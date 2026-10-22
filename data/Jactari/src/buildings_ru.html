@@ -1,0 +1,215 @@
+<!-- 
+	Created by Jactari
+	Updated by Aspirin and Aendawyn
+	Maintained by Aendawyn
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	
+-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" dir="ltr">
+<head>
+    <title>Здания | ММГК | Яктари</title>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml;charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="ru" />
+    <meta name="description" content="Список зданий в игре Меч и Магия: Герои Онлайн Королевства" />
+    <meta name="keywords" content="здания,building,buildings,construction,MMHK,HOMMK,might,magic,heroes,kingdoms,jactari" />
+    <script type="text/javascript">
+    var _base_url = '';
+    var _page = 'здания';
+    var _faction = null;
+    var _ecole = null;
+    var _categorie = null;
+    var _artefact = null;
+    var _batiment = null;
+    var _creature = null;
+    var _sort = null;
+    </script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jq-1.4.2.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jq-ui-1.8.autocomplete.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jquery.cookie.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.general.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.batiments.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/fonctions.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/images.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/permalien.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/langue-ru.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/batiments.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <link title="Bâtiments | ММГК | Яктари" type="application/xhtml+xml" rel="alternate" hreflang="fr" href="batiments.html" />
+    <link title="Gebäude | ММГК | Яктари" type="application/xhtml+xml" rel="alternate" hreflang="de" href="Gebaude.html" />
+    <link title="Buildings | ММГК | Яктари" type="application/xhtml+xml" rel="alternate" hreflang="en" href="buildings.html" />
+    <link rel="stylesheet" href="styles/batiments.style.css" type="text/css" />
+    <link rel="stylesheet" href="styles/navigation-2.css" type="text/css" />
+    <link rel="stylesheet" href="styles/jq-ui-1.8.css" type="text/css" />
+    <link rel="shortcut icon" href="images/icone-batiment.png" type="image/png" />
+    <meta name="viewport" content="width=device-width" />
+</head>
+<body id="page-batiments">
+	<div id="entete">
+		<h1>
+			Здания для <a href="ru.html" hreflang="ru"><abbr
+				title="Меч и Магия: Герои Онлайн Королевства">ММГК</abbr> с Яктари</a>
+		</h1>
+		<p id="version"></p>
+		<ul id="navigation">
+			<li><a href="hero_ru.html" hreflang="ru">Герой</a></li>
+			<li><a href="artifacts_ru.html" hreflang="ru">Артефакты</a></li>
+			<li><span>Здания</span></li>
+			<li><a href="creatures_ru.html" hreflang="ru">Твари</a></li>
+			<li><a href="spells_ru.html" hreflang="ru">Заклинания</a></li>
+			<li><a href="fight_ru.html" hreflang="ru">Бой</a></li>
+		</ul>
+		<ul id="choix-langue">
+			<li><a href="batiments.html" hreflang="fr" title="français">fr</a></li>
+			<li><a href="Gebaude.html" hreflang="de" title="deutsch">de</a></li>
+			<li><a href="buildings.html" hreflang="en" title="english">en</a></li>
+		</ul>
+	</div>
+	<div id="javascript-desactive">
+		[en] To use this tool, you should enable javascript in your browser.<br />(Firefox :
+		Tools &gt; Options &gt; Content &gt; Enable JavaScript ; Opera :
+		Settings &gt; Quick Preferences &gt; Enable Javascript.)
+	</div>
+	<span id="conteneur" class="cache">
+		<form>
+			<fieldset id="filtres">
+				<legend>Фильтровать</legend>
+				<button id="filtrer">Перечислять здания</button>
+				<label for="filtre-faction">сторона </label> <select
+					id="filtre-faction"></select>, <label for="filtre-categorie">категория
+				</label> <select id="filtre-categorie"></select><br /> <input
+					type="checkbox" id="affichage-description" /> <label
+					for="affichage-description"> описания</label>
+			</fieldset>
+			<fieldset id="tris">
+				<legend>Сортировать</legend>
+				<button id="ordonner">Сортировать здания</button>
+				<input type="checkbox" id="tri-nom" /> <label for="tri-nom">
+					имя</label>, <input type="checkbox" id="tri-faction" /> <label
+					for="tri-faction"> сторона</label>, <input type="checkbox"
+					id="tri-categorie" /> <label for="tri-categorie">
+					категория</label>, <input type="checkbox" id="tri-domination" /> <label
+					for="tri-domination"> господство</label>, <input type="checkbox"
+					id="tri-cout" /> <label for="tri-cout"> стоимость</label>, <input
+					type="checkbox" id="tri-duree" /> <label for="tri-duree">
+					Продолжительность</label>
+			</fieldset>
+			<div id="asp_center">
+				<div style="float: left; margin-top: 10px;">
+					<label for="cout-ressource-rare" class="asp_cout_res_rare">золото
+						/ редкий ресурс: </label> <select id="cout-ressource-rare"
+						class="asp_cout_res_rare">
+						<option value="1000">1 000</option>
+						<option value="1100">1 100</option>
+						<option value="1200">1 200</option>
+						<option value="1300">1 300</option>
+						<option value="1400">1 400</option>
+						<option value="1500">1 500</option>
+						<option value="1600">1 600</option>
+						<option value="1700">1 700</option>
+						<option value="1800">1 800</option>
+						<option value="1900">1 900</option>
+						<option value="2000">2 000</option>
+					</select> <label for="modificateur-construction">Стройка: </label> <select
+						id="modificateur-construction">
+						<option value="0">нормальный</option>
+						<option value="1">быстрее</option>
+						<option value="-1">дешевле</option>
+					</select> <label for="contremaitre">Бригадир: </label> <select
+						id="contremaitre">
+						<option value="0">0</option>
+						<option value="9">1</option>
+						<option value="18">2</option>
+						<option value="27">3</option>
+					</select> <label for="asp_start_time">Starting time:</label> <input
+						type="text" id="asp_start_time"
+						style="border: 0; font-weight: bold;" size="15" /> <input
+						type="hidden" id="asp_start_time_minutes" value="0" />
+				</div>
+				<div id="slider"
+					style="width: 200px; margin-top: 10px; float: left;"></div>
+				<div style="float: left; margin: 6px 0px 0px 20px;">
+					<input type="button" name="asp_start_time_ok"
+						id="asp_start_time_ok" value="OK" />
+				</div>
+			</div>
+		</form> <br style="clear: both;" />
+		<table id="liste-batiments"></table>
+	</span>
+
+	<div id="prepied"></div>
+	<div id="pied"/>
+	<script type="text/javascript" src="scripts/slider2.js"></script>
+	<script type="text/javascript">
+		$("#asp_center").css('margin-left', '285px');
+
+		var dosomething = function() {
+			var d = new Date();
+			var e = new Date();
+			e.setMinutes(d.getMinutes() + slider.values.mid);
+			bTime = [ d.getDate(), (d.getMonth() + 1), d.getFullYear(),
+					d.getHours(), d.getMinutes(), d.getSeconds(), e.getDate(),
+					(e.getMonth() + 1), e.getFullYear(), e.getHours(),
+					e.getMinutes(), e.getSeconds() ];
+			var i = 0;
+			for (i = 0; i <= 11; i++) {
+				if (bTime[i] < 10) {
+					bTime[i] = '0' + bTime[i].toString();
+				}
+			}
+			var endTime = bTime[6] + '/' + bTime[7] + '/' + bTime[8] + ' '
+					+ bTime[9] + ':' + bTime[10];
+			$("#asp_start_time").val(endTime);
+			$("#asp_start_time_minutes").val(slider.values.mid);
+		}
+		var slider = new slider();
+		slider.init({
+			id : "slider",
+			style : {
+				backgroundColor : "#FFFFFF",
+				width : "200px",
+				height : "14px"
+			},
+			pointer : {
+				backgroundColor : "#DADADA",
+				width : "14px",
+				height : "14px",
+				border : "1px solid #999999",
+				top : "-1px"
+			},
+			values : {
+				min : 0,
+				max : 1440,
+				fontSize : "10px"
+			},
+			fire : dosomething
+		})
+
+		var d = new Date();
+		var bTime = [ d.getDate(), (d.getMonth() + 1), d.getFullYear(),
+				d.getHours(), d.getMinutes(), d.getSeconds() ];
+		var i = 0;
+		for (i = 0; i <= 11; i++) {
+			if (bTime[i] < 10) {
+				bTime[i] = '0' + bTime[i].toString();
+			}
+		}
+		var startTime = bTime[0] + '/' + bTime[1] + '/' + bTime[2] + ' '
+				+ bTime[3] + ':' + bTime[4];
+		$("#asp_start_time").val(startTime);
+	</script>
+</body>
+</html>

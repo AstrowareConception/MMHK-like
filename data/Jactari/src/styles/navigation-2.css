@@ -1,0 +1,425 @@
+/* 
+	Created by Jactari
+	Updated by Aspirin and Aendawyn
+	Maintained by Aendawyn
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	
+*/
+
+body {
+	font-family: verdana, sans-serif;
+	font-size: 0.8em;
+	margin: 0;
+	padding: 0;
+	text-align: center;
+}
+
+.cache {
+	display: none;
+}
+
+#page-accueil p,#page-404 p,#page-dons p,#offre-ubisoft {
+	font-size: 1.5em;
+	margin: 1em auto;
+	text-align: justify;
+	width: 800px;
+}
+
+#page-accueil p#version,#page-mondes p#version,#page-contact p#version {
+	display: none;
+}
+
+#page-accueil p.avertissement {
+	font-weight: bold;
+}
+
+html> /**/ body p.remerciements strong {
+	font-weight: normal;
+	text-shadow: rgba(255, 0, 0, .8) 1px 1px 2px;
+}
+
+html> /**/ body p.donateurs strong {
+	font-weight: normal;
+	text-shadow: rgba(0, 0, 255, .8) 1px 1px 2px;
+}
+
+#entete {
+	padding-top: 1.2em;
+}
+
+h1 {
+	margin: 0;
+	min-height: 42px;
+	text-shadow: rgba(0, 0, 0, .5) 1px 1px 2px;
+}
+
+h1 a,ul#navigation a {
+	color: #30f;
+	text-decoration: none;
+}
+
+p#version {
+	font-size: 0.8em;
+	margin: 0;
+}
+
+p#version label /* saison 2-3 */ {
+	color: #f00;
+	font-size: 2em;
+	font-weight: bold;
+	/*text-shadow: rgba(255,0,0,1) 1px 1px 1px;*/
+}
+
+ul#navigation {
+	background: #eee;
+	border-bottom: 1px solid #666;
+	border-top: 1px dashed #666;
+	font-size: 1.3em;
+	font-weight: bold;
+	list-style: none none inside;
+	margin: 2px 0 0 0;
+	padding: 0;
+}
+
+ul#navigation li {
+	display: inline;
+	padding: 0;
+}
+
+ul#navigation li a,ul#navigation li span {
+	padding: 0 2em;
+}
+
+ul#navigation li span {
+	cursor: default;
+	text-shadow: rgba(0, 0, 0, .5) 1px 1px 2px;
+}
+
+ul#navigation li:hover a {
+	background: #ccc;
+}
+
+ul#choix-langue {
+	font-size: 1em;
+	list-style: none none inside;
+	margin: 0 2em 0 0;
+	padding: 0;
+	position: absolute;
+	right: 0;
+	top: 5px;
+}
+
+ul#choix-langue li {
+	display: inline;
+}
+
+ul#choix-langue li a {
+	border: 1px solid #000;
+	color: #000;
+	display: inline-block;
+	margin: 0 0.2em;
+	padding: 0 0.2em;
+	text-decoration: none;
+	text-transform: uppercase;
+}
+
+ul#choix-langue li a:hover {
+	background-color: #666;
+	color: #fff;
+}
+
+#pied {
+	background: #eee;
+	border-bottom: 1px dashed #666;
+	border-top: 1px solid #666;
+	font-size: 1.4em;
+	font-weight: bold;
+	margin: 1em 0 0 0;
+	padding: 5px 0 0 0;
+	display: none;
+}
+
+#pied form {
+	display: inline;
+	vertical-align: middle;
+}
+
+#pied fieldset {
+	border: none;
+	display: inline;
+	margin: 0;
+	padding: 0;
+}
+
+#pied a {
+	font-size: 0.8em;
+	vertical-align: top;
+}
+
+#page-contact form {
+	max-width: 600px;
+	margin: 1em auto 0 auto;
+	text-align: left;
+}
+
+.precision {
+	font-size: 0.8em;
+}
+
+.cap {
+	text-transform: capitalize;
+}
+
+#page-contact label {
+	font-weight: bold;
+}
+
+#page-contact #resultat-envoi {
+	color: #f00;
+	display: block;
+	font-weight: bold;
+	margin-top: 1em;
+}
+
+#javascript-desactive,#offre-ubisoft {
+	background: #ffb;
+	border-color: #000;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-style: solid;
+	border-width: 1px;
+	margin: 1em auto;
+	padding: 1em;
+}
+
+#javascript-desactive {
+	background: #fbb;
+	font-size: 1.3em;
+	text-align: center;
+	width: 900px;
+}
+
+#appel-dons {
+	background: url("../images/fond-offre.html") no-repeat center;
+	border-color: #000;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-style: solid;
+	border-width: 1px;
+	display: inline-block;
+	font-size: 1.3em;
+	font-weight: bold;
+	height: 58px;
+	max-height: 58px;
+	margin-top: 1em;
+	margin-bottom: 1em;
+	max-width: 1280px;
+	min-width: 932px;
+	padding-top: 0;
+	text-align: center;
+	width: 75%;
+}
+
+#appel-dons>a {
+	background: transparent url("../images/fleche-offre.html") no-repeat
+		right center;
+	display: inline-block;
+	padding: 1em 34px 1em 0;
+}
+
+.asp_cout_res_rare {
+	display: none;
+}
+
+@media only screen and (max-device-width:480px) {
+	body {
+		font-size: 0.8em;
+		/*width: 100%;*/
+	}
+	#entete {
+		background-image: none;
+		padding-top: 0;
+		/*width: 100%;*/
+	}
+	h1 {
+		font-size: 1em;
+		margin-bottom: 0;
+		min-height: inherit;
+		padding: 0.2em 0 0 0.5em;
+		text-align: left;
+		text-shadow: none;
+	}
+	p#version {
+		background-color: #bfb;
+		border-top: 1px dashed #666;
+		font-size: 0.8em;
+		margin: 0;
+		padding: 0.2em 0 0 0.5em;
+		text-align: left;
+		vertical-align: middle;
+	}
+	p#version label /* saison 2 */ {
+		font-weight: bold;
+		text-shadow: none;
+	}
+	p#version input {
+		display: inline;
+		margin: 0;
+		vertical-align: baseline;
+	}
+	#page-accueil p,#page-404 p {
+		font-size: 1em;
+		margin: 0.5em 0.5em;
+		text-align: justify;
+		width: auto;
+	}
+	ul#navigation {
+		border-bottom: 1px dashed #666;
+		border-top: 1px dashed #666;
+		display: block;
+		font-size: 1em;
+		font-weight: bold;
+		line-height: 1.5em;
+		list-style: none none inside;
+		margin: 0;
+		padding: 0.2em 0 0 0.5em;
+		text-align: left;
+		/*width: 100%;*/
+	}
+	ul#navigation li {
+		display: inline-block;
+		padding: 0 0.5em 0 0;
+	}
+	ul#navigation li a,ul#navigation li span {
+		padding: 0;
+	}
+	ul#navigation li span {
+		cursor: default;
+		text-shadow: none;
+	}
+	ul#choix-langue {
+		background-color: #ddd;
+		border-bottom: 1px solid #666;
+		display: block;
+		font-size: 1em;
+		font-weight: bold;
+		list-style: none none inside;
+		margin: 0;
+		padding: 0;
+		position: static;
+		right: auto;
+		text-align: right;
+		top: auto;
+		/*width: 100%;*/
+	}
+	ul#choix-langue li {
+		display: inline-block;
+		padding: 0.2em 1em 0 0;
+	}
+	ul#choix-langue li a {
+		border: none;
+		color: #30f;
+		display: inline;
+		margin: 0;
+		padding: 0;
+		text-decoration: none;
+		text-transform: none;
+	}
+	#page-contact input[type="text"] {
+		background-color: #eee;
+		border-width: 0;
+		width: 100%;
+	}
+	#page-contact textarea {
+		background-color: #eee;
+		border-width: 0;
+		height: 200px;
+		width: 100%;
+	}
+}
+
+.datetime {
+	color: #666666;
+}
+
+#paginationDiv {
+	clear: both;
+}
+
+#paginationDiv.found {
+	padding: 0 0 0 80px;
+	height: 16px;
+}
+
+#paginationDiv.found p {
+	float: left;
+	margin: 0;
+}
+
+#paginationDiv.found a {
+	float: left;
+	margin: 0;
+}
+
+ul.pagination {
+	margin: 0;
+	padding: 0 0 0 2px;
+}
+
+ul.pagination a {
+	font-size: 12px;
+	text-decoration: none;
+}
+
+ul.pagination li {
+	list-style-type: none;
+	float: left;
+	margin-left: 15px;
+	border: 1px solid #99CC00;
+	font-weight: bold;
+	padding: 3px;
+	font-family: Verdana;
+}
+
+ul.pagination li.active {
+	background: #99CC00;
+}
+
+.justify {
+	text-align: justify;
+	margin-right: 24px;
+}
+
+#comments {
+	text-align: justify;
+	margin-right: 24px;
+}
+
+.red {
+	color: red;
+}
+
+#lien-permanent,#lien-permanent_tiny,#lien-permanent_tiny_text {
+	float: left;
+	margin: auto;
+}
+
+#lien-perm_div {
+	text-align: center;
+	width: 600px;
+	height: 25px;
+	padding: 10px;
+	margin: auto;
+}

@@ -1,0 +1,111 @@
+<!-- 
+	Created by Jactari
+	Updated by Aspirin and Aendawyn
+	Maintained by Aendawyn
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	
+-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr">
+<head>
+    <title>Spell Book | MMHK | Jactari</title>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml;charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <meta name="description" content="List of magic spells in the game Might and Magic: Heroes Kingdoms" />
+    <meta name="keywords" content="spell,spells,magic,book,spellbook,MMHK,HOMMK,might,magic,heroes,kingdoms,jactari" />
+    <script type="text/javascript">
+    var _base_url = '';
+    var _page = 'spells';
+    var _faction = null;
+    var _ecole = null;
+    var _categorie = null;
+    var _artefact = null;
+    var _batiment = null;
+    var _creature = null;
+    var _sort = null;
+    </script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jq-1.4.2.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jq-ui-1.8.autocomplete.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jquery.cookie.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.general.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.sorts.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/fonctions.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/images.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/permalien.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/langue-en.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/sorts.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <link title="Grimoire des sorts | MMHK | Jactari" type="application/xhtml+xml" rel="alternate" hreflang="fr" href="sorts.html" />
+    <link title="Zauberbuch | MMHK | Jactari" type="application/xhtml+xml" rel="alternate" hreflang="de" href="Zauber.html" />
+    <link title="Гримуар заклинаний | MMHK | Jactari" type="application/xhtml+xml" rel="alternate" hreflang="ru" href="spells_ru.html" />
+    <link rel="stylesheet" href="styles/sorts.style.css" type="text/css" />
+    <link rel="stylesheet" href="styles/navigation-2.css" type="text/css" />
+    <link rel="stylesheet" href="styles/jq-ui-1.8.css" type="text/css" />
+    <link rel="shortcut icon" href="images/icone-sorts.png" type="image/png" />
+    <meta name="viewport" content="width=device-width" />
+</head>
+<body id="page-sorts">
+	<div id="entete">
+		<h1>
+			Spell Book for <a href="en.html" hreflang="en"><abbr title="Might and Magic: Heroes Kingdoms">MMHK</abbr> by
+				Jactari</a>
+		</h1>
+		<p id="version"></p>
+		<ul id="navigation">
+			<li><a href="hero.html" hreflang="en">Hero</a></li>
+			<li><a href="artifacts.html" hreflang="en">Artifacts</a></li>
+			<li><a href="buildings.html" hreflang="en">Buildings</a></li>
+			<li><a href="creatures.html" hreflang="en">Creatures</a></li>
+			<li><span>Spells</span></li>
+			<li><a href="fight.html" hreflang="en">Fight</a></li>
+		</ul>
+		<ul id="choix-langue">
+			<li><a href="sorts.html" hreflang="fr" title="français">fr</a></li>
+			<li><a href="Zauber.html" hreflang="de" title="deutsch">de</a></li>
+			<li><a href="spells_ru.html" hreflang="ru" title="русский">ru</a></li>
+		</ul>
+	</div>
+	<div id="javascript-desactive">
+		To use this tool, you should enable javascript in your browser.<br />(Firefox : Tools &gt; Options &gt; Content &gt;
+		Enable JavaScript ; Opera : Settings &gt; Quick Preferences &gt; Enable Javascript.)
+	</div>
+	<span id="conteneur" class="cache">
+		<form>
+			<fieldset id="filtres">
+				<legend>Filter</legend>
+				<button id="filtrer">List spells</button>
+				from <label for="filtre-ecole">school </label> <select id="filtre-ecole"></select>, from <label for="filtre-faction">faction
+				</label> <select id="filtre-faction"></select>, <label for="filtre-cercle">level </label> <select id="filtre-cercle"></select>,
+				of <label for="filtre-type">type </label> <select id="filtre-type"></select> <br /> <input type="checkbox"
+					id="asp_save_spells" /> <label for="asp_save_spells">save in cookie</label> <input type="checkbox"
+					id="affichage-description" /> <label for="affichage-description"> Display descriptions</label>
+			</fieldset>
+			<fieldset id="tris">
+				<legend>Order</legend>
+				<button id="ordonner">Sort spells</button>
+				<input type="checkbox" id="tri-nom" /> <label for="tri-nom"> by name</label>, <input type="checkbox" id="tri-ecole" />
+				<label for="tri-ecole"> by school</label>, <input type="checkbox" id="tri-cercle" /> <label for="tri-cercle">
+					by level</label>, <input type="checkbox" id="tri-type" /> <label for="tri-type"> by type</label>
+			</fieldset>
+		</form>
+
+		<table id="liste-sorts"></table>
+	</span>
+
+	<div id="prepied"></div>
+	<div id="pied"/>
+</body>
+</html>

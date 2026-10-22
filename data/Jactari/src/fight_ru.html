@@ -1,0 +1,333 @@
+<!-- 
+	Created by Jactari
+	Updated by Aspirin and Aendawyn
+	Maintained by Aendawyn
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	
+-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" dir="ltr">
+<head>
+    <title>Симулятор боя | ММГК | Яктари</title>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml;charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="ru" />
+    <meta name="description" content="Утилита, позволяющая рассчитать бой в игре Меч и Магия: Герои Онлайн Королевства" />
+    <meta name="keywords" content="бой,симулянт,simulator,fight,MMHK,HOMMK,might,magic,heroes,kingdoms,jactari" />
+    <script type="text/javascript">
+    var _base_url = '';
+    var _page = 'бой';
+    var _faction = null;
+    var _ecole = null;
+    var _categorie = null;
+    var _artefact = null;
+    var _batiment = null;
+    var _creature = null;
+    var _sort = null;
+    </script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jq-1.4.2.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jq-ui-1.8.autocomplete.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jquery.cookie.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.general.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.heros.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.artefacts.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.creatures.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.sorts.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/fonctions.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/images.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/permalien.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/langue-ru.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/combat.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <link title="Simulateur de combat | ММГК | Яктари" type="application/xhtml+xml" rel="alternate" hreflang="fr" href="combat.html" />
+    <link title="Kampf Simulator | ММГК | Яктари" type="application/xhtml+xml" rel="alternate" hreflang="de" href="Kampf.html" />
+    <link title="Fight Simulator | ММГК | Яктари" type="application/xhtml+xml" rel="alternate" hreflang="en" href="fight.html" />
+    <link rel="stylesheet" href="styles/combat.style.css" type="text/css" />
+    <link rel="stylesheet" href="styles/navigation-2.css" type="text/css" />
+    <link rel="stylesheet" href="styles/jq-ui-1.8.css" type="text/css" />
+    <link rel="shortcut icon" href="images/icone-combat.png" type="image/png" />
+    <meta name="viewport" content="width=device-width" />
+</head>
+<body id="page-combat">
+	<div id="entete">
+		<h1>
+			Симулятор боя для <a href="ru.html" hreflang="ru"><abbr title="Меч и Магия: Герои Онлайн Королевства">ММГК</abbr> от Яктари</a>
+		</h1>
+		<p id="version"></p>
+		<ul id="navigation">
+			<li><a href="hero_ru.html" hreflang="ru">Герой</a></li>
+			<li><a href="artifacts_ru.html" hreflang="ru">Артефакты</a></li>
+			<li><a href="buildings_ru.html" hreflang="ru">Здания</a></li>
+			<li><a href="creatures_ru.html" hreflang="ru">Твари</a></li>
+			<li><a href="spells_ru.html" hreflang="ru">Заклинания</a></li>
+			<li><span>Бой</span></li>
+		</ul>
+		<ul id="choix-langue">
+			<li><a href="combat.html" hreflang="fr" title="français">fr</a></li>
+			<li><a href="Kampf.html" hreflang="de" title="deutsch">de</a></li>
+			<li><a href="fight.html" hreflang="en" title="english">en</a></li>
+		</ul>
+	</div>
+	<div id="javascript-desactive">
+		Для использования этого инструмента вам необходимо разрешить JavaScript в вашем браузере.<br />(Firefox : Tools &gt; Options &gt; Content
+		&gt; Enable JavaScript ; Opera : Settings &gt; Quick Preferences &gt; Enable Javascript.)
+	</div>
+	<div id="lien-perm_div">
+		<p id="lien-permanent"></p>
+		<p id="lien-permanent_tiny"></p>
+		<p id="lien-permanent_tiny_text"></p>
+	</div>
+
+	<div id="conteneur" class="cache">
+		<div id="situation">
+			<h2 class="plus">Борцы</h2>
+			<div id="situation-attaquant">
+				<h3>
+					<span class="inversion" title="Invert">Нападающий</span>
+				</h3>
+			</div>
+			<div id="situation-defenseur">
+				<h3>
+					<span class="inversion" title="Invert">Защитник</span>
+				</h3>
+			</div>
+		</div>
+		<table id="rencontre">
+			<caption class="plus">Армии</caption>
+			<thead>
+				<tr>
+					<th colspan="4" class="attaquant"><span class="inversion" title="Invert">Нападающий</span></th>
+					<th rowspan="2">Взвод</th>
+					<th colspan="4" class="defenseur"><span class="inversion" title="Invert">Защитник</span></th>
+				</tr>
+				<tr>
+					<th class="attaquant">Единица</th>
+					<th class="attaquant">Оружие</th>
+					<th class="attaquant">Число</th>
+					<th class="attaquant">Сила</th>
+					<th class="defenseur">Сила</th>
+					<th class="defenseur">Число</th>
+					<th class="defenseur">Оружие</th>
+					<th class="defenseur">Единица</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr id="peloton-1">
+					<td class="unite-a"></td>
+					<td class="arme-a"></td>
+					<td class="nombre-a"></td>
+					<td class="puissance-a"></td>
+					<th>1</th>
+					<td class="puissance-d"></td>
+					<td class="nombre-d"></td>
+					<td class="arme-d"></td>
+					<td class="unite-d"></td>
+				</tr>
+				<tr id="peloton-2">
+					<td class="unite-a"></td>
+					<td class="arme-a"></td>
+					<td class="nombre-a"></td>
+					<td class="puissance-a"></td>
+					<th>2</th>
+					<td class="puissance-d"></td>
+					<td class="nombre-d"></td>
+					<td class="arme-d"></td>
+					<td class="unite-d"></td>
+				</tr>
+				<tr id="peloton-3">
+					<td class="unite-a"></td>
+					<td class="arme-a"></td>
+					<td class="nombre-a"></td>
+					<td class="puissance-a"></td>
+					<th>3</th>
+					<td class="puissance-d"></td>
+					<td class="nombre-d"></td>
+					<td class="arme-d"></td>
+					<td class="unite-d"></td>
+				</tr>
+				<tr id="peloton-4">
+					<td class="unite-a"></td>
+					<td class="arme-a"></td>
+					<td class="nombre-a"></td>
+					<td class="puissance-a"></td>
+					<th>4</th>
+					<td class="puissance-d"></td>
+					<td class="nombre-d"></td>
+					<td class="arme-d"></td>
+					<td class="unite-d"></td>
+				</tr>
+				<tr id="peloton-5">
+					<td class="unite-a"></td>
+					<td class="arme-a"></td>
+					<td class="nombre-a"></td>
+					<td class="puissance-a"></td>
+					<th>5</th>
+					<td class="puissance-d"></td>
+					<td class="nombre-d"></td>
+					<td class="arme-d"></td>
+					<td class="unite-d"></td>
+				</tr>
+				<tr id="peloton-6">
+					<td class="unite-a"></td>
+					<td class="arme-a"></td>
+					<td class="nombre-a"></td>
+					<td class="puissance-a"></td>
+					<th>6</th>
+					<td class="puissance-d"></td>
+					<td class="nombre-d"></td>
+					<td class="arme-d"></td>
+					<td class="unite-d"></td>
+				</tr>
+				<tr id="peloton-7">
+					<td class="unite-a"></td>
+					<td class="arme-a"></td>
+					<td class="nombre-a"></td>
+					<td class="puissance-a"></td>
+					<th>7</th>
+					<td class="puissance-d"></td>
+					<td class="nombre-d"></td>
+					<td class="arme-d"></td>
+					<td class="unite-d"></td>
+				</tr>
+				<tr id="peloton-total">
+					<td class="unite-a"></td>
+					<td class="arme-a"></td>
+					<td class="nombre-a"></td>
+					<td class="puissance-a"></td>
+					<th>Итог</th>
+					<td class="puissance-d"></td>
+					<td class="nombre-d"></td>
+					<td class="arme-d"></td>
+					<td class="unite-d"></td>
+				</tr>
+			</tbody>
+		</table>
+		<table id="magie">
+			<caption class="plus">Магия</caption>
+			<thead>
+				<tr>
+					<th colspan="2" class="attaquant">Нападающий</th>
+					<th colspan="2" class="defenseur">Защитник</th>
+				</tr>
+				<tr>
+					<th class="attaquant">Заклинание</th>
+					<th class="attaquant">Ход</th>
+					<th class="defenseur">Заклинание</th>
+					<th class="defenseur">Ход</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+		<table id="victoire">
+			<caption class="moins-v"></caption>
+			<thead class="cache">
+				<tr>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody class="cache">
+				<tr>
+					<th></th>
+				</tr>
+			</tbody>
+		</table>
+		<table id="avertissements">
+			<caption class="plus">Предупреждение</caption>
+			<thead>
+				<tr>
+					<th>Сообщение</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+		<table id="combat">
+			<caption class="plus">Бой</caption>
+			<thead>
+				<tr>
+					<th rowspan="2">Ход</th>
+					<th colspan="5" class="attaquant">Нападающий</th>
+					<th rowspan="2">Результат</th>
+					<th colspan="5" class="defenseur">Защитник</th>
+					<th rowspan="2">Ход</th>
+				</tr>
+				<tr>
+					<th class="attaquant">Сила</th>
+					<th class="attaquant">Число</th>
+					<th class="attaquant">Един.</th>
+					<th class="attaquant">Оружие</th>
+					<th class="attaquant">Потери</th>
+					<th class="defenseur">Потери</th>
+					<th class="defenseur">Оружие</th>
+					<th class="defenseur">Един.</th>
+					<th class="defenseur">Число</th>
+					<th class="defenseur">Сила</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+		<table id="pertes">
+			<caption class="plus">Окончательные потери</caption>
+			<thead>
+				<tr>
+					<th colspan="7" class="attaquant">Нападающий</th>
+					<th></th>
+					<th colspan="7" class="defenseur">Защитник</th>
+				</tr>
+				<tr>
+					<th rowspan="2" class="attaquant">Единица</th>
+					<th colspan="2" class="attaquant">Число</th>
+					<th colspan="2" class="attaquant">Сила</th>
+					<th rowspan="2" class="attaquant">Потери<br />в золоте</th>
+					<th rowspan="2" class="attaquant">Потери<br />в ресурсах</th>
+					<th rowspan="2">Взвод</th>
+					<th rowspan="2" class="defenseur">Единица</th>
+					<th colspan="2" class="defenseur">Число</th>
+					<th colspan="2" class="defenseur">Сила</th>
+					<th rowspan="2" class="defenseur">Потери<br />в золоте</th>
+					<th rowspan="2" class="defenseur">Потери<br />в ресурсах</th>
+				</tr>
+				<tr>
+					<th class="attaquant">было</th>
+					<th class="attaquant">потери</th>
+					<th class="attaquant">было</th>
+					<th class="attaquant">потери</th>
+					<th class="defenseur">было</th>
+					<th class="defenseur">потери</th>
+					<th class="defenseur">было</th>
+					<th class="defenseur">потери</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+		<table id="experience">
+			<caption class="plus">Опыт</caption>
+			<thead>
+				<tr>
+					<th class="attaquant">Нападающий</th>
+					<th></th>
+					<th class="defenseur">Защитник</th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</div>
+	<div id="prepied"></div>
+	<div id="pied"/>
+</body>
+</html>

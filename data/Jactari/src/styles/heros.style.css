@@ -1,0 +1,465 @@
+/* 
+	Created by Jactari
+	Updated by Aspirin and Aendawyn
+	Maintained by Aendawyn
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	
+*/
+
+.cache {
+	display: none;
+}
+
+body.tamise,input.tamise,select.tamise {
+	background: #ccc;
+}
+
+form {
+	clear: both;
+	margin: auto;
+	padding: 0;
+	width: 802px;
+}
+
+fieldset {
+	border: 1px solid #000;
+	margin: 1em 0 0 0;
+	text-align: left;
+}
+
+input,label,button,select {
+	cursor: pointer;
+}
+
+form select {
+	font-family: monospace;
+}
+
+#gestion-heros {
+	margin-bottom: 1em;
+	text-align: center;
+}
+
+#affiche-explication-gestion-heros {
+	cursor: pointer;
+	vertical-align: middle;
+}
+
+#explication-gestion-heros {
+	font-size: 0.8em;
+	margin: 0;
+	text-align: justify;
+}
+
+#f-carrieres {
+	border: none;
+	padding: 0;
+	margin: 0;
+}
+
+#c1,#c2,#c3 {
+	background-image: url(../images/hero-other.jpg);
+	background-position: left -1px;
+	background-repeat: no-repeat;
+	border: 1px solid #000;
+	clear: both;
+	margin: 1em 0 0 0;
+	padding: 0;
+	position: relative;
+}
+
+.icone-carriere {
+	height: 44px;
+	position: absolute;
+	top: 4px;
+	left: 5px;
+	width: 44px;
+}
+
+#f-carrieres input[type=checkbox] {
+	margin: 0;
+}
+
+div.carriere {
+	height: 50px;
+	padding-left: 70px;
+}
+
+div.carriere label {
+	color: #fff;
+	font-weight: bold;
+}
+
+span.description-carriere {
+	display: block;
+	font-size: 0.75em;
+	left: 318px;
+	position: absolute;
+	top: 5px;
+}
+
+#f-carrieres ul.talents {
+	clear: both;
+	list-style: none;
+	margin: 0;
+	padding-left: 1em;
+}
+
+#f-carrieres ul.talents li {
+	line-height: 25px;
+	height: 25px;
+	padding: 0;
+	vertical-align: middle;
+}
+
+span.talent {
+	border-bottom: 1px dashed;
+	cursor: help;
+	display: inline;
+	margin-left: 0.5em;
+}
+
+span.icone-talent {
+	display: block;
+	float: left;
+	height: 25px;
+	width: 25px;
+}
+
+#f-infos {
+	line-height: 2em;
+	text-align: center;
+}
+
+#liens-permanents ul {
+	display: inline-block;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+
+#liens-permanents ul li {
+	display: inline-block;
+	margin: 0 1em;
+}
+
+#heros {
+	/*background: #fff;*/
+	border: 1px solid #000;
+	color: #000;
+	height: 127px;
+	margin: auto;
+	margin-top: 10px;
+	padding: 0;
+	text-align: left;
+	width: 800px;
+	z-index: 100;
+}
+
+#cadre-portrait {
+	background: url(../images/cadre-heros.png) no-repeat;
+	float: left;
+	height: 85px;
+	margin: 5px;
+	width: 82px;
+}
+
+#portrait {
+	background-color: #000;
+	margin-top: 5px;
+	margin-left: 5px;
+	height: 72px;
+	width: 71px;
+}
+
+#adm {
+	clear: both;
+	color: #000;
+	font-size: 0.875em;
+	height: 30px;
+	line-height: 30px;
+	padding: 0 0 0 5px;
+}
+
+#adm span {
+	display: inline-block;
+	line-height: 1.5em;
+	vertical-align: middle;
+}
+
+#adm span.c2 {
+	margin-right: 1em;
+	text-align: right;
+	width: 2em;
+}
+
+#adm span.c7 {
+	margin-right: 1em;
+	text-align: right;
+	width: 5.5em;
+}
+
+#experience-valeur {
+	background: #50332b;
+	border: 1px solid #2f1a15;
+	display: block;
+	height: 12px;
+	margin-left: 5px;
+	padding: 0;
+	position: relative;
+	width: 120px !important;
+}
+
+#experience-fond {
+	background: url(../images/fond-xp.png) left center repeat-x;
+	display: block;
+	height: 12px;
+	left: 1px;
+	position: absolute;
+	z-index: 1;
+}
+
+#experience-nombre {
+	color: #fff;
+	display: block;
+	font-size: 8px;
+	line-height: 8px;
+	height: 12px;
+	left: 0px;
+	padding: 0;
+	position: absolute;
+	text-align: center;
+	vertical-align: top;
+	width: 120px;
+	z-index: 2;
+}
+
+#experience-nombre>span {
+	background: #50332b;
+}
+
+#experience-valeur+span {
+	margin-left: 1em;
+}
+
+span#competence-utilisee,span#competence {
+	background: #ddd;
+	border: 1px solid #000;
+	padding-right: 0.5em;
+	text-align: right;
+	width: 2em;
+}
+
+.depassement {
+	color: #f00 !important;
+}
+
+#adm img {
+	background: url(../images/common.png) no-repeat;
+	display: inline-block;
+	vertical-align: middle;
+}
+
+#adm #attaque-image {
+	background-position: -77px -38px;
+	height: 16px;
+	width: 14px;
+}
+
+#adm #defense-image {
+	background-position: -91px -38px;
+	height: 16px;
+	width: 15px;
+}
+
+#adm #magie-image {
+	background-position: -121px -38px;
+	height: 16px;
+	width: 13px;
+}
+
+#adm #experience-image {
+	background-position: 0px 0px;
+	height: 13px;
+	margin-left: 2em;
+	width: 18px;
+}
+
+#adm .plus {
+	color: #090;
+	font-weight: bold;
+}
+
+#adm .respec {
+	font-style: italic;
+}
+
+.progression {
+	font-size: 0.7em;
+}
+
+#inventaire {
+	background: url(../images/emplacements-artefacts.png) no-repeat center
+		top;
+	float: left;
+	height: 95px;
+	position: relative;
+	width: 200px;
+	z-index: 100;
+}
+
+#inventaire p {
+	margin-top: 110px;
+	text-align: center;
+}
+
+.slot {
+	cursor: pointer;
+}
+
+.description-artefact {
+	background: #eed; /*rgba(238,238,221,0.8) => boud� par IE*/
+	border: 1px solid #000;
+	cursor: text;
+	font-size: .9em;
+	left: 27px;
+	opacity: .9;
+	padding: 1em;
+	position: absolute;
+	text-align: left;
+	top: 26px;
+	width: 500px;
+	z-index: 10;
+}
+
+.description-artefact .nom {
+	cursor: text;
+	display: block;
+	font-weight: bold;
+}
+
+.description-artefact .proprietes {
+	border-bottom: 1px solid #000;
+	cursor: text;
+	display: block;
+	font-style: italic;
+	margin-bottom: .5em;
+	padding-bottom: .5em;
+}
+
+.description-artefact .effet {
+	cursor: text;
+	display: block;
+	font-size: .9em;
+	padding-left: 2em;
+	text-indent: -2em;
+}
+
+.description-artefact .valeur-effet {
+	color: #090;
+	cursor: text;
+	font-weight: bold;
+}
+
+.menu-artefacts {
+	background: #fff;
+	border: 1px solid #000;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	left: -7px;
+	padding: 6px;
+	position: absolute;
+	top: -6px;
+	/*width: 74px;*/
+	z-index: 20;
+}
+
+.choix-artefact {
+	float: left;
+	height: 36px;
+	opacity: .5;
+	width: 37px;
+}
+
+.choix-artefact.equipe {
+	opacity: 1;
+}
+
+.choix-artefact:hover {
+	opacity: 1;
+}
+
+.clear {
+	clear: both;
+}
+
+#f-alliance-joueur,#f-heredite {
+	font-size: 0.8em;
+	text-align: center;
+}
+
+#f-alliance-joueur select,#f-heredite select {
+	font-size: 1.2em;
+}
+
+#masque {
+	background: rgba(200, 200, 200, .5);
+	left: 0;
+	position: absolute;
+	top: 0;
+	z-index: 200;
+}
+
+#avertissement {
+	background-color: #fff;
+	border-color: #f00;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	border-style: solid;
+	border-width: 2px;
+	margin: 0;
+	padding: 10px;
+	position: absolute;
+	top: 320px;
+	z-index: 201;
+}
+
+#avertissement p {
+	margin: 0 0 1em 0;
+}
+
+#masquer-avertissement,#confirmation-oui,#confirmation-non {
+	background-color: #ddd;
+	border-color: #000;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	border-style: solid;
+	border-width: 1px;
+	cursor: pointer;
+	font-weight: bold;
+	padding: 0.4em;
+}
+
+#confirmation-oui {
+	margin-right: 5em;
+}
+
+#masquer-avertissement:hover,#confirmation-oui:hover {
+	background-color: #dfd;
+}
+
+#confirmation-non:hover {
+	background-color: #fdd;
+}

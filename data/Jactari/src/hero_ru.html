@@ -1,0 +1,194 @@
+<!-- 
+	Created by Jactari
+	Updated by Aspirin and Aendawyn
+	Maintained by Aendawyn
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	
+-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="ru" dir="ltr">
+<head>
+    <title>Инкубатор героев | ММГК | Яктари</title>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml;charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="ru" />
+    <meta name="description" content="Утилита, позволяющая запланировать характеристики и навыки героя в игре Меч и Магия: Герои Онлайн Королевства" />
+    <meta name="keywords" content="Инкубатор,героев,герой,hero,heroes,MMHK,HOMMK,might,magic,heroes,kingdoms,jactari" />
+    <script type="text/javascript">
+    var _base_url = '';
+    var _page = 'герой';
+    var _faction = null;
+    var _ecole = null;
+    var _categorie = null;
+    var _artefact = null;
+    var _batiment = null;
+    var _creature = null;
+    var _sort = null;
+    </script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jq-1.4.2.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jq-ui-1.8.autocomplete.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jquery.cookie.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.general.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.heros.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.artefacts.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.sorts.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/fonctions.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/images.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/permalien.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/langue-ru.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/heros.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <link title="Couveuse de héros | ММГК | Яктари" type="application/xhtml+xml" rel="alternate" hreflang="fr" href="heros.html" />
+    <link title="Inkubator Helden | ММГК | Яктари" type="application/xhtml+xml" rel="alternate" hreflang="de" href="Held.html" />
+    <link title="Hero Brooder | ММГК | Яктари" type="application/xhtml+xml" rel="alternate" hreflang="en" href="hero.html" />
+    <link rel="stylesheet" href="styles/heros.style.css" type="text/css" />
+    <link rel="stylesheet" href="styles/navigation-2.css" type="text/css" />
+    <link rel="stylesheet" href="styles/jq-ui-1.8.css" type="text/css" />
+    <link rel="shortcut icon" href="images/icone-heros.png" type="image/png" />
+    <meta name="viewport" content="width=device-width" />
+</head>
+<body id="page-heros">
+	<div id="entete">
+		<h1>
+			Инкубатор героев для <a href="ru.html" hreflang="ru"><abbr title="Меч и Магия: Герои Онлайн Королевства">ММГК</abbr>
+				с Яктари</a>
+		</h1>
+		<p id="version"></p>
+		<ul id="navigation">
+			<li><span>Герой</span></li>
+			<li><a href="artifacts_ru.html" hreflang="ru">Артефакты</a></li>
+			<li><a href="buildings_ru.html" hreflang="ru">Здания</a></li>
+			<li><a href="creatures_ru.html" hreflang="ru">Твари</a></li>
+			<li><a href="spells_ru.html" hreflang="ru">Заклинания</a></li>
+			<li><a href="fight_ru.html" hreflang="ru">Бой</a></li>
+		</ul>
+		<ul id="choix-langue">
+			<li><a href="heros.html" hreflang="fr" title="français">fr</a></li>
+			<li><a href="Held.html" hreflang="de" title="deutsch">de</a></li>
+			<li><a href="hero.html" hreflang="en" title="english">en</a></li>
+		</ul>
+	</div>
+	<div id="javascript-desactive">
+		[en] To use this tool, you should enable javascript in your browser.<br />(Firefox : Tools &gt; Options &gt; Content
+		&gt; Enable JavaScript ; Opera : Settings &gt; Quick Preferences &gt; Enable Javascript.)
+	</div>
+	<span id="conteneur" class="cache">
+
+		<div id="heros">
+			<div id="cadre-portrait">
+				<img src="images/unite.png" id="portrait" />
+			</div>
+			<div id="inventaire">
+				<div id="slot-0" class="slot" style="z-index: 8;"></div>
+				<div id="slot-1" class="slot" style="z-index: 7;"></div>
+				<div id="slot-2" class="slot" style="z-index: 6;"></div>
+				<div id="slot-3" class="slot" style="z-index: 5;"></div>
+				<div id="slot-4" class="slot" style="z-index: 4;"></div>
+				<div id="slot-5" class="slot" style="z-index: 3;"></div>
+				<div id="slot-6" class="slot" style="z-index: 2;"></div>
+				<div id="slot-7" class="slot" style="z-index: 1;"></div>
+			</div>
+			<div id="adm">
+				<img id="attaque-image" src="images/unite.png" alt="атака" title="атака" /><span class="c2" id="attaque-valeur"></span>
+				<img id="defense-image" src="images/unite.png" alt="защита" title="защита" /><span class="c2" id="defense-valeur"></span>
+				<img id="magie-image" src="images/unite.png" alt="магия" title="магия" /><span class="c2" id="magie-valeur"></span>
+				<img id="experience-image" src="images/unite.png" alt="опыт" title="опыт" /><span class="c7" id="experience-valeur"></span>
+				<span>Очки навыка: </span><span class="c2" id="competence"></span><span> [en] Used: </span><span
+					id="competence-utilisee"></span>
+			</div>
+		</div>
+
+		<form>
+			<fieldset id="f-identite">
+				<div id="f-infos">
+					<label for="faction">Сторона : </label> <select id="faction" name="faction"></select> <label>Портрет : </label>
+					<button id="prev" type="button">&lt;</button>
+					<span id="num_portrait"></span>
+					<button id="next" type="button">&gt;</button>
+					<br /> <label for="archetype">Обучение : </label> <select id="archetype"></select> <label for="niveau">Уровень :
+					</label> <select id="niveau"></select> <br /> <label for="tenancier">[en] Bonus points (помещик вербовщик) : </label> <select
+						id="tenancier"></select> <label for="respec">Изменения специализацию: </label> <select id="respec"></select>
+					<div id="liens-permanents"></div>
+				</div>
+			</fieldset>
+			<fieldset id="f-carrieres">
+				<div id="c1">
+					<div class="carriere">
+						<div id="icone-c1" class="icone-carriere"></div>
+						<input id="carriere-1-active" type="checkbox" value="1" /><label for="carriere-1-active"> Профессию 1</label><br />
+						<select class="carriere" id="carriere-1"></select>
+					</div>
+					<span class="description-carriere"></span>
+					<ul class="talents">
+						<li><span class="icone-talent" id="icone-talent-1-0"></span><span class="talent"></span> <label
+							for="talent-1-0">уровня </label><select id="talent-1-0" class="s-talent"></select><span id="detail-talent-1-0"></span></li>
+						<li><span class="icone-talent" id="icone-talent-1-1"></span><span class="talent"></span> <label
+							for="talent-1-1">уровня </label><select id="talent-1-1" class="s-talent"></select><span id="detail-talent-1-1"></span></li>
+						<li><span class="icone-talent" id="icone-talent-1-2"></span><span class="talent"></span> <label
+							for="talent-1-2">уровня </label><select id="talent-1-2" class="s-talent"></select><span id="detail-talent-1-2"></span></li>
+						<li><span class="icone-talent" id="icone-talent-1-3"></span><span class="talent"></span> <label
+							for="talent-1-3">уровня </label><select id="talent-1-3" class="s-talent"></select><span id="detail-talent-1-3"></span></li>
+						<li><span class="icone-talent" id="icone-talent-1-4"></span><span class="talent"></span> <label
+							for="talent-1-4">уровня </label><select id="talent-1-4" class="s-talent"></select><span id="detail-talent-1-4"></span></li>
+					</ul>
+				</div>
+				<div id="c2">
+					<div class="carriere">
+						<div id="icone-c2" class="icone-carriere"></div>
+						<input id="carriere-2-active" type="checkbox" value="2" /><label for="carriere-2-active"> Профессию 2</label><br />
+						<select class="carriere" id="carriere-2"></select>
+					</div>
+					<span class="description-carriere"></span>
+					<ul class="talents">
+						<li><span class="icone-talent" id="icone-talent-2-0"></span><span class="talent"></span> <label
+							for="talent-2-0">уровня </label><select id="talent-2-0" class="s-talent"></select><span id="detail-talent-2-0"></span></li>
+						<li><span class="icone-talent" id="icone-talent-2-1"></span><span class="talent"></span> <label
+							for="talent-2-1">уровня </label><select id="talent-2-1" class="s-talent"></select><span id="detail-talent-2-1"></span></li>
+						<li><span class="icone-talent" id="icone-talent-2-2"></span><span class="talent"></span> <label
+							for="talent-2-2">уровня </label><select id="talent-2-2" class="s-talent"></select><span id="detail-talent-2-2"></span></li>
+						<li><span class="icone-talent" id="icone-talent-2-3"></span><span class="talent"></span> <label
+							for="talent-2-3">уровня </label><select id="talent-2-3" class="s-talent"></select><span id="detail-talent-2-3"></span></li>
+						<li><span class="icone-talent" id="icone-talent-2-4"></span><span class="talent"></span> <label
+							for="talent-2-4">уровня </label><select id="talent-2-4" class="s-talent"></select><span id="detail-talent-2-4"></span></li>
+					</ul>
+				</div>
+				<div id="c3">
+					<div class="carriere">
+						<div id="icone-c3" class="icone-carriere"></div>
+						<input id="carriere-3-active" type="checkbox" value="3" /><label for="carriere-3-active"> Профессию 3</label><br />
+						<select class="carriere" id="carriere-3"></select>
+					</div>
+					<span class="description-carriere"></span>
+					<ul class="talents">
+						<li><span class="icone-talent" id="icone-talent-3-0"></span><span class="talent"></span> <label
+							for="talent-3-0">уровня </label><select id="talent-3-0" class="s-talent"></select><span id="detail-talent-3-0"></span></li>
+						<li><span class="icone-talent" id="icone-talent-3-1"></span><span class="talent"></span> <label
+							for="talent-3-1">уровня </label><select id="talent-3-1" class="s-talent"></select><span id="detail-talent-3-1"></span></li>
+						<li><span class="icone-talent" id="icone-talent-3-2"></span><span class="talent"></span> <label
+							for="talent-3-2">уровня </label><select id="talent-3-2" class="s-talent"></select><span id="detail-talent-3-2"></span></li>
+						<li><span class="icone-talent" id="icone-talent-3-3"></span><span class="talent"></span> <label
+							for="talent-3-3">уровня </label><select id="talent-3-3" class="s-talent"></select><span id="detail-talent-3-3"></span></li>
+						<li><span class="icone-talent" id="icone-talent-3-4"></span><span class="talent"></span> <label
+							for="talent-3-4">уровня </label><select id="talent-3-4" class="s-talent"></select><span id="detail-talent-3-4"></span></li>
+					</ul>
+				</div>
+			</fieldset>
+		</form>
+	</span>
+
+	<div id="prepied"></div>
+	<div id="pied"/>
+</body>
+</html>

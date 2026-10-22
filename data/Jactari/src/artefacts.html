@@ -1,0 +1,116 @@
+<!-- 
+	Created by Jactari
+	Updated by Aspirin and Aendawyn
+	Maintained by Aendawyn
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	
+-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" dir="ltr">
+<head>
+    <title>Magasin d'artéfacts | MMHK | Jactari</title>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml;charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="fr" />
+    <meta name="description" content="Liste des artéfacts du jeu Might and Magic: Heroes Kingdoms" />
+    <meta name="keywords" content="artéfact,artéfacts,magasin,MMHK,HOMMK,might,magic,heroes,kingdoms,jactari" />
+    <script type="text/javascript">
+    var _base_url = '';
+    var _page = 'artéfacts';
+    var _faction = null;
+    var _ecole = null;
+    var _categorie = null;
+    var _artefact = null;
+    var _batiment = null;
+    var _creature = null;
+    var _sort = null;
+    </script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jq-1.4.2.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jq-ui-1.8.autocomplete.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.general.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.artefacts.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/fonctions.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/images.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/permalien.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/langue-fr.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/artefacts.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <link title="Artefakte Depot | MMHK | Jactari" type="application/xhtml+xml" rel="alternate" hreflang="de" href="Artefakte.html" />
+    <link title="Artifacts Warehouse | MMHK | Jactari" type="application/xhtml+xml" rel="alternate" hreflang="en" href="artifacts.html" />
+    <link title="Магазин артефактов | MMHK | Jactari" type="application/xhtml+xml" rel="alternate" hreflang="ru" href="artifacts_ru.html" />
+    <link rel="stylesheet" href="styles/artefacts.style.css" type="text/css" />
+    <link rel="stylesheet" href="styles/navigation-2.css" type="text/css" />
+    <link rel="stylesheet" href="styles/jq-ui-1.8.css" type="text/css" />
+    <link rel="shortcut icon" href="images/icone-artefact.png" type="image/png" />
+    <meta name="viewport" content="width=device-width" />
+</head>
+<body id="page-artefacts">
+	<div id="entete">
+		<h1>
+			Magasin d'artéfacts pour <a href="fr.html" hreflang="fr"><abbr
+				title="Might and Magic: Heroes Kingdoms">MMHK</abbr> par Jactari</a>
+		</h1>
+		<p id="version"></p>
+		<ul id="navigation">
+			<li><a href="heros.html" hreflang="fr">Héros</a></li>
+			<li><span>Artéfacts</span></li>
+			<li><a href="batiments.html" hreflang="fr">Bâtiments</a></li>
+			<li><a href="creatures_fr.html" hreflang="fr">Créatures</a></li>
+			<li><a href="sorts.html" hreflang="fr">Sorts</a></li>
+			<li><a href="combat.html" hreflang="fr">Combat</a></li>
+		</ul>
+		<ul id="choix-langue">
+			<li><a href="Artefakte.html" hreflang="de" title="deutsch">de</a></li>
+			<li><a href="artifacts.html" hreflang="en" title="english">en</a></li>
+			<li><a href="artifacts_ru.html" hreflang="ru" title="русский">ru</a></li>
+		</ul>
+	</div>
+	<div id="javascript-desactive">
+		L'utilisation de cet outil nécessite que vous autorisiez l'exécution
+		du javascript dans votre navigateur.<br />(Firefox : Outils &gt;
+		Options &gt; Contenu &gt; Activer JavaScript ; Opera : Outils &gt;
+		Préférences rapides &gt; Activer le Javascript.)
+	</div>
+	<span id="conteneur" class="cache">
+		<form>
+			<fieldset id="filtres">
+				<legend>Filtrer</legend>
+				<button id="filtrer">Lister les artéfacts</button>
+				de <label for="filtre-faction">faction </label> <select
+					id="filtre-faction"></select>, de <label for="filtre-niveau">niveau
+				</label> <select id="filtre-niveau"></select>, d'<label for="filtre-slot">emplacement
+				</label> <select id="filtre-slot"></select>, ayant un <label
+					for="filtre-effet">effet </label> <select id="filtre-effet"></select>,
+				in <label for="filtre-set">set </label> <select id="filtre-set"></select>
+			</fieldset>
+			<fieldset id="tris">
+				<legend>Ordonner</legend>
+				<button id="ordonner">Trier les artéfacts</button>
+				<input type="checkbox" id="tri-nom" /> <label for="tri-nom">
+					par nom</label> <input type="checkbox" id="tri-faction" /> <label
+					for="tri-faction"> par faction</label>, <input type="checkbox"
+					id="tri-niveau" /> <label for="tri-niveau"> par niveau</label>, <input
+					type="checkbox" id="tri-slot" /> <label for="tri-slot">
+					par emplacement</label>
+			</fieldset>
+		</form>
+
+		<table id="liste-artefacts"></table>
+	</span>
+
+	<div id="prepied"></div>
+	<div id="pied"/>
+</body>
+</html>

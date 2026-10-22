@@ -1,0 +1,142 @@
+/* 
+	Created by Jactari
+	Updated by Aspirin and Aendawyn
+	Maintained by Aendawyn
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	
+*/
+
+form,table {
+	margin: auto;
+	width: 75%;
+}
+
+form {
+	font-size: 0.8em;
+	text-align: left;
+}
+
+p {
+	text-align: center;
+}
+
+select,input[type=submit] {
+	font-family: verdana, sans-serif;
+	font-size: 1em;
+	text-align: center;
+}
+
+table#liste-batiments {
+	background: transparent;
+	border-collapse: collapse;
+}
+
+caption {
+	font-weight: bold;
+	padding: 1em;
+}
+
+#liste-batiments tr {
+	background: transparent;
+}
+
+#liste-batiments tr.impair {
+	background: #ddd;
+}
+
+#liste-batiments.general tbody tr:hover,.general tr:hover td.prerequis,.general tr.impair:hover td.prerequis
+	{
+	background: #fcc;
+}
+
+th.prerequis {
+	background: #ddd;
+}
+
+td.nom {
+	padding-right: 1em;
+	text-align: right;
+}
+
+td.faction {
+	text-align: center;
+	padding: 0 1em;
+}
+
+td.niveau,td.slot,td.type {
+	text-align: center;
+	padding: 0 1em;
+}
+
+td.niveau {
+	padding: 0 1em;
+}
+
+td.effets {
+	font-size: 0.75em;
+	text-align: left;
+}
+
+td.description {
+	font-size: 0.8em;
+}
+
+td.duree,td.domination,td.cout {
+	text-align: right;
+	white-space: nowrap;
+}
+
+td.duree {
+	padding-left: 1em;
+}
+
+td.domination {
+	padding-right: 1em;
+}
+
+td.cout {
+	line-height: 18px;
+	margin-right: 6px;
+	white-space: nowrap;
+}
+
+td.cout img {
+	display: inline-block;
+	vertical-align: middle;
+}
+
+td.prerequis {
+	background: #ddd;
+}
+
+tr.impair td.prerequis {
+	background: #ccc;
+}
+
+p select+label {
+	margin-left: 1em;
+}
+
+/*label[for="modificateur-construction"]*/
+#modificateur-construction,#contremaitre {
+	/*
+    border-color: #f00;
+    border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-style: solid;
+    border-width: 1px;
+    */
+	
+}

@@ -1,0 +1,108 @@
+/* 
+	Created by Jactari
+	Updated by Aspirin and Aendawyn
+	Maintained by Aendawyn
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	
+*/
+
+form,table {
+	margin: auto;
+	width: 75%;
+}
+
+form {
+	font-size: 0.8em;
+	text-align: left;
+}
+
+p {
+	text-align: center;
+}
+
+select,input[type=submit] {
+	font-family: verdana, sans-serif;
+	font-size: 1em;
+	text-align: center;
+}
+
+table#liste-artefacts {
+	border-collapse: collapse;
+	vertical-align: middle;
+}
+
+caption {
+	font-weight: bold;
+	padding: 1em;
+}
+
+tbody tr:nth-child(odd) {
+	background: #ddd;
+}
+
+.general tbody tr:hover {
+	background: #fcc;
+}
+
+td {
+	vertical-align: middle;
+}
+
+td.nom {
+	padding-right: 1em;
+	text-align: right;
+}
+
+td.icone {
+	vertical-align: middle;
+}
+
+td.icone img {
+	height: 37px;
+	width: 36px;
+}
+
+td.faction {
+	text-align: center;
+	padding: 0 1em;
+}
+
+td.niveau,td.slot,td.type,td.set {
+	text-align: center;
+	padding: 0 1em;
+}
+
+td.niveau {
+	padding: 0 1em;
+}
+
+td.effets {
+	font-size: 0.75em;
+	text-align: left;
+}
+
+span.valeur-effet {
+	color: #080;
+}
+
+#remerciements {
+	font-size: 0.75em;
+	margin-top: 2em;
+	text-align: center;
+}
+
+#remerciements span {
+	border-bottom: 1px dashed #f00;
+}

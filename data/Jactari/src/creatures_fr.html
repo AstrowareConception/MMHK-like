@@ -1,0 +1,119 @@
+<!-- 
+	Created by Jactari
+	Updated by Aspirin and Aendawyn
+	Maintained by Aendawyn
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	
+-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="fr" dir="ltr">
+<head>
+    <title>Recensement des créatures | MMHK | Jactari</title>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml;charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="fr" />
+    <meta name="description" content="Liste des créatures du jeu Might and Magic: Heroes Kingdoms" />
+    <meta name="keywords" content="créature,créatures,recensement,troupe,troupes,MMHK,HOMMK,might,magic,heroes,kingdoms,jactari" />
+    <script type="text/javascript">
+    var _base_url = '';
+    var _page = '';
+    var _faction = null;
+    var _ecole = null;
+    var _categorie = null;
+    var _artefact = null;
+    var _batiment = null;
+    var _creature = null;
+    var _sort = null;
+    </script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jq-1.4.2.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jq-ui-1.8.autocomplete.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.general.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.creatures.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/fonctions.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/images.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/permalien.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/langue-fr.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/creatures.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <link title="Kreaturen Zensus | MMHK | Jactari" type="application/xhtml+xml" rel="alternate" hreflang="de" href="Kreaturen.html" />
+    <link title="Creatures Census | MMHK | Jactari" type="application/xhtml+xml" rel="alternate" hreflang="en" href="creatures.html" />
+    <link title="Перепись тварей | MMHK | Jactari" type="application/xhtml+xml" rel="alternate" hreflang="ru" href="creatures_ru.html" />
+    <link rel="stylesheet" href="styles/creatures.style.css" type="text/css" />
+    <link rel="stylesheet" href="styles/navigation-2.css" type="text/css" />
+    <link rel="stylesheet" href="styles/jq-ui-1.8.css" type="text/css" />
+    <link rel="shortcut icon" href="images/icone-troupes.png" type="image/png" />
+    <meta name="viewport" content="width=device-width" />
+</head>
+<body id="page-creatures">
+	<div id="entete">
+		<h1>
+			Recensement des créatures pour <a href="fr.html" hreflang="fr"><abbr title="Might and Magic: Heroes Kingdoms">MMHK</abbr>
+				par Jactari</a>
+		</h1>
+		<p id="version"></p>
+		<ul id="navigation">
+			<li><a href="heros.html" hreflang="fr">Héros</a></li>
+			<li><a href="artefacts.html" hreflang="fr">Artéfacts</a></li>
+			<li><a href="batiments.html" hreflang="fr">Bâtiments</a></li>
+			<li><span>Créatures</span></li>
+			<li><a href="sorts.html" hreflang="fr">Sorts</a></li>
+			<li><a href="combat.html" hreflang="fr">Combat</a></li>
+		</ul>
+		<ul id="choix-langue">
+			<li><a href="Kreaturen.html" hreflang="de" title="deutsch">de</a></li>
+			<li><a href="creatures.html" hreflang="en" title="english">en</a></li>
+			<li><a href="creatures_ru.html" hreflang="ru" title="русский">ru</a></li>
+		</ul>
+	</div>
+	<div id="javascript-desactive">
+		L'utilisation de cet outil nécessite que vous autorisiez l'exécution du javascript dans votre navigateur.<br />(Firefox :
+		Outils &gt; Options &gt; Contenu &gt; Activer JavaScript ; Opera : Outils &gt; Préférences rapides &gt; Activer le
+		Javascript.)
+	</div>
+	<span id="conteneur" class="cache">
+		<form>
+			<fieldset id="filtres">
+				<legend>Filtrer</legend>
+				<button id="filtrer">Lister les créatures</button>
+				de <label for="filtre-faction">faction </label> <select id="filtre-faction"></select>, de <label for="filtre-rang">rang
+				</label> <select id="filtre-rang"></select>, d'<label for="filtre-arme">arme </label> <select id="filtre-arme"></select><br />
+				<input type="checkbox" id="affichage-description" /> <label for="affichage-description"> Afficher les
+					descriptions</label> <input type="checkbox" id="affichage-armes-siege" /> <label for="affichage-armes-siege">
+					Afficher les armes de siège</label>
+			</fieldset>
+			<p class="asp_cout_res_rare">
+				<label for="cout-ressource-rare">Cout en or d'une ressource rare : </label> <select id="cout-ressource-rare">
+					<option value="1000">1 000</option>
+					<option value="1100">1 100</option>
+					<option value="1200">1 200</option>
+					<option value="1300">1 300</option>
+					<option value="1400">1 400</option>
+					<option value="1500">1 500</option>
+					<option value="1600">1 600</option>
+					<option value="1700">1 700</option>
+					<option value="1800">1 800</option>
+					<option value="1900">1 900</option>
+					<option value="2000">2 000</option>
+				</select>
+			</p>
+		</form>
+
+		<table id="liste-creatures"></table>
+	</span>
+
+	<div id="prepied"></div>
+	<div id="pied"/>
+</body>
+</html>

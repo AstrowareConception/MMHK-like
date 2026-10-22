@@ -1,0 +1,966 @@
+/* 
+	Created by Jactari
+	Updated by Aspirin and Aendawyn
+	Maintained by Aendawyn
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	
+*/
+
+select {
+	font-family: verdana, sans-serif;
+	text-align: left;
+}
+
+input {
+	text-align: right;
+}
+
+#conteneur {
+	margin: auto;
+	min-width: 932px;
+	width: 75%;
+}
+
+.important {
+	font-weight: bold;
+}
+
+span.plus {
+	color: #0a0;
+	font-weight: bold;
+}
+
+span.moins {
+	color: #a00;
+	font-weight: bold;
+}
+
+.cache {
+	display: none !important;
+}
+
+#situation {
+	margin: 0 0 1em 0;
+	padding: 0;
+}
+
+#situation label {
+	font-size: 0.8em;
+}
+
+#situation .competences-speciales>span {
+	/*color: #f00;*/
+	font-size: 0.8em;
+	/*font-weight: bold;*/
+}
+
+#situation select {
+	display: inline;
+}
+
+#situation select,#situation input {
+	font-size: 0.8em;
+}
+
+span.statut-heros {
+	padding-left: 2em;
+}
+
+#situation>div {
+	border-width: 0 1px 1px 1px;
+	border-style: solid;
+	border-color: #000;
+	margin: 0;
+}
+
+#situation-attaquant,#situation-defenseur {
+	padding-bottom: 1em;
+}
+
+#situation-attaquant,#victoire caption.attaquant,th.attaquant {
+	background-color: #fb7 !important;
+}
+
+#situation-defenseur,#victoire caption.defenseur,th.defenseur {
+	background-color: #ccf !important;
+}
+
+#situation h2 {
+	border-bottom: 1px solid #000;
+}
+
+span.inversion {
+	background: transparent url(../images/inversion.png) left center
+		no-repeat;
+	cursor: pointer;
+	padding-left: 15px;
+}
+
+#situation h3 {
+	font-size: 1em;
+	font-weight: bold;
+	margin: 0;
+	width: 100%;
+}
+
+#situation span.nom-heros {
+	margin-left: 1em;
+	display: none;
+}
+
+#situation input.nom-heros {
+	text-align: center;
+}
+
+#situation p {
+	margin: 0;
+	padding: 0;
+}
+
+#situation label {
+	
+}
+
+#situation ul {
+	float: left;
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+	text-align: left;
+}
+
+#situation li {
+	/*line-height: 1.5em;*/
+	margin-right: 1em;
+}
+
+#situation li:hover {
+	background: #ccc;
+}
+
+#situation ul.alliance li {
+	display: inline;
+	white-space: nowrap;
+}
+
+html> /**/ body #situation ul.alliance li {
+	display: inline-block;
+}
+
+#situation ul.alliance,#situation ul.heros-identite {
+	float: none;
+	margin-bottom: 1em;
+}
+
+/*#situation ul.alliance li,*/
+#situation ul.heros-identite li {
+	display: inline;
+}
+
+#situation div.guildes-specialisees,#situation div.competences-hereditaires,#situation div.competences-legendary,#situation div.voies {
+	text-align: left;
+}
+
+#situation div.competences-hereditaire {
+    display: inline-block;
+    text-align: center;
+    padding: 2px;
+}
+
+#situation div.guildes-specialisees span {
+	font-size: 0.8em;
+}
+
+#situation div.competences-speciales {
+	text-align: left;
+}
+
+.clear {
+	clear: both;
+}
+
+span.clear {
+	clear: both;
+	display: block;
+	height: 0;
+	width: 0;
+}
+
+table#combat,table#pertes,table#rencontre,table#experience,table#heros-attaquant,table#avertissements,table#magie,table#victoire,table#butin
+	{
+	border-collapse: collapse;
+	/*border: 1px solid #f00;*/
+	border-spacing: 0;
+	margin-bottom: 1em;
+	width: 100%;
+}
+
+table#avertissements,table#avertissements thead {
+	color: #f00;
+}
+
+#avertissements thead {
+	display: none;
+}
+
+caption,h2 {
+	border: 1px solid #000;
+	border-bottom: none;
+	/*font-size: 0.8em;*/
+	font-size: 1em;
+	font-weight: bold;
+	margin: 0;
+	padding: 0;
+}
+
+/*caption, x:-moz-any-link, x:default
+{
+    border-bottom: 1px solid #000;
+    margin-left: -1px;
+}*/
+#rencontre caption,#magie caption,#victoire caption,#pertes caption,#combat caption,#avertissements caption,#experience caption,h2,#butin caption
+	{
+	cursor: pointer;
+}
+
+caption.plus,h2.plus {
+	background: transparent url(../images/moins.png) 3px center no-repeat;
+	color: #000;
+}
+
+caption.moins,h2.moins {
+	background: #000 url(../images/plus.png) 3px center no-repeat;
+	color: #fff;
+}
+
+caption.plus-v {
+	background: url(../images/moins.png) 3px center no-repeat;
+	border-bottom: none;
+}
+
+caption.moins-v {
+	background: url(../images/plus.png) 3px center no-repeat;
+	border-bottom: 1px solid #000;
+}
+
+tbody tr.impair,#rencontre tbody tr:nth-child(odd),#pertes tbody tr:nth-child(odd),#experience tbody tr:nth-child(odd),#avertissements tbody tr:nth-child(odd)
+	{
+	background: #ddd;
+}
+
+tbody tr:hover,#conteneur tbody tr:hover {
+	background: #cfc;
+}
+
+th {
+	border: 1px solid #000;
+}
+
+td {
+	border: 1px solid #000;
+	font-size: 0.8em;
+}
+
+#rencontre select {
+	font-size: 1em;
+}
+
+#rencontre td {
+	padding-bottom: 0;
+	padding-top: 0;
+}
+
+td.unite-a,td.unite-d {
+	height: 22px;
+	padding: 0;
+}
+
+td.nombre-a,td.nombre-d,td.unite-a,td.unite-d {
+	white-space: nowrap;
+}
+
+td.unite-a img,td.unite-d img,td.unite-a select,td.unite-d select,div.fleches-peloton,img.croix
+	{
+	display: inline;
+	vertical-align: middle;
+}
+
+td.nombre-a img,td.nombre-d img,td.nombre-a input,td.nombre-d input {
+	vertical-align: middle;
+}
+
+td.nombre-a img,td.nombre-d img {
+	cursor: pointer;
+	margin: 0 2px;
+}
+
+#rencontre div.fleches-peloton {
+	height: 22px;
+	margin: 0 2px;
+	width: 11px;
+}
+
+#rencontre img.croix {
+	cursor: pointer;
+}
+
+#rencontre img.fleche {
+	cursor: pointer;
+	float: left;
+	height: 11px;
+	margin: 0;
+	width: 11px;
+}
+
+/* Adaptation unit�s arm�es pour IE */
+#rencontre div.fleches-peloton {
+	display: inline;
+	float: left;
+}
+
+html> /**/ body #rencontre div.fleches-peloton {
+	display: inline-block;
+	float: none;
+}
+
+#rencontre img.croix,#rencontre select,#rencontre img.image-unite-armees
+	{
+	float: left;
+}
+
+html> /**/ body #rencontre img.croix,html> /**/ body #rencontre select,html>
+	/**/ body #rencontre img.image-unite-armees {
+	float: none;
+}
+/* Fin Adaptation unit�s arm�es pour IE */
+#rencontre select option.f0 {
+	background-color: #ccf; /* acad�mie */
+}
+
+#rencontre select option.f1 {
+	background-color: #cfc; /* havre */
+}
+
+#rencontre select option.f2 {
+	background-color: #fcc; /* inferno */
+}
+
+#rencontre select option.f3 {
+	background-color: #ccc; /* n�cropole */
+}
+
+#rencontre select option.f4 {
+	background-color: #8d557c; /* sylvan */
+}
+
+.image-unite-armees,.choix-creature {
+	cursor: pointer;
+}
+
+#choix-creatures {
+	background: #fff;
+	border: 1px solid #000;
+	border-radius: 10px;
+	-moz-border-radius: 10px;
+	padding: 10px;
+	position: absolute;
+}
+
+#choix-creatures table {
+	border-collapse: collapse;
+}
+
+#choix-creatures table,#choix-creatures td,#choix-creatures img {
+	border-style: none;
+}
+
+#choix-creatures tbody tr:hover {
+	background: inherit;
+}
+
+#choix-creatures td {
+	padding: 0;
+}
+
+#description-creature {
+	background: #eed;
+	border: 1px solid #000;
+	opacity: 0.9;
+	padding: 0.5em;
+	position: absolute;
+	text-align: left;
+	/*width: 300px;*/
+}
+
+#description-creature .nom {
+	font-weight: bold;
+}
+
+#description-creature .proprietes {
+	font-style: italic;
+}
+
+#rencontre input {
+	text-align: center;
+}
+
+#magie select option.e0 {
+	background-color: #cff; /* invocation */
+}
+
+#magie select option.e1 {
+	background-color: #eae; /* t�n�bres */
+}
+
+#magie select option.e2 {
+	background-color: #ffc; /* lumi�re */
+}
+
+#magie select option.e3 {
+	background-color: #faa; /* destruction */
+}
+
+img.arme {
+	display: block;
+	margin: auto;
+	height: 22px;
+	width: 22px;
+}
+
+tr.sort img.arme {
+	display: inline-block;
+	margin: 0 2px 0 2px;
+}
+
+#combat tbody tr {
+	height: 50px;
+}
+
+html> /**/ body #combat tbody tr {
+	height: 52px;
+}
+
+#combat td.attaquant,#combat td.defenseur {
+	border-width: 1px 0;
+}
+
+#combat td.troupe {
+	height: 52px;
+	padding: 0;
+	width: 51px;
+}
+
+#combat tr.moral-eleve td,#combat tr.resistance-magique td,#combat tr.tir-de-barrage td,#combat tr.bombardement td,#combat tr.relever-les-morts td,#combat tr.resurrection td,#combat tr.special-antimagie td,#combat tr.special-baliste td,#combat tr.special-pieges td
+	{
+	color: #fff;
+	/*font-size: 1.5em;*/
+	font-weight: bold;
+	height: 62px;
+}
+
+#combat td span.petit {
+	/*font-size: 0.5em;*/
+	padding-left: 1em;
+}
+
+#combat tr.relever-les-morts.attaquant td {
+	background: #003 url(../images/fond-heredite.jpg) left -186px no-repeat;
+	padding-left: 220px;
+	text-align: left;
+}
+
+#combat tr.relever-les-morts.defenseur td {
+	background: #003 url(../images/fond-heredite.jpg) right -558px no-repeat;
+	padding-right: 220px;
+	text-align: right;
+}
+
+#combat tr.resurrection.attaquant td {
+	background: #003 url(../images/fond-heredite.jpg) left -124px no-repeat;
+	padding-left: 220px;
+	text-align: left;
+}
+
+#combat tr.resurrection.defenseur td {
+	background: #003 url(../images/fond-heredite.jpg) right -496px no-repeat;
+	padding-right: 220px;
+	text-align: right;
+}
+
+#combat tr.moral-eleve.attaquant td {
+	background: #003 url(../images/fond-heredite.jpg) left -248px no-repeat;
+	padding-left: 380px;
+	text-align: left;
+}
+
+#combat tr.moral-eleve.defenseur td {
+	background: #003 url(../images/fond-heredite.jpg) right -620px no-repeat;
+	padding-right: 380px;
+	text-align: right;
+}
+
+#combat tr.tir-de-barrage.attaquant td {
+	background: #003 url(../images/fond-heredite.jpg) left 0px no-repeat;
+	padding-left: 220px;
+	text-align: left;
+}
+
+#combat tr.tir-de-barrage.defenseur td {
+	background: #003 url(../images/fond-heredite.jpg) right -372px no-repeat;
+	padding-right: 220px;
+	text-align: right;
+}
+
+#combat tr.special-baliste.attaquant td {
+	background: #fe9285 url(../images/fond-competences-speciales.jpg) left
+		-124px no-repeat;
+	color: #000;
+	padding-left: 400px;
+	text-align: left;
+}
+
+#combat tr.special-baliste.defenseur td {
+	background: #fe9285 url(../images/fond-competences-speciales.jpg) right
+		0px no-repeat;
+	color: #000;
+	padding-right: 400px;
+	text-align: right;
+}
+
+#combat tr.special-antimagie.attaquant td {
+	background: #fe9285 url(../images/fond-competences-speciales.jpg) left
+		-186px no-repeat;
+	color: #000;
+	padding-left: 240px;
+	text-align: left;
+}
+
+#combat tr.special-antimagie.defenseur td {
+	background: #fe9285 url(../images/fond-competences-speciales.jpg) right
+		-62px no-repeat;
+	color: #000;
+	padding-right: 240px;
+	text-align: right;
+}
+
+#combat tr.special-pieges.attaquant td {
+	background: #fe9285 url(../images/fond-competences-speciales.jpg) left
+		-310px no-repeat;
+	color: #000;
+	padding-left: 80px;
+	text-align: left;
+}
+
+#combat tr.special-pieges.defenseur td {
+	background: #fe9285 url(../images/fond-competences-speciales.jpg) right
+		-248px no-repeat;
+	color: #000;
+	padding-right: 80px;
+	text-align: right;
+}
+
+#combat tr.bombardement.defenseur td {
+	background: #003 url(../images/fond-heredite.jpg) right -434px no-repeat;
+	padding-right: 220px;
+	text-align: right;
+}
+
+#combat tr.resistance-magique.attaquant td {
+	background: #003 url(../images/fond-heredite.jpg) left -310px no-repeat;
+	padding-left: 380px;
+	text-align: left;
+}
+
+#combat tr.resistance-magique.defenseur td {
+	background: #003 url(../images/fond-heredite.jpg) right -682px no-repeat;
+	padding-right: 380px;
+	text-align: right;
+}
+
+#combat tr.sort.attaquant.dark td.issue-sort {
+	background: #36183f url(../images/fonds-sorts.jpg) left -156px no-repeat;
+	color: #fff;
+}
+
+#combat tr.sort.defenseur.dark td.issue-sort {
+	background: #36183f url(../images/fonds-sorts.jpg) right -364px
+		no-repeat;
+	color: #fff;
+}
+
+#combat tr.sort.attaquant.summon td.issue-sort {
+	background: #007a7f url(../images/fonds-sorts.jpg) left 0 no-repeat;
+	color: #fff;
+}
+
+#combat tr.sort.defenseur.summon td.issue-sort {
+	background: #007a7f url(../images/fonds-sorts.jpg) right -208px
+		no-repeat;
+	color: #fff;
+}
+
+#combat tr.sort.summon span {
+	background: url(../images/fond-noir-translucide.png) repeat;
+}
+
+#combat tr.sort.attaquant.light td.issue-sort {
+	background: #f3d101 url(../images/fonds-sorts.jpg) left -52px no-repeat;
+	color: #000;
+}
+
+#combat tr.sort.defenseur.light td.issue-sort {
+	background: #f3d101 url(../images/fonds-sorts.jpg) right -260px
+		no-repeat;
+	color: #000;
+}
+
+#combat tr.sort.attaquant.destruction td.issue-sort {
+	background: #d00 url(../images/fonds-sorts.jpg) left -104px no-repeat;
+	color: #fff;
+}
+
+#combat tr.sort.defenseur.destruction td.issue-sort {
+	background: #d00 url(../images/fonds-sorts.jpg) right -312px no-repeat;
+	color: #fff;
+}
+
+#combat tr.sort.destruction span {
+	background: url(../images/fond-noir-translucide.png) repeat;
+}
+
+#combat tr.sort td span,#combat tr.sort td img {
+	vertical-align: middle;
+}
+
+#combat tr.sort.attaquant td img.icone-sort {
+	cursor: pointer;
+	margin: 0 40px 0 12px;
+}
+
+#combat tr.sort.defenseur td img.icone-sort {
+	cursor: pointer;
+	margin: 0 12px 0 40px;
+}
+
+#combat .impair th.tour {
+	background: #ddd;
+	color: #000;
+}
+
+#combat th.tour {
+	background: #fff;
+	color: #000;
+}
+
+#combat td.issue-sort {
+	border-width: 1px 1px 1px 0;
+}
+
+#combat td.issue-sort.attaquant {
+	text-align: left;
+}
+
+#combat td.issue-sort.defenseur {
+	text-align: right;
+}
+
+#combat td.issue {
+	cursor: pointer;
+}
+
+#combat td.massacre {
+	background: #f84;
+}
+
+#combat td.disperse {
+	color: #f00;
+}
+
+#combat div.barre {
+	border: 1px solid #000;
+	margin: 0 auto;
+	padding: 0;
+	text-align: right;
+}
+
+#combat div.barre.attaquant {
+	margin-bottom: 4px;
+	margin-top: 4px;
+}
+
+#combat div.barre.sort,#combat div.details-sort {
+	display: inline-block;
+	/*float: right;*/
+	vertical-align: middle;
+}
+
+#combat td.attaquant div.details-sort {
+	margin-left: 1em;
+}
+
+#combat td.defenseur div.details-sort {
+	margin-right: 1em;
+}
+
+#combat span.barre {
+	display: inline-block;
+	margin: 0;
+	padding: 0;
+	vertical-align: top !important;
+}
+
+#combat span.barre.base {
+	background: #aaa !important;
+}
+
+#combat span.barre.arme {
+	background: #4f4;
+}
+
+#combat span.barre.heros {
+	background: #f44;
+}
+
+#combat span.barre.special-pieges {
+	background: #f84;
+}
+
+#combat span.barre.fortifications {
+	background: #44f !important;
+}
+
+#combat span.barre.bonus-arme-sort {
+	background: #fff !important;
+}
+
+#combat span.barre.malus-arme-sort {
+	background: #000 !important;
+}
+
+#combat span.barre.base-magie {
+	background: #00f !important;
+}
+
+#combat span.barre.arte-pc-mag {
+	background: #88f !important;
+}
+
+#combat span.barre.instinct {
+	background: #00f !important;
+}
+
+#combat span.barre.arte-p-mag {
+	background: #88f !important;
+}
+
+#combat span.barre.expert {
+	background: #f00 !important;
+}
+
+#combat span.barre.guildes {
+	background: #f88 !important;
+}
+
+#combat span.barre.arte-pc-eff {
+	background: #f00 !important;
+}
+
+#combat span.barre.maitrise {
+	background: #f88 !important;
+}
+
+#combat span.barre.resistance {
+	background: #300 !important;
+}
+
+#combat span.barre.antimagie {
+	background: #300 !important;
+}
+
+#victoire caption {
+	font-size: 2em;
+	font-weight: bold;
+	padding-bottom: 0.2em;
+}
+
+#victoire td {
+	text-align: center;
+	/*vertical-align: middle;*/
+	width: 50%;
+}
+
+#pertes th[colspan="7"] {
+	width: 50%;
+}
+
+#pertes td,#butin td {
+	vertical-align: baseline;
+}
+
+#pertes td img,#butin td img {
+	vertical-align: middle;
+}
+
+#pertes td {
+	padding: 0 1em;
+	text-align: right;
+	white-space: nowrap;
+}
+
+#pertes td.pertes {
+	color: #f00;
+}
+
+span.texte-barre {
+	text-decoration: line-through;
+}
+
+#pertes th.peloton {
+	text-align: center;
+}
+
+#pertes td.unite {
+	padding-left: 0;
+	padding-right: 0.5em;
+	text-align: left;
+	width: 10%;
+}
+
+#pertes td.unite img {
+	margin-right: 0.5em;
+}
+
+#pertes tr.totaux {
+	font-weight: bold;
+	vertical-align: baseline !important;
+}
+
+#experience th.droite {
+	padding-left: 0.5em;
+	padding-right: 0.5em;
+	text-align: center;
+}
+
+#experience td {
+	width: 40%;
+}
+
+@media only screen and (max-device-width:480px) {
+	html,body {
+		width: 100%;
+	}
+	#conteneur {
+		border: 1px solid #f00;
+		margin: 0;
+		max-width: 200px;
+		width: 100%;
+	}
+	#situation,#rencontre {
+		margin: 0 0 1em 0;
+		padding: 0;
+		width: 200px;
+	}
+	#situation label {
+		font-size: 0.8em;
+	}
+	#situation select {
+		display: inline;
+	}
+	#situation select,#situation input {
+		font-size: 0.8em;
+	}
+	span.statut-heros {
+		padding-left: 2em;
+	}
+	#situation>div {
+		border-width: 0 1px 1px 1px;
+		border-style: solid;
+		border-color: #000;
+		margin: 0;
+	}
+	#situation-attaquant,#situation-defenseur {
+		padding-bottom: 1em;
+	}
+	#situation-attaquant,#victoire caption.attaquant,th.attaquant {
+		background-color: #fb7 !important;
+	}
+	#situation-defenseur,#victoire caption.defenseur,th.defenseur {
+		background-color: #ccf !important;
+	}
+	#situation h2 {
+		border-bottom: 1px solid #000;
+	}
+	span.inversion {
+		background: transparent url(../images/inversion.png) left center
+			no-repeat;
+		cursor: pointer;
+		padding-left: 15px;
+	}
+	#situation h3 {
+		font-size: 1em;
+		font-weight: bold;
+		margin: 0;
+		width: 100%;
+	}
+	#situation span.nom-heros {
+		margin-left: 1em;
+	}
+	#situation input.nom-heros {
+		text-align: center;
+	}
+	#situation p {
+		margin: 0;
+		padding: 0;
+	}
+	#situation label {
+		
+	}
+	#situation ul {
+		float: left;
+		list-style-type: none;
+		margin: 0;
+		padding: 0;
+		text-align: left;
+	}
+	#situation li {
+		/*line-height: 1.5em;*/
+		margin-right: 1em;
+	}
+	#situation li:hover {
+		background: #ccc;
+	}
+	#situation ul.alliance li {
+		display: inline;
+		white-space: nowrap;
+	}
+	html> /**/ body #situation ul.alliance li {
+		display: inline-block;
+	}
+	#situation ul.alliance,#situation ul.heros-identite {
+		float: none;
+		margin-bottom: 1em;
+	}
+	/*#situation ul.alliance li,*/
+	#situation ul.heros-identite li {
+		display: inline;
+	}
+	#situation div.guildes-specialisees,#situation div.competences-hereditaires,#situation div.voies
+		{
+		text-align: left;
+	}
+	#situation div.guildes-specialisees span {
+		font-size: 0.8em;
+	}
+}

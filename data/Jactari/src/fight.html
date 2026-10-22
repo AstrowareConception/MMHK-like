@@ -1,0 +1,353 @@
+<!-- 
+	Created by Jactari
+	Updated by Aspirin and Aendawyn
+	Maintained by Aendawyn
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	
+-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" dir="ltr">
+<head>
+    <title>Fight Simulator | MMHK | Jactari</title>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml;charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="en" />
+    <meta name="description" content="Tool allowing to emulate a fight for the game Might and Magic: Heroes Kingdoms" />
+    <meta name="keywords" content="simulator,fight,encounter,calculator,MMHK,HOMMK,might,magic,heroes,kingdoms,jactari" />
+    <script type="text/javascript">
+    var _base_url = '';
+    var _page = 'fight';
+    var _faction = null;
+    var _ecole = null;
+    var _categorie = null;
+    var _artefact = null;
+    var _batiment = null;
+    var _creature = null;
+    var _sort = null;
+    </script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jq-1.4.2.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jq-ui-1.8.autocomplete.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jquery.cookie.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.general.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.heros.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.artefacts.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.creatures.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.sorts.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/fonctions.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/images.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/permalien.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/langue-en.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/combat.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <link title="Simulateur de combat | MMHK | Jactari" type="application/xhtml+xml" rel="alternate" hreflang="fr" href="combat.html" />
+    <link title="Kampf Simulator | MMHK | Jactari" type="application/xhtml+xml" rel="alternate" hreflang="de" href="Kampf.html" />
+    <link title="Симулятор боя | MMHK | Jactari" type="application/xhtml+xml" rel="alternate" hreflang="ru" href="fight_ru.html" />
+    <link rel="stylesheet" href="styles/combat.style.css" type="text/css" />
+    <link rel="stylesheet" href="styles/navigation-2.css" type="text/css" />
+    <link rel="stylesheet" href="styles/jq-ui-1.8.css" type="text/css" />
+    <link rel="shortcut icon" href="images/icone-combat.png" type="image/png" />
+    <meta name="viewport" content="width=device-width" />
+</head>
+<body id="page-combat">
+	<div id="entete">
+		<h1>
+			Fight Simulator for <a href="en.html" hreflang="en"><abbr title="Might and Magic: Heroes Kingdoms">MMHK</abbr> by
+				Jactari</a>
+		</h1>
+		<p id="version"></p>
+		<ul id="navigation">
+			<li><a href="hero.html" hreflang="en">Hero</a></li>
+			<li><a href="artifacts.html" hreflang="en">Artifacts</a></li>
+			<li><a href="buildings.html" hreflang="en">Buildings</a></li>
+			<li><a href="creatures.html" hreflang="en">Creatures</a></li>
+			<li><a href="spells.html" hreflang="en">Spells</a></li>
+			<li><span>Fight</span></li>
+		</ul>
+		<ul id="choix-langue">
+			<li><a href="combat.html" hreflang="fr" title="français">fr</a></li>
+			<li><a href="Kampf.html" hreflang="de" title="deutsch">de</a></li>
+			<li><a href="fight_ru.html" hreflang="ru" title="русский">ru</a></li>
+		</ul>
+	</div>
+	<div id="javascript-desactive">
+		To use this tool, you should enable javascript in your browser.<br />(Firefox : Tools &gt; Options &gt; Content &gt;
+		Enable JavaScript ; Opera : Settings &gt; Quick Preferences &gt; Enable Javascript.)
+	</div>
+	<div id="lien-perm_div">
+		<p id="lien-permanent"></p>
+		<p id="lien-permanent_tiny"></p>
+		<p id="lien-permanent_tiny_text"></p>
+	</div>
+	<div id="conteneur" class="cache">
+		<div id="situation">
+			<h2 class="plus">Fighters</h2>
+			<div id="situation-attaquant">
+				<h3>
+					<span class="inversion" title="Invert">Attacker</span>
+				</h3>
+			</div>
+			<div id="situation-defenseur">
+				<h3>
+					<span class="inversion" title="Invert">Defender</span>
+				</h3>
+			</div>
+		</div>
+		<table id="rencontre">
+			<caption class="plus">Armies</caption>
+			<thead>
+				<tr>
+					<th colspan="4" class="attaquant"><span class="inversion" title="Invert">Attacker</span></th>
+					<th rowspan="2">Stack</th>
+					<th colspan="4" class="defenseur"><span class="inversion" title="Invert">Defender</span></th>
+				</tr>
+				<tr>
+					<th class="attaquant">Unit</th>
+					<th class="attaquant">Weapon</th>
+					<th class="attaquant">Number</th>
+					<th class="attaquant">Power</th>
+					<th class="defenseur">Power</th>
+					<th class="defenseur">Number</th>
+					<th class="defenseur">Weapon</th>
+					<th class="defenseur">Unit</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr id="peloton-1">
+					<td class="unite-a"></td>
+					<td class="arme-a"></td>
+					<td class="nombre-a"></td>
+					<td class="puissance-a"></td>
+					<th>1</th>
+					<td class="puissance-d"></td>
+					<td class="nombre-d"></td>
+					<td class="arme-d"></td>
+					<td class="unite-d"></td>
+				</tr>
+				<tr id="peloton-2">
+					<td class="unite-a"></td>
+					<td class="arme-a"></td>
+					<td class="nombre-a"></td>
+					<td class="puissance-a"></td>
+					<th>2</th>
+					<td class="puissance-d"></td>
+					<td class="nombre-d"></td>
+					<td class="arme-d"></td>
+					<td class="unite-d"></td>
+				</tr>
+				<tr id="peloton-3">
+					<td class="unite-a"></td>
+					<td class="arme-a"></td>
+					<td class="nombre-a"></td>
+					<td class="puissance-a"></td>
+					<th>3</th>
+					<td class="puissance-d"></td>
+					<td class="nombre-d"></td>
+					<td class="arme-d"></td>
+					<td class="unite-d"></td>
+				</tr>
+				<tr id="peloton-4">
+					<td class="unite-a"></td>
+					<td class="arme-a"></td>
+					<td class="nombre-a"></td>
+					<td class="puissance-a"></td>
+					<th>4</th>
+					<td class="puissance-d"></td>
+					<td class="nombre-d"></td>
+					<td class="arme-d"></td>
+					<td class="unite-d"></td>
+				</tr>
+				<tr id="peloton-5">
+					<td class="unite-a"></td>
+					<td class="arme-a"></td>
+					<td class="nombre-a"></td>
+					<td class="puissance-a"></td>
+					<th>5</th>
+					<td class="puissance-d"></td>
+					<td class="nombre-d"></td>
+					<td class="arme-d"></td>
+					<td class="unite-d"></td>
+				</tr>
+				<tr id="peloton-6">
+					<td class="unite-a"></td>
+					<td class="arme-a"></td>
+					<td class="nombre-a"></td>
+					<td class="puissance-a"></td>
+					<th>6</th>
+					<td class="puissance-d"></td>
+					<td class="nombre-d"></td>
+					<td class="arme-d"></td>
+					<td class="unite-d"></td>
+				</tr>
+				<tr id="peloton-7">
+					<td class="unite-a"></td>
+					<td class="arme-a"></td>
+					<td class="nombre-a"></td>
+					<td class="puissance-a"></td>
+					<th>7</th>
+					<td class="puissance-d"></td>
+					<td class="nombre-d"></td>
+					<td class="arme-d"></td>
+					<td class="unite-d"></td>
+				</tr>
+				<tr id="peloton-total">
+					<td class="unite-a"></td>
+					<td class="arme-a"></td>
+					<td class="nombre-a"></td>
+					<td class="puissance-a"></td>
+					<th>Total</th>
+					<td class="puissance-d"></td>
+					<td class="nombre-d"></td>
+					<td class="arme-d"></td>
+					<td class="unite-d"></td>
+				</tr>
+			</tbody>
+		</table>
+		<table id="magie">
+			<caption class="plus">Magic</caption>
+			<thead>
+				<tr>
+					<th colspan="2" class="attaquant">Attacker</th>
+					<th colspan="2" class="defenseur">Defender</th>
+				</tr>
+				<tr>
+					<th class="attaquant">Spell</th>
+					<th class="attaquant">Round</th>
+					<th class="defenseur">Spell</th>
+					<th class="defenseur">Round</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+		<table id="victoire">
+			<caption class="moins-v"></caption>
+			<thead class="cache">
+				<tr>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody class="cache">
+				<tr>
+					<th></th>
+				</tr>
+			</tbody>
+		</table>
+		<table id="avertissements">
+			<caption class="plus">Warning</caption>
+			<thead>
+				<tr>
+					<th>Message</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+		<table id="combat">
+			<caption class="plus">Fight</caption>
+			<thead>
+				<tr>
+					<th rowspan="2">Round</th>
+					<th colspan="5" class="attaquant">Attacker</th>
+					<th rowspan="2">Outcome</th>
+					<th colspan="5" class="defenseur">Defender</th>
+					<th rowspan="2">Round</th>
+				</tr>
+				<tr>
+					<th class="attaquant">Power</th>
+					<th class="attaquant">Number</th>
+					<th class="attaquant">Unit</th>
+					<th class="attaquant">Weapon</th>
+					<th class="attaquant">Losses</th>
+					<th class="defenseur">Losses</th>
+					<th class="defenseur">Weapon</th>
+					<th class="defenseur">Unit</th>
+					<th class="defenseur">Number</th>
+					<th class="defenseur">Power</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+		<table id="pertes">
+			<caption class="plus">Definitive losses</caption>
+			<thead>
+				<tr>
+					<th colspan="7" class="attaquant">Attacker</th>
+					<th></th>
+					<th colspan="7" class="defenseur">Defender</th>
+				</tr>
+				<tr>
+					<th rowspan="2" class="attaquant">Unit</th>
+					<th colspan="2" class="attaquant">Number</th>
+					<th colspan="2" class="attaquant">Power</th>
+					<th rowspan="2" class="attaquant">Losses<br />Gold Cost
+					</th>
+					<th rowspan="2" class="attaquant">Losses<br />Rare Cost
+					</th>
+					<th rowspan="2">Stack</th>
+					<th rowspan="2" class="defenseur">Unit</th>
+					<th colspan="2" class="defenseur">Number</th>
+					<th colspan="2" class="defenseur">Power</th>
+					<th rowspan="2" class="defenseur">Losses<br />Gold Cost
+					</th>
+					<th rowspan="2" class="defenseur">Losses<br />Rare Cost
+					</th>
+				</tr>
+				<tr>
+					<th class="attaquant">Initial</th>
+					<th class="attaquant">Lost</th>
+					<th class="attaquant">Initial</th>
+					<th class="attaquant">Lost</th>
+					<th class="defenseur">Initial</th>
+					<th class="defenseur">Lost</th>
+					<th class="defenseur">Initial</th>
+					<th class="defenseur">Lost</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+		<table id="experience">
+			<caption class="plus">Experience</caption>
+			<thead>
+				<tr>
+					<th class="attaquant">Attacker</th>
+					<th></th>
+					<th class="defenseur">Defender</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+	<div id="prepied"></div>
+	<div id="pied"/>
+</body>
+</html>

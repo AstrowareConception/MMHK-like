@@ -1,0 +1,193 @@
+<!-- 
+	Created by Jactari
+	Updated by Aspirin and Aendawyn
+	Maintained by Aendawyn
+
+	This program is free software: you can redistribute it and/or modify
+	it under the terms of the GNU General Public License as published by
+	the Free Software Foundation, either version 3 of the License, or
+	(at your option) any later version.
+	
+	This program is distributed in the hope that it will be useful,
+	but WITHOUT ANY WARRANTY; without even the implied warranty of
+	MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+	GNU General Public License for more details.
+	
+	You should have received a copy of the GNU General Public License
+	along with this program.  If not, see <http://www.gnu.org/licenses/>.
+	
+-->
+
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="de" dir="ltr">
+<head>
+    <title>Inkubator Helden | MMHK | Jactari</title>
+    <meta http-equiv="Content-Type" content="application/xhtml+xml;charset=UTF-8" />
+    <meta http-equiv="Content-Language" content="de" />
+    <meta name="description" content="Eigenschaften und Fertigkeiten des Helden" />
+    <meta name="keywords" content="held,helden,inkubator,MMHK,HOMMK,might,magic,heroes,kingdoms,jactari" />
+    <script type="text/javascript">
+    var _base_url = '';
+    var _page = 'Held';
+    var _faction = null;
+    var _ecole = null;
+    var _categorie = null;
+    var _artefact = null;
+    var _batiment = null;
+    var _creature = null;
+    var _sort = null;
+    </script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jq-1.4.2.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jq-ui-1.8.autocomplete.min.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/jquery.cookie.js"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.general.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.heros.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.artefacts.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/donnees.sorts.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/fonctions.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/images.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/permalien.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/langue-de.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <script type="text/javascript" charset="UTF-8" src="scripts/heros.min.js?version=##JACTARI-BUILD-LABEL##"></script>
+    <link title="Couveuse de héros | MMHK | Jactari" type="application/xhtml+xml" rel="alternate" hreflang="fr" href="heros.html" />
+    <link title="Hero Brooder | MMHK | Jactari" type="application/xhtml+xml" rel="alternate" hreflang="en" href="hero.html" />
+    <link title="Инкубатор героев | MMHK | Jactari" type="application/xhtml+xml" rel="alternate" hreflang="ru" href="hero_ru.html" />
+    <link rel="stylesheet" href="styles/heros.style.css" type="text/css" />
+    <link rel="stylesheet" href="styles/navigation-2.css" type="text/css" />
+    <link rel="stylesheet" href="styles/jq-ui-1.8.css" type="text/css" />
+    <link rel="shortcut icon" href="images/icone-heros.png" type="image/png" />
+    <meta name="viewport" content="width=device-width" />
+</head>
+<body id="page-heros">
+	<div id="entete">
+		<h1>
+			Inkubator Helden für <a href="de.html" hreflang="de"><abbr title="Might and Magic: Heroes Kingdoms">MMHK</abbr>
+				von Jactari</a>
+		</h1>
+		<p id="version"></p>
+		<ul id="navigation">
+			<li><span>Held</span></li>
+			<li><a href="Artefakte.html" hreflang="de">Artefakte</a></li>
+			<li><a href="Gebaude.html" hreflang="de">Gebäude</a></li>
+			<li><a href="Kreaturen.html" hreflang="de">Kreaturen</a></li>
+			<li><a href="Zauber.html" hreflang="de">Zauber</a></li>
+			<li><a href="Kampf.html" hreflang="de">Kampf</a></li>
+		</ul>
+		<ul id="choix-langue">
+			<li><a href="heros.html" hreflang="fr" title="français">fr</a></li>
+			<li><a href="hero.html" hreflang="en" title="english">en</a></li>
+			<li><a href="hero_ru.html" hreflang="ru" title="русский">ru</a></li>
+		</ul>
+	</div>
+	<div id="javascript-desactive">
+		[en] To use this tool, you should enable javascript in your browser.<br />(Firefox : Tools &gt; Options &gt; Content
+		&gt; Enable JavaScript ; Opera : Settings &gt; Quick Preferences &gt; Enable Javascript.)
+	</div>
+	<span id="conteneur" class="cache">
+		<div id="heros">
+			<div id="cadre-portrait">
+				<img src="images/unite.png" id="portrait" />
+			</div>
+			<div id="inventaire">
+				<div id="slot-0" class="slot" style="z-index: 8;"></div>
+				<div id="slot-1" class="slot" style="z-index: 7;"></div>
+				<div id="slot-2" class="slot" style="z-index: 6;"></div>
+				<div id="slot-3" class="slot" style="z-index: 5;"></div>
+				<div id="slot-4" class="slot" style="z-index: 4;"></div>
+				<div id="slot-5" class="slot" style="z-index: 3;"></div>
+				<div id="slot-6" class="slot" style="z-index: 2;"></div>
+				<div id="slot-7" class="slot" style="z-index: 1;"></div>
+			</div>
+			<div id="adm">
+				<img id="attaque-image" src="images/unite.png" alt="Angriff" title="Angriff" /><span class="c2" id="attaque-valeur"></span>
+				<img id="defense-image" src="images/unite.png" alt="Verteidigung" title="Verteidigung" /><span class="c2"
+					id="defense-valeur"></span> <img id="magie-image" src="images/unite.png" alt="Magie" title="Magie" /><span
+					class="c2" id="magie-valeur"></span> <img id="experience-image" src="images/unite.png" alt="Erfahrung"
+					title="Erfahrung" /><span class="c7" id="experience-valeur"></span> <span>Verfügbare Fertigkeitenpunkte: </span><span
+					class="c2" id="competence"></span><span>Benutzt: </span><span id="competence-utilisee"></span>
+			</div>
+		</div>
+
+		<form>
+			<fieldset id="f-identite">
+				<div id="f-infos">
+					<label for="faction">Fraktion: </label> <select id="faction" name="faction"></select> <label>Porträt: </label>
+					<button id="prev" type="button">&lt;</button>
+					<span id="num_portrait"></span>
+					<button id="next" type="button">&gt;</button>
+					<label for="archetype">Archetyp: </label> <select id="archetype"></select> <label for="niveau">Stufe: </label> <select
+						id="niveau"></select> <br /> <label for="tenancier">Bonuspunkt(e) (wirt anwerber): </label> <select
+						id="tenancier"></select> <label for="respec">Respezialisieren gemacht: </label> <select id="respec"></select>
+					<div id="liens-permanents"></div>
+				</div>
+			</fieldset>
+			<fieldset id="f-carrieres">
+				<div id="c1">
+					<div class="carriere">
+						<div id="icone-c1" class="icone-carriere"></div>
+						<input id="carriere-1-active" type="checkbox" value="1" /><label for="carriere-1-active"> Laufbahn 1</label><br />
+						<select class="carriere" id="carriere-1"></select>
+					</div>
+					<span class="description-carriere"></span>
+					<ul class="talents">
+						<li><span class="icone-talent" id="icone-talent-1-0"></span><span class="talent"></span> <label
+							for="talent-1-0">stufe </label><select id="talent-1-0" class="s-talent"></select><span id="detail-talent-1-0"></span></li>
+						<li><span class="icone-talent" id="icone-talent-1-1"></span><span class="talent"></span> <label
+							for="talent-1-1">stufe </label><select id="talent-1-1" class="s-talent"></select><span id="detail-talent-1-1"></span></li>
+						<li><span class="icone-talent" id="icone-talent-1-2"></span><span class="talent"></span> <label
+							for="talent-1-2">stufe </label><select id="talent-1-2" class="s-talent"></select><span id="detail-talent-1-2"></span></li>
+						<li><span class="icone-talent" id="icone-talent-1-3"></span><span class="talent"></span> <label
+							for="talent-1-3">stufe </label><select id="talent-1-3" class="s-talent"></select><span id="detail-talent-1-3"></span></li>
+						<li><span class="icone-talent" id="icone-talent-1-4"></span><span class="talent"></span> <label
+							for="talent-1-4">stufe </label><select id="talent-1-4" class="s-talent"></select><span id="detail-talent-1-4"></span></li>
+					</ul>
+				</div>
+				<div id="c2">
+					<div class="carriere">
+						<div id="icone-c2" class="icone-carriere"></div>
+						<input id="carriere-2-active" type="checkbox" value="2" /><label for="carriere-2-active"> Laufbahn 2</label><br />
+						<select class="carriere" id="carriere-2"></select>
+					</div>
+					<span class="description-carriere"></span>
+					<ul class="talents">
+						<li><span class="icone-talent" id="icone-talent-2-0"></span><span class="talent"></span> <label
+							for="talent-2-0">stufe </label><select id="talent-2-0" class="s-talent"></select><span id="detail-talent-2-0"></span></li>
+						<li><span class="icone-talent" id="icone-talent-2-1"></span><span class="talent"></span> <label
+							for="talent-2-1">stufe </label><select id="talent-2-1" class="s-talent"></select><span id="detail-talent-2-1"></span></li>
+						<li><span class="icone-talent" id="icone-talent-2-2"></span><span class="talent"></span> <label
+							for="talent-2-2">stufe </label><select id="talent-2-2" class="s-talent"></select><span id="detail-talent-2-2"></span></li>
+						<li><span class="icone-talent" id="icone-talent-2-3"></span><span class="talent"></span> <label
+							for="talent-2-3">stufe </label><select id="talent-2-3" class="s-talent"></select><span id="detail-talent-2-3"></span></li>
+						<li><span class="icone-talent" id="icone-talent-2-4"></span><span class="talent"></span> <label
+							for="talent-2-4">stufe </label><select id="talent-2-4" class="s-talent"></select><span id="detail-talent-2-4"></span></li>
+					</ul>
+				</div>
+				<div id="c3">
+					<div class="carriere">
+						<div id="icone-c3" class="icone-carriere"></div>
+						<input id="carriere-3-active" type="checkbox" value="3" /><label for="carriere-3-active"> Laufbahn 3</label><br />
+						<select class="carriere" id="carriere-3"></select>
+					</div>
+					<span class="description-carriere"></span>
+					<ul class="talents">
+						<li><span class="icone-talent" id="icone-talent-3-0"></span><span class="talent"></span> <label
+							for="talent-3-0">stufe </label><select id="talent-3-0" class="s-talent"></select><span id="detail-talent-3-0"></span></li>
+						<li><span class="icone-talent" id="icone-talent-3-1"></span><span class="talent"></span> <label
+							for="talent-3-1">stufe </label><select id="talent-3-1" class="s-talent"></select><span id="detail-talent-3-1"></span></li>
+						<li><span class="icone-talent" id="icone-talent-3-2"></span><span class="talent"></span> <label
+							for="talent-3-2">stufe </label><select id="talent-3-2" class="s-talent"></select><span id="detail-talent-3-2"></span></li>
+						<li><span class="icone-talent" id="icone-talent-3-3"></span><span class="talent"></span> <label
+							for="talent-3-3">stufe </label><select id="talent-3-3" class="s-talent"></select><span id="detail-talent-3-3"></span></li>
+						<li><span class="icone-talent" id="icone-talent-3-4"></span><span class="talent"></span> <label
+							for="talent-3-4">stufe </label><select id="talent-3-4" class="s-talent"></select><span id="detail-talent-3-4"></span></li>
+					</ul>
+				</div>
+			</fieldset>
+		</form>
+	</span>
+
+	<div id="prepied"></div>
+	<div id="pied"/>
+</body>
+</html>
