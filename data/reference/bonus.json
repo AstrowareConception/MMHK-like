@@ -1,0 +1,441 @@
+{
+  "_provenance": {
+    "source": "CODE-01",
+    "commit": "e8d862d82741986759b88012421aed8e8175e26e",
+    "license": "GPL-3.0-or-later",
+    "schema_version": 1,
+    "locale": "fr",
+    "warning": "Indices sources conservés. Tables communautaires, pas une configuration de serveur certifiée."
+  },
+  "_competences_alliance": {
+    "cri_de_guerre": {
+      "bonus": [
+        0,
+        5,
+        10,
+        15
+      ],
+      "nom": "Cri de guerre activé"
+    },
+    "ralliement": {
+      "bonus": [
+        0,
+        5,
+        10,
+        15
+      ],
+      "nom": "Ralliement activé"
+    },
+    "inspiration": {
+      "bonus": [
+        0,
+        5,
+        10,
+        15
+      ],
+      "nom": "Inspiration activée"
+    }
+  },
+  "_competences_hereditaires": {
+    "butin_de_guerre": {
+      "bonus": [
+        0,
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16,
+        18,
+        20
+      ],
+      "nom": "Butin de guerre",
+      "brief": "Le héros victorieux utilise ses troupes pour armes et équipements sur les cadavres de l'armée ennemie.",
+      "description": "Cette aptitude ne fonctionne que lors d'affrontements joueurs contre joueurs. La somme d'or ainsi collectée dépend de la puissance d'armée ennemie mise en déroute.",
+      "voie": "h",
+      "categorie": "r",
+      "combat": 1
+    },
+    "relever_les_morts": {
+      "bonus": [
+        0,
+        3.75,
+        7.5,
+        11.25,
+        15,
+        18.75,
+        22.5,
+        26.25,
+        30,
+        33.75,
+        37.5
+      ],
+      "nom": "Relever les morts",
+      "brief": "Une partie de l’armée décimée se relève d’entre les morts.",
+      "description": "L’attrition finale est réduite en fonction de l'étendue des troupes. Cette habilité est particulièrement efficace lorsque les pertes sont élevées.",
+      "voie": "d",
+      "categorie": "t",
+      "combat": 1
+    },
+    "resistance_magique": {
+      "bonus": [
+        0,
+        4.5,
+        9,
+        13.5,
+        18,
+        22.5,
+        27,
+        31.5,
+        36,
+        40.5,
+        45
+      ],
+      "nom": "Résistance magique",
+      "brief": "L’armée du héros est recouverte d'un bouclier anti-magie.",
+      "description": "Tous les sorts ennemis voient leur efficacité réduite. Réduit l'effet des sorts touchant le héros, son armée ou ses fortifications.",
+      "voie": "d",
+      "categorie": "t",
+      "combat": 1
+    },
+    "moral_eleve": {
+      "bonus": [
+        0,
+        2,
+        4,
+        6,
+        8,
+        10,
+        12,
+        14,
+        16,
+        18,
+        20
+      ],
+      "nom": "Moral élevé",
+      "brief": "La puissance totale de l'armée est augmentée si toutes les troupes sont de la même faction que celle du héros.",
+      "description": "Cette habilité est beaucoup moins efficace si votre armée comporte un très gros peloton accompagné par des pelotons beaucoup plus petits.",
+      "voie": "r",
+      "categorie": "t",
+      "combat": 1
+    },
+    "resurrection": {
+      "bonus": [
+        0,
+        0.4,
+        0.8,
+        1.2,
+        1.6,
+        2,
+        2.4,
+        2.8,
+        3.2,
+        3.6,
+        4
+      ],
+      "nom": "Résurrection",
+      "brief": "Une magie puissante soigne les blessures et ramène certain guerriers à la vie.",
+      "description": "L'attrition finale est réduite en fonction du nombre de créatures présentes au début de la bataille. Cette habilité est particulièrement efficace si les pertes sont réduites.",
+      "voie": "r",
+      "categorie": "t",
+      "combat": 1
+    },
+    "tir_de_barrage": {
+      "bonus": [
+        0,
+        1.5,
+        3,
+        4.5,
+        6,
+        7.5,
+        9,
+        10.5,
+        12,
+        13.5,
+        15
+      ],
+      "nom": "Tir de barrage",
+      "brief": "Tous les tireurs de l'armée du héros se joignent pour tirer une salve sur l'ennemi avant le début de l'affrontement.",
+      "description": "Les dégâts sont appliqués au premier peloton de l'armée adverse. S'il est détruit, les dommages excédentaires sont appliqués au peloton suivant et ainsi de suite.",
+      "voie": "h",
+      "categorie": "t",
+      "combat": 1
+    },
+    "heros_superieur": {
+      "bonus": {
+        "a": [
+          0,
+          2,
+          2,
+          2,
+          6,
+          4,
+          4,
+          12,
+          6,
+          6,
+          18
+        ],
+        "d": [
+          0,
+          0,
+          2,
+          2,
+          0,
+          4,
+          4,
+          0,
+          6,
+          6,
+          0
+        ],
+        "m": [
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          4,
+          0,
+          0,
+          6,
+          0
+        ]
+      },
+      "nom": "Héros supérieur",
+      "brief": "Le héros commence sa carrière avec des caractéristiques plus élevées.",
+      "description": "Le héros commence sa carrière avec des caractéristiques plus élevées.",
+      "voie": "r",
+      "categorie": "h",
+      "combat": 1
+    },
+    "maitrise_des_sorts": {
+      "bonus": {
+        "cercle": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          5,
+          5,
+          5,
+          5,
+          5
+        ],
+        "valeur": [
+          0,
+          10,
+          10,
+          10,
+          10,
+          10,
+          15,
+          20,
+          25,
+          30,
+          35
+        ]
+      },
+      "nom": "Maitrise des sorts",
+      "brief": "Le héros est spécialisé dans un niveau de magie défini.",
+      "description": "Tous les sorts de ce niveau, quelle que soit leur école, sont lancés avec un bonus important.",
+      "voie": "h",
+      "categorie": "h",
+      "combat": 1
+    },
+    "revelation_de_caracteristiques": {
+      "bonus": {
+        "a": [
+          0,
+          2,
+          2,
+          2,
+          6,
+          3,
+          3,
+          9,
+          4,
+          4,
+          12
+        ],
+        "d": [
+          0,
+          0,
+          2,
+          2,
+          0,
+          3,
+          3,
+          0,
+          4,
+          4,
+          0
+        ],
+        "m": [
+          0,
+          0,
+          0,
+          2,
+          0,
+          0,
+          3,
+          0,
+          0,
+          4,
+          0
+        ]
+      },
+      "nom": "Révélation de caractéristiques",
+      "brief": "Le héros est touché par la grâce d’Asha à deux reprises au cours de sa carrière.",
+      "description": "Il reçoit alors de nombreux points de caractéristiques supplémentaires au niveaux 15 et 30.",
+      "voie": "h",
+      "categorie": "h",
+      "combat": 1
+    },
+    "heros_talentueux": {
+      "bonus": [
+        0,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13
+      ],
+      "nom": "Héros talentueux",
+      "brief": "Le héros commence sa carrière avec d’avantage de points de talents.",
+      "description": "Le héros commence sa carrière avec d’avantage de points de talents.",
+      "voie": "r",
+      "categorie": "h",
+      "combat": 0
+    },
+    "revelation_de_talents": {
+      "bonus": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10
+      ],
+      "nom": "Révélation de talents",
+      "brief": "Le héros reçoit des points de talents supplémentaires lorsqu'il atteint les niveaux 15 et 30.",
+      "description": "Le héros reçoit des points de talents supplémentaires lorsqu'il atteint les niveaux 15 et 30.",
+      "voie": "d",
+      "categorie": "h",
+      "combat": 0
+    },
+    "contribution_populaire": {
+      "bonus": [
+        0,
+        0.7,
+        1.4,
+        2.1,
+        2.8,
+        3.5,
+        4.2,
+        4.9,
+        5.6,
+        6.3,
+        7
+      ],
+      "nom": "Contribution populaire",
+      "brief": "Toutes les créatures de l'armée du héros contribuent à l'accroissement du trésor de la cité.",
+      "description": "Toutes les créatures de l'armée du héros contribuent à l'accroissement du trésor de la cité.",
+      "voie": "d",
+      "categorie": "r",
+      "combat": 0
+    },
+    "richesse_personnelle": {
+      "bonus": [
+        0,
+        100,
+        200,
+        300,
+        400,
+        500,
+        600,
+        700,
+        800,
+        900,
+        1000
+      ],
+      "nom": "Richesse personnelle",
+      "brief": "Le héros dispose de richesses personnelles qui lui permettent de contribuer à l'accroissement quotidien du trésor.",
+      "description": "Le héros dispose de richesses personnelles qui lui permettent de contribuer à l'accroissement quotidien du trésor. Le montant de cette contribution dépend du niveau du héros.",
+      "voie": "r",
+      "categorie": "r",
+      "combat": 0
+    },
+    "recrutement_quotidien": {
+      "bonus": [
+        0,
+        0.7,
+        1.4,
+        2.1,
+        2.8,
+        3.5,
+        4.2,
+        4.9,
+        5.6,
+        6.3,
+        7
+      ],
+      "nom": "Recrutement quotidien",
+      "brief": "Grâce à son charisme naturel, le héros recrute des troupes gratuitement.",
+      "description": "Ces troupes apparaissent dans la cité du héros durant la nuit. Le nombre de créatures recrutées est basé sur la puissance de l’armée dans la cité. Les unités obtenues grâce à cette compétence sont des T2. vous ne pouvez gagner plus de 100 000 de puissance par jour.",
+      "voie": "h",
+      "categorie": "t",
+      "combat": 0
+    },
+    "mysticisme": {
+      "bonus": [
+        0,
+        5,
+        12,
+        18,
+        24,
+        30,
+        36,
+        42,
+        48,
+        54,
+        60
+      ],
+      "nom": "Mysticisme",
+      "brief": "Une régénération de mana exceptionnelle permet au héros de jeter des sorts plus fréquemment.",
+      "description": "Le temps de rechargement de tous les sorts du héros est réduit.",
+      "voie": "d",
+      "categorie": "h",
+      "combat": 0
+    }
+  },
+  "_competences_speciales": {
+    "antimagie": {
+      "bonus": 10,
+      "nom": "antimagie"
+    },
+    "baliste": {
+      "bonus": 3,
+      "nom": "baliste"
+    },
+    "pieges": {
+      "bonus": 3,
+      "nom": "pièges"
+    }
+  }
+}

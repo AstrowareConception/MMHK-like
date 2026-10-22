@@ -1,0 +1,99 @@
+{
+  "source_id": "CODE-01",
+  "repository": "https://github.com/Aendawyn/MMHK-Plus",
+  "commit": "e8d862d82741986759b88012421aed8e8175e26e",
+  "commit_date": "2013-12-09T16:35:44Z",
+  "retrieved_on": "2026-10-22",
+  "license": "GPL-3.0-or-later",
+  "authors": [
+    "Jactari",
+    "Aspirin",
+    "Aendawyn"
+  ],
+  "files": [
+    {
+      "path": "Jactari/src/scripts/combat.min.js",
+      "file": "combat.min.js",
+      "git_blob_sha": "b022a1c94dccd74f0887dbd6daccab78f60445bd",
+      "sha256": "5bf87123083b67b959429bc123e2fd56479ada2e0c99c104c5bff0a661533782",
+      "bytes": 259611
+    },
+    {
+      "path": "Jactari/src/scripts/donnees.artefacts.min.js",
+      "file": "donnees.artefacts.min.js",
+      "git_blob_sha": "14be968d05ae6432a7517faa7be765fb3aa490f7",
+      "sha256": "20906f0fe303c3793b59ffe5672022ec26454edd0bd3d36eab3feed5266d57e0",
+      "bytes": 259931
+    },
+    {
+      "path": "Jactari/src/scripts/donnees.batiments.min.js",
+      "file": "donnees.batiments.min.js",
+      "git_blob_sha": "21ce2a8160be40b7b53b25faf43ebe6039b078f0",
+      "sha256": "1621d309de66af5528dcad72dcecef639b3499b0d8a146e4f169284f5f7420f3",
+      "bytes": 190427
+    },
+    {
+      "path": "Jactari/src/scripts/donnees.creatures.min.js",
+      "file": "donnees.creatures.min.js",
+      "git_blob_sha": "7fef6962b2f442cd352b6c5bfdf42a56467c5dd4",
+      "sha256": "cee52da90ec79a044a158e6a6897b7fce17035cb6597f7717dd0e7327a6cd6ca",
+      "bytes": 134168
+    },
+    {
+      "path": "Jactari/src/scripts/donnees.general.min.js",
+      "file": "donnees.general.min.js",
+      "git_blob_sha": "4ee3411616a8c0932f40d079986a0101af9f84a0",
+      "sha256": "3e13a96409ca7c0ced47bda260b953816e4b6fff3b78841949ca6b1a994379e4",
+      "bytes": 68054
+    },
+    {
+      "path": "Jactari/src/scripts/donnees.heros.min.js",
+      "file": "donnees.heros.min.js",
+      "git_blob_sha": "7468b20a8a19be103c860e616b9fe306361d9c79",
+      "sha256": "8362f5c86404605ebe7220cff395a541ec52063d506520b964918af669543aa1",
+      "bytes": 92653
+    },
+    {
+      "path": "Jactari/src/scripts/donnees.sorts.min.js",
+      "file": "donnees.sorts.min.js",
+      "git_blob_sha": "5c8e177c62c60ea54430b212b2902d8968583a2c",
+      "sha256": "f42770c40940d5fdd9b21f12252fc93101eb99e89dca0b77b44cebc645f04aa4",
+      "bytes": 34103
+    },
+    {
+      "path": "Licence.txt",
+      "file": "Licence.txt",
+      "git_blob_sha": "94a9ed024d3859793618152ea559a168bbcbb5e2",
+      "sha256": "8ceb4b9ee5adedde47b31e975c1d90c73ad27b6b165a1dcd80c7c545eb65b903",
+      "bytes": 35147
+    },
+    {
+      "path": "MMHK-Plus/src/modules/mmhkplusUtilities.js",
+      "file": "mmhkplusUtilities.js",
+      "git_blob_sha": "90d808618ba819df155197752d14508a2a76cc88",
+      "sha256": "318bddffd933d8d62b467581665f20b5b259815e31a1a2a5c2cc996658ce8f2c",
+      "bytes": 13026
+    },
+    {
+      "path": "MMHK-Plus/src/modules/tools/attacksSieges.js",
+      "file": "attacksSieges.js",
+      "git_blob_sha": "864baa2d8b1c860a103f6d7489f8f03ef039d32e",
+      "sha256": "4ccad315766f5943fa688a29706e59e5e0ad752d779882b764b32d06cd05eabc",
+      "bytes": 8532
+    },
+    {
+      "path": "MMHK-Plus/src/modules/tools/distances.js",
+      "file": "distances.js",
+      "git_blob_sha": "fd0ec7c7acfdf0999edb29552be4eeab606d7d21",
+      "sha256": "5ddd98758e2ba3b4f707cd116fd9a3e2de25add2968b26620386db91d209a192",
+      "bytes": 4650
+    },
+    {
+      "path": "MMHK-Plus/src/modules/tools/maintenance.js",
+      "file": "maintenance.js",
+      "git_blob_sha": "3f6de2f7049b84aaffd6ea7d5d4a23312b8c6e8b",
+      "sha256": "f9460d9090045fb77cc5c8b7ce6a7f2de6bbcffcfd79c5d69e8540e3c45a3301",
+      "bytes": 7678
+    }
+  ]
+}

@@ -1,0 +1,4045 @@
+{
+  "_provenance": {
+    "source": "CODE-01",
+    "commit": "e8d862d82741986759b88012421aed8e8175e26e",
+    "license": "GPL-3.0-or-later",
+    "schema_version": 1,
+    "locale": "fr",
+    "warning": "Indices sources conservés. Tables communautaires, pas une configuration de serveur certifiée."
+  },
+  "_categories_batiments": [
+    {
+      "nom": "autre"
+    },
+    {
+      "nom": "recrutement"
+    },
+    {
+      "nom": "magie"
+    },
+    {
+      "nom": "défense"
+    },
+    {
+      "nom": "administration"
+    }
+  ],
+  "_batiments": [
+    {
+      "nom": "",
+      "description": "",
+      "faction": 0,
+      "cout": 0,
+      "w": 0,
+      "o": 0,
+      "duree": 0,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 0,
+        "batiment": null
+      }
+    },
+    {
+      "nom": "Conseil du village",
+      "faction": 0,
+      "cout": {
+        "G": 0
+      },
+      "duree": 0,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 0,
+        "batiment": null
+      },
+      "domination": 2000,
+      "categorie": 4,
+      "description": "Le conseil du village vous permet d'accéder à de nouvelles structures et vous fournit 2 000 pièces d'or par jour."
+    },
+    {
+      "nom": "Mairie",
+      "faction": 0,
+      "cout": {
+        "G": 6000,
+        "w": 8,
+        "o": 10
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": 1
+      },
+      "domination": 3000,
+      "categorie": 4,
+      "description": "La mairie vous permet d'accéder à de nouvelles structures et vous fournit 4 000 pièces d'or par jour."
+    },
+    {
+      "nom": "Hôtel de ville",
+      "faction": 0,
+      "cout": {
+        "G": 27500,
+        "w": 25,
+        "o": 48
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": 2
+      },
+      "domination": 6500,
+      "categorie": 4,
+      "description": "L'hôtel de ville vous permet d'accéder à de nouvelles structures et vous fournit 7 000 pièces d'or par jour."
+    },
+    {
+      "nom": "Capitole",
+      "faction": 0,
+      "cout": {
+        "G": 120000,
+        "w": 83,
+        "o": 85
+      },
+      "duree": 2880,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 15,
+        "batiment": 3
+      },
+      "domination": 30500,
+      "categorie": 4,
+      "description": "Le capitole vous fournit 13 000 pièces d'or par jour."
+    },
+    {
+      "nom": "Nef céleste",
+      "faction": 0,
+      "cout": {
+        "G": 180000,
+        "w": 62,
+        "o": 114
+      },
+      "duree": 14400,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 15,
+        "batiment": null
+      },
+      "domination": 36000,
+      "categorie": 4,
+      "description": "La nef céleste augmente de 50 % la production quotidienne de créatures, vous fournit 5 000 pièces d'or additionnelles par jour, augmente de 125 000 la capacité de support de votre cité et multiplie par 2 la vitesse de mouvement des héros quittant cette cité avec une armée. Une larme d'Asha est nécessaire pour bâtir cette structure."
+    },
+    {
+      "nom": "Taverne",
+      "faction": 0,
+      "cout": {
+        "G": 500,
+        "w": 3,
+        "o": 4
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 1
+      },
+      "domination": 100,
+      "categorie": 0,
+      "description": "La taverne vous permet de recruter des héros. Chaque nouveau héros arrive accompagné d'une petite armée."
+    },
+    {
+      "nom": "Forge",
+      "faction": 0,
+      "cout": {
+        "G": 4000,
+        "w": 8,
+        "o": 12
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": null
+      },
+      "domination": 800,
+      "categorie": 1,
+      "description": "La forge vous permet d'équiper vos armées de balistes."
+    },
+    {
+      "nom": "Forge de guerre",
+      "faction": 0,
+      "cout": {
+        "G": 6000,
+        "w": 8,
+        "o": 11
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": 7
+      },
+      "domination": 1800,
+      "categorie": 1,
+      "description": "La forge de guerre vous permet d'équiper vos armées de catapultes."
+    },
+    {
+      "nom": "Fortin",
+      "faction": 0,
+      "cout": {
+        "G": 12000,
+        "w": 18,
+        "o": 25
+      },
+      "duree": 1152,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 6,
+        "batiment": null
+      },
+      "domination": 2400,
+      "categorie": 3,
+      "description": "Le fortin ajoute des remparts autour d'une cité, ce qui fait bénéficier les troupes stationnées dans la cité d'un bonus de défense de 16 %."
+    },
+    {
+      "nom": "Citadelle",
+      "faction": 0,
+      "cout": {
+        "G": 32000,
+        "w": 33,
+        "o": 50
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": 9
+      },
+      "domination": 8800,
+      "categorie": 3,
+      "description": "La citadelle ajoute un donjon et des douves autour des remparts, et augmente de 50 % la production de créatures de base. Les troupes stationnées dans la cité bénéficient d'un bonus de défense de 35 %."
+    },
+    {
+      "nom": "Château",
+      "faction": 0,
+      "cout": {
+        "G": 65000,
+        "w": 62,
+        "o": 68
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 12,
+        "batiment": 10
+      },
+      "domination": 23200,
+      "categorie": 3,
+      "description": "Le château renforce les défenses d'une cité, augmente de 100 % la production de créatures de base et fait bénéficier les troupes stationnées dans la cité d'un bonus de défense de 56 %."
+    },
+    {
+      "nom": "Marché",
+      "faction": 0,
+      "cout": {
+        "G": 850,
+        "w": 4,
+        "o": 5
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 1
+      },
+      "domination": 170,
+      "categorie": 0,
+      "description": "Le marché vous permet d'acheter et de vendre des ressources et des artéfacts au marchand ou aux autres joueurs. Il vous permet également d'envoyer des caravanes à destination d'autres cités."
+    },
+    {
+      "nom": "Silo à ressources niveau 1",
+      "faction": 0,
+      "cout": {
+        "G": 500,
+        "w": 4,
+        "o": 5
+      },
+      "duree": 144,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 12
+      },
+      "domination": 100,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 1."
+    },
+    {
+      "nom": "Silo à ressources niveau 2",
+      "faction": 0,
+      "cout": {
+        "G": 1000
+      },
+      "duree": 576,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 13
+      },
+      "domination": 200,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 2."
+    },
+    {
+      "nom": "Silo à ressources niveau 3",
+      "faction": 0,
+      "cout": {
+        "G": 1500
+      },
+      "duree": 864,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 14
+      },
+      "domination": 300,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 3."
+    },
+    {
+      "nom": "Silo à ressources niveau 4",
+      "faction": 0,
+      "cout": {
+        "G": 2000
+      },
+      "duree": 1152,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 15
+      },
+      "domination": 400,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 4."
+    },
+    {
+      "nom": "Silo à ressources niveau 5",
+      "faction": 0,
+      "cout": {
+        "G": 2500
+      },
+      "duree": 1440,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 16
+      },
+      "domination": 500,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 5."
+    },
+    {
+      "nom": "Silo à ressources niveau 6",
+      "faction": 0,
+      "cout": {
+        "G": 3000
+      },
+      "duree": 1728,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 17
+      },
+      "domination": 600,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 6."
+    },
+    {
+      "nom": "Silo à ressources niveau 7",
+      "faction": 0,
+      "cout": {
+        "G": 3500
+      },
+      "duree": 2016,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 18
+      },
+      "domination": 700,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 7."
+    },
+    {
+      "nom": "Silo à ressources niveau 8",
+      "faction": 0,
+      "cout": {
+        "G": 4000
+      },
+      "duree": 2304,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 19
+      },
+      "domination": 800,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 8."
+    },
+    {
+      "nom": "Silo à ressources niveau 9",
+      "faction": 0,
+      "cout": {
+        "G": 4500
+      },
+      "duree": 2592,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 20
+      },
+      "domination": 900,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 9."
+    },
+    {
+      "nom": "Silo à ressources niveau 10",
+      "faction": 0,
+      "cout": {
+        "G": 5000
+      },
+      "duree": 2880,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 21
+      },
+      "domination": 1000,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 10."
+    },
+    {
+      "nom": "Atelier des gremlins",
+      "faction": 0,
+      "cout": {
+        "G": 700
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 1
+      },
+      "domination": 140,
+      "categorie": 1,
+      "description": "L'atelier des gremlins vous permet de recruter des gremlins (tireurs)."
+    },
+    {
+      "nom": "Manufacture des gremlins",
+      "faction": 0,
+      "cout": {
+        "G": 1000,
+        "w": 4,
+        "o": 4
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 2,
+        "batiment": 23
+      },
+      "domination": 340,
+      "categorie": 1,
+      "description": "La manufacture des gremlins vous permet de recruter des ingénieurs gremlins (tireurs)."
+    },
+    {
+      "nom": "Parapet de pierre",
+      "faction": 0,
+      "cout": {
+        "G": 4800,
+        "w": 8,
+        "o": 11
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": null
+      },
+      "domination": 800,
+      "categorie": 1,
+      "description": "Le parapet de pierre vous permet de recruter des gargouilles de pierre (cavalerie)."
+    },
+    {
+      "nom": "Parapet d'obsidienne",
+      "faction": 0,
+      "cout": {
+        "G": 6600,
+        "w": 7,
+        "o": 11
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 4,
+        "batiment": 25
+      },
+      "domination": 1900,
+      "categorie": 1,
+      "description": "Le parapet d'obsidienne vous permet de recruter des gargouilles d'obsidienne (cavalerie)."
+    },
+    {
+      "nom": "Forge de golems",
+      "faction": 0,
+      "cout": {
+        "G": 8000,
+        "w": 20,
+        "o": 20,
+        "g": 4
+      },
+      "duree": 1152,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 6,
+        "batiment": null
+      },
+      "domination": 1600,
+      "categorie": 1,
+      "description": "La forge de golems vous permet de recruter des golems de fer (infanterie)."
+    },
+    {
+      "nom": "Fonderie de golems",
+      "faction": 0,
+      "cout": {
+        "G": 10500,
+        "w": 18,
+        "o": 29,
+        "g": 6
+      },
+      "duree": 1152,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 7,
+        "batiment": 27
+      },
+      "domination": 3700,
+      "categorie": 1,
+      "description": "La fonderie de golems vous permet de recruter des golems d'acier (infanterie)."
+    },
+    {
+      "nom": "Tour des mages",
+      "faction": 0,
+      "cout": {
+        "G": 22000,
+        "w": 32,
+        "o": 45,
+        "g": 7,
+        "s": 5
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": null
+      },
+      "domination": 4400,
+      "categorie": 1,
+      "description": "La tour des mages vous permet de recruter des mages (tireurs)."
+    },
+    {
+      "nom": "Tour des archimages",
+      "faction": 0,
+      "cout": {
+        "G": 24000,
+        "w": 39,
+        "o": 44,
+        "g": 10,
+        "s": 7
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 10,
+        "batiment": 29
+      },
+      "domination": 9200,
+      "categorie": 1,
+      "description": "La tour des archimages vous permet de recruter des archimages (tireurs)."
+    },
+    {
+      "nom": "Autel des vœux",
+      "faction": 0,
+      "cout": {
+        "G": 23000,
+        "w": 34,
+        "o": 44,
+        "g": 14,
+        "s": 15
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": null
+      },
+      "domination": 4600,
+      "categorie": 1,
+      "description": "L'autel des vœux vous permet de recruter des djinns (cavalerie)."
+    },
+    {
+      "nom": "Pinacle des vœux",
+      "faction": 0,
+      "cout": {
+        "G": 27000,
+        "w": 25,
+        "o": 53,
+        "g": 22,
+        "s": 23
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 10,
+        "batiment": 31
+      },
+      "domination": 10000,
+      "categorie": 1,
+      "description": "Le pinacle des vœux vous permet de recruter des sultans djinns (cavalerie)."
+    },
+    {
+      "nom": "Caverne au trésor",
+      "faction": 0,
+      "cout": {
+        "G": 20000,
+        "w": 30,
+        "o": 30
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 11,
+        "batiment": 32
+      },
+      "domination": 4000,
+      "categorie": 0,
+      "description": "La caverne au trésor augmente de +2 la production quotidienne de djinns et de sultans djinns."
+    },
+    {
+      "nom": "Pavillon d'argent",
+      "faction": 0,
+      "cout": {
+        "G": 57000,
+        "w": 56,
+        "o": 80,
+        "g": 25,
+        "s": 10
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 12,
+        "batiment": null
+      },
+      "domination": 11400,
+      "categorie": 1,
+      "description": "Le pavillon d'argent vous permet de recruter des ranis rakshasa (infanterie)."
+    },
+    {
+      "nom": "Pavillon d'or",
+      "faction": 0,
+      "cout": {
+        "G": 70000,
+        "w": 44,
+        "o": 93,
+        "g": 33,
+        "s": 15
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 13,
+        "batiment": 34
+      },
+      "domination": 25400,
+      "categorie": 1,
+      "description": "Le pavillon d'or vous permet de recruter des rajas rakshasa (infanterie)."
+    },
+    {
+      "nom": "Colisée des nuages",
+      "faction": 0,
+      "cout": {
+        "G": 120000,
+        "w": 70,
+        "o": 100,
+        "g": 37,
+        "s": 23
+      },
+      "duree": 2880,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 15,
+        "batiment": null
+      },
+      "domination": 26000,
+      "categorie": 1,
+      "description": "Le colisée des nuages vous permet de recruter des géants (infanterie)."
+    },
+    {
+      "nom": "Colisée des tempêtes",
+      "faction": 0,
+      "cout": {
+        "G": 160000,
+        "w": 78,
+        "o": 105,
+        "g": 50,
+        "s": 30
+      },
+      "duree": 2880,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 16,
+        "batiment": 36
+      },
+      "domination": 64000,
+      "categorie": 1,
+      "description": "Le colisée des tempêtes vous permet de recruter des titans (tireurs)."
+    },
+    {
+      "nom": "Guilde des mages niveau 1",
+      "faction": 0,
+      "cout": {
+        "G": 3240,
+        "w": 5,
+        "o": 5
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": null
+      },
+      "domination": 900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du premier cercle."
+    },
+    {
+      "nom": "Guilde des mages niveau 2",
+      "faction": 0,
+      "cout": {
+        "G": 6000,
+        "w": 10,
+        "o": 9,
+        "c": 2,
+        "g": 2,
+        "m": 2,
+        "s": 2
+      },
+      "duree": 1152,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 6,
+        "batiment": 38
+      },
+      "domination": 2900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du second cercle."
+    },
+    {
+      "nom": "Guilde des mages niveau 3",
+      "faction": 0,
+      "cout": {
+        "G": 15000,
+        "w": 23,
+        "o": 21,
+        "c": 5,
+        "g": 5,
+        "m": 5,
+        "s": 5
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": 39
+      },
+      "domination": 7900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du troisième cercle."
+    },
+    {
+      "nom": "Guilde des mages niveau 4",
+      "faction": 0,
+      "cout": {
+        "G": 39000,
+        "w": 38,
+        "o": 34,
+        "c": 9,
+        "g": 9,
+        "m": 9,
+        "s": 9
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 12,
+        "batiment": 40
+      },
+      "domination": 20900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du quatrième cercle."
+    },
+    {
+      "nom": "Guilde des mages niveau 5",
+      "faction": 0,
+      "cout": {
+        "G": 108000,
+        "w": 36,
+        "o": 50,
+        "c": 18,
+        "g": 18,
+        "m": 18,
+        "s": 18
+      },
+      "duree": 2880,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 15,
+        "batiment": 41
+      },
+      "domination": 56900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du cinquième cercle."
+    },
+    {
+      "nom": "Conseil du village",
+      "faction": 1,
+      "cout": {
+        "G": 0
+      },
+      "duree": 0,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 0,
+        "batiment": null
+      },
+      "domination": 2000,
+      "categorie": 4,
+      "description": "Le conseil du village vous permet d'accéder à de nouvelles structures et vous fournit 2 000 pièces d'or par jour."
+    },
+    {
+      "nom": "Mairie",
+      "faction": 1,
+      "cout": {
+        "G": 5000,
+        "w": 10,
+        "o": 12
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": 43
+      },
+      "domination": 3000,
+      "categorie": 4,
+      "description": "La mairie vous permet d'accéder à de nouvelles structures et vous fournit 4 000 pièces d'or par jour."
+    },
+    {
+      "nom": "Hôtel de ville",
+      "faction": 1,
+      "cout": {
+        "G": 27500,
+        "w": 53,
+        "o": 53
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": 44
+      },
+      "domination": 6500,
+      "categorie": 4,
+      "description": "L'hôtel de ville vous permet d'accéder à de nouvelles structures et vous fournit 7 000 pièces d'or par jour."
+    },
+    {
+      "nom": "Capitole",
+      "faction": 1,
+      "cout": {
+        "G": 120000,
+        "w": 133,
+        "o": 132
+      },
+      "duree": 2880,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 15,
+        "batiment": 45
+      },
+      "domination": 30500,
+      "categorie": 4,
+      "description": "Le capitole vous fournit 13 000 pièces d'or par jour."
+    },
+    {
+      "nom": "Sentinelle d'Elrath",
+      "faction": 1,
+      "cout": {
+        "G": 180000,
+        "w": 120,
+        "o": 113
+      },
+      "duree": 14400,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 15,
+        "batiment": null
+      },
+      "domination": 36000,
+      "categorie": 4,
+      "description": "La sentinelle d'Elrath augmente de 50 % la production quotidienne de créatures, vous fournit 5 000 pièces d'or additionnelles par jour, augmente de 125 000 la capacité de support de votre cité et multiplie par 2 la vitesse de mouvement des héros quittant cette cité avec une armée. Une larme d'Asha est nécessaire pour bâtir cette structure."
+    },
+    {
+      "nom": "Taverne",
+      "faction": 1,
+      "cout": {
+        "G": 500,
+        "w": 3,
+        "o": 4
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 43
+      },
+      "domination": 100,
+      "categorie": 0,
+      "description": "La taverne vous permet de recruter des héros. Chaque nouveau héros arrive accompagné d'une petite armée."
+    },
+    {
+      "nom": "Forge",
+      "faction": 1,
+      "cout": {
+        "G": 4000,
+        "w": 13,
+        "o": 13
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": null
+      },
+      "domination": 800,
+      "categorie": 1,
+      "description": "La forge vous permet d'équiper vos armées de balistes."
+    },
+    {
+      "nom": "Forge de guerre",
+      "faction": 1,
+      "cout": {
+        "G": 5000,
+        "w": 11,
+        "o": 13
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 4,
+        "batiment": 49
+      },
+      "domination": 1800,
+      "categorie": 1,
+      "description": "La forge de guerre vous permet d'équiper vos armées de catapultes."
+    },
+    {
+      "nom": "Fortin",
+      "faction": 1,
+      "cout": {
+        "G": 12000,
+        "w": 29,
+        "o": 29
+      },
+      "duree": 1152,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 6,
+        "batiment": null
+      },
+      "domination": 2400,
+      "categorie": 3,
+      "description": "Le fortin ajoute des remparts autour d'une cité, ce qui fait bénéficier les troupes stationnées dans la cité d'un bonus de défense de 16 %."
+    },
+    {
+      "nom": "Citadelle",
+      "faction": 1,
+      "cout": {
+        "G": 32000,
+        "w": 56,
+        "o": 52
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": 51
+      },
+      "domination": 8800,
+      "categorie": 3,
+      "description": "La citadelle ajoute un donjon et des douves autour des remparts, et augmente de 50 % la production de créatures de base. Les troupes stationnées dans la cité bénéficient d'un bonus de défense de 35 %."
+    },
+    {
+      "nom": "Château",
+      "faction": 1,
+      "cout": {
+        "G": 72000,
+        "w": 95,
+        "o": 92
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 12,
+        "batiment": 52
+      },
+      "domination": 23200,
+      "categorie": 3,
+      "description": "Le château renforce les défenses d'une cité, augmente de 100 % la production de créatures de base et fait bénéficier les troupes stationnées dans la cité d'un bonus de défense de 56 %."
+    },
+    {
+      "nom": "Marché",
+      "faction": 1,
+      "cout": {
+        "G": 850,
+        "w": 7,
+        "o": 5
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 43
+      },
+      "domination": 170,
+      "categorie": 0,
+      "description": "Le marché vous permet d'acheter et de vendre des ressources et des artéfacts au marchand ou aux autres joueurs. Il vous permet également d'envoyer des caravanes à destination d'autres cités."
+    },
+    {
+      "nom": "Silo à ressources niveau 1",
+      "faction": 1,
+      "cout": {
+        "G": 500,
+        "w": 6,
+        "o": 6
+      },
+      "duree": 144,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 54
+      },
+      "domination": 100,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 1."
+    },
+    {
+      "nom": "Silo à ressources niveau 2",
+      "faction": 1,
+      "cout": {
+        "G": 1000
+      },
+      "duree": 576,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 55
+      },
+      "domination": 200,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 2."
+    },
+    {
+      "nom": "Silo à ressources niveau 3",
+      "faction": 1,
+      "cout": {
+        "G": 1500
+      },
+      "duree": 864,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 56
+      },
+      "domination": 300,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 3."
+    },
+    {
+      "nom": "Silo à ressources niveau 4",
+      "faction": 1,
+      "cout": {
+        "G": 2000
+      },
+      "duree": 1152,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 57
+      },
+      "domination": 400,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 4."
+    },
+    {
+      "nom": "Silo à ressources niveau 5",
+      "faction": 1,
+      "cout": {
+        "G": 2500
+      },
+      "duree": 1440,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 58
+      },
+      "domination": 500,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 5."
+    },
+    {
+      "nom": "Silo à ressources niveau 6",
+      "faction": 1,
+      "cout": {
+        "G": 3000
+      },
+      "duree": 1728,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 59
+      },
+      "domination": 600,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 6."
+    },
+    {
+      "nom": "Silo à ressources niveau 7",
+      "faction": 1,
+      "cout": {
+        "G": 3500
+      },
+      "duree": 2016,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 60
+      },
+      "domination": 700,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 7."
+    },
+    {
+      "nom": "Silo à ressources niveau 8",
+      "faction": 1,
+      "cout": {
+        "G": 4000
+      },
+      "duree": 2304,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 61
+      },
+      "domination": 800,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 8."
+    },
+    {
+      "nom": "Silo à ressources niveau 9",
+      "faction": 1,
+      "cout": {
+        "G": 4500
+      },
+      "duree": 2592,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 62
+      },
+      "domination": 900,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 9."
+    },
+    {
+      "nom": "Silo à ressources niveau 10",
+      "faction": 1,
+      "cout": {
+        "G": 5000
+      },
+      "duree": 2880,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 63
+      },
+      "domination": 1000,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 10."
+    },
+    {
+      "nom": "Huttes de paysans",
+      "faction": 1,
+      "cout": {
+        "G": 700
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 43
+      },
+      "domination": 140,
+      "categorie": 1,
+      "description": "Les huttes de paysans vous permettent de recruter des paysans (infanterie)."
+    },
+    {
+      "nom": "Chaumières de paysans",
+      "faction": 1,
+      "cout": {
+        "G": 1000,
+        "w": 6,
+        "o": 6
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 2,
+        "batiment": 65
+      },
+      "domination": 340,
+      "categorie": 1,
+      "description": "Les chaumières de paysans vous permettent de recruter des conscrits (infanterie)."
+    },
+    {
+      "nom": "Fermes",
+      "faction": 1,
+      "cout": {
+        "G": 20000,
+        "w": 30,
+        "o": 30
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 4,
+        "batiment": 66
+      },
+      "domination": 4000,
+      "categorie": 0,
+      "description": "Les fermes augmentent de +5 la production quotidienne de paysans et de conscrits."
+    },
+    {
+      "nom": "Tour des archers",
+      "faction": 1,
+      "cout": {
+        "G": 4000,
+        "w": 9,
+        "o": 8
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": null
+      },
+      "domination": 800,
+      "categorie": 1,
+      "description": "La tour des archers vous permet de recruter des archers (tireurs)."
+    },
+    {
+      "nom": "Tour des arbalétriers",
+      "faction": 1,
+      "cout": {
+        "G": 5500,
+        "w": 11,
+        "o": 12
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 4,
+        "batiment": 68
+      },
+      "domination": 1900,
+      "categorie": 1,
+      "description": "La tour des arbalétriers vous permet de recruter des arbalétriers (tireurs)."
+    },
+    {
+      "nom": "Caserne",
+      "faction": 1,
+      "cout": {
+        "G": 8000,
+        "w": 32,
+        "o": 31
+      },
+      "duree": 1152,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 6,
+        "batiment": null
+      },
+      "domination": 1600,
+      "categorie": 1,
+      "description": "La caserne vous permet de recruter des fantassins (infanterie)."
+    },
+    {
+      "nom": "Garnison",
+      "faction": 1,
+      "cout": {
+        "G": 10500,
+        "w": 33,
+        "o": 29
+      },
+      "duree": 1152,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 7,
+        "batiment": 70
+      },
+      "domination": 3700,
+      "categorie": 1,
+      "description": "La garnison vous permet de recruter des champions (infanterie)."
+    },
+    {
+      "nom": "Tour des griffons",
+      "faction": 1,
+      "cout": {
+        "G": 22000,
+        "w": 38,
+        "o": 38
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": null
+      },
+      "domination": 4400,
+      "categorie": 1,
+      "description": "La tour des griffons vous permet de recruter des griffons."
+    },
+    {
+      "nom": "Bastion des griffons",
+      "faction": 1,
+      "cout": {
+        "G": 24000,
+        "w": 64,
+        "o": 63
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 10,
+        "batiment": 72
+      },
+      "domination": 9200,
+      "categorie": 1,
+      "description": "Le bastion des griffons vous permet de recruter des griffons impériaux (cavalerie)."
+    },
+    {
+      "nom": "Monastère",
+      "faction": 1,
+      "cout": {
+        "G": 31000,
+        "w": 45,
+        "o": 41,
+        "c": 10,
+        "g": 4,
+        "m": 4,
+        "s": 4
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": null
+      },
+      "domination": 4600,
+      "categorie": 1,
+      "description": "Le monastère vous permet de recruter des prêtres (tireurs)."
+    },
+    {
+      "nom": "Cathédrale",
+      "faction": 1,
+      "cout": {
+        "G": 27000,
+        "w": 49,
+        "o": 54,
+        "c": 14,
+        "g": 6,
+        "m": 6,
+        "s": 6
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 10,
+        "batiment": 74
+      },
+      "domination": 10000,
+      "categorie": 1,
+      "description": "La cathédrale vous permet de recruter des inquisiteurs (tireurs)."
+    },
+    {
+      "nom": "Lice",
+      "faction": 1,
+      "cout": {
+        "G": 80000,
+        "w": 92,
+        "o": 92,
+        "c": 15
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 12,
+        "batiment": null
+      },
+      "domination": 11400,
+      "categorie": 1,
+      "description": "La lice vous permet de recruter des cavaliers (cavalerie)."
+    },
+    {
+      "nom": "Ordre des paladins",
+      "faction": 1,
+      "cout": {
+        "G": 70000,
+        "w": 84,
+        "o": 97,
+        "c": 24
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 13,
+        "batiment": 76
+      },
+      "domination": 25400,
+      "categorie": 1,
+      "description": "L'ordre des paladins vous permet de recruter des paladins (cavalerie)."
+    },
+    {
+      "nom": "Autel de la lumière",
+      "faction": 1,
+      "cout": {
+        "G": 140000,
+        "w": 115,
+        "o": 115,
+        "c": 26
+      },
+      "duree": 2880,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 15,
+        "batiment": null
+      },
+      "domination": 26000,
+      "categorie": 1,
+      "description": "L'autel de la lumière vous permet de recruter des anges (infanterie)."
+    },
+    {
+      "nom": "Autel des cieux",
+      "faction": 1,
+      "cout": {
+        "G": 190000,
+        "w": 99,
+        "o": 110,
+        "c": 40
+      },
+      "duree": 2880,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 16,
+        "batiment": 78
+      },
+      "domination": 64000,
+      "categorie": 1,
+      "description": "L'autel des cieux vous permet de recruter des archanges (infanterie)."
+    },
+    {
+      "nom": "Guilde des mages niveau 1",
+      "faction": 1,
+      "cout": {
+        "G": 6300,
+        "w": 16,
+        "o": 18
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": null
+      },
+      "domination": 900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du premier cercle."
+    },
+    {
+      "nom": "Guilde des mages niveau 2",
+      "faction": 1,
+      "cout": {
+        "G": 14000,
+        "w": 47,
+        "o": 48,
+        "c": 4,
+        "g": 4,
+        "m": 4,
+        "s": 4
+      },
+      "duree": 1152,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 6,
+        "batiment": 80
+      },
+      "domination": 2900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du second cercle."
+    },
+    {
+      "nom": "Guilde des mages niveau 3",
+      "faction": 1,
+      "cout": {
+        "G": 35000,
+        "w": 76,
+        "o": 64,
+        "c": 13,
+        "g": 13,
+        "m": 13,
+        "s": 13
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": 81
+      },
+      "domination": 7900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du troisième cercle."
+    },
+    {
+      "nom": "Guilde des mages niveau 4",
+      "faction": 1,
+      "cout": {
+        "G": 91000,
+        "w": 108,
+        "o": 109,
+        "c": 21,
+        "g": 21,
+        "m": 21,
+        "s": 21
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 12,
+        "batiment": 82
+      },
+      "domination": 20900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du quatrième cercle."
+    },
+    {
+      "nom": "Guilde des mages niveau 5",
+      "faction": 1,
+      "cout": {
+        "G": 252000,
+        "w": 126,
+        "o": 148,
+        "c": 42,
+        "g": 42,
+        "m": 42,
+        "s": 42
+      },
+      "duree": 2880,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 15,
+        "batiment": 83
+      },
+      "domination": 56900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du cinquième cercle."
+    },
+    {
+      "nom": "Conseil du village",
+      "faction": 2,
+      "cout": {
+        "G": 0
+      },
+      "duree": 0,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 0,
+        "batiment": null
+      },
+      "domination": 2000,
+      "categorie": 4,
+      "description": "Le conseil du village vous permet d'accéder à de nouvelles structures et vous fournit 2 000 pièces d'or par jour."
+    },
+    {
+      "nom": "Mairie",
+      "faction": 2,
+      "cout": {
+        "G": 6000,
+        "w": 11,
+        "o": 10
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": 85
+      },
+      "domination": 3000,
+      "categorie": 4,
+      "description": "La mairie vous permet d'accéder à de nouvelles structures et vous fournit 4 000 pièces d'or par jour."
+    },
+    {
+      "nom": "Hôtel de ville",
+      "faction": 2,
+      "cout": {
+        "G": 33000,
+        "w": 39,
+        "o": 31
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": 86
+      },
+      "domination": 6500,
+      "categorie": 4,
+      "description": "L'hôtel de ville vous permet d'accéder à de nouvelles structures et vous fournit 7 000 pièces d'or par jour."
+    },
+    {
+      "nom": "Capitole",
+      "faction": 2,
+      "cout": {
+        "G": 144000,
+        "w": 97,
+        "o": 96
+      },
+      "duree": 2880,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 15,
+        "batiment": 87
+      },
+      "domination": 30500,
+      "categorie": 4,
+      "description": "Le capitole vous fournit 13 000 pièces d'or par jour."
+    },
+    {
+      "nom": "Maitre des supplices",
+      "faction": 2,
+      "cout": {
+        "G": 216000,
+        "w": 99,
+        "o": 85,
+        "m": 7,
+        "s": 20
+      },
+      "duree": 14400,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 15,
+        "batiment": null
+      },
+      "domination": 36000,
+      "categorie": 4,
+      "description": "Le maitre des supplices augmente de 50 % la production quotidienne de créatures, vous fournit 5 000 pièces d'or additionnelles par jour, augmente de 125 000 la capacité de support de votre cité et multiplie par 2 la vitesse de mouvement des héros quittant cette cité avec une armée. Une larme d'Asha est nécessaire pour bâtir cette structure."
+    },
+    {
+      "nom": "Taverne",
+      "faction": 2,
+      "cout": {
+        "G": 600,
+        "w": 3,
+        "o": 3
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 85
+      },
+      "domination": 100,
+      "categorie": 0,
+      "description": "La taverne vous permet de recruter des héros. Chaque nouveau héros arrive accompagné d'une petite armée."
+    },
+    {
+      "nom": "Forge",
+      "faction": 2,
+      "cout": {
+        "G": 4800,
+        "w": 9,
+        "o": 9
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": null
+      },
+      "domination": 800,
+      "categorie": 1,
+      "description": "La forge vous permet d'équiper vos armées de balistes."
+    },
+    {
+      "nom": "Forge de guerre",
+      "faction": 2,
+      "cout": {
+        "G": 6000,
+        "w": 6,
+        "o": 8
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 4,
+        "batiment": 91
+      },
+      "domination": 1800,
+      "categorie": 1,
+      "description": "La forge de guerre vous permet d'équiper vos armées de catapultes."
+    },
+    {
+      "nom": "Fortin",
+      "faction": 2,
+      "cout": {
+        "G": 14400,
+        "w": 21,
+        "o": 21,
+        "s": 4
+      },
+      "duree": 1152,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 6,
+        "batiment": null
+      },
+      "domination": 2400,
+      "categorie": 3,
+      "description": "Le fortin ajoute des remparts autour d'une cité, ce qui fait bénéficier les troupes stationnées dans la cité d'un bonus de défense de 16 %."
+    },
+    {
+      "nom": "Citadelle",
+      "faction": 2,
+      "cout": {
+        "G": 38400,
+        "w": 41,
+        "o": 37,
+        "s": 8
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": 93
+      },
+      "domination": 8800,
+      "categorie": 3,
+      "description": "La citadelle ajoute un donjon et des douves autour des remparts, et augmente de 50 % la production de créatures de base. Les troupes stationnées dans la cité bénéficient d'un bonus de défense de 35 %."
+    },
+    {
+      "nom": "Château",
+      "faction": 2,
+      "cout": {
+        "G": 95000,
+        "w": 77,
+        "o": 69,
+        "s": 22
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 12,
+        "batiment": 94
+      },
+      "domination": 23200,
+      "categorie": 3,
+      "description": "Le château renforce les défenses d'une cité, augmente de 100 % la production de créatures de base et fait bénéficier les troupes stationnées dans la cité d'un bonus de défense de 56 %."
+    },
+    {
+      "nom": "Marché",
+      "faction": 2,
+      "cout": {
+        "G": 1020,
+        "w": 4,
+        "o": 4
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 85
+      },
+      "domination": 170,
+      "categorie": 0,
+      "description": "Le marché vous permet d'acheter et de vendre des ressources et des artéfacts au marchand ou aux autres joueurs. Il vous permet également d'envoyer des caravanes à destination d'autres cités."
+    },
+    {
+      "nom": "Silo à ressources niveau 1",
+      "faction": 2,
+      "cout": {
+        "G": 500,
+        "w": 4,
+        "o": 4
+      },
+      "duree": 144,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 96
+      },
+      "domination": 100,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 1."
+    },
+    {
+      "nom": "Silo à ressources niveau 2",
+      "faction": 2,
+      "cout": {
+        "G": 1000
+      },
+      "duree": 576,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 97
+      },
+      "domination": 200,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 2."
+    },
+    {
+      "nom": "Silo à ressources niveau 3",
+      "faction": 2,
+      "cout": {
+        "G": 1500
+      },
+      "duree": 864,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 98
+      },
+      "domination": 300,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 3."
+    },
+    {
+      "nom": "Silo à ressources niveau 4",
+      "faction": 2,
+      "cout": {
+        "G": 2000
+      },
+      "duree": 1152,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 99
+      },
+      "domination": 400,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 4."
+    },
+    {
+      "nom": "Silo à ressources niveau 5",
+      "faction": 2,
+      "cout": {
+        "G": 2500
+      },
+      "duree": 1440,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 100
+      },
+      "domination": 500,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 5."
+    },
+    {
+      "nom": "Silo à ressources niveau 6",
+      "faction": 2,
+      "cout": {
+        "G": 3000
+      },
+      "duree": 1728,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 101
+      },
+      "domination": 600,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 6."
+    },
+    {
+      "nom": "Silo à ressources niveau 7",
+      "faction": 2,
+      "cout": {
+        "G": 3500
+      },
+      "duree": 2016,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 102
+      },
+      "domination": 700,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 7."
+    },
+    {
+      "nom": "Silo à ressources niveau 8",
+      "faction": 2,
+      "cout": {
+        "G": 4000
+      },
+      "duree": 2304,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 103
+      },
+      "domination": 800,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 8."
+    },
+    {
+      "nom": "Silo à ressources niveau 9",
+      "faction": 2,
+      "cout": {
+        "G": 4500
+      },
+      "duree": 2592,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 104
+      },
+      "domination": 900,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 9."
+    },
+    {
+      "nom": "Silo à ressources niveau 10",
+      "faction": 2,
+      "cout": {
+        "G": 5000
+      },
+      "duree": 2880,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 105
+      },
+      "domination": 1000,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 10."
+    },
+    {
+      "nom": "Creuset de diablotins",
+      "faction": 2,
+      "cout": {
+        "G": 840
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 85
+      },
+      "domination": 140,
+      "categorie": 1,
+      "description": "Le creuset de diablotins vous permet de recruter des diablotins (infanterie)."
+    },
+    {
+      "nom": "Creuset de familiers",
+      "faction": 2,
+      "cout": {
+        "G": 1200,
+        "w": 5,
+        "o": 5,
+        "s": 1
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 2,
+        "batiment": 107
+      },
+      "domination": 340,
+      "categorie": 1,
+      "description": "Le creuset de familiers vous permet de recruter des familiers (tireurs)."
+    },
+    {
+      "nom": "Tour des cornus",
+      "faction": 2,
+      "cout": {
+        "G": 4800,
+        "w": 7,
+        "o": 6,
+        "m": 1,
+        "s": 3
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": null
+      },
+      "domination": 800,
+      "categorie": 1,
+      "description": "La tour des cornus vous permet de recruter des démons cornus (infanterie)."
+    },
+    {
+      "nom": "Bastion des cornus",
+      "faction": 2,
+      "cout": {
+        "G": 6600,
+        "w": 9,
+        "o": 8,
+        "m": 2,
+        "s": 6
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 4,
+        "batiment": 109
+      },
+      "domination": 1900,
+      "categorie": 1,
+      "description": "Le bastion des cornus vous permet de recruter des tyrans cornus (infanterie)."
+    },
+    {
+      "nom": "Chenils",
+      "faction": 2,
+      "cout": {
+        "G": 9600,
+        "w": 20,
+        "o": 19,
+        "m": 2,
+        "s": 6
+      },
+      "duree": 1152,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 6,
+        "batiment": null
+      },
+      "domination": 1600,
+      "categorie": 1,
+      "description": "Les chenils vous permettent de recruter des chiens des enfers (cavalerie)."
+    },
+    {
+      "nom": "Chenils corrompus",
+      "faction": 2,
+      "cout": {
+        "G": 12600,
+        "w": 23,
+        "o": 26,
+        "m": 5,
+        "s": 8
+      },
+      "duree": 1152,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 7,
+        "batiment": 111
+      },
+      "domination": 3700,
+      "categorie": 1,
+      "description": "Les chenils corrompus vous permettent de recruter des cerbères (cavalerie)."
+    },
+    {
+      "nom": "Hall des tentations",
+      "faction": 2,
+      "cout": {
+        "G": 26400,
+        "w": 32,
+        "o": 33,
+        "m": 3,
+        "s": 8
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": null
+      },
+      "domination": 4400,
+      "categorie": 1,
+      "description": "Le hall des tentations vous permet de recruter des succubes (tireurs)."
+    },
+    {
+      "nom": "Hall des péchés",
+      "faction": 2,
+      "cout": {
+        "G": 28800,
+        "w": 42,
+        "o": 38,
+        "m": 5,
+        "s": 10
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 10,
+        "batiment": 113
+      },
+      "domination": 9200,
+      "categorie": 1,
+      "description": "Le hall des péchés vous permet de recruter des maitresses succubes (tireurs)."
+    },
+    {
+      "nom": "Écuries infernales",
+      "faction": 2,
+      "cout": {
+        "G": 27600,
+        "w": 33,
+        "o": 35,
+        "m": 6,
+        "s": 5
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": null
+      },
+      "domination": 4600,
+      "categorie": 1,
+      "description": "Les écuries infernales vous permettent de recruter des chevaux infernaux (cavalerie)."
+    },
+    {
+      "nom": "Écuries de cauchemar",
+      "faction": 2,
+      "cout": {
+        "G": 32400,
+        "w": 39,
+        "o": 31,
+        "m": 8,
+        "s": 7
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 10,
+        "batiment": 115
+      },
+      "domination": 10000,
+      "categorie": 1,
+      "description": "Les écuries de cauchemar vous permettent de recruter des destriers de cauchemar (cavalerie)."
+    },
+    {
+      "nom": "Hall des horreurs",
+      "faction": 2,
+      "cout": {
+        "G": 24000,
+        "w": 25,
+        "o": 25
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 11,
+        "batiment": 116
+      },
+      "domination": 4000,
+      "categorie": 0,
+      "description": "Le hall des horreurs augmente de +1 la production quotidienne de chevaux infernaux et de destriers de cauchemar."
+    },
+    {
+      "nom": "Antichambre des abimes",
+      "faction": 2,
+      "cout": {
+        "G": 68400,
+        "w": 63,
+        "o": 65,
+        "m": 7,
+        "s": 14
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 12,
+        "batiment": null
+      },
+      "domination": 11400,
+      "categorie": 1,
+      "description": "L'antichambre des abimes vous permet de recruter des fiélons des abimes (tireurs)."
+    },
+    {
+      "nom": "Cœur des abimes",
+      "faction": 2,
+      "cout": {
+        "G": 84000,
+        "w": 70,
+        "o": 75,
+        "m": 10,
+        "s": 25
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 13,
+        "batiment": 118
+      },
+      "domination": 25400,
+      "categorie": 1,
+      "description": "Le cœur des abimes vous permet de recruter des seigneurs des abimes (tireurs)."
+    },
+    {
+      "nom": "Palais des tourments",
+      "faction": 2,
+      "cout": {
+        "G": 180000,
+        "w": 85,
+        "o": 85,
+        "m": 10,
+        "s": 24
+      },
+      "duree": 2880,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 15,
+        "batiment": null
+      },
+      "domination": 26000,
+      "categorie": 1,
+      "description": "Le palais des tourments vous permet de recruter des diables (infanterie)."
+    },
+    {
+      "nom": "Palais des tortures",
+      "faction": 2,
+      "cout": {
+        "G": 218000,
+        "w": 69,
+        "o": 100,
+        "m": 15,
+        "s": 30
+      },
+      "duree": 2880,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 16,
+        "batiment": 120
+      },
+      "domination": 64000,
+      "categorie": 1,
+      "description": "Le palais des tortures vous permet de recruter des archidiables (infanterie)."
+    },
+    {
+      "nom": "Guilde des mages niveau 1",
+      "faction": 2,
+      "cout": {
+        "G": 5400,
+        "w": 12,
+        "o": 11
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": null
+      },
+      "domination": 900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du premier cercle."
+    },
+    {
+      "nom": "Guilde des mages niveau 2",
+      "faction": 2,
+      "cout": {
+        "G": 12000,
+        "w": 27,
+        "o": 27,
+        "c": 4,
+        "g": 4,
+        "m": 4,
+        "s": 4
+      },
+      "duree": 1152,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 6,
+        "batiment": 122
+      },
+      "domination": 2900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du second cercle."
+    },
+    {
+      "nom": "Guilde des mages niveau 3",
+      "faction": 2,
+      "cout": {
+        "G": 30000,
+        "w": 56,
+        "o": 43,
+        "c": 11,
+        "g": 11,
+        "m": 11,
+        "s": 11
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": 123
+      },
+      "domination": 7900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du troisième cercle."
+    },
+    {
+      "nom": "Guilde des mages niveau 4",
+      "faction": 2,
+      "cout": {
+        "G": 78000,
+        "w": 77,
+        "o": 85,
+        "c": 18,
+        "g": 18,
+        "m": 18,
+        "s": 18
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 12,
+        "batiment": 124
+      },
+      "domination": 20900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du quatrième cercle."
+    },
+    {
+      "nom": "Guilde des mages niveau 5",
+      "faction": 2,
+      "cout": {
+        "G": 216000,
+        "w": 117,
+        "o": 118,
+        "c": 36,
+        "g": 36,
+        "m": 36,
+        "s": 36
+      },
+      "duree": 2880,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 15,
+        "batiment": 125
+      },
+      "domination": 56900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du cinquième cercle."
+    },
+    {
+      "nom": "Conseil du village",
+      "faction": 3,
+      "cout": {
+        "G": 0
+      },
+      "duree": 0,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 0,
+        "batiment": null
+      },
+      "domination": 2000,
+      "categorie": 4,
+      "description": "Le conseil du village vous permet d'accéder à de nouvelles structures et vous fournit 2 000 pièces d'or par jour."
+    },
+    {
+      "nom": "Mairie",
+      "faction": 3,
+      "cout": {
+        "G": 4500,
+        "w": 10,
+        "o": 6
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": 127
+      },
+      "domination": 3000,
+      "categorie": 4,
+      "description": "La mairie vous permet d'accéder à de nouvelles structures et vous fournit 4 000 pièces d'or par jour."
+    },
+    {
+      "nom": "Hôtel de ville",
+      "faction": 3,
+      "cout": {
+        "G": 24750,
+        "w": 49,
+        "o": 38
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": 128
+      },
+      "domination": 6500,
+      "categorie": 4,
+      "description": "L'hôtel de ville vous permet d'accéder à de nouvelles structures et vous fournit 7 000 pièces d'or par jour."
+    },
+    {
+      "nom": "Capitole",
+      "faction": 3,
+      "cout": {
+        "G": 108000,
+        "w": 105,
+        "o": 61
+      },
+      "duree": 2880,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 15,
+        "batiment": 129
+      },
+      "domination": 30500,
+      "categorie": 4,
+      "description": "Le capitole vous fournit 13 000 pièces d'or par jour."
+    },
+    {
+      "nom": "Tombeau des maudits",
+      "faction": 3,
+      "cout": {
+        "G": 162000,
+        "w": 75,
+        "o": 69
+      },
+      "duree": 14400,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 15,
+        "batiment": null
+      },
+      "domination": 36000,
+      "categorie": 4,
+      "description": "Le tombeau des maudits augmente de 50 % la production quotidienne de créatures, vous fournit 5 000 pièces d'or additionnelles par jour, augmente de 125 000 la capacité de support de votre cité et multiplie par 2 la vitesse de mouvement des héros quittant cette cité avec une armée. Une larme d'Asha est nécessaire pour bâtir cette structure."
+    },
+    {
+      "nom": "Taverne",
+      "faction": 3,
+      "cout": {
+        "G": 450,
+        "w": 4,
+        "o": 3
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 127
+      },
+      "domination": 100,
+      "categorie": 0,
+      "description": "La taverne vous permet de recruter des héros. Chaque nouveau héros arrive accompagné d'une petite armée."
+    },
+    {
+      "nom": "Forge",
+      "faction": 3,
+      "cout": {
+        "G": 3600,
+        "w": 8,
+        "o": 7
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": null
+      },
+      "domination": 800,
+      "categorie": 1,
+      "description": "La forge vous permet d'équiper vos armées de balistes."
+    },
+    {
+      "nom": "Forge de guerre",
+      "faction": 3,
+      "cout": {
+        "G": 4500,
+        "w": 9,
+        "o": 6
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 4,
+        "batiment": 133
+      },
+      "domination": 1800,
+      "categorie": 1,
+      "description": "La forge de guerre vous permet d'équiper vos armées de catapultes."
+    },
+    {
+      "nom": "Fortin",
+      "faction": 3,
+      "cout": {
+        "G": 10800,
+        "w": 23,
+        "o": 15,
+        "m": 6
+      },
+      "duree": 1152,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 6,
+        "batiment": null
+      },
+      "domination": 2400,
+      "categorie": 3,
+      "description": "Le fortin ajoute des remparts autour d'une cité, ce qui fait bénéficier les troupes stationnées dans la cité d'un bonus de défense de 15 %."
+    },
+    {
+      "nom": "Citadelle",
+      "faction": 3,
+      "cout": {
+        "G": 28800,
+        "w": 45,
+        "o": 34,
+        "m": 14
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": 135
+      },
+      "domination": 8800,
+      "categorie": 3,
+      "description": "La citadelle ajoute un donjon et des douves autour des remparts, et augmente de 50 % la production de créatures de base. Les troupes stationnées dans la cité bénéficient d'un bonus de défense de 30 %."
+    },
+    {
+      "nom": "Château",
+      "faction": 3,
+      "cout": {
+        "G": 64800,
+        "w": 70,
+        "o": 51,
+        "m": 20
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 12,
+        "batiment": 136
+      },
+      "domination": 23200,
+      "categorie": 3,
+      "description": "Le château renforce les défenses d'une cité, augmente de 100 % la production de créatures de base et fait bénéficier les troupes stationnées dans la cité d'un bonus de défense de 40 %."
+    },
+    {
+      "nom": "Marché",
+      "faction": 3,
+      "cout": {
+        "G": 765,
+        "w": 5,
+        "o": 4
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 127
+      },
+      "domination": 170,
+      "categorie": 0,
+      "description": "Le marché vous permet d'acheter et de vendre des ressources et des artéfacts au marchand ou aux autres joueurs. Il vous permet également d'envoyer des caravanes à destination d'autres cités."
+    },
+    {
+      "nom": "Silo à ressources niveau 1",
+      "faction": 3,
+      "cout": {
+        "G": 500,
+        "w": 3,
+        "o": 2
+      },
+      "duree": 144,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 138
+      },
+      "domination": 100,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 1."
+    },
+    {
+      "nom": "Silo à ressources niveau 2",
+      "faction": 3,
+      "cout": {
+        "G": 1000
+      },
+      "duree": 576,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 139
+      },
+      "domination": 200,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 2."
+    },
+    {
+      "nom": "Silo à ressources niveau 3",
+      "faction": 3,
+      "cout": {
+        "G": 1500
+      },
+      "duree": 864,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 140
+      },
+      "domination": 300,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 3."
+    },
+    {
+      "nom": "Silo à ressources niveau 4",
+      "faction": 3,
+      "cout": {
+        "G": 2000
+      },
+      "duree": 1152,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 141
+      },
+      "domination": 400,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 4."
+    },
+    {
+      "nom": "Silo à ressources niveau 5",
+      "faction": 3,
+      "cout": {
+        "G": 2500
+      },
+      "duree": 1440,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 142
+      },
+      "domination": 500,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 5."
+    },
+    {
+      "nom": "Silo à ressources niveau 6",
+      "faction": 3,
+      "cout": {
+        "G": 3000
+      },
+      "duree": 1728,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 143
+      },
+      "domination": 600,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 6."
+    },
+    {
+      "nom": "Silo à ressources niveau 7",
+      "faction": 3,
+      "cout": {
+        "G": 3500
+      },
+      "duree": 2016,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 144
+      },
+      "domination": 700,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 7."
+    },
+    {
+      "nom": "Silo à ressources niveau 8",
+      "faction": 3,
+      "cout": {
+        "G": 4000
+      },
+      "duree": 2304,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 145
+      },
+      "domination": 800,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 8."
+    },
+    {
+      "nom": "Silo à ressources niveau 9",
+      "faction": 3,
+      "cout": {
+        "G": 4500
+      },
+      "duree": 2592,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 146
+      },
+      "domination": 900,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 9."
+    },
+    {
+      "nom": "Silo à ressources niveau 10",
+      "faction": 3,
+      "cout": {
+        "G": 5000
+      },
+      "duree": 2880,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 147
+      },
+      "domination": 1000,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 10."
+    },
+    {
+      "nom": "Cimetière",
+      "faction": 3,
+      "cout": {
+        "G": 630
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 127
+      },
+      "domination": 140,
+      "categorie": 1,
+      "description": "Le cimetière vous permet de recruter des squelettes (infanterie)."
+    },
+    {
+      "nom": "Ossuaire",
+      "faction": 3,
+      "cout": {
+        "G": 900,
+        "w": 4,
+        "o": 4
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 2,
+        "batiment": 149
+      },
+      "domination": 340,
+      "categorie": 1,
+      "description": "L'ossuaire vous permet de recruter des tireurs squelettes (tireurs)."
+    },
+    {
+      "nom": "Tombes profanées",
+      "faction": 3,
+      "cout": {
+        "G": 18000,
+        "w": 26,
+        "o": 26
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": 150
+      },
+      "domination": 4000,
+      "categorie": 0,
+      "description": "Les tombes profanées augmentent de +6 la production quotidienne de squelettes et d'archers squelettes."
+    },
+    {
+      "nom": "Crypte",
+      "faction": 3,
+      "cout": {
+        "G": 3600,
+        "w": 11,
+        "o": 8,
+        "m": 3
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": null
+      },
+      "domination": 800,
+      "categorie": 1,
+      "description": "La crypte vous permet de recruter des zombies (infanterie)."
+    },
+    {
+      "nom": "Crypte putride",
+      "faction": 3,
+      "cout": {
+        "G": 4950,
+        "w": 10,
+        "o": 7,
+        "m": 5
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 4,
+        "batiment": 152
+      },
+      "domination": 1900,
+      "categorie": 1,
+      "description": "La crypte putride vous permet de recruter des zombies pestilentiels (infanterie)."
+    },
+    {
+      "nom": "Tour en ruines",
+      "faction": 3,
+      "cout": {
+        "G": 7200,
+        "w": 24,
+        "o": 19,
+        "m": 6
+      },
+      "duree": 1152,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 6,
+        "batiment": null
+      },
+      "domination": 1600,
+      "categorie": 1,
+      "description": "La tour en ruines vous permet de recruter des fantômes (cavalerie)."
+    },
+    {
+      "nom": "Tour hantée",
+      "faction": 3,
+      "cout": {
+        "G": 9450,
+        "w": 20,
+        "o": 17,
+        "m": 12
+      },
+      "duree": 1152,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 7,
+        "batiment": 154
+      },
+      "domination": 3700,
+      "categorie": 1,
+      "description": "La tour hantée vous permet de recruter des spectres (cavalerie)."
+    },
+    {
+      "nom": "Manoir de vampires",
+      "faction": 3,
+      "cout": {
+        "G": 19800,
+        "w": 40,
+        "o": 28,
+        "m": 8
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": null
+      },
+      "domination": 4400,
+      "categorie": 1,
+      "description": "Le manoir de vampires vous permet de recruter des vampires (infanterie)."
+    },
+    {
+      "nom": "Château de vampire",
+      "faction": 3,
+      "cout": {
+        "G": 21600,
+        "w": 47,
+        "o": 16,
+        "m": 12
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 10,
+        "batiment": 156
+      },
+      "domination": 9200,
+      "categorie": 1,
+      "description": "Le château de vampire vous permet de recruter des seigneurs vampires (infanterie)."
+    },
+    {
+      "nom": "Caveau",
+      "faction": 3,
+      "cout": {
+        "G": 20700,
+        "w": 37,
+        "o": 25,
+        "c": 6,
+        "g": 3,
+        "m": 14,
+        "s": 3
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": null
+      },
+      "domination": 4600,
+      "categorie": 1,
+      "description": "Le caveau vous permet de recruter des liches (tireurs)."
+    },
+    {
+      "nom": "Mausolée",
+      "faction": 3,
+      "cout": {
+        "G": 24300,
+        "w": 41,
+        "o": 26,
+        "c": 15,
+        "g": 9,
+        "m": 20,
+        "s": 9
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 10,
+        "batiment": 158
+      },
+      "domination": 10000,
+      "categorie": 1,
+      "description": "Le mausolée vous permet de recruter des archiliches (tireurs)."
+    },
+    {
+      "nom": "Hall des lamentations",
+      "faction": 3,
+      "cout": {
+        "G": 51300,
+        "w": 72,
+        "o": 50,
+        "c": 12,
+        "m": 22
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 12,
+        "batiment": null
+      },
+      "domination": 11400,
+      "categorie": 1,
+      "description": "Le hall des lamentations vous permet de recruter des revenants (infanterie)."
+    },
+    {
+      "nom": "Cathédrale des lamentations",
+      "faction": 3,
+      "cout": {
+        "G": 63000,
+        "w": 56,
+        "o": 58,
+        "c": 21,
+        "m": 30
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 13,
+        "batiment": 160
+      },
+      "domination": 25400,
+      "categorie": 1,
+      "description": "La cathédrale des lamentations vous permet de recruter des apparitions (infanterie)."
+    },
+    {
+      "nom": "Cimetière des dragons",
+      "faction": 3,
+      "cout": {
+        "G": 117000,
+        "w": 90,
+        "o": 63,
+        "c": 33,
+        "m": 45
+      },
+      "duree": 2880,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 15,
+        "batiment": null
+      },
+      "domination": 26000,
+      "categorie": 1,
+      "description": "Le cimetière des dragons vous permet de recruter des dragons squelettes (cavalerie)."
+    },
+    {
+      "nom": "Sépulcre des dragons",
+      "faction": 3,
+      "cout": {
+        "G": 171000,
+        "w": 73,
+        "o": 52,
+        "c": 48,
+        "m": 50
+      },
+      "duree": 2880,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 16,
+        "batiment": 162
+      },
+      "domination": 64000,
+      "categorie": 1,
+      "description": "Le sépulcre des dragons vous permet de recruter des dragons spectraux (cavalerie)."
+    },
+    {
+      "nom": "Guilde des mages niveau 1",
+      "faction": 3,
+      "cout": {
+        "G": 3600,
+        "w": 8,
+        "o": 9
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": null
+      },
+      "domination": 900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du premier cercle."
+    },
+    {
+      "nom": "Guilde des mages niveau 2",
+      "faction": 3,
+      "cout": {
+        "G": 8000,
+        "w": 22,
+        "o": 16,
+        "c": 2,
+        "g": 2,
+        "m": 2,
+        "s": 2
+      },
+      "duree": 1152,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 6,
+        "batiment": 164
+      },
+      "domination": 2900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du second cercle."
+    },
+    {
+      "nom": "Guilde des mages niveau 3",
+      "faction": 3,
+      "cout": {
+        "G": 22000,
+        "w": 32,
+        "o": 25,
+        "c": 7,
+        "g": 7,
+        "m": 7,
+        "s": 7
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": 165
+      },
+      "domination": 7900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du troisième cercle."
+    },
+    {
+      "nom": "Guilde des mages niveau 4",
+      "faction": 3,
+      "cout": {
+        "G": 52000,
+        "w": 42,
+        "o": 64,
+        "c": 12,
+        "g": 12,
+        "m": 12,
+        "s": 12
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 12,
+        "batiment": 166
+      },
+      "domination": 20900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du quatrième cercle."
+    },
+    {
+      "nom": "Guilde des mages niveau 5",
+      "faction": 3,
+      "cout": {
+        "G": 144000,
+        "w": 72,
+        "o": 106,
+        "c": 24,
+        "g": 24,
+        "m": 24,
+        "s": 24
+      },
+      "duree": 2880,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 15,
+        "batiment": 167
+      },
+      "domination": 56900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du cinquième cercle."
+    },
+    {
+      "nom": "Conseil du village",
+      "faction": 4,
+      "cout": {
+        "G": 0
+      },
+      "duree": 0,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 0,
+        "batiment": null
+      },
+      "domination": 2000,
+      "categorie": 4,
+      "description": "Le conseil du village vous permet d'accéder à de nouvelles structures et vous fournit 2 000 pièces d'or par jour."
+    },
+    {
+      "nom": "Mairie",
+      "faction": 4,
+      "cout": {
+        "G": 4500,
+        "w": 13,
+        "o": 11
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": 169
+      },
+      "domination": 3000,
+      "categorie": 4,
+      "description": "La mairie vous permet d'accéder à de nouvelles structures et vous fournit 4 000 pièces d'or par jour."
+    },
+    {
+      "nom": "Hôtel de ville",
+      "faction": 4,
+      "cout": {
+        "G": 24750,
+        "w": 60,
+        "o": 40
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": 170
+      },
+      "domination": 6500,
+      "categorie": 4,
+      "description": "L'hôtel de ville vous permet d'accéder à de nouvelles structures et vous fournit 7 000 pièces d'or par jour."
+    },
+    {
+      "nom": "Capitole",
+      "faction": 4,
+      "cout": {
+        "G": 108000,
+        "w": 137,
+        "o": 77
+      },
+      "duree": 2880,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 15,
+        "batiment": 171
+      },
+      "domination": 30500,
+      "categorie": 4,
+      "description": "Le capitole vous fournit 13 000 pièces d'or par jour."
+    },
+    {
+      "nom": "Fille de Sylanna",
+      "faction": 4,
+      "cout": {
+        "G": 162000,
+        "w": 91,
+        "o": 105
+      },
+      "duree": 14400,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 15,
+        "batiment": null
+      },
+      "domination": 36000,
+      "categorie": 4,
+      "description": "La fille de Sylanna augmente de 50 % la production quotidienne de créatures, vous fournit 5 000 pièces d'or additionnelles par jour, augmente de 125 000 la capacité de support de votre cité et multiplie par 2 la vitesse de mouvement des héros quittant cette cité avec une armée. Une larme d'Asha est nécessaire pour bâtir cette structure."
+    },
+    {
+      "nom": "Taverne",
+      "faction": 4,
+      "cout": {
+        "G": 450,
+        "w": 3,
+        "o": 3
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 169
+      },
+      "domination": 100,
+      "categorie": 0,
+      "description": "La taverne vous permet de recruter des héros. Chaque nouveau héros arrive accompagné d'une petite armée."
+    },
+    {
+      "nom": "Forge",
+      "faction": 4,
+      "cout": {
+        "G": 3600,
+        "w": 13,
+        "o": 11
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": null
+      },
+      "domination": 800,
+      "categorie": 1,
+      "description": "La forge vous permet d'équiper vos armées de balistes."
+    },
+    {
+      "nom": "Forge de guerre",
+      "faction": 4,
+      "cout": {
+        "G": 4500,
+        "w": 13,
+        "o": 11
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 4,
+        "batiment": 175
+      },
+      "domination": 1800,
+      "categorie": 1,
+      "description": "La forge de guerre vous permet d'équiper vos armées de catapultes."
+    },
+    {
+      "nom": "Fortin",
+      "faction": 4,
+      "cout": {
+        "G": 10800,
+        "w": 29,
+        "o": 25
+      },
+      "duree": 1152,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 6,
+        "batiment": null
+      },
+      "domination": 2400,
+      "categorie": 3,
+      "description": "Le fortin ajoute des remparts autour d'une cité, ce qui fait bénéficier les troupes stationnées dans la cité d'un bonus de défense de 16 %."
+    },
+    {
+      "nom": "Citadelle",
+      "faction": 4,
+      "cout": {
+        "G": 28800,
+        "w": 52,
+        "o": 38
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": 177
+      },
+      "domination": 8800,
+      "categorie": 3,
+      "description": "La citadelle ajoute un donjon et des douves autour des remparts, et augmente de 50 % la production de créatures de base. Les troupes stationnées dans la cité bénéficient d'un bonus de défense de 35 %."
+    },
+    {
+      "nom": "Château",
+      "faction": 4,
+      "cout": {
+        "G": 64800,
+        "w": 110,
+        "o": 78
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 12,
+        "batiment": 178
+      },
+      "domination": 23200,
+      "categorie": 3,
+      "description": "Le château renforce les défenses d'une cité, augmente de 100 % la production de créatures de base et fait bénéficier les troupes stationnées dans la cité d'un bonus de défense de 56 %."
+    },
+    {
+      "nom": "Marché",
+      "faction": 4,
+      "cout": {
+        "G": 765,
+        "w": 6,
+        "o": 5
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 169
+      },
+      "domination": 170,
+      "categorie": 0,
+      "description": "Le marché vous permet d'acheter et de vendre des ressources et des artéfacts au marchand ou aux autres joueurs. Il vous permet également d'envoyer des caravanes à destination d'autres cités."
+    },
+    {
+      "nom": "Silo à ressources niveau 1",
+      "faction": 4,
+      "cout": {
+        "G": 500,
+        "w": 6,
+        "o": 6
+      },
+      "duree": 144,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 180
+      },
+      "domination": 100,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 1."
+    },
+    {
+      "nom": "Silo à ressources niveau 2",
+      "faction": 4,
+      "cout": {
+        "G": 1000
+      },
+      "duree": 576,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 181
+      },
+      "domination": 200,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 2."
+    },
+    {
+      "nom": "Silo à ressources niveau 3",
+      "faction": 4,
+      "cout": {
+        "G": 1500
+      },
+      "duree": 864,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 182
+      },
+      "domination": 300,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 3."
+    },
+    {
+      "nom": "Silo à ressources niveau 4",
+      "faction": 4,
+      "cout": {
+        "G": 2000
+      },
+      "duree": 1152,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 183
+      },
+      "domination": 400,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 4."
+    },
+    {
+      "nom": "Silo à ressources niveau 5",
+      "faction": 4,
+      "cout": {
+        "G": 2500
+      },
+      "duree": 1440,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 184
+      },
+      "domination": 500,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 5."
+    },
+    {
+      "nom": "Silo à ressources niveau 6",
+      "faction": 4,
+      "cout": {
+        "G": 3000
+      },
+      "duree": 1728,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 185
+      },
+      "domination": 600,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 6."
+    },
+    {
+      "nom": "Silo à ressources niveau 7",
+      "faction": 4,
+      "cout": {
+        "G": 3500
+      },
+      "duree": 2016,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 186
+      },
+      "domination": 700,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 7."
+    },
+    {
+      "nom": "Silo à ressources niveau 8",
+      "faction": 4,
+      "cout": {
+        "G": 4000
+      },
+      "duree": 2304,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 187
+      },
+      "domination": 800,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 8."
+    },
+    {
+      "nom": "Silo à ressources niveau 9",
+      "faction": 4,
+      "cout": {
+        "G": 4500
+      },
+      "duree": 2592,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 188
+      },
+      "domination": 900,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 9."
+    },
+    {
+      "nom": "Silo à ressources niveau 10",
+      "faction": 4,
+      "cout": {
+        "G": 5000
+      },
+      "duree": 2880,
+      "niveau": 0,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 189
+      },
+      "domination": 1000,
+      "categorie": 0,
+      "description": "Le silo à ressources augmente votre capacité de stockage. Niveau 10."
+    },
+    {
+      "nom": "Arbre des fées",
+      "faction": 4,
+      "cout": {
+        "G": 630
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 1,
+        "batiment": 169
+      },
+      "domination": 140,
+      "categorie": 1,
+      "description": "L'arbre des fées permet de recruter des nymphes (cavalerie)."
+    },
+    {
+      "nom": "Bois des fées",
+      "faction": 4,
+      "cout": {
+        "G": 900,
+        "w": 6,
+        "o": 5
+      },
+      "duree": 144,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 2,
+        "batiment": 191
+      },
+      "domination": 340,
+      "categorie": 1,
+      "description": "Le bois des fées permet de recruter des dryades (cavalerie)."
+    },
+    {
+      "nom": "Terrasse de la lame dansante",
+      "faction": 4,
+      "cout": {
+        "G": 3600,
+        "w": 14,
+        "o": 10
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": null
+      },
+      "domination": 800,
+      "categorie": 1,
+      "description": "La terrasse de la lame dansante permet de recruter des fines-lames (infanterie)."
+    },
+    {
+      "nom": "Arène de la lame dansante",
+      "faction": 4,
+      "cout": {
+        "G": 4950,
+        "w": 15,
+        "o": 11,
+        "g": 3
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 4,
+        "batiment": 193
+      },
+      "domination": 1900,
+      "categorie": 1,
+      "description": "L'arène de la lame dansante permet de recruter lames-de-guerre (infanterie)."
+    },
+    {
+      "nom": "Loge de chasse",
+      "faction": 4,
+      "cout": {
+        "G": 7200,
+        "w": 28,
+        "o": 26,
+        "g": 3
+      },
+      "duree": 1152,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 6,
+        "batiment": null
+      },
+      "domination": 1600,
+      "categorie": 1,
+      "description": "La loge de chasse permet de recruter des chasseurs (tireurs)."
+    },
+    {
+      "nom": "Pavillon de chasse",
+      "faction": 4,
+      "cout": {
+        "G": 9450,
+        "w": 29,
+        "o": 21,
+        "g": 5
+      },
+      "duree": 1152,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 7,
+        "batiment": 195
+      },
+      "domination": 3700,
+      "categorie": 1,
+      "description": "Le pavillon de chasse permet de recruter des maitres archers (tireurs)."
+    },
+    {
+      "nom": "Cercle des pierres",
+      "faction": 4,
+      "cout": {
+        "G": 19800,
+        "w": 52,
+        "o": 45,
+        "g": 5
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": null
+      },
+      "domination": 4400,
+      "categorie": 1,
+      "description": "Le cercle des pierres permet de recruter des druides (tireurs)."
+    },
+    {
+      "nom": "Cromlech",
+      "faction": 4,
+      "cout": {
+        "G": 21600,
+        "w": 49,
+        "o": 55,
+        "g": 8
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 10,
+        "batiment": 197
+      },
+      "domination": 9200,
+      "categorie": 1,
+      "description": "Le cromlech permet de recruter des druides séculaires (tireurs)."
+    },
+    {
+      "nom": "Clairière des licornes",
+      "faction": 4,
+      "cout": {
+        "G": 20700,
+        "w": 59,
+        "o": 50,
+        "g": 9,
+        "m": 3
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": null
+      },
+      "domination": 4600,
+      "categorie": 1,
+      "description": "La clairière des licornes permet de recruter des licornes (cavalerie)."
+    },
+    {
+      "nom": "Jardin des licornes",
+      "faction": 4,
+      "cout": {
+        "G": 24300,
+        "w": 56,
+        "o": 38,
+        "g": 15,
+        "m": 6
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 10,
+        "batiment": 199
+      },
+      "domination": 10000,
+      "categorie": 1,
+      "description": "Le jardin des licornes permet de recruter des licornes d'argent (cavalerie)."
+    },
+    {
+      "nom": "Arche de tréant",
+      "faction": 4,
+      "cout": {
+        "G": 51300,
+        "w": 92,
+        "o": 80,
+        "g": 17,
+        "m": 8
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 12,
+        "batiment": null
+      },
+      "domination": 11400,
+      "categorie": 1,
+      "description": "L'arche de tréant permet de recruter des tréants (infanterie)."
+    },
+    {
+      "nom": "Alcôve de tréant",
+      "faction": 4,
+      "cout": {
+        "G": 63000,
+        "w": 76,
+        "o": 79,
+        "g": 21,
+        "m": 12
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 13,
+        "batiment": 201
+      },
+      "domination": 25400,
+      "categorie": 1,
+      "description": "L'alcôve de tréant permet de recruter des tréants hargneux (infanterie)."
+    },
+    {
+      "nom": "Pousses de tréant",
+      "faction": 4,
+      "cout": {
+        "G": 22000,
+        "w": 30,
+        "o": 30
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 14,
+        "batiment": 202
+      },
+      "domination": 4000,
+      "categorie": 0,
+      "description": "Les pousses de tréant augmentent de +1 la production quotidienne de tréants, de tréants séculaires et de tréants hargneux."
+    },
+    {
+      "nom": "Autel des dragons",
+      "faction": 4,
+      "cout": {
+        "G": 117000,
+        "w": 115,
+        "o": 100,
+        "g": 22,
+        "m": 13
+      },
+      "duree": 2880,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 15,
+        "batiment": null
+      },
+      "domination": 26000,
+      "categorie": 1,
+      "description": "L'autel des dragons permet de recruter des dragons verts (cavalerie)."
+    },
+    {
+      "nom": "Sanctuaire des dragons",
+      "faction": 4,
+      "cout": {
+        "G": 190000,
+        "w": 136,
+        "o": 81,
+        "g": 27,
+        "m": 19
+      },
+      "duree": 2880,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 16,
+        "batiment": 204
+      },
+      "domination": 64000,
+      "categorie": 1,
+      "description": "Le sanctuaire des dragons permet de recruter des dragons d'émeraude (cavalerie)."
+    },
+    {
+      "nom": "Guilde des mages niveau 1",
+      "faction": 4,
+      "cout": {
+        "G": 5850,
+        "w": 13,
+        "o": 13
+      },
+      "duree": 576,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 3,
+        "batiment": null
+      },
+      "domination": 900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du premier cercle."
+    },
+    {
+      "nom": "Guilde des mages niveau 2",
+      "faction": 4,
+      "cout": {
+        "G": 13000,
+        "w": 32,
+        "o": 25,
+        "c": 4,
+        "g": 4,
+        "m": 4,
+        "s": 4
+      },
+      "duree": 1152,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 6,
+        "batiment": 206
+      },
+      "domination": 2900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du second cercle."
+    },
+    {
+      "nom": "Guilde des mages niveau 3",
+      "faction": 4,
+      "cout": {
+        "G": 32500,
+        "w": 54,
+        "o": 49,
+        "c": 13,
+        "g": 13,
+        "m": 13,
+        "s": 13
+      },
+      "duree": 1584,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 9,
+        "batiment": 207
+      },
+      "domination": 7900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du troisième cercle."
+    },
+    {
+      "nom": "Guilde des mages niveau 4",
+      "faction": 4,
+      "cout": {
+        "G": 84500,
+        "w": 71,
+        "o": 73,
+        "c": 21,
+        "g": 21,
+        "m": 21,
+        "s": 21
+      },
+      "duree": 1872,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 12,
+        "batiment": 208
+      },
+      "domination": 20900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du quatrième cercle."
+    },
+    {
+      "nom": "Guilde des mages niveau 5",
+      "faction": 4,
+      "cout": {
+        "G": 234000,
+        "w": 131,
+        "o": 124,
+        "c": 42,
+        "g": 42,
+        "m": 42,
+        "s": 42
+      },
+      "duree": 2880,
+      "niveau": 1,
+      "prerequis": {
+        "niveau_cite": 15,
+        "batiment": 209
+      },
+      "domination": 56900,
+      "categorie": 2,
+      "description": "Permet à un héros d'accéder à deux sorts du cinquième cercle."
+    }
+  ],
+  "_batiments_region": [
+    {
+      "nom": "Atelier d'exploitation des cristaux niveau 1",
+      "faction": -1,
+      "cout": 3000,
+      "c": 1,
+      "duree": 144,
+      "prerequis_carriere": 2,
+      "batiment": null,
+      "prerequis_mine": 1,
+      "domination": 600,
+      "description": "L'atelier d'exploitation des cristaux (niveau 1) augmente de 4 % la production des mines de cristaux situées à proximité. L'effet est augmenté de 20 % si l'atelier d'exploitation est situé à côté de la mine."
+    },
+    {
+      "nom": "Atelier d'exploitation des cristaux niveau 2",
+      "faction": -1,
+      "cout": 6000,
+      "c": 2,
+      "duree": 288,
+      "prerequis_carriere": null,
+      "batiment": null,
+      "prerequis_mine": 2,
+      "domination": 0,
+      "description": "L'atelier d'exploitation des cristaux (niveau 2) augmente de 8 % la production des mines de cristaux situées à proximité. L'effet est augmenté de 20 % si l'atelier d'exploitation est situé à côté de la mine."
+    },
+    {
+      "nom": "Atelier d'exploitation des cristaux niveau 3",
+      "faction": -1,
+      "cout": 9000,
+      "c": 3,
+      "duree": 432,
+      "prerequis_carriere": null,
+      "batiment": null,
+      "prerequis_mine": 3,
+      "domination": 0,
+      "description": "L'atelier d'exploitation des cristaux (niveau 3) augmente de 12 % la production des mines de cristaux situées à proximité. L'effet est augmenté de 20 % si l'atelier d'exploitation est situé à côté de la mine."
+    },
+    {
+      "nom": "Atelier d'exploitation des cristaux niveau 4",
+      "faction": -1,
+      "cout": {
+        "G": 12000,
+        "c": 4
+      },
+      "duree": 576,
+      "prerequis_carriere": null,
+      "batiment": null,
+      "prerequis_mine": 4,
+      "domination": 0,
+      "description": "L'atelier d'exploitation des cristaux (niveau 4) augmente de 16 % la production des mines de cristaux situées à proximité. L'effet est augmenté de 20 % si l'atelier d'exploitation est situé à côté de la mine."
+    },
+    {
+      "nom": "Atelier d'exploitation des cristaux niveau 5",
+      "faction": -1,
+      "cout": {
+        "G": 15000,
+        "c": 5
+      },
+      "duree": 720,
+      "prerequis_carriere": null,
+      "batiment": null,
+      "prerequis_mine": 5,
+      "domination": 0,
+      "description": "L'atelier d'exploitation des cristaux (niveau 5) augmente de 20 % la production des mines de cristaux situées à proximité. L'effet est augmenté de 20 % si l'atelier d'exploitation est situé à côté de la mine."
+    },
+    {
+      "nom": "Entrepôt",
+      "faction": -1,
+      "cout": {
+        "G": 30000,
+        "w": 10,
+        "o": 10
+      },
+      "duree": 864,
+      "prerequis": {
+        "carriere": null,
+        "batiment": 59,
+        "mine": null
+      },
+      "domination": 10600,
+      "description": "Les entrepôts augmentent de 50 % la capacité de stockage d'une cité."
+    },
+    {
+      "nom": "Champs",
+      "faction": -1,
+      "cout": {
+        "G": 20000
+      },
+      "duree": 432,
+      "prerequis": {
+        "carriere": null,
+        "batiment": null,
+        "mine": null
+      },
+      "domination": 4000,
+      "description": "Les champs augmentent de 5 % la capacité de support de troupes d'une cité."
+    },
+    {
+      "nom": "Relai niveau 1",
+      "faction": -1,
+      "cout": {
+        "G": 5000,
+        "w": 3,
+        "o": 3
+      },
+      "duree": 144,
+      "prerequis": {
+        "carriere": null,
+        "batiment": "XmairieX",
+        "mine": null
+      },
+      "domination": 1000,
+      "description": "Un relai (niveau 1) vous permet de rediriger jusqu'à 20 % de la production journalière d'une mine vers une autre cité."
+    },
+    {
+      "nom": "Relai niveau 2",
+      "faction": -1,
+      "cout": {
+        "G": 10000,
+        "w": 6,
+        "o": 6
+      },
+      "duree": 144,
+      "prerequis": {
+        "carriere": null,
+        "batiment": "XRelai1X",
+        "mine": null
+      },
+      "domination": 0,
+      "description": "Un relai (niveau 2) vous permet de rediriger jusqu'à 40 % de la production journalière d'une mine vers une autre cité."
+    },
+    {
+      "nom": "Portail",
+      "faction": -1,
+      "cout": {
+        "G": 100000,
+        "w": 90,
+        "o": 90
+      },
+      "duree": 10080,
+      "prerequis": {
+        "carriere": null,
+        "niveau": 35,
+        "batiment": "XGM5X",
+        "mine": null
+      },
+      "domination": 0,
+      "description": "Le portail est un téléporteur qui transportera un héros et son armée sur une montagne très éloignée. Il est malheureusement impossible de franchir le portail accompagné d'une armée d'une puissance supérieure à 100 000. Une fois sur place, le héros devra affronter une imposante armée d'élémentaires. En cas de victoire, les élémentaires battront en retraite avant de contre-attaquer. Votre héros devra tenir bon. S'il remporte à nouveau la victoire, un camp de base pourra être installé et votre héros pourra revenir pour rassembler de nouvelles troupes."
+    }
+  ]
+}

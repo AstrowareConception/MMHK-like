@@ -1,0 +1,219 @@
+{
+  "schema_version": 1,
+  "source": "CODE-01-COMBAT",
+  "provenance": "Cas synthétiques calculés à partir du code communautaire ; aucun rapport historique.",
+  "toy_unit_power": 100,
+  "duels": [
+    {
+      "id": "counter_I_C",
+      "a": {
+        "count": 100,
+        "arm": "I"
+      },
+      "d": {
+        "count": 100,
+        "arm": "C"
+      },
+      "expected": {
+        "winner": "a",
+        "dispersed_a": 50,
+        "dispersed_d": 100,
+        "deaths_a": 15,
+        "deaths_d": 30,
+        "overrun": false
+      }
+    },
+    {
+      "id": "counter_R_I",
+      "a": {
+        "count": 100,
+        "arm": "R"
+      },
+      "d": {
+        "count": 100,
+        "arm": "I"
+      },
+      "expected": {
+        "winner": "a",
+        "dispersed_a": 50,
+        "dispersed_d": 100,
+        "deaths_a": 15,
+        "deaths_d": 30,
+        "overrun": false
+      }
+    },
+    {
+      "id": "counter_C_R",
+      "a": {
+        "count": 100,
+        "arm": "C"
+      },
+      "d": {
+        "count": 100,
+        "arm": "R"
+      },
+      "expected": {
+        "winner": "a",
+        "dispersed_a": 50,
+        "dispersed_d": 100,
+        "deaths_a": 15,
+        "deaths_d": 30,
+        "overrun": false
+      }
+    },
+    {
+      "id": "defender_counter",
+      "a": {
+        "count": 100,
+        "arm": "C"
+      },
+      "d": {
+        "count": 100,
+        "arm": "I"
+      },
+      "expected": {
+        "winner": "d",
+        "dispersed_a": 100,
+        "dispersed_d": 50,
+        "deaths_a": 30,
+        "deaths_d": 15,
+        "overrun": false
+      }
+    },
+    {
+      "id": "same_arm",
+      "a": {
+        "count": 100,
+        "arm": "I"
+      },
+      "d": {
+        "count": 50,
+        "arm": "I"
+      },
+      "expected": {
+        "winner": "a",
+        "dispersed_a": 50,
+        "dispersed_d": 50,
+        "deaths_a": 15,
+        "deaths_d": 15,
+        "overrun": false
+      }
+    },
+    {
+      "id": "overrun",
+      "a": {
+        "count": 100,
+        "arm": "I"
+      },
+      "d": {
+        "count": 10,
+        "arm": "C"
+      },
+      "expected": {
+        "winner": "a",
+        "dispersed_a": 0,
+        "dispersed_d": 10,
+        "deaths_a": 0,
+        "deaths_d": 3,
+        "overrun": true
+      }
+    },
+    {
+      "id": "zero_losses_without_overrun",
+      "a": {
+        "count": 100,
+        "arm": "I"
+      },
+      "d": {
+        "count": 50,
+        "arm": "C"
+      },
+      "expected": {
+        "winner": "a",
+        "dispersed_a": 0,
+        "dispersed_d": 50,
+        "deaths_a": 0,
+        "deaths_d": 15,
+        "overrun": false
+      }
+    }
+  ],
+  "admission": [
+    {
+      "id": "pve_boundary",
+      "mode": "pve",
+      "attack": 1,
+      "defense": 7,
+      "expected": "flee"
+    },
+    {
+      "id": "pve_above",
+      "mode": "pve",
+      "attack": 2,
+      "defense": 7,
+      "expected": "battle"
+    },
+    {
+      "id": "pvp_capture",
+      "mode": "pvp",
+      "attack": 9,
+      "defense": 100,
+      "expected": "capture"
+    },
+    {
+      "id": "pvp_wound24",
+      "mode": "pvp",
+      "attack": 3,
+      "defense": 30,
+      "expected": "wound24"
+    },
+    {
+      "id": "pvp_wound18",
+      "mode": "pvp",
+      "attack": 4,
+      "defense": 30,
+      "expected": "wound18"
+    },
+    {
+      "id": "pvp_wound12",
+      "mode": "pvp",
+      "attack": 5,
+      "defense": 30,
+      "expected": "wound12"
+    },
+    {
+      "id": "pvp_wound6",
+      "mode": "pvp",
+      "attack": 6,
+      "defense": 30,
+      "expected": "wound6"
+    },
+    {
+      "id": "pvp_flee",
+      "mode": "pvp",
+      "attack": 7,
+      "defense": 30,
+      "expected": "flee"
+    },
+    {
+      "id": "pvp_battle",
+      "mode": "pvp",
+      "attack": 8,
+      "defense": 30,
+      "expected": "battle"
+    }
+  ],
+  "excluded": [
+    "égalité et faux nul",
+    "magie",
+    "fortifications",
+    "tirs préalables",
+    "talents",
+    "artéfacts",
+    "hérédité",
+    "statuts PNJ",
+    "résurrection",
+    "cas d’armée vide"
+  ],
+  "loss_context": "Branche simplifiée avec héros, pertes ordinaires et facteur 0,30 sans modificateur ; appliquer uniquement aux dispersions de ces duels."
+}

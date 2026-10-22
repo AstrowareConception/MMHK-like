@@ -1,0 +1,615 @@
+{
+  "_provenance": {
+    "source": "CODE-01",
+    "commit": "e8d862d82741986759b88012421aed8e8175e26e",
+    "license": "GPL-3.0-or-later",
+    "schema_version": 1,
+    "locale": "fr",
+    "warning": "Indices sources conservés. Tables communautaires, pas une configuration de serveur certifiée."
+  },
+  "_ecoles_magie": [
+    {
+      "nom": "invocation",
+      "nom_machine": "SUMMON",
+      "carriere": 6
+    },
+    {
+      "nom": "ténèbres",
+      "nom_machine": "DARK",
+      "carriere": 8
+    },
+    {
+      "nom": "lumière",
+      "nom_machine": "LIGHT",
+      "carriere": 4
+    },
+    {
+      "nom": "destruction",
+      "nom_machine": "DESTRUCTION",
+      "carriere": 7
+    }
+  ],
+  "_types_sorts": [
+    "Dégâts",
+    "Invocation",
+    "Résurrection",
+    "Altération",
+    "Amélioration"
+  ],
+  "_cibles_sorts": [
+    {
+      "arme": "I",
+      "fr": "",
+      "en": ""
+    },
+    {
+      "arme": "R",
+      "fr": "",
+      "en": ""
+    },
+    {
+      "arme": "C",
+      "fr": "",
+      "en": ""
+    },
+    "à tous les pelotons",
+    "au peloton actif",
+    "attaque",
+    "défense",
+    "défense de cité ou de région",
+    "zombie",
+    "truerez"
+  ],
+  "_unites_sorts": [
+    " par unité",
+    " par unité",
+    " %",
+    " %",
+    " % de l'armée adverse",
+    "hero against",
+    " %",
+    " dégâts fixes"
+  ],
+  "_sorts": [
+    {
+      "nom": "Poing de la colère",
+      "cercle": 1,
+      "ecole": 0,
+      "type": 0,
+      "cible": 4,
+      "unite": 1,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.7,
+      "description": "Inflige X point de dégâts par point de magie à chaque unité du peloton ennemi au cours du tour choisi."
+    },
+    {
+      "nom": "Essaim",
+      "cercle": 1,
+      "ecole": 0,
+      "type": 1,
+      "cible": 2,
+      "unite": 0,
+      "facteur": {
+        "I": 0,
+        "R": 0,
+        "C": 1
+      },
+      "puissance": 110,
+      "description": "Invoque un peloton de cavalerie d'une puissance équivalente à X par point de magie."
+    },
+    {
+      "nom": "Piège de feu",
+      "cercle": 2,
+      "ecole": 0,
+      "type": 0,
+      "cible": 4,
+      "unite": 3,
+      "facteur": {
+        "I": 1,
+        "R": 0.5,
+        "C": 1
+      },
+      "puissance": 0.3,
+      "description": "Réduit de X % par point de magie la puissance du peloton ennemi au cours du tour choisi. Ce sort est 50 % moins efficace lorsqu'il est lancé sur des tireurs."
+    },
+    {
+      "nom": "Animation de cadavre",
+      "cercle": 2,
+      "ecole": 0,
+      "type": 2,
+      "cible": 8,
+      "unite": 2,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.45,
+      "description": "Ressuscite un montant égal à X % par point de magie du nombre de créatures dispersées au cours d'un tour. Le sort ne fonctionne que si au moins une créature du peloton est vivante à la fin du tour. Les créatures invoquées disparaissent à la fin du combat."
+    },
+    {
+      "nom": "Séisme",
+      "cercle": 3,
+      "ecole": 0,
+      "type": 3,
+      "cible": 7,
+      "unite": 3,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.5,
+      "description": "Réduit de X % par point de magie l'efficacité des défenses d'une cité ou d'une région pendant tout le restant d'une bataille."
+    },
+    {
+      "nom": "Forces fantomatiques",
+      "cercle": 3,
+      "ecole": 0,
+      "type": 1,
+      "cible": 1,
+      "unite": 0,
+      "facteur": {
+        "I": 0,
+        "R": 1,
+        "C": 0
+      },
+      "puissance": 130,
+      "description": "Invoque un peloton de tireurs d'une puissance équivalente à X par point de magie."
+    },
+    {
+      "nom": "Invocation d'élémentaires",
+      "cercle": 4,
+      "ecole": 0,
+      "type": 1,
+      "cible": 0,
+      "unite": 0,
+      "facteur": {
+        "I": 1,
+        "R": 0,
+        "C": 0
+      },
+      "puissance": 200,
+      "description": "Invoque un peloton d'infanterie d'une puissance équivalente à X par point de magie."
+    },
+    {
+      "nom": "Mur de flammes",
+      "cercle": 4,
+      "ecole": 0,
+      "type": 0,
+      "cible": 4,
+      "unite": 1,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 1.35,
+      "description": "Inflige X point de dégâts par point de magie à chaque unité du peloton ennemi au cours du tour choisi."
+    },
+    {
+      "nom": "Invocation de phénix",
+      "cercle": 5,
+      "ecole": 0,
+      "type": 1,
+      "cible": 2,
+      "unite": 4,
+      "facteur": {
+        "I": 0,
+        "R": 0,
+        "C": 1
+      },
+      "puissance": 0.22,
+      "description": "Invoque un peloton de cavalerie d'une puissance équivalente à X % de la puissance de l'armée ennemie, par point de magie."
+    },
+    {
+      "nom": "Hex de faiblesse",
+      "cercle": 1,
+      "ecole": 1,
+      "type": 3,
+      "cible": 5,
+      "unite": 5,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.35,
+      "description": "Réduit de X par point de magie l'attaque du héros ennemi."
+    },
+    {
+      "nom": "Infection",
+      "cercle": 1,
+      "ecole": 1,
+      "type": 0,
+      "cible": 3,
+      "unite": 1,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.5,
+      "description": "Inflige X point de dégâts par point de magie à toutes les unités de tous les pelotons ennemis."
+    },
+    {
+      "nom": "Hex de contracture",
+      "cercle": 2,
+      "ecole": 1,
+      "type": 3,
+      "cible": 6,
+      "unite": 5,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.25,
+      "description": "Réduit de X par point de magie la défense du héros ennemi."
+    },
+    {
+      "nom": "Maladie",
+      "cercle": 2,
+      "ecole": 1,
+      "type": 0,
+      "cible": 3,
+      "unite": 1,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.7,
+      "description": "Inflige X point de dégâts par point de magie à toutes les unités de tous les pelotons ennemis."
+    },
+    {
+      "nom": "Hex de vulnérabilité",
+      "cercle": 3,
+      "ecole": 1,
+      "type": 3,
+      "cible": 6,
+      "unite": 5,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.35,
+      "description": "Réduit de X par point de magie la défense du héros ennemi."
+    },
+    {
+      "nom": "Hex d'épuisement",
+      "cercle": 3,
+      "ecole": 1,
+      "type": 3,
+      "cible": 5,
+      "unite": 5,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.5,
+      "description": "Réduit de X par point de magie l'attaque du héros ennemi."
+    },
+    {
+      "nom": "Peste",
+      "cercle": 4,
+      "ecole": 1,
+      "type": 0,
+      "cible": 3,
+      "unite": 1,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.9,
+      "description": "Inflige X point de dégâts par point de magie à toutes les unités de tous les pelotons ennemis."
+    },
+    {
+      "nom": "Hex de défaillance",
+      "cercle": 4,
+      "ecole": 1,
+      "type": 3,
+      "cible": 5,
+      "unite": 5,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.6,
+      "description": "Réduit de X par point de magie l'attaque du héros ennemi."
+    },
+    {
+      "nom": "Fléau",
+      "cercle": 5,
+      "ecole": 1,
+      "type": 0,
+      "cible": 3,
+      "unite": 3,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.2,
+      "description": "Anéantit X % par point de magie des unités de tous les pelotons ennemis."
+    },
+    {
+      "nom": "Grâce de force",
+      "cercle": 1,
+      "ecole": 2,
+      "type": 4,
+      "cible": 5,
+      "unite": 0,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.3,
+      "description": "Augmente de X par point de magie l'attaque de toutes les unités d'un peloton au cours du tour choisi."
+    },
+    {
+      "nom": "Grâce d'endurance",
+      "cercle": 1,
+      "ecole": 2,
+      "type": 4,
+      "cible": 6,
+      "unite": 2,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.35,
+      "description": "Augmente de X % par point de magie la défense d'un peloton au cours du tour choisi."
+    },
+    {
+      "nom": "Grâce d'immunité",
+      "cercle": 2,
+      "ecole": 2,
+      "type": 4,
+      "cible": 6,
+      "unite": 0,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1.5
+      },
+      "puissance": 0.6,
+      "description": "Augmente de X par point de magie la défense de toutes les unités d'un peloton au cours du tour choisi. Ce sort est 50 % plus efficace sur les pelotons de cavalerie."
+    },
+    {
+      "nom": "Grâce de rapidité",
+      "cercle": 2,
+      "ecole": 2,
+      "type": 4,
+      "cible": 5,
+      "unite": 2,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.21,
+      "description": "Augmente de X % par point de magie l'attaque d'un peloton au cours du tour choisi."
+    },
+    {
+      "nom": "Grâce de puissance",
+      "cercle": 3,
+      "ecole": 2,
+      "type": 4,
+      "cible": 5,
+      "unite": 0,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.6,
+      "description": "Augmente de X par point de magie l'attaque de toutes les unités d'un peloton au cours du tour choisi."
+    },
+    {
+      "nom": "Grâce de déflexion",
+      "cercle": 3,
+      "ecole": 2,
+      "type": 4,
+      "cible": 6,
+      "unite": 3,
+      "facteur": {
+        "I": 1,
+        "R": 1.5,
+        "C": 1
+      },
+      "puissance": 0.45,
+      "description": "Augmente de X % par point de magie la défense d'un peloton au cours du tour choisi. Ce sort est 50 % plus efficace face à un peloton de tireurs ennemis."
+    },
+    {
+      "nom": "Téléportation",
+      "cercle": 4,
+      "ecole": 2,
+      "type": 4,
+      "cible": 5,
+      "unite": 2,
+      "facteur": {
+        "I": 1,
+        "R": 0.5,
+        "C": 1
+      },
+      "puissance": 0.28,
+      "description": "Augmente de X % par point de magie l'attaque d'un peloton au cours du tour choisi. Ce sort est 50 % moins efficace sur les pelotons de tireurs."
+    },
+    {
+      "nom": "Mot de lumière",
+      "cercle": 4,
+      "ecole": 2,
+      "type": 0,
+      "cible": 4,
+      "unite": 7,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 160,
+      "description": "Inflige X points de dégâts par point de magie au peloton ennemi au cours du tour choisi."
+    },
+    {
+      "nom": "Résurrection",
+      "cercle": 5,
+      "ecole": 2,
+      "type": 2,
+      "cible": 9,
+      "unite": 2,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.4,
+      "description": "Ressuscite un montant égal à X % des créatures encore en vie à la fin du tour. Le sort n'est lancé que si au moins une créature du peloton est vivante à la fin du tour."
+    },
+    {
+      "nom": "Stalagmites",
+      "cercle": 1,
+      "ecole": 3,
+      "type": 0,
+      "cible": 4,
+      "unite": 1,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.7,
+      "description": "Inflige X point de dégâts par point de magie à chaque unité du peloton ennemi au cours du tour choisi."
+    },
+    {
+      "nom": "Flèches des arcanes",
+      "cercle": 1,
+      "ecole": 3,
+      "type": 0,
+      "cible": 4,
+      "unite": 7,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 130,
+      "description": "Inflige X points de dégâts par point de magie au peloton ennemi au cours du tour choisi."
+    },
+    {
+      "nom": "Trait de glace",
+      "cercle": 2,
+      "ecole": 3,
+      "type": 0,
+      "cible": 4,
+      "unite": 3,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.25,
+      "description": "Réduit de X % par point de magie la puissance du peloton ennemi au cours du tour choisi."
+    },
+    {
+      "nom": "Foudre",
+      "cercle": 2,
+      "ecole": 3,
+      "type": 0,
+      "cible": 4,
+      "unite": 1,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.9,
+      "description": "Inflige X point de dégâts par point de magie à chaque unité du peloton ennemi au cours du tour choisi."
+    },
+    {
+      "nom": "Cercle d'hiver",
+      "cercle": 3,
+      "ecole": 3,
+      "type": 0,
+      "cible": 4,
+      "unite": 1,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 1.2,
+      "description": "Inflige X point de dégâts par point de magie à chaque unité du peloton ennemi au cours du tour choisi."
+    },
+    {
+      "nom": "Boule de feu",
+      "cercle": 3,
+      "ecole": 3,
+      "type": 0,
+      "cible": 4,
+      "unite": 3,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.325,
+      "description": "Réduit de X % par point de magie la puissance du peloton ennemi au cours du tour choisi."
+    },
+    {
+      "nom": "Pluie de météores",
+      "cercle": 4,
+      "ecole": 3,
+      "type": 0,
+      "cible": 4,
+      "unite": 1,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 1.7,
+      "description": "Inflige X point de dégâts par point de magie à chaque unité du peloton ennemi au cours du tour choisi."
+    },
+    {
+      "nom": "Chaine de foudre",
+      "cercle": 4,
+      "ecole": 3,
+      "type": 0,
+      "cible": 4,
+      "unite": 7,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 180,
+      "description": "Inflige X points de dégâts par point de magie au peloton ennemi au cours du tour choisi."
+    },
+    {
+      "nom": "Choc terrestre",
+      "cercle": 5,
+      "ecole": 3,
+      "type": 0,
+      "cible": 4,
+      "unite": 3,
+      "facteur": {
+        "I": 1,
+        "R": 1,
+        "C": 1
+      },
+      "puissance": 0.4,
+      "description": "Réduit de X % par point de magie la puissance du peloton ennemi au cours du tour choisi."
+    }
+  ]
+}

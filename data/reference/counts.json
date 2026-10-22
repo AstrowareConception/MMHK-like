@@ -1,0 +1,13 @@
+{
+  "creatures": 130,
+  "buildings": 210,
+  "regional_buildings": 10,
+  "spells": 36,
+  "hero_archetypes": 15,
+  "careers": 13,
+  "talent_groups": 21,
+  "talents": 74,
+  "artifacts": 563,
+  "artifact_effects": 270,
+  "artifact_sets": 12
+}

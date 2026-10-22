@@ -1,0 +1,1717 @@
+{
+  "_provenance": {
+    "source": "CODE-01",
+    "commit": "e8d862d82741986759b88012421aed8e8175e26e",
+    "license": "GPL-3.0-or-later",
+    "schema_version": 1,
+    "locale": "fr",
+    "warning": "Indices sources conservés. Tables communautaires, pas une configuration de serveur certifiée."
+  },
+  "_unites": [
+    {
+      "id": 0,
+      "nom": "Gremlin",
+      "faction": 0,
+      "rang": 1,
+      "prod": 15,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 71,
+      "cout": {
+        "G": 189
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 56
+      }
+    },
+    {
+      "id": 1,
+      "nom": "Ingénieur gremlin",
+      "faction": 0,
+      "rang": 1,
+      "prod": 15,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 86,
+      "cout": {
+        "G": 226
+      },
+      "ratio_xp": 15
+    },
+    {
+      "id": 2,
+      "nom": "Gargouille de pierre",
+      "faction": 0,
+      "rang": 2,
+      "prod": 10,
+      "plus": 0,
+      "arme": "C",
+      "puissance": 120,
+      "cout": {
+        "G": 342
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 102
+      }
+    },
+    {
+      "id": 3,
+      "nom": "Gargouille d'obsidienne",
+      "faction": 0,
+      "rang": 2,
+      "prod": 10,
+      "plus": 1,
+      "arme": "C",
+      "puissance": 144,
+      "cout": {
+        "G": 410
+      },
+      "ratio_xp": 15
+    },
+    {
+      "id": 4,
+      "nom": "Golem de fer",
+      "faction": 0,
+      "rang": 3,
+      "prod": 7,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 272,
+      "cout": {
+        "G": 720
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 216
+      }
+    },
+    {
+      "id": 5,
+      "nom": "Golem d'acier",
+      "faction": 0,
+      "rang": 3,
+      "prod": 7,
+      "plus": 1,
+      "arme": "I",
+      "puissance": 327,
+      "cout": {
+        "G": 864
+      },
+      "ratio_xp": 15
+    },
+    {
+      "id": 6,
+      "nom": "Mage",
+      "faction": 0,
+      "rang": 4,
+      "prod": 5,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 674,
+      "cout": {
+        "G": 1584
+      },
+      "ratio_xp": 12,
+      "cout_amel": {
+        "G": 474
+      }
+    },
+    {
+      "id": 7,
+      "nom": "Archimage",
+      "faction": 0,
+      "rang": 4,
+      "prod": 5,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 809,
+      "cout": {
+        "G": 1900
+      },
+      "ratio_xp": 12
+    },
+    {
+      "id": 8,
+      "nom": "Djinn",
+      "faction": 0,
+      "rang": 5,
+      "prod": 3,
+      "plus": 0,
+      "arme": "C",
+      "puissance": 1317,
+      "cout": {
+        "G": 900,
+        "g": 2
+      },
+      "ratio_xp": 12,
+      "cout_amel": {
+        "G": 750,
+        "g": 2
+      }
+    },
+    {
+      "id": 9,
+      "nom": "Sultan djinn",
+      "faction": 0,
+      "rang": 5,
+      "prod": 3,
+      "plus": 1,
+      "arme": "C",
+      "puissance": 1994,
+      "cout": {
+        "G": 1400,
+        "g": 3
+      },
+      "ratio_xp": 12
+    },
+    {
+      "id": 10,
+      "nom": "Rani Rakshasa",
+      "faction": 0,
+      "rang": 6,
+      "prod": 2,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 2242,
+      "cout": {
+        "G": 1800,
+        "s": 3
+      },
+      "ratio_xp": 12,
+      "cout_amel": {
+        "G": 750,
+        "s": 2
+      }
+    },
+    {
+      "id": 11,
+      "nom": "Raja Rakshasa",
+      "faction": 0,
+      "rang": 6,
+      "prod": 2,
+      "plus": 1,
+      "arme": "I",
+      "puissance": 2950,
+      "cout": {
+        "G": 2300,
+        "s": 4
+      },
+      "ratio_xp": 12
+    },
+    {
+      "id": 12,
+      "nom": "Géant",
+      "faction": 0,
+      "rang": 7,
+      "prod": 1,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 5850,
+      "cout": {
+        "g": 10
+      },
+      "ratio_xp": 10,
+      "cout_amel": {
+        "g": 6
+      }
+    },
+    {
+      "id": 13,
+      "nom": "Titan",
+      "faction": 0,
+      "rang": 7,
+      "prod": 1,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 8190,
+      "cout": {
+        "g": 14
+      },
+      "ratio_xp": 10
+    },
+    {
+      "id": 14,
+      "nom": "Baliste",
+      "faction": 0,
+      "rang": 0,
+      "prod": 1,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 300,
+      "cout": {
+        "G": 2500
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 3750
+      },
+      "siege": 1
+    },
+    {
+      "id": 15,
+      "nom": "Catapulte",
+      "faction": 0,
+      "rang": 0,
+      "prod": 1,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 450,
+      "cout": {
+        "G": 5000
+      },
+      "ratio_xp": 15,
+      "siege": 1
+    },
+    {
+      "nom": "Paysan",
+      "faction": 1,
+      "rang": 1,
+      "prod": 15,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 97,
+      "cout": {
+        "G": 220
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 86
+      }
+    },
+    {
+      "nom": "Conscrit",
+      "faction": 1,
+      "rang": 1,
+      "prod": 15,
+      "plus": 1,
+      "arme": "I",
+      "puissance": 128,
+      "cout": {
+        "G": 277
+      },
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Archer",
+      "faction": 1,
+      "rang": 2,
+      "prod": 10,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 198,
+      "cout": {
+        "G": 440
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 171
+      }
+    },
+    {
+      "nom": "Arbalétrier",
+      "faction": 1,
+      "rang": 2,
+      "prod": 10,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 263,
+      "cout": {
+        "G": 554
+      },
+      "ratio_xp": 15
+    },
+    {
+      "id": 20,
+      "nom": "Fantassin",
+      "faction": 1,
+      "rang": 3,
+      "prod": 7,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 407,
+      "cout": {
+        "G": 880
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 264
+      }
+    },
+    {
+      "nom": "Champion",
+      "faction": 1,
+      "rang": 3,
+      "prod": 7,
+      "plus": 1,
+      "arme": "I",
+      "puissance": 488,
+      "cout": {
+        "G": 1056
+      },
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Griffon",
+      "faction": 1,
+      "rang": 4,
+      "prod": 5,
+      "plus": 0,
+      "arme": "C",
+      "puissance": 751,
+      "cout": {
+        "G": 1672
+      },
+      "ratio_xp": 12,
+      "cout_amel": {
+        "G": 501
+      }
+    },
+    {
+      "nom": "Griffon impérial",
+      "faction": 1,
+      "rang": 4,
+      "prod": 5,
+      "plus": 1,
+      "arme": "C",
+      "puissance": 902,
+      "cout": {
+        "G": 2006
+      },
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Prêtre",
+      "faction": 1,
+      "rang": 5,
+      "prod": 3,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 1747,
+      "cout": {
+        "G": 1200,
+        "c": 2
+      },
+      "ratio_xp": 12,
+      "cout_amel": {
+        "G": 750,
+        "c": 2
+      }
+    },
+    {
+      "nom": "Inquisiteur",
+      "faction": 1,
+      "rang": 5,
+      "prod": 3,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 2575,
+      "cout": {
+        "G": 1700,
+        "c": 3
+      },
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Cavalier",
+      "faction": 1,
+      "rang": 6,
+      "prod": 2,
+      "plus": 0,
+      "arme": "C",
+      "puissance": 3188,
+      "cout": {
+        "G": 2400,
+        "g": 3
+      },
+      "ratio_xp": 12,
+      "cout_amel": {
+        "G": 750,
+        "g": 2
+      }
+    },
+    {
+      "nom": "Paladin",
+      "faction": 1,
+      "rang": 6,
+      "prod": 2,
+      "plus": 1,
+      "arme": "C",
+      "puissance": 4508,
+      "cout": {
+        "G": 2900,
+        "g": 4
+      },
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Ange",
+      "faction": 1,
+      "rang": 7,
+      "prod": 1,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 7150,
+      "cout": {
+        "c": 10
+      },
+      "ratio_xp": 10,
+      "cout_amel": {
+        "c": 6
+      }
+    },
+    {
+      "nom": "Archange",
+      "faction": 1,
+      "rang": 7,
+      "prod": 1,
+      "plus": 1,
+      "arme": "I",
+      "puissance": 10010,
+      "cout": {
+        "c": 14
+      },
+      "ratio_xp": 10
+    },
+    {
+      "id": 30,
+      "nom": "Baliste",
+      "faction": 1,
+      "rang": 0,
+      "prod": 1,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 300,
+      "cout": {
+        "G": 2500
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 3750
+      },
+      "siege": 1
+    },
+    {
+      "nom": "Catapulte",
+      "faction": 1,
+      "rang": 0,
+      "prod": 1,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 450,
+      "cout": {
+        "G": 5000
+      },
+      "ratio_xp": 15,
+      "siege": 1
+    },
+    {
+      "nom": "Diablotin",
+      "faction": 2,
+      "rang": 1,
+      "prod": 15,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 71,
+      "cout": {
+        "G": 189
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 56
+      }
+    },
+    {
+      "nom": "Familier",
+      "faction": 2,
+      "rang": 1,
+      "prod": 15,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 86,
+      "cout": {
+        "G": 226
+      },
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Démon cornu",
+      "faction": 2,
+      "rang": 2,
+      "prod": 10,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 163,
+      "cout": {
+        "G": 399
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 119
+      }
+    },
+    {
+      "nom": "Démon gardien",
+      "faction": 2,
+      "rang": 2,
+      "prod": 10,
+      "plus": 1,
+      "arme": "I",
+      "puissance": 196,
+      "cout": {
+        "G": 478
+      },
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Chien des enfers",
+      "faction": 2,
+      "rang": 3,
+      "prod": 7,
+      "plus": 0,
+      "arme": "C",
+      "puissance": 370,
+      "cout": {
+        "G": 840
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 252
+      }
+    },
+    {
+      "nom": "Cerbère",
+      "faction": 2,
+      "rang": 3,
+      "prod": 7,
+      "plus": 1,
+      "arme": "C",
+      "puissance": 445,
+      "cout": {
+        "G": 1008
+      },
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Succube",
+      "faction": 2,
+      "rang": 4,
+      "prod": 5,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 918,
+      "cout": {
+        "G": 1848
+      },
+      "ratio_xp": 12,
+      "cout_amel": {
+        "G": 554
+      }
+    },
+    {
+      "nom": "Maitresse succube",
+      "faction": 2,
+      "rang": 4,
+      "prod": 5,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 1101,
+      "cout": {
+        "G": 2217
+      },
+      "ratio_xp": 12
+    },
+    {
+      "id": 40,
+      "nom": "Cheval infernal",
+      "faction": 2,
+      "rang": 5,
+      "prod": 3,
+      "plus": 0,
+      "arme": "C",
+      "puissance": 1795,
+      "cout": {
+        "G": 1100,
+        "s": 2
+      },
+      "ratio_xp": 12,
+      "cout_amel": {
+        "G": 900,
+        "s": 2
+      }
+    },
+    {
+      "nom": "Destrier de cauchemar",
+      "faction": 2,
+      "rang": 5,
+      "prod": 3,
+      "plus": 1,
+      "arme": "C",
+      "puissance": 2668,
+      "cout": {
+        "G": 1700,
+        "s": 3
+      },
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Fiélon des abimes",
+      "faction": 2,
+      "rang": 6,
+      "prod": 2,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 2946,
+      "cout": {
+        "G": 2200,
+        "m": 3
+      },
+      "ratio_xp": 12,
+      "cout_amel": {
+        "G": 750,
+        "m": 2
+      }
+    },
+    {
+      "nom": "Seigneur des abimes",
+      "faction": 2,
+      "rang": 6,
+      "prod": 2,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 3816,
+      "cout": {
+        "G": 2700,
+        "m": 4
+      },
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Diable",
+      "faction": 2,
+      "rang": 7,
+      "prod": 1,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 6825,
+      "cout": {
+        "s": 10
+      },
+      "ratio_xp": 10,
+      "cout_amel": {
+        "s": 6
+      }
+    },
+    {
+      "nom": "Archidiable",
+      "faction": 2,
+      "rang": 7,
+      "prod": 1,
+      "plus": 1,
+      "arme": "I",
+      "puissance": 9555,
+      "cout": {
+        "s": 14
+      },
+      "ratio_xp": 10
+    },
+    {
+      "nom": "Baliste",
+      "faction": 2,
+      "rang": 0,
+      "prod": 1,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 300,
+      "cout": {
+        "G": 2500
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 3750
+      },
+      "siege": 1
+    },
+    {
+      "nom": "Catapulte",
+      "faction": 2,
+      "rang": 0,
+      "prod": 1,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 450,
+      "cout": {
+        "G": 5000
+      },
+      "ratio_xp": 15,
+      "siege": 1
+    },
+    {
+      "nom": "Squelette",
+      "faction": 3,
+      "rang": 1,
+      "prod": 15,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 87,
+      "cout": {
+        "G": 209
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 0
+      }
+    },
+    {
+      "nom": "Archer squelette",
+      "faction": 3,
+      "rang": 1,
+      "prod": 15,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 70,
+      "cout": {
+        "G": 205
+      },
+      "ratio_xp": 15
+    },
+    {
+      "id": 50,
+      "nom": "Zombie",
+      "faction": 3,
+      "rang": 2,
+      "prod": 10,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 134,
+      "cout": {
+        "G": 361
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 108
+      }
+    },
+    {
+      "nom": "Zombie pestilentiel",
+      "faction": 3,
+      "rang": 2,
+      "prod": 10,
+      "plus": 1,
+      "arme": "I",
+      "puissance": 160,
+      "cout": {
+        "G": 433
+      },
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Fantôme",
+      "faction": 3,
+      "rang": 3,
+      "prod": 7,
+      "plus": 0,
+      "arme": "C",
+      "puissance": 303,
+      "cout": {
+        "G": 760
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 228
+      }
+    },
+    {
+      "nom": "Spectre",
+      "faction": 3,
+      "rang": 3,
+      "prod": 7,
+      "plus": 1,
+      "arme": "C",
+      "puissance": 364,
+      "cout": {
+        "G": 912
+      },
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Vampire",
+      "faction": 3,
+      "rang": 4,
+      "prod": 5,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 751,
+      "cout": {
+        "G": 1672
+      },
+      "ratio_xp": 12,
+      "cout_amel": {
+        "G": 501
+      }
+    },
+    {
+      "nom": "Seigneur vampire",
+      "faction": 3,
+      "rang": 4,
+      "prod": 5,
+      "plus": 1,
+      "arme": "I",
+      "puissance": 902,
+      "cout": {
+        "G": 2006
+      },
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Liche",
+      "faction": 3,
+      "rang": 5,
+      "prod": 3,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 1430,
+      "cout": {
+        "G": 1000,
+        "m": 2
+      },
+      "ratio_xp": 12,
+      "cout_amel": {
+        "G": 750,
+        "m": 2
+      }
+    },
+    {
+      "nom": "Archiliche",
+      "faction": 3,
+      "rang": 5,
+      "prod": 3,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 2144,
+      "cout": {
+        "G": 1500,
+        "m": 3
+      },
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Revenant",
+      "faction": 3,
+      "rang": 6,
+      "prod": 2,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 2578,
+      "cout": {
+        "G": 2000,
+        "c": 3
+      },
+      "ratio_xp": 12,
+      "cout_amel": {
+        "G": 750,
+        "c": 2
+      }
+    },
+    {
+      "nom": "Apparition",
+      "faction": 3,
+      "rang": 6,
+      "prod": 2,
+      "plus": 1,
+      "arme": "I",
+      "puissance": 3365,
+      "cout": {
+        "G": 2500,
+        "c": 4
+      },
+      "ratio_xp": 12
+    },
+    {
+      "id": 60,
+      "nom": "Dragon squelette",
+      "faction": 3,
+      "rang": 7,
+      "prod": 1,
+      "plus": 0,
+      "arme": "C",
+      "puissance": 5866,
+      "cout": {
+        "m": 10
+      },
+      "ratio_xp": 10,
+      "cout_amel": {
+        "m": 6
+      }
+    },
+    {
+      "nom": "Dragon spectral",
+      "faction": 3,
+      "rang": 7,
+      "prod": 1,
+      "plus": 1,
+      "arme": "C",
+      "puissance": 8213,
+      "cout": {
+        "m": 14
+      },
+      "ratio_xp": 10
+    },
+    {
+      "nom": "Baliste",
+      "faction": 3,
+      "rang": 0,
+      "prod": 1,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 300,
+      "cout": {
+        "G": 2500
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 3750
+      },
+      "siege": 1
+    },
+    {
+      "nom": "Catapulte",
+      "faction": 3,
+      "rang": 0,
+      "prod": 1,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 450,
+      "cout": {
+        "G": 5000
+      },
+      "ratio_xp": 15,
+      "siege": 1
+    },
+    {
+      "nom": "Élémentaire d'air",
+      "faction": -1,
+      "rang": 6,
+      "plus": 1,
+      "arme": "C",
+      "puissance": 4200,
+      "ratio_xp": 20
+    },
+    {
+      "nom": "Élémentaire d'eau",
+      "faction": -1,
+      "rang": 6,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 3900,
+      "ratio_xp": 20
+    },
+    {
+      "nom": "Élémentaire de terre",
+      "faction": -1,
+      "rang": 6,
+      "plus": 1,
+      "arme": "I",
+      "puissance": 3600,
+      "ratio_xp": 20
+    },
+    {
+      "nom": "Élémentaire de feu",
+      "faction": -1,
+      "rang": 6,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 3300,
+      "ratio_xp": 20
+    },
+    {
+      "nom": "Chevalier de la mort",
+      "faction": -1,
+      "rang": 9,
+      "plus": 1,
+      "arme": "C",
+      "puissance": 60000,
+      "ratio_xp": 20
+    },
+    {
+      "nom": "Nymphe",
+      "faction": 4,
+      "rang": 1,
+      "prod": 15,
+      "plus": 0,
+      "arme": "C",
+      "puissance": 88,
+      "cout": {
+        "G": 210
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 63
+      }
+    },
+    {
+      "id": 70,
+      "nom": "Dryade",
+      "faction": 4,
+      "rang": 1,
+      "prod": 15,
+      "plus": 1,
+      "arme": "C",
+      "puissance": 106,
+      "cout": {
+        "G": 252
+      },
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Fine-lame",
+      "faction": 4,
+      "rang": 2,
+      "prod": 10,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 163,
+      "cout": {
+        "G": 399
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 120
+      }
+    },
+    {
+      "nom": "Lame-de-guerre",
+      "faction": 4,
+      "rang": 2,
+      "prod": 10,
+      "plus": 1,
+      "arme": "I",
+      "puissance": 196,
+      "cout": {
+        "G": 479
+      },
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Chasseur",
+      "faction": 4,
+      "rang": 3,
+      "prod": 7,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 448,
+      "cout": {
+        "G": 924
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 278
+      }
+    },
+    {
+      "nom": "Maitre chasseur",
+      "faction": 4,
+      "rang": 3,
+      "prod": 7,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 538,
+      "cout": {
+        "G": 1109
+      },
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Druide",
+      "faction": 4,
+      "rang": 4,
+      "prod": 5,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 918,
+      "cout": {
+        "G": 1848
+      },
+      "ratio_xp": 12,
+      "cout_amel": {
+        "G": 555
+      }
+    },
+    {
+      "nom": "Druide séculaire",
+      "faction": 4,
+      "rang": 4,
+      "prod": 5,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 1101,
+      "cout": {
+        "G": 2218
+      },
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Licorne",
+      "faction": 4,
+      "rang": 5,
+      "prod": 3,
+      "plus": 0,
+      "arme": "C",
+      "puissance": 1709,
+      "cout": {
+        "G": 1100,
+        "g": 2
+      },
+      "ratio_xp": 12,
+      "cout_amel": {
+        "G": 750,
+        "g": 2
+      }
+    },
+    {
+      "nom": "Licorne d'argent",
+      "faction": 4,
+      "rang": 5,
+      "prod": 3,
+      "plus": 1,
+      "arme": "C",
+      "puissance": 2541,
+      "cout": {
+        "G": 1600,
+        "g": 3
+      },
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Tréant",
+      "faction": 4,
+      "rang": 6,
+      "prod": 2,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 2652,
+      "cout": {
+        "G": 2200,
+        "m": 3
+      },
+      "ratio_xp": 12,
+      "cout_amel": {
+        "G": 750,
+        "m": 2
+      }
+    },
+    {
+      "id": 80,
+      "nom": "Tréant séculaire",
+      "faction": 4,
+      "rang": 6,
+      "prod": 2,
+      "plus": 1,
+      "arme": "I",
+      "puissance": 3434,
+      "cout": {
+        "G": 2700,
+        "m": 4
+      },
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Dragon vert",
+      "faction": 4,
+      "rang": 7,
+      "prod": 1,
+      "plus": 0,
+      "arme": "C",
+      "puissance": 6143,
+      "cout": {
+        "g": 10
+      },
+      "ratio_xp": 10,
+      "cout_amel": {
+        "g": 6
+      }
+    },
+    {
+      "nom": "Dragon d'émeraude",
+      "faction": 4,
+      "rang": 7,
+      "prod": 1,
+      "plus": 1,
+      "arme": "C",
+      "puissance": 9077,
+      "cout": {
+        "g": 14
+      },
+      "ratio_xp": 10
+    },
+    {
+      "nom": "Baliste",
+      "faction": 4,
+      "rang": 0,
+      "prod": 1,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 300,
+      "cout": {
+        "G": 2500
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 3750
+      },
+      "siege": 1
+    },
+    {
+      "nom": "Catapulte",
+      "faction": 4,
+      "rang": 0,
+      "prod": 1,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 450,
+      "cout": {
+        "G": 5000
+      },
+      "ratio_xp": 15,
+      "siege": 1
+    },
+    {
+      "nom": "Gnome",
+      "faction": -1,
+      "rang": 1,
+      "plus": 1,
+      "arme": "I",
+      "puissance": 115,
+      "ratio_xp": 8,
+      "attrition_pnj": 1
+    },
+    {
+      "nom": "Loup",
+      "faction": -1,
+      "rang": 2,
+      "plus": 1,
+      "arme": "C",
+      "puissance": 245,
+      "ratio_xp": 8,
+      "attrition_pnj": 1
+    },
+    {
+      "nom": "Centaure",
+      "faction": -1,
+      "rang": 3,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 410,
+      "ratio_xp": 8,
+      "attrition_pnj": 1
+    },
+    {
+      "nom": "Fantôme errant",
+      "faction": -1,
+      "rang": 3,
+      "plus": 0,
+      "arme": "C",
+      "puissance": 303,
+      "ratio_xp": 20,
+      "attrition_pnj": 1
+    },
+    {
+      "nom": "Manticore",
+      "faction": -1,
+      "rang": 5,
+      "plus": 0,
+      "arme": "C",
+      "puissance": 1681,
+      "ratio_xp": 11,
+      "attrition_pnj": 1
+    },
+    {
+      "nom": "Minotaure",
+      "faction": -1,
+      "rang": 4,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 822,
+      "ratio_xp": 8,
+      "attrition_pnj": 1
+    },
+    {
+      "nom": "Défenseur",
+      "faction": 5,
+      "rang": 1,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 97,
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Garde bouclier",
+      "faction": 5,
+      "rang": 1,
+      "plus": 1,
+      "arme": "I",
+      "puissance": 117,
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Manieur de lance",
+      "faction": 5,
+      "rang": 2,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 146,
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Escarmoucheur",
+      "faction": 5,
+      "rang": 2,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 176,
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Chevaucheur d'ours",
+      "faction": 5,
+      "rang": 3,
+      "plus": 0,
+      "arme": "C",
+      "puissance": 370,
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Chevaucheur d'ours noir",
+      "faction": 5,
+      "rang": 3,
+      "plus": 1,
+      "arme": "C",
+      "puissance": 445,
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Batailleur",
+      "faction": 5,
+      "rang": 4,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 918,
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Berserker",
+      "faction": 5,
+      "rang": 4,
+      "plus": 1,
+      "arme": "I",
+      "puissance": 1101,
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Prêtre des Runes",
+      "faction": 5,
+      "rang": 5,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 1756,
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Patriarche des runes",
+      "faction": 5,
+      "rang": 5,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 2587,
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Thane",
+      "faction": 5,
+      "rang": 6,
+      "plus": 0,
+      "arme": "C",
+      "puissance": 2891,
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Seigneur des tempêtes",
+      "faction": 5,
+      "rang": 6,
+      "plus": 1,
+      "arme": "C",
+      "puissance": 3717,
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Dragon de feu",
+      "faction": 5,
+      "rang": 7,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 6825,
+      "ratio_xp": 10
+    },
+    {
+      "nom": "Dragon de magma",
+      "faction": 5,
+      "rang": 7,
+      "plus": 1,
+      "arme": "I",
+      "puissance": 9555,
+      "ratio_xp": 10
+    },
+    {
+      "nom": "Baliste",
+      "faction": 5,
+      "rang": 0,
+      "prod": 1,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 300,
+      "cout": {
+        "G": 2500
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 3750
+      },
+      "siege": 1
+    },
+    {
+      "nom": "Catapulte",
+      "faction": 5,
+      "rang": 0,
+      "prod": 1,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 450,
+      "cout": {
+        "G": 5000
+      },
+      "ratio_xp": 15,
+      "siege": 1
+    },
+    {
+      "nom": "Éclaireur",
+      "faction": 6,
+      "rang": 1,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 72,
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Assassin",
+      "faction": 6,
+      "rang": 1,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 87,
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Vierge sanglante",
+      "faction": 6,
+      "rang": 2,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 134,
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Furie sanglante",
+      "faction": 6,
+      "rang": 2,
+      "plus": 1,
+      "arme": "I",
+      "puissance": 160,
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Minotaure",
+      "faction": 6,
+      "rang": 3,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 303,
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Champion minotaure",
+      "faction": 6,
+      "rang": 3,
+      "plus": 1,
+      "arme": "I",
+      "puissance": 364,
+      "ratio_xp": 15
+    },
+    {
+      "nom": "Maraudeur noir",
+      "faction": 6,
+      "rang": 4,
+      "plus": 0,
+      "arme": "C",
+      "puissance": 751,
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Maraudeur sinistre",
+      "faction": 6,
+      "rang": 4,
+      "plus": 1,
+      "arme": "C",
+      "puissance": 902,
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Hydre",
+      "faction": 6,
+      "rang": 5,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 1509,
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Hydre des abysses",
+      "faction": 6,
+      "rang": 5,
+      "plus": 1,
+      "arme": "I",
+      "puissance": 2224,
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Sorcière de l'ombre",
+      "faction": 6,
+      "rang": 6,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 2478,
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Matriarche de l'ombre",
+      "faction": 6,
+      "rang": 6,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 3186,
+      "ratio_xp": 12
+    },
+    {
+      "nom": "Dragon d'ombre",
+      "faction": 6,
+      "rang": 7,
+      "plus": 0,
+      "arme": "C",
+      "puissance": 6793,
+      "ratio_xp": 10
+    },
+    {
+      "nom": "Dragon noir",
+      "faction": 6,
+      "rang": 7,
+      "plus": 1,
+      "arme": "C",
+      "puissance": 9510,
+      "ratio_xp": 10
+    },
+    {
+      "nom": "Baliste",
+      "faction": 6,
+      "rang": 0,
+      "prod": 1,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 300,
+      "cout": {
+        "G": 2500
+      },
+      "ratio_xp": 15,
+      "cout_amel": {
+        "G": 3750
+      },
+      "siege": 1
+    },
+    {
+      "nom": "Catapulte",
+      "faction": 6,
+      "rang": 0,
+      "prod": 1,
+      "plus": 1,
+      "arme": "R",
+      "puissance": 450,
+      "cout": {
+        "G": 5000
+      },
+      "ratio_xp": 15,
+      "siege": 1
+    },
+    {
+      "nom": "Adryade",
+      "faction": -2,
+      "rang": 1,
+      "plus": 0,
+      "arme": "C",
+      "puissance": 127,
+      "ratio_xp": 1
+    },
+    {
+      "nom": "Danse-vent",
+      "faction": -2,
+      "rang": 2,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 234,
+      "ratio_xp": 1
+    },
+    {
+      "nom": "Maître Archer",
+      "faction": -2,
+      "rang": 3,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 645,
+      "ratio_xp": 1
+    },
+    {
+      "nom": "Haut Druide",
+      "faction": -2,
+      "rang": 4,
+      "plus": 0,
+      "arme": "R",
+      "puissance": 1321,
+      "ratio_xp": 1
+    },
+    {
+      "nom": "Licorne Blanche",
+      "faction": -2,
+      "rang": 5,
+      "plus": 0,
+      "arme": "C",
+      "puissance": 3777,
+      "ratio_xp": 1
+    },
+    {
+      "nom": "Treant Hargneux",
+      "faction": -2,
+      "rang": 6,
+      "plus": 0,
+      "arme": "I",
+      "puissance": 4447,
+      "ratio_xp": 1
+    },
+    {
+      "nom": "Dragon de Béryl",
+      "faction": -2,
+      "rang": 7,
+      "plus": 0,
+      "arme": "C",
+      "puissance": 13414,
+      "ratio_xp": 1
+    }
+  ]
+}

@@ -1,0 +1,1983 @@
+{
+  "_provenance": {
+    "source": "CODE-01",
+    "commit": "e8d862d82741986759b88012421aed8e8175e26e",
+    "license": "GPL-3.0-or-later",
+    "schema_version": 1,
+    "locale": "fr",
+    "warning": "Indices sources conservés. Tables communautaires, pas une configuration de serveur certifiée."
+  },
+  "_archetypes": [
+    {
+      "nom": "Mage des arcanes",
+      "type": "mage",
+      "attaque": 2,
+      "defense": 2,
+      "magie": 5
+    },
+    {
+      "nom": "Magicien dérangé",
+      "type": "mage",
+      "attaque": 6,
+      "defense": 0,
+      "magie": 5
+    },
+    {
+      "nom": "Sorcier fanatique",
+      "type": "mage",
+      "attaque": 6,
+      "defense": 0,
+      "magie": 6
+    },
+    {
+      "nom": "Protecteur illuminé",
+      "type": "mage",
+      "attaque": 0,
+      "defense": 6,
+      "magie": 6
+    },
+    {
+      "nom": "Mercenaire",
+      "type": "guerrier",
+      "attaque": 4,
+      "defense": 4,
+      "magie": 0
+    },
+    {
+      "nom": "Guerrier des confins",
+      "type": "guerrier",
+      "attaque": 6,
+      "defense": 4,
+      "magie": 0
+    },
+    {
+      "nom": "Baron",
+      "type": "mage-guerrier",
+      "attaque": 3,
+      "defense": 4,
+      "magie": 1
+    },
+    {
+      "nom": "Guerrier d'arène",
+      "type": "guerrier",
+      "attaque": 6,
+      "defense": 6,
+      "magie": 0
+    },
+    {
+      "nom": "Protecteur",
+      "type": "mage",
+      "attaque": 0,
+      "defense": 5,
+      "magie": 5
+    },
+    {
+      "nom": "Mage de guerre",
+      "type": "mage",
+      "attaque": 3,
+      "defense": 1,
+      "magie": 4
+    },
+    {
+      "nom": "Maitre de guerre",
+      "type": "guerrier",
+      "attaque": 5,
+      "defense": 5,
+      "magie": 0
+    },
+    {
+      "nom": "Mage guerrier",
+      "type": "mage-guerrier",
+      "attaque": 3,
+      "defense": 3,
+      "magie": 3
+    },
+    {
+      "nom": "Sénéchal",
+      "type": "mage-guerrier",
+      "attaque": 7,
+      "defense": 5,
+      "magie": 7
+    },
+    {
+      "nom": "Magicien assagi",
+      "type": "mage-guerrier",
+      "attaque": 1,
+      "defense": 4,
+      "magie": 8
+    },
+    {
+      "nom": "Explorateur",
+      "type": "mage-guerrier",
+      "attaque": 6,
+      "defense": 2,
+      "magie": 2
+    }
+  ],
+  "_progression": [
+    {
+      "fr": "aucune progression",
+      "en": "none",
+      "description": "Aucune progression. / Le maximum sera de 0 au niveau 40."
+    },
+    {
+      "fr": "progression classique très faible",
+      "en": "classical very weak",
+      "description": "La progression classique est linéaire. Le héros gagne le même nombre de points du niveau 1 au niveau 40. / Le maximum sera de 20 au niveau 40."
+    },
+    {
+      "fr": "progression classique faible",
+      "en": "classical weak",
+      "description": "La progression classique est linéaire. Le héros gagne le même nombre de points du niveau 1 au niveau 40. / Le maximum sera de 30 au niveau 40."
+    },
+    {
+      "fr": "progression classique moyenne",
+      "en": "classical average",
+      "description": "La progression classique est linéaire. Le héros gagne le même nombre de points du niveau 1 au niveau 40. / Le maximum sera de 40 au niveau 40."
+    },
+    {
+      "fr": "progression classique forte",
+      "en": "classical strong",
+      "description": "La progression classique est linéaire. Le héros gagne le même nombre de points du niveau 1 au niveau 40. / Le maximum sera de 60 au niveau 40."
+    },
+    {
+      "fr": "progression académique forte",
+      "en": "scholastic strong",
+      "description": "Une progression académique représente un héros qui apprend dans les livres et les bibliothèques. Il démarre lentement, car il faut du temps pour assimiler les bases, mais à partir du niveau 10, tout s'accélère et le héros gagne beaucoup de points jusqu'au niveau 30. Après le niveau 30, le héros a atteint le maximum de son potentiel et ne gagne plus que quelques points jusqu'au niveau 40. / Le maximum sera de 60 au niveau 40."
+    },
+    {
+      "fr": "progression fanatique forte",
+      "en": "fanatic strong",
+      "description": "Une progression fanatique démarre très vite et représente un héros qui apprend sur le terrain. Mais au bout d'un moment, il manque de bases théoriques et commence à stagner. En fin de carrière (après le niveau 30), il reçoit l'inspiration des dieux et entame une progression rapide jusqu'au niveau 40. / Le maximum sera de 60 au niveau 40."
+    },
+    {
+      "fr": "progression fanatique faible",
+      "en": "fanatic weak",
+      "description": "Une progression fanatique démarre très vite et représente un héros qui apprend sur le terrain. Mais au bout d'un moment, il manque de bases théoriques et commence à stagner. En fin de carrière (après le niveau 30), il reçoit l'inspiration des dieux et entame une progression rapide jusqu'au niveau 40. / Le maximum sera de 30 au niveau 40."
+    },
+    {
+      "fr": "progression académique moyenne",
+      "en": "scholastic average",
+      "description": "Une progression académique représente un héros qui apprend dans les livres et les bibliothèques. Il démarre lentement, car il faut du temps pour assimiler les bases, mais à partir du niveau 10, tout s'accélère et le héros gagne beaucoup de points jusqu'au niveau 30. Après le niveau 30, le héros a atteint le maximum de son potentiel et ne gagne plus que quelques points jusqu'au niveau 40. / Le maximum sera de 40 au niveau 40."
+    }
+  ],
+  "_niveaux": [
+    "",
+    [
+      0,
+      1,
+      1,
+      1,
+      2,
+      0,
+      2,
+      2,
+      0
+    ],
+    [
+      800,
+      1,
+      2,
+      2,
+      3,
+      0,
+      4,
+      4,
+      0
+    ],
+    [
+      2000,
+      2,
+      3,
+      3,
+      5,
+      1,
+      6,
+      6,
+      0
+    ],
+    [
+      3200,
+      2,
+      3,
+      4,
+      6,
+      2,
+      8,
+      8,
+      1
+    ],
+    [
+      4600,
+      3,
+      4,
+      5,
+      8,
+      3,
+      10,
+      9,
+      2
+    ],
+    [
+      6200,
+      3,
+      5,
+      6,
+      9,
+      4,
+      12,
+      10,
+      3
+    ],
+    [
+      8000,
+      4,
+      6,
+      7,
+      11,
+      5,
+      14,
+      11,
+      4
+    ],
+    [
+      10000,
+      4,
+      6,
+      8,
+      12,
+      6,
+      16,
+      12,
+      5
+    ],
+    [
+      12200,
+      5,
+      7,
+      9,
+      14,
+      7,
+      18,
+      13,
+      6
+    ],
+    [
+      14700,
+      5,
+      8,
+      10,
+      15,
+      8,
+      20,
+      14,
+      7
+    ],
+    [
+      17500,
+      6,
+      9,
+      11,
+      17,
+      10,
+      22,
+      15,
+      8
+    ],
+    [
+      20600,
+      6,
+      9,
+      12,
+      18,
+      12,
+      24,
+      15,
+      9
+    ],
+    [
+      24320,
+      7,
+      10,
+      13,
+      20,
+      14,
+      25,
+      15,
+      11
+    ],
+    [
+      28784,
+      7,
+      11,
+      14,
+      21,
+      16,
+      26,
+      15,
+      13
+    ],
+    [
+      34140,
+      8,
+      12,
+      15,
+      23,
+      18,
+      27,
+      15,
+      15
+    ],
+    [
+      40567,
+      8,
+      12,
+      16,
+      24,
+      20,
+      28,
+      15,
+      17
+    ],
+    [
+      48279,
+      9,
+      13,
+      17,
+      26,
+      23,
+      29,
+      15,
+      19
+    ],
+    [
+      57533,
+      9,
+      14,
+      18,
+      27,
+      26,
+      29,
+      15,
+      21
+    ],
+    [
+      68637,
+      10,
+      15,
+      19,
+      29,
+      29,
+      29,
+      15,
+      23
+    ],
+    [
+      81961,
+      10,
+      15,
+      20,
+      30,
+      32,
+      29,
+      15,
+      25
+    ],
+    [
+      97949,
+      11,
+      16,
+      21,
+      32,
+      34,
+      29,
+      15,
+      27
+    ],
+    [
+      117134,
+      11,
+      17,
+      22,
+      33,
+      36,
+      30,
+      15,
+      29
+    ],
+    [
+      140156,
+      12,
+      18,
+      23,
+      35,
+      38,
+      31,
+      15,
+      31
+    ],
+    [
+      167782,
+      12,
+      18,
+      24,
+      36,
+      40,
+      32,
+      15,
+      33
+    ],
+    [
+      200933,
+      13,
+      19,
+      25,
+      38,
+      42,
+      33,
+      15,
+      34
+    ],
+    [
+      240634,
+      13,
+      20,
+      26,
+      39,
+      44,
+      34,
+      15,
+      35
+    ],
+    [
+      288179,
+      14,
+      21,
+      27,
+      41,
+      46,
+      35,
+      15,
+      36
+    ],
+    [
+      345119,
+      14,
+      21,
+      28,
+      42,
+      48,
+      36,
+      15,
+      37
+    ],
+    [
+      413309,
+      15,
+      22,
+      29,
+      44,
+      50,
+      38,
+      15,
+      38
+    ],
+    [
+      494972,
+      15,
+      23,
+      30,
+      45,
+      52,
+      40,
+      16,
+      39
+    ],
+    [
+      592770,
+      16,
+      23,
+      31,
+      47,
+      53,
+      42,
+      17,
+      40
+    ],
+    [
+      709892,
+      16,
+      24,
+      32,
+      48,
+      54,
+      44,
+      18,
+      40
+    ],
+    [
+      850155,
+      17,
+      25,
+      33,
+      50,
+      55,
+      46,
+      19,
+      40
+    ],
+    [
+      1018132,
+      17,
+      26,
+      34,
+      51,
+      56,
+      48,
+      20,
+      40
+    ],
+    [
+      1219299,
+      18,
+      26,
+      35,
+      53,
+      57,
+      50,
+      21,
+      40
+    ],
+    [
+      1460212,
+      18,
+      27,
+      36,
+      54,
+      58,
+      52,
+      22,
+      40
+    ],
+    [
+      1748727,
+      19,
+      28,
+      37,
+      56,
+      59,
+      54,
+      24,
+      40
+    ],
+    [
+      2094247,
+      19,
+      29,
+      38,
+      57,
+      60,
+      56,
+      26,
+      40
+    ],
+    [
+      2508036,
+      20,
+      30,
+      39,
+      59,
+      60,
+      58,
+      28,
+      40
+    ],
+    [
+      3003584,
+      20,
+      30,
+      40,
+      60,
+      60,
+      60,
+      30,
+      40
+    ]
+  ],
+  "_carrieres": [
+    {
+      "nom": "Architecte",
+      "description": "Plus efficace pour attaquer et défendre les cités, ainsi que pour la construction. Permet de fabriquer des catapultes."
+    },
+    {
+      "nom": "Barbare",
+      "description": "Formé pour repérer les éclaireurs ennemis. Bonnes capacités de pillage et d'interception de troupes ennemies en déroute. Permet de capturer les éclaireurs ennemis."
+    },
+    {
+      "nom": "Bâtisseur",
+      "description": " Augmente les revenus. Permet de construire des ateliers d'exploitation. Un bon choix pour donner un coup de pouce à votre économie."
+    },
+    {
+      "nom": "Chevalier",
+      "description": "Unités plus puissantes en défense. Permet de construire des forts. Aucun royaume n'est vraiment protégé sans un chevalier."
+    },
+    {
+      "nom": "Clerc",
+      "ecole": 2,
+      "description": "Capable de lancer des sorts de l'École de la Lumière, efficaces pour améliorer vos troupes."
+    },
+    {
+      "nom": "Combattant",
+      "description": "Unités plus puissantes en attaque. Peut utiliser les armes magiques. Très utile pour éliminer les monstres autour d'une cité."
+    },
+    {
+      "nom": "Invocateur",
+      "ecole": 0,
+      "description": "Capable de lancer des sorts de l'École de l'Invocation. Invoquer des troupes est un bon moyen pour tuer des monstres sans mettre en danger vos troupes."
+    },
+    {
+      "nom": "Magicien de la destruction",
+      "ecole": 3,
+      "description": "Capable de lancer des sorts de l'École de la Destruction, très efficaces pour tuer les troupes ennemies."
+    },
+    {
+      "nom": "Magicien des ténèbres",
+      "ecole": 1,
+      "description": "Capable de lancer des sorts de l'École des Ténèbres, très efficaces pour tuer les troupes faibles et pour affaiblir les héros ennemis."
+    },
+    {
+      "nom": "Marchand",
+      "description": "Très habile dans la manipulation des caravanes et les arcanes du commerce, le marchand augmente la vitesse et la capacité de vos caravanes tout en maximisant les bénéfices de vos ventes directes."
+    },
+    {
+      "nom": "Meneur",
+      "description": "Produit et recrute les unités plus rapidement. Permet de recruter les unités de rang 7."
+    },
+    {
+      "nom": "Rôdeur",
+      "description": "Meilleur éclaireur. Peut effectuer des reconnaissances de cités ou de régions. Utile pour garder un œil sur ses voisins."
+    },
+    {
+      "nom": "Tenancier",
+      "description": "Réduit le coût des actions à la taverne et augmente leur efficacité. Réduit les coûts de maintenance."
+    }
+  ],
+  "_talents": [
+    [
+      {
+        "nom": "Contremaitre",
+        "v": [
+          0,
+          9,
+          18,
+          27
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % la vitesse de construction et d'amélioration des bâtiments et des mines."
+      },
+      {
+        "nom": "Expert en balistique",
+        "v": [
+          0,
+          9,
+          18,
+          27
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % la puissance de bombardement des catapultes."
+      },
+      {
+        "nom": "Bâtisseur de fortifications",
+        "nom_machine": "batisseur_fortifications",
+        "v": [
+          0,
+          3,
+          6,
+          9
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % le bonus des fortifications."
+      },
+      {
+        "nom": "Sapeur",
+        "nom_machine": "sapeur",
+        "v": [
+          0,
+          3,
+          6,
+          9
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Réduit de X % le bonus de fortifications de l'ennemi."
+      }
+    ],
+    [
+      {
+        "nom": "Chasseur d'éclaireurs",
+        "v": [
+          0,
+          3,
+          6,
+          9
+        ],
+        "plus": 1,
+        "pourcent": 0,
+        "description": "Gagne X niveaux en détectant des éclaireurs ennemis."
+      },
+      {
+        "nom": "Massacreur",
+        "nom_machine": "massacreur",
+        "v": [
+          0,
+          3,
+          6,
+          9
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % les pertes de l'ennemi au combat."
+      },
+      {
+        "nom": "Pilleur",
+        "v": [
+          0,
+          21,
+          42,
+          63
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % la quantité de ressources pillées."
+      }
+    ],
+    [
+      {
+        "nom": "Intendant",
+        "v": [
+          0,
+          3,
+          6,
+          9
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % la production de ressources communes."
+      },
+      {
+        "nom": "Alchimiste",
+        "v": [
+          0,
+          3,
+          6,
+          9
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % la production de ressources rares."
+      },
+      {
+        "nom": "Chercheur d'or",
+        "v": [
+          0,
+          3,
+          6,
+          9
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % la production d'or."
+      },
+      {
+        "nom": "Bon payeur",
+        "nom_machine": "bon_payeur",
+        "v": [
+          0,
+          5,
+          10,
+          15
+        ],
+        "plus": 1,
+        "pourcent": 0,
+        "description": "Augmente de X la défense de toutes les unités."
+      }
+    ],
+    [
+      {
+        "nom": "Tacticien défenseur",
+        "nom_machine": "tacticien_defenseur",
+        "v": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % la défense de toutes les unités."
+      },
+      {
+        "nom": "Écuyer défenseur",
+        "nom_machine": "ecuyer_defenseur",
+        "v": [
+          0,
+          5,
+          10,
+          15
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % la défense de toutes les unités de cavalerie en cas de bonus de troupe."
+      },
+      {
+        "nom": "Expert en tirs de barrage",
+        "nom_machine": "expert_tirs_barrage",
+        "v": [
+          0,
+          5,
+          10,
+          15
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % la défense de toutes les unités de tireurs en cas de bonus de troupe."
+      },
+      {
+        "nom": "Inébranlable",
+        "nom_machine": "inebranlable",
+        "v": [
+          0,
+          5,
+          10,
+          15
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % la défense de toutes les unités d'infanterie en cas de bonus de troupe."
+      },
+      {
+        "nom": "Logisticien",
+        "nom_machine": "logisticien",
+        "v": [
+          0,
+          2,
+          4,
+          6
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Réduit de X % les pertes d'unités au combat."
+      }
+    ],
+    [
+      {
+        "nom": "Instinct lumineux",
+        "nom_machine": "instinct_2",
+        "v": [
+          0,
+          2,
+          4,
+          6
+        ],
+        "plus": 1,
+        "pourcent": 0,
+        "description": "Fait gagner X points de magie lors du lancement de sorts de l'École de la lumière."
+      },
+      {
+        "nom": "Maitre des arcanes",
+        "nom_machine": "arcanes",
+        "v": [
+          0,
+          1,
+          3,
+          5
+        ],
+        "plus": 1,
+        "pourcent": 0,
+        "description": "Permet de lancer un sort supplémentaire, limité au cercle X."
+      },
+      {
+        "nom": "Scribe",
+        "v": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "plus": 1,
+        "pourcent": 0,
+        "description": "Augmente de X le nombre de sorts dans le livre de sorts."
+      },
+      {
+        "nom": "Expert de la lumière",
+        "nom_machine": "expert_2",
+        "v": [
+          0,
+          6,
+          12,
+          18
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % l'efficacité des sorts de l'École de la lumière."
+      }
+    ],
+    [
+      {
+        "nom": "Tacticien",
+        "nom_machine": "tacticien",
+        "v": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % l'attaque de toutes les unités."
+      },
+      {
+        "nom": "Écuyer",
+        "nom_machine": "ecuyer",
+        "v": [
+          0,
+          5,
+          10,
+          15
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % l'attaque de toutes les unités de cavalerie en cas de bonus de troupe."
+      },
+      {
+        "nom": "Tireur d'élite",
+        "nom_machine": "tireur_elite",
+        "v": [
+          0,
+          5,
+          10,
+          15
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % l'attaque de toutes les unités de tireurs en cas de bonus de troupe."
+      },
+      {
+        "nom": "Commandant d'infanterie",
+        "nom_machine": "commandant_infanterie",
+        "v": [
+          0,
+          5,
+          10,
+          15
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % l'attaque de toutes les unités d'infanterie en cas de bonus de troupe."
+      }
+    ],
+    [
+      {
+        "nom": "Instinct d'invocateur",
+        "nom_machine": "instinct_0",
+        "v": [
+          0,
+          2,
+          4,
+          6
+        ],
+        "plus": 1,
+        "pourcent": 0,
+        "description": "Fait gagner X points de magie lors du lancement de sorts de l'École de l'invocation."
+      },
+      {
+        "nom": "Maitre des arcanes",
+        "nom_machine": "arcanes",
+        "v": [
+          0,
+          1,
+          3,
+          5
+        ],
+        "plus": 1,
+        "pourcent": 0,
+        "description": "Permet de lancer un sort supplémentaire, limité au cercle X."
+      },
+      {
+        "nom": "Scribe",
+        "v": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "plus": 1,
+        "pourcent": 0,
+        "description": "Augmente de X le nombre de sorts dans le livre de sorts."
+      },
+      {
+        "nom": "Expert de l'invocation",
+        "nom_machine": "expert_0",
+        "v": [
+          0,
+          6,
+          12,
+          18
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % l'efficacité des sorts de l'École de l'invocation."
+      }
+    ],
+    [
+      {
+        "nom": "Instinct destruction",
+        "nom_machine": "instinct_3",
+        "v": [
+          0,
+          2,
+          4,
+          6
+        ],
+        "plus": 1,
+        "pourcent": 0,
+        "description": "Fait gagner X points de magie lors du lancement de sorts de l'École de la destruction."
+      },
+      {
+        "nom": "Maitre des arcanes",
+        "nom_machine": "arcanes",
+        "v": [
+          0,
+          1,
+          3,
+          5
+        ],
+        "plus": 1,
+        "pourcent": 0,
+        "description": "Permet de lancer un sort supplémentaire, limité au cercle X."
+      },
+      {
+        "nom": "Scribe",
+        "v": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "plus": 1,
+        "pourcent": 0,
+        "description": "Augmente de X le nombre de sorts dans le livre de sorts."
+      },
+      {
+        "nom": "Expert de destruction",
+        "nom_machine": "expert_3",
+        "v": [
+          0,
+          6,
+          12,
+          18
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % l'efficacité des sorts de l'École de la destruction."
+      }
+    ],
+    [
+      {
+        "nom": "Instinct ténébreux",
+        "nom_machine": "instinct_1",
+        "v": [
+          0,
+          2,
+          4,
+          6
+        ],
+        "plus": 1,
+        "pourcent": 0,
+        "description": "Fait gagner X points de magie lors du lancement de sorts de l'École des ténèbres."
+      },
+      {
+        "nom": "Maitre des arcanes",
+        "nom_machine": "arcanes",
+        "v": [
+          0,
+          1,
+          3,
+          5
+        ],
+        "plus": 1,
+        "pourcent": 0,
+        "description": "Permet de lancer un sort supplémentaire, limité au cercle X."
+      },
+      {
+        "nom": "Scribe",
+        "v": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "plus": 1,
+        "pourcent": 0,
+        "description": "Augmente de X le nombre de sorts dans le livre de sorts."
+      },
+      {
+        "nom": "Expert des ténèbres",
+        "nom_machine": "expert_1",
+        "v": [
+          0,
+          6,
+          12,
+          18
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % l'efficacité des sorts de l'École des ténèbres."
+      }
+    ],
+    [
+      {
+        "nom": "Commerçant",
+        "v": [
+          0,
+          9,
+          18,
+          27
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % le prix de vente au marchand des ressources."
+      },
+      {
+        "nom": "Caravanier",
+        "v": [
+          0,
+          50,
+          100,
+          150
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % la contenance des caravanes."
+      },
+      {
+        "nom": "Éleveur de mules",
+        "v": [
+          0,
+          50,
+          100,
+          150
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % la vitesse des caravanes."
+      }
+    ],
+    [
+      {
+        "nom": "Chef charismatique",
+        "v": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "plus": 1,
+        "pourcent": 0,
+        "description": "Augmente de +X la production quotidienne de toutes les unités, à l'exception de celles de rang 7."
+      },
+      {
+        "nom": "Maitre entraineur",
+        "v": [
+          0,
+          9,
+          18,
+          27
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % la vitesse de recrutement de toutes les unités, à l'exception de celles de rang 7."
+      },
+      {
+        "nom": "Diplomate",
+        "v": [
+          0,
+          9,
+          18,
+          27
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % les chances de recruter des unités neutres."
+      },
+      {
+        "nom": "Harangueur",
+        "nom_machine": "harangueur",
+        "v": [
+          0,
+          5,
+          10,
+          15
+        ],
+        "plus": 1,
+        "pourcent": 0,
+        "description": "Augmente de X l'attaque de toutes les unités."
+      }
+    ],
+    [
+      {
+        "nom": "Maitre espion",
+        "v": [
+          0,
+          5,
+          10,
+          15
+        ],
+        "plus": 1,
+        "pourcent": 0,
+        "description": "L'éclaireur gagne X niveaux en effectuant des reconnaissances."
+      },
+      {
+        "nom": "Coureur",
+        "v": [
+          0,
+          9,
+          18,
+          27
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Permet d'atteindre plus rapidement une destination. Augmente de X % la vitesse des éclaireurs."
+      },
+      {
+        "nom": "Expert des renseignements",
+        "v": [
+          0,
+          21,
+          42,
+          63
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % la vitesse des reconnaissances."
+      }
+    ],
+    [
+      {
+        "nom": "Pilier de comptoir",
+        "v": [
+          0,
+          9,
+          18,
+          27
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Réduit de X % les coûts dans les tavernes."
+      },
+      {
+        "nom": "Enrôleur",
+        "v": [
+          0,
+          1,
+          2,
+          3
+        ],
+        "plus": 1,
+        "pourcent": 0,
+        "description": "Augmente de X le nombre de points de compétence possédé par les héros lors de leur recrutement."
+      },
+      {
+        "nom": "Enrôleur charismatique",
+        "v": [
+          0,
+          45,
+          90,
+          135
+        ],
+        "plus": 1,
+        "pourcent": 1,
+        "description": "Augmente de X % les troupes accompagnant les héros lors de leur recrutement."
+      },
+      {
+        "nom": "Offreur de tournées",
+        "v": [
+          0,
+          3,
+          6,
+          9
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Réduit de X % les coûts de maintenance."
+      }
+    ],
+    [
+      {
+        "nom": "Maître Harangueur",
+        "nom_title": "Souverain de Sheogh",
+        "nom_machine": "legendary_sovereign_a",
+        "v": [
+          0,
+          10,
+          20,
+          30
+        ],
+        "plus": 1,
+        "pourcent": 0,
+        "description": "Augmente l'attaque de toutes les unités de 10/20/30"
+      },
+      {
+        "nom": "Maître Combattant",
+        "nom_title": "Souverain de Sheogh",
+        "nom_machine": "legendary_sovereign_b",
+        "v": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Augmente l'attaque du héros de 4%/8%/12%"
+      },
+      {
+        "nom": "Sans-pitié",
+        "nom_title": "Souverain de Sheogh",
+        "nom_machine": "legendary_sovereign_c",
+        "v": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Augmente les pertes ennemies de 4%/8%/12% après une bataille lorsque le héros est en attaque"
+      }
+    ],
+    [
+      {
+        "nom": "Maître Combattant",
+        "nom_title": "Guerrier Légendaire",
+        "nom_machine": "legendary_legwarrior_a",
+        "v": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Augmente l'attaque du héros de 4%/8%/12%"
+      },
+      {
+        "nom": "Maître Défendeur",
+        "nom_title": "Guerrier Légendaire",
+        "nom_machine": "legendary_legwarrior_b",
+        "v": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Augmente la défense du héros de 4%/8%/12%"
+      },
+      {
+        "nom": "Briseur de Murs",
+        "nom_title": "Guerrier Légendaire",
+        "nom_machine": "legendary_legwarrior_c",
+        "v": [
+          0,
+          5,
+          10,
+          15
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Réduit le bonus de fortifications de la cité ennemie 5%/10%/15%"
+      }
+    ],
+    [
+      {
+        "nom": "Cri Démoralisant",
+        "nom_title": "Chasseur de Mage",
+        "nom_machine": "legendary_magehunter_a",
+        "v": [
+          0,
+          5,
+          10,
+          15
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Diminue l'attaque du héros ennemi 5%/10%/15%"
+      },
+      {
+        "nom": "Résistance",
+        "nom_title": "Chasseur de Mage",
+        "nom_machine": "legendary_magehunter_b",
+        "v": [
+          0,
+          5,
+          10,
+          15
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Diminue la magie du héros ennemi de 5%/10%/15%"
+      },
+      {
+        "nom": "Immunité aux sorts",
+        "nom_title": "Chasseur de Mage",
+        "nom_machine": "legendary_magehunter_c",
+        "v": [
+          0,
+          10,
+          20,
+          30
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Réduit l'efficacité des sorts ennemis visant le héros, son armée ou ses fortifications de 10%/20%/30%"
+      }
+    ],
+    [
+      {
+        "nom": "Gardien",
+        "nom_title": "Paladin Légendaire",
+        "nom_machine": "legendary_legpaladin_a",
+        "v": [
+          0,
+          3,
+          6,
+          9
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Réduit de 3%/6%/9% les pertes d'unités après une bataille lorsque le héros est en défense"
+      },
+      {
+        "nom": "Maître Défendeur",
+        "nom_title": "Paladin Légendaire",
+        "nom_machine": "legendary_legpaladin_b",
+        "v": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Augmente la défense du héro de 4%/8%/12%"
+      },
+      {
+        "nom": "Inspiration Divine",
+        "nom_title": "Paladin Légendaire",
+        "nom_machine": "legendary_legpaladin_c",
+        "v": [
+          0,
+          10,
+          20,
+          30
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Augmente de 10%/20%/30% l'efficacité des sorts de l'École de la Lumière"
+      }
+    ],
+    [
+      {
+        "nom": "Gardien",
+        "nom_title": "Nuit Éternelle",
+        "nom_machine": "legendary_ethernalnight_a",
+        "v": [
+          0,
+          3,
+          6,
+          9
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Réduit de 3%/6%/9% les pertes d'unités après une bataille lorsque le héros est en défense"
+      },
+      {
+        "nom": "Génie Militaire",
+        "nom_title": "Nuit Éternelle",
+        "nom_machine": "legendary_ethernalnight_b",
+        "v": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Augmente de 4%/8%/12% le bonus des fortifications de la cité"
+      },
+      {
+        "nom": "Nuit Éternelle",
+        "nom_title": "Nuit Éternelle",
+        "nom_machine": "legendary_ethernalnight_c",
+        "v": [
+          0,
+          10,
+          20,
+          30
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Augmente de 10%/20%/30% l'efficacité des sorts de l'École des Ténèbres"
+      }
+    ],
+    [
+      {
+        "nom": "Nuit Éternelle",
+        "nom_title": "Roi des Non-Morts",
+        "nom_machine": "legendary_kingundead_a",
+        "v": [
+          0,
+          10,
+          20,
+          30
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Augmente de 10%/20%/30% l'efficacité des sorts de l'École des Ténèbres"
+      },
+      {
+        "nom": "Invocateur Suprême",
+        "nom_title": "Roi des Non-Morts",
+        "nom_machine": "legendary_kingundead_b",
+        "v": [
+          0,
+          10,
+          20,
+          30
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Augmente de 10%/20%/30% l'efficacité des sorts de l'École de l'Invocation"
+      },
+      {
+        "nom": "Sans-pitié",
+        "nom_title": "Roi des Non-Morts",
+        "nom_machine": "legendary_kingundead_c",
+        "v": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Augmente de 4%/8%/12% les pertes ennemies après une bataille lorsque le héros est en attaque"
+      }
+    ],
+    [
+      {
+        "nom": "Invocateur Suprême Supérieur",
+        "nom_title": "Magicien Légendaire",
+        "nom_machine": "legendary_legmagician_a",
+        "v": [
+          0,
+          10,
+          20,
+          30
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Augmente de 10%/20%/30% l'efficacité des sorts de l'École de l'Invocation"
+      },
+      {
+        "nom": "Inspiration Divine",
+        "nom_title": "Magicien Légendaire",
+        "nom_machine": "legendary_legmagician_b",
+        "v": [
+          0,
+          10,
+          20,
+          30
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Augmente de 10%/20%/30% l'efficacité des sorts de l'École de la Lumière"
+      },
+      {
+        "nom": "Gardien",
+        "nom_title": "Magicien Légendaire",
+        "nom_machine": "legendary_legmagician_c",
+        "v": [
+          0,
+          3,
+          6,
+          9
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Réduit de 3%/6%/9% les pertes d'unités après une bataille lorsque le héros est en défense"
+      }
+    ],
+    [
+      {
+        "nom": "Sans-pitié",
+        "nom_title": "Chevalier Dragon",
+        "nom_machine": "legendary_dragonkinght_a",
+        "v": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Augmente de 4%/8%/12% les pertes ennemies après une bataille lorsque le héros est en attaque"
+      },
+      {
+        "nom": "Grand Destructeur",
+        "nom_title": "Chevalier Dragon",
+        "nom_machine": "legendary_dragonkinght_b",
+        "v": [
+          0,
+          10,
+          20,
+          30
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Augmente de 10%/20%/30% l'efficacité des sorts de l'École de la Destruction"
+      },
+      {
+        "nom": "Maître Combattant",
+        "nom_title": "Chevalier Dragon",
+        "nom_machine": "legendary_dragonkinght_c",
+        "v": [
+          0,
+          4,
+          8,
+          12
+        ],
+        "plus": 0,
+        "pourcent": 1,
+        "description": "Augmente de 4%/8%/12% l'attaque du héros"
+      }
+    ]
+  ],
+  "_talents_combat": {
+    "attaquant": [
+      {
+        "c": 5,
+        "t": 0
+      },
+      {
+        "c": 5,
+        "t": 1
+      },
+      {
+        "c": 5,
+        "t": 2
+      },
+      {
+        "c": 5,
+        "t": 3
+      },
+      {
+        "c": 3,
+        "t": 4
+      },
+      {
+        "c": 10,
+        "t": 3
+      },
+      {
+        "c": 0,
+        "t": 3
+      },
+      {
+        "c": 1,
+        "t": 1
+      }
+    ],
+    "defenseur": [
+      {
+        "c": 3,
+        "t": 0
+      },
+      {
+        "c": 3,
+        "t": 1
+      },
+      {
+        "c": 3,
+        "t": 2
+      },
+      {
+        "c": 3,
+        "t": 3
+      },
+      {
+        "c": 3,
+        "t": 4
+      },
+      {
+        "c": 2,
+        "t": 3
+      },
+      {
+        "c": 0,
+        "t": 2
+      },
+      {
+        "c": 1,
+        "t": 1
+      }
+    ]
+  },
+  "_talents_magie": [
+    {
+      "c": 4,
+      "t": 0
+    },
+    {
+      "c": 4,
+      "t": 3
+    },
+    {
+      "c": 6,
+      "t": 0
+    },
+    {
+      "c": 6,
+      "t": 3
+    },
+    {
+      "c": 7,
+      "t": 0
+    },
+    {
+      "c": 7,
+      "t": 3
+    },
+    {
+      "c": 8,
+      "t": 0
+    },
+    {
+      "c": 8,
+      "t": 3
+    },
+    {
+      "c": 4,
+      "t": 1
+    }
+  ],
+  "_apprentissage": [
+    0,
+    1,
+    3,
+    6
+  ],
+  "_talents_legendary_combat": {
+    "attaquant": [
+      {
+        "c": 13,
+        "t": 0
+      },
+      {
+        "c": 13,
+        "t": 1
+      },
+      {
+        "c": 13,
+        "t": 2
+      },
+      {
+        "c": 14,
+        "t": 0
+      },
+      {
+        "c": 14,
+        "t": 1
+      },
+      {
+        "c": 14,
+        "t": 2
+      },
+      {
+        "c": 15,
+        "t": 0
+      },
+      {
+        "c": 15,
+        "t": 1
+      },
+      {
+        "c": 15,
+        "t": 2
+      },
+      {
+        "c": 16,
+        "t": 0
+      },
+      {
+        "c": 16,
+        "t": 1
+      },
+      {
+        "c": 16,
+        "t": 2
+      },
+      {
+        "c": 17,
+        "t": 0
+      },
+      {
+        "c": 17,
+        "t": 1
+      },
+      {
+        "c": 17,
+        "t": 2
+      },
+      {
+        "c": 18,
+        "t": 0
+      },
+      {
+        "c": 18,
+        "t": 1
+      },
+      {
+        "c": 18,
+        "t": 2
+      },
+      {
+        "c": 19,
+        "t": 0
+      },
+      {
+        "c": 19,
+        "t": 1
+      },
+      {
+        "c": 19,
+        "t": 2
+      },
+      {
+        "c": 20,
+        "t": 0
+      },
+      {
+        "c": 20,
+        "t": 1
+      },
+      {
+        "c": 20,
+        "t": 2
+      }
+    ],
+    "defenseur": [
+      {
+        "c": 13,
+        "t": 0
+      },
+      {
+        "c": 13,
+        "t": 1
+      },
+      {
+        "c": 13,
+        "t": 2
+      },
+      {
+        "c": 14,
+        "t": 0
+      },
+      {
+        "c": 14,
+        "t": 1
+      },
+      {
+        "c": 14,
+        "t": 2
+      },
+      {
+        "c": 15,
+        "t": 0
+      },
+      {
+        "c": 15,
+        "t": 1
+      },
+      {
+        "c": 15,
+        "t": 2
+      },
+      {
+        "c": 16,
+        "t": 0
+      },
+      {
+        "c": 16,
+        "t": 1
+      },
+      {
+        "c": 16,
+        "t": 2
+      },
+      {
+        "c": 17,
+        "t": 0
+      },
+      {
+        "c": 17,
+        "t": 1
+      },
+      {
+        "c": 17,
+        "t": 2
+      },
+      {
+        "c": 18,
+        "t": 0
+      },
+      {
+        "c": 18,
+        "t": 1
+      },
+      {
+        "c": 18,
+        "t": 2
+      },
+      {
+        "c": 19,
+        "t": 0
+      },
+      {
+        "c": 19,
+        "t": 1
+      },
+      {
+        "c": 19,
+        "t": 2
+      },
+      {
+        "c": 20,
+        "t": 0
+      },
+      {
+        "c": 20,
+        "t": 1
+      },
+      {
+        "c": 20,
+        "t": 2
+      }
+    ]
+  }
+}

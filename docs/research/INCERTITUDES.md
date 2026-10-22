@@ -1,0 +1,59 @@
+# Incertitudes, contradictions et preuves manquantes
+
+Ce registre sépare **information absente**, **sources contradictoires**, **anomalie d’outil** et **choix du successeur**. Une case inconnue ne prend pas une valeur de zéro par défaut. Les propositions techniques n’effacent pas les incertitudes historiques.
+
+Priorités : **P0** bloque la fidélité du socle ; **P1** bloque un module ou une campagne complète ; **P2** complète le contenu ou l’exploitation. La priorité n’oblige pas à bloquer toute recherche : les autres modules peuvent avancer.
+
+| ID | Priorité / nature | Question précise | Preuve disponible | Vérification suivante |
+| --- | --- | --- | --- | --- |
+| U01 | P0, périmètre | Quelle saison et quel type de serveur doivent servir de référence ? | Plusieurs versions incompatibles | Identifier un monde mémorable, sa date et ses options ; comparer captures et témoignages |
+| U02 | P0, version | Quelles tables du commit 2013 sont déjà valables en S2 ? | En-tête 4.1.3, commit 4.5 | Comparer une révision antérieure de Jactari et un rapport S2 |
+| U03 | P0, temps | À quelle cadence ressources et recrues sont-elles créditées ? | Descriptions quotidiennes | Observer chiffres avant/après une frontière horaire sur archive ou capture |
+| U04 | P0, arrondis | Fractions conservées, arrondis par mine ou par total ? | Tables nominales seulement | Cas de petite production avec bonus et plafond |
+| U05 | P0, construction | Combien de chantiers par cité/héros ; exécutant immobilisé combien de temps ? | Héros nécessaires à certaines actions | Tutoriel filmé et interface de files |
+| U06 | P0, recrutement | Recrues communes entre variantes ; cadence, coût et durée du recrutement ? | Coûts et `prod` récupérés | Comparer un bâtiment avant/après amélioration et une commande de recrutement |
+| U07 | P0, entretien | Quel barème s’applique au monde cible ; quelles unités et quelle cité paient ? | G08 et calculateur divergent | Retrouver outil TotG du serveur ou bilan quotidien authentique |
+| U08 | P0, insolvabilité | Déficit d’or : dette, blocage, désertion, délai ou autre ? | Non établi | Rapport et écran d’une cité insolvable |
+| U09 | P0, mouvement | Chemin réellement traversé, diagonales, points et arrondis ? | Distance torique d’outil, guide des haltes | Tracé et heure réelle sur deux trajets tests dont franchissement de bord |
+| U10 | P0, trêve | Fuseau, heures, heure d’été, influence sur marche/halte/siège ? | G05 russe, aperçu général | Paramètres d’un serveur français et exemples de frontière nocturne |
+| U11 | P0, combat | Départage des égalités et faux nuls ; zéro défense ? | Branches spécifiques du simulateur | Rapport authentique aux seuils exacts |
+| U12 | P0, combat | Admission PvP : branches de `floor(30r)` identiques au serveur ? | Code précis, guides approximatifs | Quatre captures autour de ratios limites |
+| U13 | P0, pertes | Traitement complet des PNJ, invocations, résurrections et absence de héros ? | Plusieurs branches, correction marquée `bugged` | Rapports par catégorie et comparaison d’oracles |
+| U14 | P0, simultanéité | Renfort et attaque à même seconde ; capture et victoire à même instant ? | Non retrouvé | Historique d’incident ou règle officielle ; sinon choix annoncé |
+| U15 | P1, influence | Formule spatiale, fenêtre de moyenne, fréquence et conflits ? | G08, moyenne militaire et recalcul nocturne | Export de carte sur plusieurs jours avec puissances connues |
+| U16 | P1, colonisation | Coût complet, limites, distance, état initial et réservation ? | G08 descriptif | Formulaire de fondation pour plusieurs nombres de cités |
+| U17 | P1, génération | Taille, terrain, distribution des quatre mines, PNJ, sites spéciaux ? | Grille 5×5 et contenus partiels | Plusieurs régions initiales, générateur/client archivé s’il existe |
+| U18 | P1, défense | Sélection/tri des sept pelotons et attribution des héros en garnison ? | Guide siège et simulateur multi-héros | Rapport avec plus de sept pelotons et plusieurs héros |
+| U19 | P1, siège | Durée totale, encerclement, Graals, sortie/secours et retour des renforts ? | G10 incomplet | Calculateur TotG et rapports horodatés de siège |
+| U20 | P1, protection | Dernière cité, débutant, inactif, vacances et immunités ? | Exceptions partielles de G10 | Règles de serveur et écrans de refus d’attaque |
+| U21 | P1, bombardement | Tirage de cibles et sort des prérequis après destruction ? | G10, poids catégoriels | Rapport détaillé avant/après destruction de plusieurs bâtiments |
+| U22 | P1, pillage | Capacité de butin, transport, fraction adjacente et ciblage ? | G06 avec points de seuil | Rapport de pillage de faible et forte puissance |
+| U23 | P1, espionnage | Probabilités de qualité/détection/capture et défense d’espionnage ? | G15 qualitatif | Série de rapports avec niveaux et talents connus |
+| U24 | P1, héros | Prix, offre de taverne, limites et caractéristiques de départ ? | Taverne et archétypes | Captures d’offres, recrutement initial et recrutements suivants |
+| U25 | P1, talents | Nombre de carrières, niveaux d’ouverture et distribution de points ? | Tables de valeurs | Arbre complet à plusieurs niveaux, manuel de carrière |
+| U26 | P1, magie | Apprentissage, recharge, cumul des mêmes sorts, effet négatif ? | G14 et calculateur | Rapports et écrans de sorts de la saison cible |
+| U27 | P1, objets | Disponibilité, butin, liaison, ensembles et transfert ? | Catalogue abondant, disponibilité manquante | Captures d’objets, boutique et tables d’événements |
+| U28 | P1, commerce | Tarifs marchand, enchères, commissions, portée et transport ? | G18 et talents | Parcours complet d’achat, vente et règlement |
+| U29 | P1, balance | Solde par paire ou agrégé, croissance, exclusions et contrôle exact ? | G17 | Message de refus et soldes avant/après plusieurs échanges |
+| U30 | P1, stockage | Tables complètes, or, débordements et marchandises en vente ? | G16 et bâtiments | Capacités par niveau et résultats de crédits dépassant le plafond |
+| U31 | P1, alliance | Capacités/rangs exacts, score et droits détaillés ? | G09 avec seuils suspects | Écran d’alliance de rangs 1, 5, 6, 7 et 10 |
+| U32 | P1, diplomatie | Pactes, délais, alliances parentes et effets sur ordres déjà partis ? | Droit de passage décrit | Messages diplomatiques et temps d’effet |
+| U33 | P1, Larmes | Fréquence d’obtention, simultanéité, possession/vol et perte en conquête ? | G01–G04 | Journal de progression d’une alliance sur toute la guerre |
+| U34 | P1, victoire | Décompte précis du maintien, égalité entre alliances, date de clôture ? | G01 | Annonce de victoire et derniers changements de monuments |
+| U35 | P1, hérédité | Calcul exact, cas G=5, prix, unions, héritier et consommation ? | G26–G28, tables de bonus | Résultat final et écran de sélection du monde suivant |
+| U36 | P1, Arkath | Génération des assauts, forteresses, récompenses et cérémonie ? | SRC-12 et G23 | Journal complet d’un monde PvE et calendrier |
+| U37 | P1, tournoi | Seuils intermédiaires, appariement, transferts et égalités S4 ? | G25 | Tableau de compétition et historique d’une manche |
+| U38 | P2, contenu | Quêtes et récompenses exhaustives, blocages du tutoriel ? | G22, indices divers | Archives de quêtes et parcours filmé neuf |
+| U39 | P2, aléatoire | Ruines : probabilités, fortification, effondrement et récompenses ? | G24 incohérent | Table d’origine lisible ou distribution documentée |
+| U40 | P2, services | Fonctions gratuites/premium par date et serveur ? | Fiches contradictoires | Archive des offres et droits effectifs |
+| U41 | P2, interface | Écrans, outils de coordination, filtres et notifications exacts ? | Images/vidéos repérées, non reconstituées | Inventaire de captures contextualisées |
+| U42 | P1, anomalie outil | Double ajout de bonus légendaire et pertes temporaires erronées ? | CODE-01-COMBAT | Versions antérieures/suivantes et rapports tardifs |
+| U43 | P2, référentiel | Entrées vides, descriptions manquantes, placeholders régionaux ? | JSON extraits sans correction | Rapport du validateur puis recherche ciblée |
+
+## Décisions du futur jeu, distinctes des inconnues
+
+L’univers original, les noms, la direction artistique, le modèle économique, le rythme de campagne, les règles de sommeil, le niveau d’aide à l’optimisation et les éventuels ajustements d’entretien relèvent de décisions de projet. Même si une amélioration paraît évidente, elle sera consignée comme un écart volontaire après obtention d’une référence historique testable.
+
+## Fiche de preuve à utiliser
+
+Pour chaque nouvel élément : URL ou fichier d’origine ; auteur et date ; monde/saison/pays ; capture intégrale pertinente ; état avant ; action ; délai ; résultat ; variables connues ; variables inconnues ; conclusion limitée ; IDs d’exigence et d’incertitude concernés. Deux souvenirs compatibles aident à prioriser, mais un rapport chiffré permet de valider un arrondi.
