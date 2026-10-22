@@ -15,7 +15,7 @@ Le dépôt contient une première rétroconception large, un corpus de données 
 | 5. Ajouter le monde partagé | Colonisation, influence, déplacements, trêve, commerce et reconnaissance | Deux royaumes interagissent, reprises serveur et conflits d’ordres validés |
 | 6. Ajouter la guerre d’alliance | Rôles, diplomatie, pillage, siège, captures et rapports partagés | Scénarios multi-joueurs sans duplication ni fuite d’information |
 | 7. Fermer une campagne complète | Trois voies, monuments, victoire classique et résultat | Un monde de test accéléré atteint sa fin et attribue une seule hérédité |
-| 8. Restaurer les variantes choisies | Arkath, tournoi S4, événements et hérédité avancée | Chaque profil possède sa propre recette et ne contamine pas le classique |
+| 8. Variantes éventuelles, hors engagement classique | Arkath et tournoi S4 restent archivés ; hérédité avancée conditionnelle à qualification | Un choix ultérieur explicite serait nécessaire pour ouvrir ces profils ; aucun n’est requis par le backlog classique |
 | 9. Créer le successeur | Univers, assets et écarts de design décidés | Matrice des changements et validation d’équilibrage séparées de la fidélité |
 
 L’accélération du temps de test doit être un réglage du monde, pas une modification ponctuelle de constantes disséminées. Elle sert à parcourir une campagne entière, avec conservation des rapports, sans attendre plusieurs mois.
@@ -51,3 +51,11 @@ Le suivi doit mesurer les mécanismes couverts, les incertitudes P0 restantes, l
 Le mode cible est confirmé, les 57 captures sont classées et les ressources graphiques Jactari inventoriées. Les trois carrières, coûts de points et inventaires de héros sont mieux documentés. Les contrats d’interface et de rendu sont désormais disponibles ; cela ne signifie pas que le client soit implémenté.
 
 Prochain travail concret : construire une tranche verticale de présentation à partir du [gabarit](INTERFACE-ET-RENDU-ISOMETRIQUE.md), avec monde détaillé/politique, région, scène de ville, colonne du royaume et une modale de héros/combat ; brancher les sprites validés et signaler les décors de remplacement. En parallèle documentaire, les plus forts manques du profil sont les écrans de Guerre des Larmes, les formules de déplacement et les rapports de combat complets. L’implémentation du moteur et les jalons militaires suivent le plan existant.
+
+## Pilotage par les user stories — v0.3
+
+Le **[backlog de 300 fiches](../backlog/README.md)** devient l’outil de préparation et d’acceptation du développement. La [story map](../backlog/STORY-MAP.md) propose six tranches, de la qualification du profil à la clôture d’une campagne, et une lecture indépendante par early/mid/end game. Ces tranches se raccordent aux étapes ci-dessus ; elles ne constituent pas des sprints chiffrés.
+
+Le prochain travail de réalisation peut utiliser des substituts graphiques pour la boucle locale. Il commence par l’affinage des fiches pivots et de leurs dépendances : règles temporelles, économie, recrutement et oracles de combat. La tranche de présentation mentionnée plus haut est une partie de cette boucle jouable ; elle ne suffit pas à elle seule à accepter la gestion d’un royaume.
+
+La recherche d’assets de ville/bâtiments se poursuit séparément, avec traçabilité de la fidélité visuelle. Les questions d’affinage et les preuves attendues figurent dans la [couverture des inconnues](../backlog/COUVERTURE.md). Les [parcours intégrés](../backlog/RECETTE-PARCOURS.md) fournissent les démonstrations attendues à chaque étape.

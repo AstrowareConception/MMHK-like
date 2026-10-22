@@ -2,14 +2,20 @@
 
 **Objectif : reconstruire le fonctionnement de Might & Magic Heroes Kingdoms avant de développer son successeur jouable par navigateur.** Le présent dépôt contient un référentiel de gameplay, des spécifications fonctionnelles, des données historiques extraites et un plan de validation. Il ne contient pas encore de jeu exécutable.
 
-Version documentaire **0.2 — 22 octobre 2026**. Recherche réalisée à partir des neuf liens fournis, de leurs archives accessibles, de guides communautaires et du code public de MMHK-Plus/Jactari. Les mécanismes retrouvés sont distingués des hypothèses et des propositions de reconstruction. **Ce dossier n’est pas une copie certifiée du serveur Ubisoft : plusieurs règles ont changé selon les saisons et certaines informations manquent.**
+Version documentaire **0.3 — 22 octobre 2026**. Recherche réalisée à partir des neuf liens fournis, de leurs archives accessibles, de guides communautaires et du code public de MMHK-Plus/Jactari. Les mécanismes retrouvés sont distingués des hypothèses et des propositions de reconstruction. **Ce dossier n’est pas une copie certifiée du serveur Ubisoft : plusieurs règles ont changé selon les saisons et certaines informations manquent.**
 
 La révision 0.2 intègre **57 captures (53 distinctes)** et les **153 fichiers Jactari, dont 96 images**, fournis dans le dépôt. Elle confirme le périmètre **PvP classique avec Guerre des Larmes**, détaille les interfaces et relie les objets aux planches graphiques. Les décors complets de monde/région/ville restent à retrouver ou reconstruire.
+
+La révision 0.3 ajoute un **[backlog de 300 user stories](docs/backlog/README.md)**, réparties en 23 catégories et reliées aux phases de campagne. Chaque fiche comprend les 3 C, cinq critères d’acceptation, un examen INVEST, la DoD, les dépendances et les inconnues. Les 55 exigences classiques actives sont couvertes ; les scénarios restent à exécuter lors du développement.
 
 ## Lire le dossier
 
 | Besoin | Document |
 | --- | --- |
+| Piloter le développement par les besoins joueur | [Backlog de 300 user stories](docs/backlog/README.md), [index complet](docs/backlog/INDEX-STORIES.md) |
+| Organiser les versions et les phases de campagne | [Story map](docs/backlog/STORY-MAP.md) |
+| Affiner, estimer et accepter une fonctionnalité | [3 C, INVEST et Definition of Done](docs/backlog/METHODE-ET-QUALITE.md) |
+| Vérifier la couverture fonctionnelle | [Exigences vers stories](docs/backlog/COUVERTURE.md), [parcours intégrés](docs/backlog/RECETTE-PARCOURS.md) |
 | Comprendre le jeu dans son ensemble | [Game design : vision, boucles et interfaces](docs/game-design/01-VISION-ET-BOUCLES.md) |
 | Lire l’analyse image par image | [Analyse des 57 captures](docs/research/ANALYSE-CAPTURES.md) |
 | Identifier les assets utilisables et manquants | [Audit Jactari et 1 317 correspondances de sprites](docs/research/AUDIT-JACTARI-ASSETS.md) |
@@ -71,3 +77,11 @@ python3 tools/validate.py
 ```
 
 L’audit d’images nécessite Pillow. Ces commandes contrôlent les fichiers, empreintes, rectangles de sprites et liens documentaires ; elles ne testent pas un client de jeu. Voir le [rapport de validation](docs/research/VALIDATION.md).
+
+## Contrôler le backlog fonctionnel
+
+```bash
+node tools/validate-backlog.mjs
+```
+
+Ce contrôle vérifie la structure des 300 fiches, leurs 1 500 critères, les dépendances, les références et les liens. Il ne lance pas le jeu. Le [rapport du backlog](docs/backlog/VALIDATION.md) distingue ces vérifications documentaires des futurs tests de gameplay. Le [JSON](data/backlog/user-stories.json) permet l’import dans un outil de suivi sans ressaisie.

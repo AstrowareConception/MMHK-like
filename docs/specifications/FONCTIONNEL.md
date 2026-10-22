@@ -142,3 +142,9 @@ Le [profil PvP classique](PROFIL-PVP-CLASSIQUE.md) est confirmé. `REQ-TOURNAMEN
 | REQ-UI-10 | Présenter caravanes, colonisation et taverne en séparant coûts, délais, capacité et verrous commerciaux éventuels | SS-040/053/057 |
 | REQ-UI-11 | Résoudre les sprites depuis un manifeste ; gérer explicitement fichier absent, rectangle débordant et variante indisponible | CODE-02-IMAGES ; adaptation PROP |
 | REQ-UI-12 | Reproduire une famille graphique cohérente, avec textes lisibles et contrôle des états aux dimensions de référence | IMG-01 ; DEC-002 ; adaptation PROP |
+
+## Mise en œuvre par user stories — v0.3
+
+Les contrats ci-dessus sont déclinés en **[300 fiches fonctionnelles](../backlog/README.md)**. La [matrice de couverture](../backlog/COUVERTURE.md) relie chacune des 55 exigences classiques actives aux stories concernées ; les deux exigences archivées restent exclues. Les [3 C, INVEST et DoD](../backlog/METHODE-ET-QUALITE.md) fixent le travail d’affinage et de validation restant. Les [douze parcours intégrés](../backlog/RECETTE-PARCOURS.md) vérifient la cohérence entre catégories sans remplacer les critères de chaque fiche.
+
+Les stories organisent le développement ; elles ne remplacent pas les tables et sources historiques. Toute divergence doit mettre à jour la règle, les critères concernés, la décision de profil et la traçabilité. Aucune story n’est déclarée prête ou terminée à cette étape documentaire.
