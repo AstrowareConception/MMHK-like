@@ -1,0 +1,2721 @@
+{
+  "source_commit": "71f8ec79cbea19246c539394bf33d75fc21f26b3",
+  "file_count": 153,
+  "image_count": 96,
+  "extensions": {
+    ".css": 9,
+    ".gif": 4,
+    ".html": 25,
+    ".jpg": 24,
+    ".js": 23,
+    ".png": 68
+  },
+  "files": [
+    {
+      "path": "data/Jactari/src/Artefakte.html",
+      "bytes": 5832,
+      "git_blob_sha": "5844d1ddb6f9b492d7574795d00488ead531e35e",
+      "sha256": "15e1f0026448820b14feca2d2442b421b12e6802cbffd474cfc76d041acc13a1"
+    },
+    {
+      "path": "data/Jactari/src/Gebaude.html",
+      "bytes": 9372,
+      "git_blob_sha": "85f768cf3854fc20e1a87d052a0d1dbfe820bf8b",
+      "sha256": "97ccf66f5fa519d6bbddeb2518227cb2c7b5c5bab16b45cc34142d4f5017f01c"
+    },
+    {
+      "path": "data/Jactari/src/Held.html",
+      "bytes": 11767,
+      "git_blob_sha": "80e7bd0038bbaa2d884df29836c26b84d3a60ae1",
+      "sha256": "b19bb697fbc6f21cd84d666d5a8f44d434755566e07cf453edc16a6a3f059448"
+    },
+    {
+      "path": "data/Jactari/src/Kampf.html",
+      "bytes": 11930,
+      "git_blob_sha": "0d60945152eccb96b9e78290342386901fde6b45",
+      "sha256": "1cdc5fabb831375ab8c75168ed46adac71b6eae6bc540dab79a96d166f00f64a"
+    },
+    {
+      "path": "data/Jactari/src/Kreaturen.html",
+      "bytes": 6035,
+      "git_blob_sha": "6721cb1394d49744eedba7d509bf8e5906a1e6d6",
+      "sha256": "08303ad4875d62e500c27b8a495a2a540e4f8b718bde2d795ee59dceb08adf55"
+    },
+    {
+      "path": "data/Jactari/src/Zauber.html",
+      "bytes": 5965,
+      "git_blob_sha": "65b2a71b72537f2b82a3bc185981bd05abff33e9",
+      "sha256": "9bf453559a6c0d4730d1c01223d79de718a547d1b5983c03cb909ab18d1b9048"
+    },
+    {
+      "path": "data/Jactari/src/artefacts.html",
+      "bytes": 5913,
+      "git_blob_sha": "f4e3088e8f750b4939ef32eb45abcf81af76f553",
+      "sha256": "1c8319ed1182e7dc337f2cedd02b5c82ee5e8936031353cf217079ffeb907908"
+    },
+    {
+      "path": "data/Jactari/src/artifacts.html",
+      "bytes": 5806,
+      "git_blob_sha": "f2bb730a8d1cde7568f95af0968187794d5fc0b8",
+      "sha256": "65a5c30382f38bfc01f46199cef1c0e6ef896594a44d0019c753419b9fe4c867"
+    },
+    {
+      "path": "data/Jactari/src/artifacts_ru.html",
+      "bytes": 6168,
+      "git_blob_sha": "089e6841044790335c92edbc35026e4199f70995",
+      "sha256": "d8655f12af3d8f2a6c5e2584d6efb292bfbfcb5d051cf3ae3c1e8a27c4548b78"
+    },
+    {
+      "path": "data/Jactari/src/batiments.html",
+      "bytes": 9354,
+      "git_blob_sha": "d9fc81bd69d389820cd9b23cff23a12ba5d25d5f",
+      "sha256": "bb9dfc0b687afeba1f1b2273529cda1af0714490d9789ada10c49d59d1cde816"
+    },
+    {
+      "path": "data/Jactari/src/buildings.html",
+      "bytes": 9237,
+      "git_blob_sha": "8fbfc0812a69bd9dfded86a033a7585918de99fd",
+      "sha256": "b931f9efb77a6033d6646f8a4d14e90bcdea7f7b29ab8a47f6a77b1a895027c2"
+    },
+    {
+      "path": "data/Jactari/src/buildings_ru.html",
+      "bytes": 9686,
+      "git_blob_sha": "309c05c574a619562bed0a64fbef63f89f801381",
+      "sha256": "df289b4279696f40d6b9329c5a86a4bbf2bb0dc6c6ec90ca832dac2d961c8e4d"
+    },
+    {
+      "path": "data/Jactari/src/combat.html",
+      "bytes": 12167,
+      "git_blob_sha": "2d1870cd64f6c6fd6fc2038ce002582c4ed3ffe3",
+      "sha256": "44a342927b9159d1e023263bd41d749a4ef0c5b89da1ecd44cf22547e782e2b8"
+    },
+    {
+      "path": "data/Jactari/src/creatures.html",
+      "bytes": 6054,
+      "git_blob_sha": "9d8182c5b74244dfafd8424954b29cb6a39e533c",
+      "sha256": "db02090a2ac6e297c6b4ed512dfe19ebf442db5a59f719dfbc5e6bb4e3f54a02"
+    },
+    {
+      "path": "data/Jactari/src/creatures_fr.html",
+      "bytes": 6133,
+      "git_blob_sha": "cc11504126f3dd4cced51e5bffd0e527722aa9d0",
+      "sha256": "fe2c9ff3fdf4f31cf59df8b393cb981db73f5ed16dc86dee21c7dcfdfad34f4c"
+    },
+    {
+      "path": "data/Jactari/src/creatures_ru.html",
+      "bytes": 6303,
+      "git_blob_sha": "c44f991554286992bf5f5ace59f79a093c9605f6",
+      "sha256": "97be76bab1e5bd41bb90df58bd86af2fd41583cebc25719e176e135225286865"
+    },
+    {
+      "path": "data/Jactari/src/fight.html",
+      "bytes": 11981,
+      "git_blob_sha": "c89db4e9ad84eb41a2626942c8585573e3e9ed84",
+      "sha256": "db0a13ded335013f70efdbb1f000394e1e7ff5af1844c635d19dd5c74c52646d"
+    },
+    {
+      "path": "data/Jactari/src/fight_ru.html",
+      "bytes": 12563,
+      "git_blob_sha": "19564015ef19071cf9cd4f9d4b3bc7a11fd8f124",
+      "sha256": "cd0b5e8281041e47a46e4abbb5f6e6cec19d2cd33a03a39849cd7087c388c262"
+    },
+    {
+      "path": "data/Jactari/src/hero.html",
+      "bytes": 11779,
+      "git_blob_sha": "10fb64e14464ace197de291d486fa26f712444d3",
+      "sha256": "fd267122c64a04b4b7f24195aa5f634dc9f07a762d4191646bac5576175d89d7"
+    },
+    {
+      "path": "data/Jactari/src/hero_ru.html",
+      "bytes": 12334,
+      "git_blob_sha": "a540ddd48dc76863ee509cf7d0df97ea9a413b6b",
+      "sha256": "cbaf20fcba555e9a5e81f75a8cade94c903b06ba31fbc6891a2541b11f11c21f"
+    },
+    {
+      "path": "data/Jactari/src/heros.html",
+      "bytes": 11940,
+      "git_blob_sha": "16ca01a1d6db21642d9f15149442b7d0071e3883",
+      "sha256": "d8aa6ebac1b85cf3b802d4ae1159c12f207b6670df2993ce102eb997e8d40922"
+    },
+    {
+      "path": "data/Jactari/src/images/Artefact_ACADEMY.png",
+      "bytes": 15012,
+      "git_blob_sha": "47c09197b6a10d9e60fbcba810840eeb42601180",
+      "sha256": "4056ebe2ad9450a9e06ded9089bdffbf92446932f43d67e2df932c56988cc5b5",
+      "width": 555,
+      "height": 36,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Artefact_COMMON.png",
+      "bytes": 862699,
+      "git_blob_sha": "888982aea9a9125b87d4c9a4ac420ac74b839dda",
+      "sha256": "c1fc993a69b8654c3d6f3426fb0ba73d37defb642e486df92ec9ba48d052cd1b",
+      "width": 560,
+      "height": 1476,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Artefact_HAVEN.png",
+      "bytes": 14989,
+      "git_blob_sha": "b3cf3872554ea078039c6213604e7469b9f28e4d",
+      "sha256": "e2da0948c2f5a97cb0f9735d900f5a5e862c5f7c4556dceee7a04c681d5b2668",
+      "width": 555,
+      "height": 36,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Artefact_HEREDITY.gif",
+      "bytes": 4240,
+      "git_blob_sha": "f38a08630a77d596333086a8278568eb1583aabe",
+      "sha256": "f66441ee4818eddb13904f2a6c90a44f088e07f9e1c5b083377630f692a9c61e",
+      "width": 37,
+      "height": 108,
+      "format": "GIF",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Artefact_HEREDITY.png",
+      "bytes": 3946,
+      "git_blob_sha": "06557db3db27e6c20b1e733fbe5187f47c153a37",
+      "sha256": "24fe133abb1a1b60f013690ecf12e1f9cf521c0ae9e6d9d65dff06ac9d1cebe4",
+      "width": 111,
+      "height": 36,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Artefact_INFERNO.png",
+      "bytes": 14431,
+      "git_blob_sha": "a9f8db64482c9a884e862bf3a7587465109a54b1",
+      "sha256": "3659545a70957b9b1121626fc44090d208bf41d1bf1a92b0118bf8c25ccd55c2",
+      "width": 555,
+      "height": 36,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Artefact_NECROPOLIS.png",
+      "bytes": 15123,
+      "git_blob_sha": "536637369c46864e54827357304b17bfc47263ac",
+      "sha256": "9849675f3e33e45609efb3cb69950947c46cfe86f2d807af778514d5df892204",
+      "width": 555,
+      "height": 36,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Artefact_REWARD.gif",
+      "bytes": 9063,
+      "git_blob_sha": "723e3fd6af7fc902f865fa7ab6d0fcd574c4090b",
+      "sha256": "f87957af735602b997a6c0d6502b0c072a6e26c1fc28150384b3992bacb4101a",
+      "width": 259,
+      "height": 36,
+      "format": "GIF",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Artefact_REWARD.png",
+      "bytes": 7974,
+      "git_blob_sha": "1b47d06e16411e7a200b371005676db898ad5d7d",
+      "sha256": "22fa9855f42a7db4cfee932a7e888c6e066e6c175ddcfa3ea4c259aa2c5fc076",
+      "width": 259,
+      "height": 36,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Artefact_SET.png",
+      "bytes": 499495,
+      "git_blob_sha": "aa96830b5a0a96a71306dc56e413e8e34126dd0e",
+      "sha256": "d2a672a707e9a7fc61b9562a358066d710cd4d5979442cadb5c9edee002a8ff8",
+      "width": 397,
+      "height": 288,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Artefact_SYLVAN.png",
+      "bytes": 14174,
+      "git_blob_sha": "de1160a27a88b2d2cfb2d86986f7f30085302b91",
+      "sha256": "72643fe8607931e7da84f29c551f9dee562456c33e738cb79bbd4a1a59cdf48e",
+      "width": 555,
+      "height": 36,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/BattleUnitStack_ACADEMY.jpg",
+      "bytes": 52681,
+      "git_blob_sha": "f652f39fdaf3c831570b88f71acb238daced1d78",
+      "sha256": "6623afcadee7fc8997a4b74fa9c59aa0ad7e8fd4c51c275fe83a66d5afdee0f7",
+      "width": 816,
+      "height": 104,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/BattleUnitStack_DUNGEON.jpg",
+      "bytes": 75197,
+      "git_blob_sha": "3e530ddab1195e50f911eb968cb71fe6c1abef2a",
+      "sha256": "fdb62e952d1634db4169224654dfa84f8ffbb047f0e47ef2ded1138dabd95462",
+      "width": 816,
+      "height": 156,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/BattleUnitStack_FORTRESS.jpg",
+      "bytes": 82112,
+      "git_blob_sha": "73fb368fa1e6324a8448b688168fdc0d701e0e3c",
+      "sha256": "d9a15e5bea8980caa55531728a50284e5c8188a690fc788a5e9e767d412c3624",
+      "width": 816,
+      "height": 156,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/BattleUnitStack_HAVEN.jpg",
+      "bytes": 52144,
+      "git_blob_sha": "52fa445c9c5bc9e21e00250f22d3ddc2291efbd0",
+      "sha256": "a4cc6576e0d0bcdae973de9656e267f4546b6abf88c407f11c5df7e0a8a01872",
+      "width": 816,
+      "height": 104,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/BattleUnitStack_INFERNO.jpg",
+      "bytes": 56419,
+      "git_blob_sha": "6ee2e51366ec31723707fea30300538203d69f85",
+      "sha256": "9249f9f48ddef31210846b4bee7ff3fcba257043ce163c223786cdf078a707e3",
+      "width": 816,
+      "height": 104,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/BattleUnitStack_NECROPOLIS.jpg",
+      "bytes": 75886,
+      "git_blob_sha": "fe8cab27efd665750b9683e866783d9c3be7c16d",
+      "sha256": "c399ac91d7e1ac5eafcfe6443b7bbe2655a853e7e322dfc408ede37b1661428f",
+      "width": 816,
+      "height": 104,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/BattleUnitStack_NEUTRAL.jpg",
+      "bytes": 40936,
+      "git_blob_sha": "0c4f7114fd9faf1016ecdec6b6e21c18eb11ba4b",
+      "sha256": "c1d60717621e25db65b35d43b939ffaea8bc1b94ddf9b5a44f10b0f249d748c9",
+      "width": 561,
+      "height": 156,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/BattleUnitStack_NEW.jpg",
+      "bytes": 29225,
+      "git_blob_sha": "8776f98f21f1b8f922d007cf97a183cd7028d994",
+      "sha256": "776edb576fda95be271aff19a846fd9ad3fb14f102532402c874eefaec265bc2",
+      "width": 357,
+      "height": 156,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/BattleUnitStack_SYLVAN.jpg",
+      "bytes": 78796,
+      "git_blob_sha": "f722f4712edd4d76c6bf159d878a9c41f3825d3f",
+      "sha256": "d54bc9de0dea3d0305dc25bf13e26c2069f2a3ef6c0b4575727a02b17d486661",
+      "width": 816,
+      "height": 156,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/BonusIcon_HEREDITY.png",
+      "bytes": 158352,
+      "git_blob_sha": "3e623563b4acf74a5078046657ca774f54c2d48d",
+      "sha256": "f54d6a2fd809fd6cd746f48dcbd6b5ae4d8861896e9d2eb658d579303ccb5bfc",
+      "width": 225,
+      "height": 375,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/BonusIcon_HEREDITY_d5x3.png",
+      "bytes": 90997,
+      "git_blob_sha": "1065fc849d5541e452a3880e1fc9e5bc34e1208a",
+      "sha256": "3bcd96122e9c655cb3ed20b12120c208d8fdc34647c4fb0739da123cf148aa7f",
+      "width": 135,
+      "height": 225,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/HeroClass.png",
+      "bytes": 547935,
+      "git_blob_sha": "11881fb3e56890f7faf53ae438af8dd4169a5e3d",
+      "sha256": "885312324ab8d15f35dd973661f4462185289bf905344b716e5233b7b64834fb",
+      "width": 625,
+      "height": 617,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/HeroClassSkill.png",
+      "bytes": 60633,
+      "git_blob_sha": "08bd940acf29a44855e569b43b43169bb88f8fe6",
+      "sha256": "38887e18c6b25167505e79e8b4b9b56336d8a18964b0e444f787698dc48f7ccb",
+      "width": 275,
+      "height": 200,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Hero_ACADEMY_2.jpg",
+      "bytes": 84427,
+      "git_blob_sha": "29c9be492a0c36d908e5bcd179ec2956423747f5",
+      "sha256": "a88ca7c79906cedafc45c515df06992ed5ae45189df50795a2f4e2bc9387309c",
+      "width": 1491,
+      "height": 72,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/Hero_DUNGEON_2.jpg",
+      "bytes": 79027,
+      "git_blob_sha": "a1e2e3e5de27617c362472ce04dfdcd3891baa2b",
+      "sha256": "e3163d5ea0b89b8779db83c6e21437776930182b17fe480792a73fdce4b47b7a",
+      "width": 1491,
+      "height": 72,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/Hero_HAVEN_2.jpg",
+      "bytes": 72486,
+      "git_blob_sha": "8cd1726c9c4a8795bfaa57407f50e3c8d75371af",
+      "sha256": "0516abf0199553101c0dcfbe48c0133a60be788ffe2d1f614325252ff79fd36e",
+      "width": 1491,
+      "height": 72,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/Hero_INFERNO_2.jpg",
+      "bytes": 107128,
+      "git_blob_sha": "618606fe4ca31333270126d6e02d9eceb7484edc",
+      "sha256": "0394713bbc3b7e8bcef86555e689d2d4bcf12f6ed1a035d4c08aec725133dad1",
+      "width": 1491,
+      "height": 72,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/Hero_NECROPOLIS_2.jpg",
+      "bytes": 80152,
+      "git_blob_sha": "13e8d2d7c49390628cd305a983c4cb1de2b8af6a",
+      "sha256": "032fc8cf60125b1023ab2fa81a59a83a3ca62669a31445e8225f778f403c1c2f",
+      "width": 1491,
+      "height": 72,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/Hero_SYLVAN_2.jpg",
+      "bytes": 88179,
+      "git_blob_sha": "d13115c2b29b62b1870fb65836e5c420f6a8ab64",
+      "sha256": "2660a0570ac9890f262ae7355b59b84c75828da271dc146ed735efcf5e6be383",
+      "width": 1491,
+      "height": 72,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/Ressources.png",
+      "bytes": 13013,
+      "git_blob_sha": "d020ae29e7c608d0760d60f3d9fc3af386e40883",
+      "sha256": "5faf1d4cf9e23a853302206fe7ee806387b1c547d9dc392455bec0726660b681",
+      "width": 250,
+      "height": 140,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Rrom.png",
+      "bytes": 2685,
+      "git_blob_sha": "9e3c710e95d3b46a04032e3650de5349fae1a3c1",
+      "sha256": "dbffdb27b5660caa98e6ff648f86cafe42d514ddb1baff5f33ace1af3971c216",
+      "width": 96,
+      "height": 64,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/SpellStack_DARK.png",
+      "bytes": 33502,
+      "git_blob_sha": "4070382dcb674ab0e24aaa6bee2ab51a47fe6fcc",
+      "sha256": "e9ee4139791d6e32f92d6f2350f88a87d9683b60a27dfff13b1e098df788c8f4",
+      "width": 421,
+      "height": 183,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/SpellStack_DESTRUCTION.png",
+      "bytes": 34450,
+      "git_blob_sha": "13c186f4a3e4e47798677d0855d7c962ce0dbe61",
+      "sha256": "e629d8cd94c3f1d99f4be082f635e434313320d3cfbd627c1b0221b9a662d39a",
+      "width": 421,
+      "height": 184,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/SpellStack_LIGHT.png",
+      "bytes": 36037,
+      "git_blob_sha": "fb940f514503d3f9fb87638769acf4d01b913f74",
+      "sha256": "3f7ba39b8788bff9d1c9567387abbc5d27d3d8d6ba6afe3b93f93a8e1c884f24",
+      "width": 421,
+      "height": 183,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/SpellStack_SUMMON.png",
+      "bytes": 35497,
+      "git_blob_sha": "8973f32cc83fd3984f70e0a9cfc1733a67a69526",
+      "sha256": "6e064298c1a86bfebe427dcc54274682f42945fb6fb849e397407437a68fb8f6",
+      "width": 421,
+      "height": 183,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/UnitStack_ACADEMY.png",
+      "bytes": 11507,
+      "git_blob_sha": "c56fede0116561be773ea2c0e16c7793dbeb610a",
+      "sha256": "d10fb677a7c0adef2d7a3dd38cb948786ae61be53e8be8495e8ff6f63616a3f6",
+      "width": 368,
+      "height": 44,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/UnitStack_DUNGEON.png",
+      "bytes": 11735,
+      "git_blob_sha": "131ef3d683cef4d8d43aa4cd565b5d59c7e18178",
+      "sha256": "6a65603b6d8276f6089f28d04743346a294587e3489e850d6112412aad1e8b14",
+      "width": 368,
+      "height": 44,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/UnitStack_FORTRESS.png",
+      "bytes": 11829,
+      "git_blob_sha": "a255940591baf0b131e28915cc3a38a962b44569",
+      "sha256": "6b55dd736fadf56fc97ff86c525436553ee810030e7f39ba65100a3f8b84585d",
+      "width": 367,
+      "height": 44,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/UnitStack_HAVEN.png",
+      "bytes": 12824,
+      "git_blob_sha": "0bf38f537b72a6840f5f6585606d736e7f464206",
+      "sha256": "b48b4a30bdf77a7aa2420cf33564e77f126ed6f2e2b5e68971b611dc9a6eb624",
+      "width": 368,
+      "height": 44,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/UnitStack_INFERNO.png",
+      "bytes": 12555,
+      "git_blob_sha": "d2a3c354a540fa4cd76da678ae643146627fd958",
+      "sha256": "a17795f9444e713c774537e91ed24828d4cd0a7bdac62b46920703ca1eaf2feb",
+      "width": 368,
+      "height": 44,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/UnitStack_NECROPOLIS.png",
+      "bytes": 13019,
+      "git_blob_sha": "bc6270532b8bbe0b3edf54936d988cf7544bb31d",
+      "sha256": "0e5193f9898650765f98d4b6b0eaf20d4646ca6de11b704180c6dce0bdea7af6",
+      "width": 368,
+      "height": 44,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/UnitStack_NEUTRAL.png",
+      "bytes": 9655,
+      "git_blob_sha": "1db5a765130122a372f5e9291c7735058fd20f3c",
+      "sha256": "c56d0399a7566ee1b2028d2539181407b12a4595d743976cc274ca7fb1763e29",
+      "width": 253,
+      "height": 44,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/UnitStack_NEW.png",
+      "bytes": 73183,
+      "git_blob_sha": "2aa0fdf035be51cd41050974f3116bac8d3005f4",
+      "sha256": "6890f0841c18af484f7f97acd896778d1b844ce8e81d9716b41b367efecdd5b7",
+      "width": 161,
+      "height": 44,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/UnitStack_SYLVAN.png",
+      "bytes": 12277,
+      "git_blob_sha": "a1ac293b596587ad37d1b1ae75302e29e6ee82b0",
+      "sha256": "b38972a94c640493f4b9ec599c08d9995468c3c9a4618da1ec2b668c7a8b708b",
+      "width": 368,
+      "height": 44,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/UnitStack_types.png",
+      "bytes": 3377,
+      "git_blob_sha": "a29e8a6bfc798318397a7777253e7ef469a9e6c6",
+      "sha256": "56dae7eb3d4b7b11bd917fc522a44f11f15de2b6c6abcf61948b9f4be586258f",
+      "width": 66,
+      "height": 66,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/cadre-heros.png",
+      "bytes": 1607,
+      "git_blob_sha": "c413377df5fe8e9b27e1920d8727502a8eaad409",
+      "sha256": "a68719bd85be99f1b61b928260a99509fb8dd844c0a5b4d3a16319337cfb9e66",
+      "width": 82,
+      "height": 85,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/classesBg.gif",
+      "bytes": 32338,
+      "git_blob_sha": "ae7d69375d6145dc95a3b50570f46f4a4e92131d",
+      "sha256": "2d979134fb417375131bca824db6110f21fede06e7c7f53d174a4e226e7ab9fd",
+      "width": 304,
+      "height": 244,
+      "format": "GIF",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/common.png",
+      "bytes": 13217,
+      "git_blob_sha": "2f6811ac51d22767728a62566efed8b8686de9d8",
+      "sha256": "78b6e12319f1483c75d17dcb3f5275a355530d137788e86b219942ef0647bbf2",
+      "width": 260,
+      "height": 220,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/emplacements-artefacts.png",
+      "bytes": 13342,
+      "git_blob_sha": "1f883ceebc84c6d88880f99888fab271640ce066",
+      "sha256": "4c6ade0b9c47dfb34e40308f424b24fd95cba3e8bda1a1baf26013b640257d16",
+      "width": 188,
+      "height": 95,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/equipementBg.jpg",
+      "bytes": 8464,
+      "git_blob_sha": "3f59823436d7391418b7a7eeedaee20ed2fcb471",
+      "sha256": "fdbafea8b2048a9e3a20c81de747ba969853fee1455ecb913860c3e4ef911a2d",
+      "width": 350,
+      "height": 47,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/fleche-offre.png",
+      "bytes": 1265,
+      "git_blob_sha": "877364c4cc0dc585b5196c2a36f09e98f23141af",
+      "sha256": "4cc8db721c698a4ba35e5ef854741aeee56b639c15f780f9733dc8e09afe1e27",
+      "width": 24,
+      "height": 24,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/fond-competences-speciales.jpg",
+      "bytes": 47059,
+      "git_blob_sha": "202bfdbf5b6596356b961aaf0d1b6568a64c7624",
+      "sha256": "012511aaffb83204bcce9340689c9626e74dc086973f628aa3813d49106ef44a",
+      "width": 602,
+      "height": 372,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/fond-heredite.jpg",
+      "bytes": 170318,
+      "git_blob_sha": "e9b043197bc2270acc4645dd2330b998ae22cfc2",
+      "sha256": "dd205fc7adae9fbdc35a81b8d7181dffda625d788e4dbf97c0bd71507a876068",
+      "width": 602,
+      "height": 744,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/fond-noir-translucide.png",
+      "bytes": 142,
+      "git_blob_sha": "d3323570da854b2dec2e8ac1baa4048d65f404fc",
+      "sha256": "0e6acd834ea466bce3acf3ee90a86124d0c933072ecf5deeb9514657c494f8dc",
+      "width": 20,
+      "height": 50,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/fond-offre.jpg",
+      "bytes": 9536,
+      "git_blob_sha": "2a8accd5cbf0550f748328aa1d23fad47989e6e7",
+      "sha256": "28f3e3df250f4dd1d459a1f8165c67fcaa2d561df029046f2f9d2817225158b7",
+      "width": 1280,
+      "height": 58,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/fond-xp.png",
+      "bytes": 171,
+      "git_blob_sha": "1ae7938659360106805757483f41ddb310872577",
+      "sha256": "f586d556746fa33e771046a097e1eb72a7082c14ba821098ed8329d73acbb850",
+      "width": 12,
+      "height": 12,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/fonds-sorts.jpg",
+      "bytes": 54526,
+      "git_blob_sha": "380f25de7dc5b4aef84b5c304d343f567fd58849",
+      "sha256": "a556abb8dcbd1805b51484d4044d1008a70888ea30f5be36e6858fcbe62569a4",
+      "width": 332,
+      "height": 416,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/hero-green.jpg",
+      "bytes": 7119,
+      "git_blob_sha": "edcbe9861f3dac7de41fc44a15ac10556e3743d6",
+      "sha256": "63c4adb454cbb4ee49ebcfbba57c4ff040bdcb10dffb7b1739d3426d37166106",
+      "width": 308,
+      "height": 51,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/hero-other.jpg",
+      "bytes": 7817,
+      "git_blob_sha": "4aa7a19a529fa96debc94d3d3cc452beb46e83a6",
+      "sha256": "695688f45914f469e58dfe74aca4a97939b100ab6364d2d91f88465629880be4",
+      "width": 308,
+      "height": 51,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/hero-purple.jpg",
+      "bytes": 5969,
+      "git_blob_sha": "71351f062eb9cdada79499bed68af378c36af314",
+      "sha256": "2a9a7b85cd09510d3abe8ea0fe3229ea0412f885b4240e2c4354ce0ce31f4b42",
+      "width": 308,
+      "height": 51,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/hero-red.jpg",
+      "bytes": 7175,
+      "git_blob_sha": "b836501f82ccc5039d09477ffa591c25b72854df",
+      "sha256": "f5b15e4eeb29696edaf048ced4ebd8b63ec268afcf50c9737e4d079e9fdc523c",
+      "width": 308,
+      "height": 51,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/icone-accueil.png",
+      "bytes": 634,
+      "git_blob_sha": "ad35a3bbe2e79bc41020e3ca870f4c8035dd3c6d",
+      "sha256": "46ec477a48a6f6079694d9b8161b510216584a6c5160c1acb1309db19ff07c17",
+      "width": 16,
+      "height": 17,
+      "format": "PNG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/icone-artefact.png",
+      "bytes": 1059,
+      "git_blob_sha": "0b056e593e384160e73261979654f421726844e6",
+      "sha256": "4ae28b427852252d7e71cd81b9ea10f5e3666402896bbc59eada32640a62fbfb",
+      "width": 16,
+      "height": 17,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/icone-batiment.png",
+      "bytes": 742,
+      "git_blob_sha": "7f1a6b151cc9cfad9ddd2d369a553229983baef7",
+      "sha256": "52fcd13ac41a06d42954cfeba3a765a9b2aec3468d3696066250a6d41a1a8275",
+      "width": 16,
+      "height": 17,
+      "format": "PNG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/icone-combat.png",
+      "bytes": 484,
+      "git_blob_sha": "1a869460517cad2f2928e9c892e470b0cb416e7c",
+      "sha256": "991e6448e4fb130e71d742bd56893939ad2562074e8273311c7d588d2bf9ce48",
+      "width": 16,
+      "height": 17,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/icone-fleches-circulaires.png",
+      "bytes": 1128,
+      "git_blob_sha": "297f328b7d15c52d611196509dc6e2e0ec03eced",
+      "sha256": "dafffd3eb48a602957d82a139edfb4df967d549d1ae302f12c90be0bb5336fca",
+      "width": 16,
+      "height": 17,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/icone-heros.png",
+      "bytes": 1085,
+      "git_blob_sha": "a8b580aac18ab19c7d7b4a857aa0ed5223891d88",
+      "sha256": "2309b125ff6a96924268cc4c0b6e79f32fb77c037ada417b95a93c7eba47cd2e",
+      "width": 16,
+      "height": 16,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/icone-sorts.png",
+      "bytes": 517,
+      "git_blob_sha": "ce931fcfab61d583219c7ebac300263b7e15353e",
+      "sha256": "73467f4b34af4b507a3a6ab433d198e7bf2612bd93cce5f195a78cba04d167a5",
+      "width": 16,
+      "height": 17,
+      "format": "PNG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/icone-troupes.png",
+      "bytes": 1102,
+      "git_blob_sha": "8d47205121d0eafbcf34afb403300b9ebf9bc5d2",
+      "sha256": "8a829e81be10c14acbb0d31cc9e0c86341c43026aab41c491f3eebe8af5ee5c7",
+      "width": 16,
+      "height": 17,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/info.png",
+      "bytes": 571,
+      "git_blob_sha": "d3c3996fe0e42695ba625f8dfe020ffd99491094",
+      "sha256": "1ea45326bdd70135fa5b78c6642c02a694757b60d1f441936618838759776d03",
+      "width": 24,
+      "height": 24,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/inversion.png",
+      "bytes": 166,
+      "git_blob_sha": "0c3c5b00b07980ed7551b66c7c77f8051d291221",
+      "sha256": "156e8d4e2519fc15e7de59169ef27546be49994a8f6fb4b24726769d9e6c1cfa",
+      "width": 11,
+      "height": 11,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/moins-cent.png",
+      "bytes": 189,
+      "git_blob_sha": "012def04d28f7452a6873033d128c26841b4afcc",
+      "sha256": "0e36791e8da39a35c7aed2c1809779b50139d67dd95c9424606aa0864787f7cb",
+      "width": 11,
+      "height": 22,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/moins-dix.png",
+      "bytes": 189,
+      "git_blob_sha": "9e659fc3cc269a9d9d3c27e7635301f489d4a15c",
+      "sha256": "ebf05133e54dc9f1b59302d3b8a286e1d8837f4ed9da62c8d36664733383d554",
+      "width": 11,
+      "height": 22,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/moins-survol.png",
+      "bytes": 185,
+      "git_blob_sha": "3d3b137c087b6d35f27c49ee5e3d235cd1c9f560",
+      "sha256": "5cd595434f975ae4c7930091cdd358de4d105e69ddcea840617ba6f8e78a7b71",
+      "width": 11,
+      "height": 22,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/moins-un.png",
+      "bytes": 185,
+      "git_blob_sha": "90a9d21824b9655a050bca9cf71642923a0c353d",
+      "sha256": "34679b1670a0307dfe62abdcd48a89dcc4f320a791d612222269a414f213b884",
+      "width": 11,
+      "height": 22,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/moins.png",
+      "bytes": 142,
+      "git_blob_sha": "9f2c96a2ca1c2b69917ae1916c2790b33fcf983a",
+      "sha256": "287b25e4fd4c8a967665e932fe3f48b09095925bf31bb1d72b2ae39e092df38a",
+      "width": 9,
+      "height": 9,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/plus-cent.png",
+      "bytes": 194,
+      "git_blob_sha": "f4502d02a94c5904bd7f7e4af6df40ba0ca7991c",
+      "sha256": "9ab7cae212a0c40c13e5c7dc2439e8740190c23c3caea5b10c077e7ce2bdd1c2",
+      "width": 11,
+      "height": 22,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/plus-dix.png",
+      "bytes": 193,
+      "git_blob_sha": "1a7e0a468e32b66e5ded535a043f72b8f27de2bb",
+      "sha256": "176c693ebfc6ff033014076889e64d76e6e11649114b6ee34649173ad0bdde44",
+      "width": 11,
+      "height": 22,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/plus-survol.png",
+      "bytes": 190,
+      "git_blob_sha": "00783647a0a4c7f2434579dbdf843d846b615521",
+      "sha256": "31c79f54a7b40f045dd34a5351e2518fec4789d166d8648cdce5f504787f7529",
+      "width": 11,
+      "height": 22,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/plus-un.png",
+      "bytes": 190,
+      "git_blob_sha": "8979c14b828a0f6db4f8a0710a986dc95bb13c94",
+      "sha256": "4f44b3a077796e16880ade13639e11f59f5618b5e7c7050195d8645fa3c68f47",
+      "width": 11,
+      "height": 22,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/plus.png",
+      "bytes": 146,
+      "git_blob_sha": "0a9eba06bc9b9078e011f22a99dbfadb0270fd3e",
+      "sha256": "b951b7f1285b542e29f8594f5f4669f4b61f9e7f98c36c5b5e28e31f8866050d",
+      "width": 9,
+      "height": 9,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/score-rempli.png",
+      "bytes": 215,
+      "git_blob_sha": "7da87b8d3e3fc7d9408480f60626b09d92a1a173",
+      "sha256": "bd623309fc6069ab292bb3fcd91969e0f29b53a3db0a67b506e2d0811b8f96ec",
+      "width": 80,
+      "height": 8,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/score-vide.png",
+      "bytes": 174,
+      "git_blob_sha": "cfad950ca5500c783842b5346a08d48118212817",
+      "sha256": "543c1a53b39d0d41aaaccd182e5eabac56dad6d415a6d37cfadbe4d7a4f70c24",
+      "width": 80,
+      "height": 8,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/ui-anim_basic_16x16.gif",
+      "bytes": 1553,
+      "git_blob_sha": "085ccaecaf5fa5c34bc14cd2c2ed5cbbd8e25dcb",
+      "sha256": "d3e3944d4649450dee66a55c69eeced2d825b6ca1a349f72c75fd3780ae3f006",
+      "width": 16,
+      "height": 16,
+      "format": "GIF",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/ui-bg_diagonals-thick_18_b81900_40x40.png",
+      "bytes": 384,
+      "git_blob_sha": "29460f0ef34db4f18a80f960518e9b04dada21d6",
+      "sha256": "ee2600ed743ecd4fb2903e3459952604593ae2ea71e2c9633d7888b005d3c86f",
+      "width": 40,
+      "height": 40,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/ui-bg_diagonals-thick_20_666666_40x40.png",
+      "bytes": 251,
+      "git_blob_sha": "64ece5707d91a6edf9fad4bfcce0c4dbcafcf58d",
+      "sha256": "26d009d09ea27a9e08717c252c6451e473faf3fdabff911e6726c7d143a7afc1",
+      "width": 40,
+      "height": 40,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/ui-bg_flat_10_000000_40x100.png",
+      "bytes": 178,
+      "git_blob_sha": "abdc01082bf3534eafecc5819d28c9574d44ea89",
+      "sha256": "0e1ac198171a7efb4e331b0aa097a8aa1d4ebdbade5b29c4861bb422f95f1be7",
+      "width": 40,
+      "height": 100,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/ui-bg_glass_100_f6f6f6_1x400.png",
+      "bytes": 104,
+      "git_blob_sha": "9b383f4d2eab09c0f2a739d6b232c32934bc620b",
+      "sha256": "29205b2d198ce4eed569d38a5ce0a55ef27a0c8e643473c375d623ced7d24ca8",
+      "width": 1,
+      "height": 400,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/ui-bg_glass_100_fdf5ce_1x400.png",
+      "bytes": 125,
+      "git_blob_sha": "a23baad25b1d1ff36e17361eab24271f2e9b7326",
+      "sha256": "1cbf4bb8af5ce70ba8228e90a81eddba4733cce35bbbe469e952b8fc7cd49b8d",
+      "width": 1,
+      "height": 400,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/ui-bg_glass_65_ffffff_1x400.png",
+      "bytes": 105,
+      "git_blob_sha": "42ccba269b6e91bef12ad0fa18be651b5ef0ee68",
+      "sha256": "f0e6cd91b837d5c5644d026e5ffeccd907953317cd5c0f689901733afda260b2",
+      "width": 1,
+      "height": 400,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/ui-bg_highlight-soft_100_eeeeee_1x100.png",
+      "bytes": 90,
+      "git_blob_sha": "f1273672d253263b7564e9e21d69d7d9d0b337d9",
+      "sha256": "41ff65fb4f9b6f2fa9c9d025c2e9b0c9e09a2aee6f32266d19ee93c8af4dacbf",
+      "width": 1,
+      "height": 100,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/ui-bg_highlight-soft_75_ffe45c_1x100.png",
+      "bytes": 129,
+      "git_blob_sha": "359397acffdd84bd102f0e8a951c9d744f278db5",
+      "sha256": "1e1cfb209f291f1ebe33adf0301d27f03089d77db5a59d2288c54cde5d044973",
+      "width": 1,
+      "height": 100,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/unite-absente.png",
+      "bytes": 180,
+      "git_blob_sha": "0f43f98e9a7d621eb632dd00ecee94f2143dc35f",
+      "sha256": "70985f6b0b1586783a7988f9d75cf8311ebdfdb40779fd9f0c4641f160077710",
+      "width": 23,
+      "height": 22,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/unite-suppression.png",
+      "bytes": 175,
+      "git_blob_sha": "e7471be4ad778e96e9768312421181c847e7a0da",
+      "sha256": "a0166505270e769641d5e210bd8a4f641cd0413cc748ddaa85fc895ca4540315",
+      "width": 23,
+      "height": 22,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/unite.png",
+      "bytes": 153,
+      "git_blob_sha": "728e61f38dc71c65f1333ed4f4c318ae7b630732",
+      "sha256": "c543f453e2e1860891754c8e4fd90b2dcfc3f2564a684e95a30a89de1dda0686",
+      "width": 51,
+      "height": 52,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/index.html",
+      "bytes": 891,
+      "git_blob_sha": "be50c9add19893863f6c7f13f7f2a943e7301a3b",
+      "sha256": "fe6f45ca1b351a4da7359e3a65a724cc59151e2608031b15c0ff63f2a0ae743b"
+    },
+    {
+      "path": "data/Jactari/src/scripts/artefacts.min.js",
+      "bytes": 13751,
+      "git_blob_sha": "efc42d19011d0efd75ca405bab1c8a9682549569",
+      "sha256": "412025fae31771157416ff422b4846476659124c80ba49b65842f3c2adbf7c9f"
+    },
+    {
+      "path": "data/Jactari/src/scripts/batiments.min.js",
+      "bytes": 19603,
+      "git_blob_sha": "609c68319bd6eac6e6c7c6e20b3e5375b29e3b31",
+      "sha256": "23f121ed4b724b3383a36b71b427328d807d4a4daa139af92676547c1032e811"
+    },
+    {
+      "path": "data/Jactari/src/scripts/combat.min.js",
+      "bytes": 259611,
+      "git_blob_sha": "b022a1c94dccd74f0887dbd6daccab78f60445bd",
+      "sha256": "5bf87123083b67b959429bc123e2fd56479ada2e0c99c104c5bff0a661533782"
+    },
+    {
+      "path": "data/Jactari/src/scripts/creatures.min.js",
+      "bytes": 19292,
+      "git_blob_sha": "7004a99863f1ff007f767fe68624296bc8a5c606",
+      "sha256": "fed2680873e1f52967225d2e57ab39d8f293fe09222eb11de555c3f79236c261"
+    },
+    {
+      "path": "data/Jactari/src/scripts/donnees.artefacts.min.js",
+      "bytes": 259931,
+      "git_blob_sha": "14be968d05ae6432a7517faa7be765fb3aa490f7",
+      "sha256": "20906f0fe303c3793b59ffe5672022ec26454edd0bd3d36eab3feed5266d57e0"
+    },
+    {
+      "path": "data/Jactari/src/scripts/donnees.batiments.min.js",
+      "bytes": 190427,
+      "git_blob_sha": "21ce2a8160be40b7b53b25faf43ebe6039b078f0",
+      "sha256": "1621d309de66af5528dcad72dcecef639b3499b0d8a146e4f169284f5f7420f3"
+    },
+    {
+      "path": "data/Jactari/src/scripts/donnees.creatures.min.js",
+      "bytes": 134168,
+      "git_blob_sha": "7fef6962b2f442cd352b6c5bfdf42a56467c5dd4",
+      "sha256": "cee52da90ec79a044a158e6a6897b7fce17035cb6597f7717dd0e7327a6cd6ca"
+    },
+    {
+      "path": "data/Jactari/src/scripts/donnees.general.min.js",
+      "bytes": 68054,
+      "git_blob_sha": "4ee3411616a8c0932f40d079986a0101af9f84a0",
+      "sha256": "3e13a96409ca7c0ced47bda260b953816e4b6fff3b78841949ca6b1a994379e4"
+    },
+    {
+      "path": "data/Jactari/src/scripts/donnees.heros.min.js",
+      "bytes": 92653,
+      "git_blob_sha": "7468b20a8a19be103c860e616b9fe306361d9c79",
+      "sha256": "8362f5c86404605ebe7220cff395a541ec52063d506520b964918af669543aa1"
+    },
+    {
+      "path": "data/Jactari/src/scripts/donnees.sorts.min.js",
+      "bytes": 34103,
+      "git_blob_sha": "5c8e177c62c60ea54430b212b2902d8968583a2c",
+      "sha256": "f42770c40940d5fdd9b21f12252fc93101eb99e89dca0b77b44cebc645f04aa4"
+    },
+    {
+      "path": "data/Jactari/src/scripts/fonctions.min.js",
+      "bytes": 14646,
+      "git_blob_sha": "4ab2c0ce2c4f8b7369dbacfe3aadcb3ac526fcdd",
+      "sha256": "89a359c02cedcf99ded476eb56d48c4c314124c617549373fdaeb62b08b70afc"
+    },
+    {
+      "path": "data/Jactari/src/scripts/heros.min.js",
+      "bytes": 63115,
+      "git_blob_sha": "6ec2cb27e8c4a954c8b4be994f85f92e446b9500",
+      "sha256": "b4e86ced9c2e0b44681464b540495bf61899fbc419ad0a8bb9d6bca5a22436a6"
+    },
+    {
+      "path": "data/Jactari/src/scripts/images.min.js",
+      "bytes": 17916,
+      "git_blob_sha": "85921052ef0ef7407b0bb3a03eef5ca1a903a980",
+      "sha256": "4f16a3a8eb93684d7fa30f2375b2a900595fc64f42bbaa2c08fc108b3d9db2ac"
+    },
+    {
+      "path": "data/Jactari/src/scripts/jq-1.4.2.min.js",
+      "bytes": 72174,
+      "git_blob_sha": "7c243080233761859937d52195b670602731a379",
+      "sha256": "e23a2a4e2d7c2b41ebcdd8ffc0679df7140eb7f52e1eebabf827a88182643c59"
+    },
+    {
+      "path": "data/Jactari/src/scripts/jq-ui-1.8.autocomplete.min.js",
+      "bytes": 16982,
+      "git_blob_sha": "802948faed2e627d286486f2a947de4cd2a9868f",
+      "sha256": "4773f23ebea87999615af26f32eef106419dcb21d04168aca1c38e7542b299de"
+    },
+    {
+      "path": "data/Jactari/src/scripts/jquery.cookie.js",
+      "bytes": 2253,
+      "git_blob_sha": "aebaa84fc6a7bcd9831b5a8981e0265ef87026f6",
+      "sha256": "07bd3415a10c1e28f121f83385df47113ed4424508de494c85a95f4909adb8da"
+    },
+    {
+      "path": "data/Jactari/src/scripts/langue-de.js",
+      "bytes": 731,
+      "git_blob_sha": "55039fd6d677a74f7f7376282dee7b5a849f7a38",
+      "sha256": "78de9fb6cf43a0d67625470045e9dc79b4b6a2a0f0d330bffc8149e8421ac6e4"
+    },
+    {
+      "path": "data/Jactari/src/scripts/langue-en.js",
+      "bytes": 731,
+      "git_blob_sha": "a60637979c3574549ea6358b011f6f076713b467",
+      "sha256": "89a2df2bc40503183b62f3916246e3073abaf9a9ccc60a56c9ee0eb947b8ef63"
+    },
+    {
+      "path": "data/Jactari/src/scripts/langue-fr.js",
+      "bytes": 731,
+      "git_blob_sha": "40c15328677133bb7f20ae3e057dc809d7acc09b",
+      "sha256": "f77db84fbcce5829924da4f73dbbae51bda23f6ef4d6b513d9eb4ec6b2c3c035"
+    },
+    {
+      "path": "data/Jactari/src/scripts/langue-ru.js",
+      "bytes": 731,
+      "git_blob_sha": "c48326f2d75df18b536b6095821d1a3aee96ebee",
+      "sha256": "70fe6bb5d11f73a9a1f80fc068bf1ad3a51ded53e533adf6caa53ac7ca64bd6e"
+    },
+    {
+      "path": "data/Jactari/src/scripts/permalien.min.js",
+      "bytes": 39283,
+      "git_blob_sha": "4931cb9bbfb34357e5c59731871e15a6583cd948",
+      "sha256": "874decb82d3ba6836a11ebb35b5e265480d98e07b366d4e3dff41e03043fe4d0"
+    },
+    {
+      "path": "data/Jactari/src/scripts/slider2.js",
+      "bytes": 14497,
+      "git_blob_sha": "580b861465d8e1d150de0f8d1fc7f08b81f4fd6f",
+      "sha256": "318cb1e0b87a9139a23100125cff70be9135de9f12e6a7dd5ce876643d2874ab"
+    },
+    {
+      "path": "data/Jactari/src/scripts/sorts.min.js",
+      "bytes": 18528,
+      "git_blob_sha": "6c65056871766c151b92ce165cef270eef4d49f7",
+      "sha256": "a4c0f2e6408ec81a1592bddf9676c0bf78d774e1a600bb45770990587cc3d621"
+    },
+    {
+      "path": "data/Jactari/src/sorts.html",
+      "bytes": 6108,
+      "git_blob_sha": "8fb01f30f6fddba1251839149972317f4e0bee30",
+      "sha256": "81c7e0e087267b7735224784093285f77d88d372b4381a6594759075e2e7ad1e"
+    },
+    {
+      "path": "data/Jactari/src/spells.html",
+      "bytes": 5960,
+      "git_blob_sha": "2157b4c3ed8a75d1df62cf171e3b0529a5ac1aa8",
+      "sha256": "89c21de559127819eb358859cc4b7353dd3cf3491ad51c21794efac63fae80a9"
+    },
+    {
+      "path": "data/Jactari/src/spells_ru.html",
+      "bytes": 6318,
+      "git_blob_sha": "068040f429526845ee922b2796548ee63a60f2cb",
+      "sha256": "84be9161aaeb4a2dd3356dc43619f832bcdeaf5b561a78a0657b013982d7c9c0"
+    },
+    {
+      "path": "data/Jactari/src/styles/artefacts.style.css",
+      "bytes": 1720,
+      "git_blob_sha": "59ea0e6194dd9f4d62331403bf7f491c44391e2a",
+      "sha256": "5e7b18c0d1babb918810c8d54c190f2146eb6af8d2f1ce5b2805db9721690054"
+    },
+    {
+      "path": "data/Jactari/src/styles/batiments.style.css",
+      "bytes": 2280,
+      "git_blob_sha": "30132ca5ca7547cd341061588a0fc38f4a86494b",
+      "sha256": "ecf8c7da7f9bae972a77f2cf4b1bb210b27ca2657445f86618fd5b5ae1fac38e"
+    },
+    {
+      "path": "data/Jactari/src/styles/combat.style.css",
+      "bytes": 17667,
+      "git_blob_sha": "f3d1b3e1330338b36478744983f95eee6f3aea29",
+      "sha256": "8370a336d42e1ed6d58b292faf0276edda67f5ce217c53ba6d12584f3129db5a"
+    },
+    {
+      "path": "data/Jactari/src/styles/creatures.style.css",
+      "bytes": 2067,
+      "git_blob_sha": "340507a069622b20feea8a84bfd1a8904840cf40",
+      "sha256": "b9bd9a0d7330e467c28555e4007fd24098d537543faa43f28486d9ac77e5b23f"
+    },
+    {
+      "path": "data/Jactari/src/styles/heros.style.css",
+      "bytes": 7118,
+      "git_blob_sha": "b1ab891f040b14859835d94c43db4d386cfd06d1",
+      "sha256": "ecbca4dc03cfdcee64ac9da9e508f34bd871c1eeab075d31424900eba07a99a7"
+    },
+    {
+      "path": "data/Jactari/src/styles/jq-ui-1.8.css",
+      "bytes": 5682,
+      "git_blob_sha": "e5c9aced432592251edd750947ee918b15679e72",
+      "sha256": "770d79d8b94f781d705082814f5235045d3c6666aeac5ad61d559477295ce48f"
+    },
+    {
+      "path": "data/Jactari/src/styles/mondes.style.css",
+      "bytes": 1546,
+      "git_blob_sha": "5d2ef3a0285c093e74ccf5ad2cb40d9ecb446117",
+      "sha256": "3d2737dde3eaf733c4dff2977751322dd053a52249ccad527d6a379b28cc5fc3"
+    },
+    {
+      "path": "data/Jactari/src/styles/navigation-2.css",
+      "bytes": 7098,
+      "git_blob_sha": "2a27918047a8fb7d1fcc4c696a2594d10de28f7a",
+      "sha256": "b240c0ecdd3cf46ca990fc24a9aea47bb7f5f32bdebb5d4761ab561cbae9bce4"
+    },
+    {
+      "path": "data/Jactari/src/styles/sorts.style.css",
+      "bytes": 1631,
+      "git_blob_sha": "e1dce016190edb8f567d461ce5dadd70ae8f25e4",
+      "sha256": "d73ba93fdcd9fb6a72c1f752279d26d3285ad32357d1bdaf8d9a2296ded57799"
+    }
+  ],
+  "images": [
+    {
+      "path": "data/Jactari/src/images/Artefact_ACADEMY.png",
+      "bytes": 15012,
+      "git_blob_sha": "47c09197b6a10d9e60fbcba810840eeb42601180",
+      "sha256": "4056ebe2ad9450a9e06ded9089bdffbf92446932f43d67e2df932c56988cc5b5",
+      "width": 555,
+      "height": 36,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Artefact_COMMON.png",
+      "bytes": 862699,
+      "git_blob_sha": "888982aea9a9125b87d4c9a4ac420ac74b839dda",
+      "sha256": "c1fc993a69b8654c3d6f3426fb0ba73d37defb642e486df92ec9ba48d052cd1b",
+      "width": 560,
+      "height": 1476,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Artefact_HAVEN.png",
+      "bytes": 14989,
+      "git_blob_sha": "b3cf3872554ea078039c6213604e7469b9f28e4d",
+      "sha256": "e2da0948c2f5a97cb0f9735d900f5a5e862c5f7c4556dceee7a04c681d5b2668",
+      "width": 555,
+      "height": 36,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Artefact_HEREDITY.gif",
+      "bytes": 4240,
+      "git_blob_sha": "f38a08630a77d596333086a8278568eb1583aabe",
+      "sha256": "f66441ee4818eddb13904f2a6c90a44f088e07f9e1c5b083377630f692a9c61e",
+      "width": 37,
+      "height": 108,
+      "format": "GIF",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Artefact_HEREDITY.png",
+      "bytes": 3946,
+      "git_blob_sha": "06557db3db27e6c20b1e733fbe5187f47c153a37",
+      "sha256": "24fe133abb1a1b60f013690ecf12e1f9cf521c0ae9e6d9d65dff06ac9d1cebe4",
+      "width": 111,
+      "height": 36,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Artefact_INFERNO.png",
+      "bytes": 14431,
+      "git_blob_sha": "a9f8db64482c9a884e862bf3a7587465109a54b1",
+      "sha256": "3659545a70957b9b1121626fc44090d208bf41d1bf1a92b0118bf8c25ccd55c2",
+      "width": 555,
+      "height": 36,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Artefact_NECROPOLIS.png",
+      "bytes": 15123,
+      "git_blob_sha": "536637369c46864e54827357304b17bfc47263ac",
+      "sha256": "9849675f3e33e45609efb3cb69950947c46cfe86f2d807af778514d5df892204",
+      "width": 555,
+      "height": 36,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Artefact_REWARD.gif",
+      "bytes": 9063,
+      "git_blob_sha": "723e3fd6af7fc902f865fa7ab6d0fcd574c4090b",
+      "sha256": "f87957af735602b997a6c0d6502b0c072a6e26c1fc28150384b3992bacb4101a",
+      "width": 259,
+      "height": 36,
+      "format": "GIF",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Artefact_REWARD.png",
+      "bytes": 7974,
+      "git_blob_sha": "1b47d06e16411e7a200b371005676db898ad5d7d",
+      "sha256": "22fa9855f42a7db4cfee932a7e888c6e066e6c175ddcfa3ea4c259aa2c5fc076",
+      "width": 259,
+      "height": 36,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Artefact_SET.png",
+      "bytes": 499495,
+      "git_blob_sha": "aa96830b5a0a96a71306dc56e413e8e34126dd0e",
+      "sha256": "d2a672a707e9a7fc61b9562a358066d710cd4d5979442cadb5c9edee002a8ff8",
+      "width": 397,
+      "height": 288,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Artefact_SYLVAN.png",
+      "bytes": 14174,
+      "git_blob_sha": "de1160a27a88b2d2cfb2d86986f7f30085302b91",
+      "sha256": "72643fe8607931e7da84f29c551f9dee562456c33e738cb79bbd4a1a59cdf48e",
+      "width": 555,
+      "height": 36,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/BattleUnitStack_ACADEMY.jpg",
+      "bytes": 52681,
+      "git_blob_sha": "f652f39fdaf3c831570b88f71acb238daced1d78",
+      "sha256": "6623afcadee7fc8997a4b74fa9c59aa0ad7e8fd4c51c275fe83a66d5afdee0f7",
+      "width": 816,
+      "height": 104,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/BattleUnitStack_DUNGEON.jpg",
+      "bytes": 75197,
+      "git_blob_sha": "3e530ddab1195e50f911eb968cb71fe6c1abef2a",
+      "sha256": "fdb62e952d1634db4169224654dfa84f8ffbb047f0e47ef2ded1138dabd95462",
+      "width": 816,
+      "height": 156,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/BattleUnitStack_FORTRESS.jpg",
+      "bytes": 82112,
+      "git_blob_sha": "73fb368fa1e6324a8448b688168fdc0d701e0e3c",
+      "sha256": "d9a15e5bea8980caa55531728a50284e5c8188a690fc788a5e9e767d412c3624",
+      "width": 816,
+      "height": 156,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/BattleUnitStack_HAVEN.jpg",
+      "bytes": 52144,
+      "git_blob_sha": "52fa445c9c5bc9e21e00250f22d3ddc2291efbd0",
+      "sha256": "a4cc6576e0d0bcdae973de9656e267f4546b6abf88c407f11c5df7e0a8a01872",
+      "width": 816,
+      "height": 104,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/BattleUnitStack_INFERNO.jpg",
+      "bytes": 56419,
+      "git_blob_sha": "6ee2e51366ec31723707fea30300538203d69f85",
+      "sha256": "9249f9f48ddef31210846b4bee7ff3fcba257043ce163c223786cdf078a707e3",
+      "width": 816,
+      "height": 104,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/BattleUnitStack_NECROPOLIS.jpg",
+      "bytes": 75886,
+      "git_blob_sha": "fe8cab27efd665750b9683e866783d9c3be7c16d",
+      "sha256": "c399ac91d7e1ac5eafcfe6443b7bbe2655a853e7e322dfc408ede37b1661428f",
+      "width": 816,
+      "height": 104,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/BattleUnitStack_NEUTRAL.jpg",
+      "bytes": 40936,
+      "git_blob_sha": "0c4f7114fd9faf1016ecdec6b6e21c18eb11ba4b",
+      "sha256": "c1d60717621e25db65b35d43b939ffaea8bc1b94ddf9b5a44f10b0f249d748c9",
+      "width": 561,
+      "height": 156,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/BattleUnitStack_NEW.jpg",
+      "bytes": 29225,
+      "git_blob_sha": "8776f98f21f1b8f922d007cf97a183cd7028d994",
+      "sha256": "776edb576fda95be271aff19a846fd9ad3fb14f102532402c874eefaec265bc2",
+      "width": 357,
+      "height": 156,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/BattleUnitStack_SYLVAN.jpg",
+      "bytes": 78796,
+      "git_blob_sha": "f722f4712edd4d76c6bf159d878a9c41f3825d3f",
+      "sha256": "d54bc9de0dea3d0305dc25bf13e26c2069f2a3ef6c0b4575727a02b17d486661",
+      "width": 816,
+      "height": 156,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/BonusIcon_HEREDITY.png",
+      "bytes": 158352,
+      "git_blob_sha": "3e623563b4acf74a5078046657ca774f54c2d48d",
+      "sha256": "f54d6a2fd809fd6cd746f48dcbd6b5ae4d8861896e9d2eb658d579303ccb5bfc",
+      "width": 225,
+      "height": 375,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/BonusIcon_HEREDITY_d5x3.png",
+      "bytes": 90997,
+      "git_blob_sha": "1065fc849d5541e452a3880e1fc9e5bc34e1208a",
+      "sha256": "3bcd96122e9c655cb3ed20b12120c208d8fdc34647c4fb0739da123cf148aa7f",
+      "width": 135,
+      "height": 225,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/HeroClass.png",
+      "bytes": 547935,
+      "git_blob_sha": "11881fb3e56890f7faf53ae438af8dd4169a5e3d",
+      "sha256": "885312324ab8d15f35dd973661f4462185289bf905344b716e5233b7b64834fb",
+      "width": 625,
+      "height": 617,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/HeroClassSkill.png",
+      "bytes": 60633,
+      "git_blob_sha": "08bd940acf29a44855e569b43b43169bb88f8fe6",
+      "sha256": "38887e18c6b25167505e79e8b4b9b56336d8a18964b0e444f787698dc48f7ccb",
+      "width": 275,
+      "height": 200,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Hero_ACADEMY_2.jpg",
+      "bytes": 84427,
+      "git_blob_sha": "29c9be492a0c36d908e5bcd179ec2956423747f5",
+      "sha256": "a88ca7c79906cedafc45c515df06992ed5ae45189df50795a2f4e2bc9387309c",
+      "width": 1491,
+      "height": 72,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/Hero_DUNGEON_2.jpg",
+      "bytes": 79027,
+      "git_blob_sha": "a1e2e3e5de27617c362472ce04dfdcd3891baa2b",
+      "sha256": "e3163d5ea0b89b8779db83c6e21437776930182b17fe480792a73fdce4b47b7a",
+      "width": 1491,
+      "height": 72,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/Hero_HAVEN_2.jpg",
+      "bytes": 72486,
+      "git_blob_sha": "8cd1726c9c4a8795bfaa57407f50e3c8d75371af",
+      "sha256": "0516abf0199553101c0dcfbe48c0133a60be788ffe2d1f614325252ff79fd36e",
+      "width": 1491,
+      "height": 72,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/Hero_INFERNO_2.jpg",
+      "bytes": 107128,
+      "git_blob_sha": "618606fe4ca31333270126d6e02d9eceb7484edc",
+      "sha256": "0394713bbc3b7e8bcef86555e689d2d4bcf12f6ed1a035d4c08aec725133dad1",
+      "width": 1491,
+      "height": 72,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/Hero_NECROPOLIS_2.jpg",
+      "bytes": 80152,
+      "git_blob_sha": "13e8d2d7c49390628cd305a983c4cb1de2b8af6a",
+      "sha256": "032fc8cf60125b1023ab2fa81a59a83a3ca62669a31445e8225f778f403c1c2f",
+      "width": 1491,
+      "height": 72,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/Hero_SYLVAN_2.jpg",
+      "bytes": 88179,
+      "git_blob_sha": "d13115c2b29b62b1870fb65836e5c420f6a8ab64",
+      "sha256": "2660a0570ac9890f262ae7355b59b84c75828da271dc146ed735efcf5e6be383",
+      "width": 1491,
+      "height": 72,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/Ressources.png",
+      "bytes": 13013,
+      "git_blob_sha": "d020ae29e7c608d0760d60f3d9fc3af386e40883",
+      "sha256": "5faf1d4cf9e23a853302206fe7ee806387b1c547d9dc392455bec0726660b681",
+      "width": 250,
+      "height": 140,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/Rrom.png",
+      "bytes": 2685,
+      "git_blob_sha": "9e3c710e95d3b46a04032e3650de5349fae1a3c1",
+      "sha256": "dbffdb27b5660caa98e6ff648f86cafe42d514ddb1baff5f33ace1af3971c216",
+      "width": 96,
+      "height": 64,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/SpellStack_DARK.png",
+      "bytes": 33502,
+      "git_blob_sha": "4070382dcb674ab0e24aaa6bee2ab51a47fe6fcc",
+      "sha256": "e9ee4139791d6e32f92d6f2350f88a87d9683b60a27dfff13b1e098df788c8f4",
+      "width": 421,
+      "height": 183,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/SpellStack_DESTRUCTION.png",
+      "bytes": 34450,
+      "git_blob_sha": "13c186f4a3e4e47798677d0855d7c962ce0dbe61",
+      "sha256": "e629d8cd94c3f1d99f4be082f635e434313320d3cfbd627c1b0221b9a662d39a",
+      "width": 421,
+      "height": 184,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/SpellStack_LIGHT.png",
+      "bytes": 36037,
+      "git_blob_sha": "fb940f514503d3f9fb87638769acf4d01b913f74",
+      "sha256": "3f7ba39b8788bff9d1c9567387abbc5d27d3d8d6ba6afe3b93f93a8e1c884f24",
+      "width": 421,
+      "height": 183,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/SpellStack_SUMMON.png",
+      "bytes": 35497,
+      "git_blob_sha": "8973f32cc83fd3984f70e0a9cfc1733a67a69526",
+      "sha256": "6e064298c1a86bfebe427dcc54274682f42945fb6fb849e397407437a68fb8f6",
+      "width": 421,
+      "height": 183,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/UnitStack_ACADEMY.png",
+      "bytes": 11507,
+      "git_blob_sha": "c56fede0116561be773ea2c0e16c7793dbeb610a",
+      "sha256": "d10fb677a7c0adef2d7a3dd38cb948786ae61be53e8be8495e8ff6f63616a3f6",
+      "width": 368,
+      "height": 44,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/UnitStack_DUNGEON.png",
+      "bytes": 11735,
+      "git_blob_sha": "131ef3d683cef4d8d43aa4cd565b5d59c7e18178",
+      "sha256": "6a65603b6d8276f6089f28d04743346a294587e3489e850d6112412aad1e8b14",
+      "width": 368,
+      "height": 44,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/UnitStack_FORTRESS.png",
+      "bytes": 11829,
+      "git_blob_sha": "a255940591baf0b131e28915cc3a38a962b44569",
+      "sha256": "6b55dd736fadf56fc97ff86c525436553ee810030e7f39ba65100a3f8b84585d",
+      "width": 367,
+      "height": 44,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/UnitStack_HAVEN.png",
+      "bytes": 12824,
+      "git_blob_sha": "0bf38f537b72a6840f5f6585606d736e7f464206",
+      "sha256": "b48b4a30bdf77a7aa2420cf33564e77f126ed6f2e2b5e68971b611dc9a6eb624",
+      "width": 368,
+      "height": 44,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/UnitStack_INFERNO.png",
+      "bytes": 12555,
+      "git_blob_sha": "d2a3c354a540fa4cd76da678ae643146627fd958",
+      "sha256": "a17795f9444e713c774537e91ed24828d4cd0a7bdac62b46920703ca1eaf2feb",
+      "width": 368,
+      "height": 44,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/UnitStack_NECROPOLIS.png",
+      "bytes": 13019,
+      "git_blob_sha": "bc6270532b8bbe0b3edf54936d988cf7544bb31d",
+      "sha256": "0e5193f9898650765f98d4b6b0eaf20d4646ca6de11b704180c6dce0bdea7af6",
+      "width": 368,
+      "height": 44,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/UnitStack_NEUTRAL.png",
+      "bytes": 9655,
+      "git_blob_sha": "1db5a765130122a372f5e9291c7735058fd20f3c",
+      "sha256": "c56d0399a7566ee1b2028d2539181407b12a4595d743976cc274ca7fb1763e29",
+      "width": 253,
+      "height": 44,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/UnitStack_NEW.png",
+      "bytes": 73183,
+      "git_blob_sha": "2aa0fdf035be51cd41050974f3116bac8d3005f4",
+      "sha256": "6890f0841c18af484f7f97acd896778d1b844ce8e81d9716b41b367efecdd5b7",
+      "width": 161,
+      "height": 44,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/UnitStack_SYLVAN.png",
+      "bytes": 12277,
+      "git_blob_sha": "a1ac293b596587ad37d1b1ae75302e29e6ee82b0",
+      "sha256": "b38972a94c640493f4b9ec599c08d9995468c3c9a4618da1ec2b668c7a8b708b",
+      "width": 368,
+      "height": 44,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/UnitStack_types.png",
+      "bytes": 3377,
+      "git_blob_sha": "a29e8a6bfc798318397a7777253e7ef469a9e6c6",
+      "sha256": "56dae7eb3d4b7b11bd917fc522a44f11f15de2b6c6abcf61948b9f4be586258f",
+      "width": 66,
+      "height": 66,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/cadre-heros.png",
+      "bytes": 1607,
+      "git_blob_sha": "c413377df5fe8e9b27e1920d8727502a8eaad409",
+      "sha256": "a68719bd85be99f1b61b928260a99509fb8dd844c0a5b4d3a16319337cfb9e66",
+      "width": 82,
+      "height": 85,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/classesBg.gif",
+      "bytes": 32338,
+      "git_blob_sha": "ae7d69375d6145dc95a3b50570f46f4a4e92131d",
+      "sha256": "2d979134fb417375131bca824db6110f21fede06e7c7f53d174a4e226e7ab9fd",
+      "width": 304,
+      "height": 244,
+      "format": "GIF",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/common.png",
+      "bytes": 13217,
+      "git_blob_sha": "2f6811ac51d22767728a62566efed8b8686de9d8",
+      "sha256": "78b6e12319f1483c75d17dcb3f5275a355530d137788e86b219942ef0647bbf2",
+      "width": 260,
+      "height": 220,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/emplacements-artefacts.png",
+      "bytes": 13342,
+      "git_blob_sha": "1f883ceebc84c6d88880f99888fab271640ce066",
+      "sha256": "4c6ade0b9c47dfb34e40308f424b24fd95cba3e8bda1a1baf26013b640257d16",
+      "width": 188,
+      "height": 95,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/equipementBg.jpg",
+      "bytes": 8464,
+      "git_blob_sha": "3f59823436d7391418b7a7eeedaee20ed2fcb471",
+      "sha256": "fdbafea8b2048a9e3a20c81de747ba969853fee1455ecb913860c3e4ef911a2d",
+      "width": 350,
+      "height": 47,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/fleche-offre.png",
+      "bytes": 1265,
+      "git_blob_sha": "877364c4cc0dc585b5196c2a36f09e98f23141af",
+      "sha256": "4cc8db721c698a4ba35e5ef854741aeee56b639c15f780f9733dc8e09afe1e27",
+      "width": 24,
+      "height": 24,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/fond-competences-speciales.jpg",
+      "bytes": 47059,
+      "git_blob_sha": "202bfdbf5b6596356b961aaf0d1b6568a64c7624",
+      "sha256": "012511aaffb83204bcce9340689c9626e74dc086973f628aa3813d49106ef44a",
+      "width": 602,
+      "height": 372,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/fond-heredite.jpg",
+      "bytes": 170318,
+      "git_blob_sha": "e9b043197bc2270acc4645dd2330b998ae22cfc2",
+      "sha256": "dd205fc7adae9fbdc35a81b8d7181dffda625d788e4dbf97c0bd71507a876068",
+      "width": 602,
+      "height": 744,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/fond-noir-translucide.png",
+      "bytes": 142,
+      "git_blob_sha": "d3323570da854b2dec2e8ac1baa4048d65f404fc",
+      "sha256": "0e6acd834ea466bce3acf3ee90a86124d0c933072ecf5deeb9514657c494f8dc",
+      "width": 20,
+      "height": 50,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/fond-offre.jpg",
+      "bytes": 9536,
+      "git_blob_sha": "2a8accd5cbf0550f748328aa1d23fad47989e6e7",
+      "sha256": "28f3e3df250f4dd1d459a1f8165c67fcaa2d561df029046f2f9d2817225158b7",
+      "width": 1280,
+      "height": 58,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/fond-xp.png",
+      "bytes": 171,
+      "git_blob_sha": "1ae7938659360106805757483f41ddb310872577",
+      "sha256": "f586d556746fa33e771046a097e1eb72a7082c14ba821098ed8329d73acbb850",
+      "width": 12,
+      "height": 12,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/fonds-sorts.jpg",
+      "bytes": 54526,
+      "git_blob_sha": "380f25de7dc5b4aef84b5c304d343f567fd58849",
+      "sha256": "a556abb8dcbd1805b51484d4044d1008a70888ea30f5be36e6858fcbe62569a4",
+      "width": 332,
+      "height": 416,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/hero-green.jpg",
+      "bytes": 7119,
+      "git_blob_sha": "edcbe9861f3dac7de41fc44a15ac10556e3743d6",
+      "sha256": "63c4adb454cbb4ee49ebcfbba57c4ff040bdcb10dffb7b1739d3426d37166106",
+      "width": 308,
+      "height": 51,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/hero-other.jpg",
+      "bytes": 7817,
+      "git_blob_sha": "4aa7a19a529fa96debc94d3d3cc452beb46e83a6",
+      "sha256": "695688f45914f469e58dfe74aca4a97939b100ab6364d2d91f88465629880be4",
+      "width": 308,
+      "height": 51,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/hero-purple.jpg",
+      "bytes": 5969,
+      "git_blob_sha": "71351f062eb9cdada79499bed68af378c36af314",
+      "sha256": "2a9a7b85cd09510d3abe8ea0fe3229ea0412f885b4240e2c4354ce0ce31f4b42",
+      "width": 308,
+      "height": 51,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/hero-red.jpg",
+      "bytes": 7175,
+      "git_blob_sha": "b836501f82ccc5039d09477ffa591c25b72854df",
+      "sha256": "f5b15e4eeb29696edaf048ced4ebd8b63ec268afcf50c9737e4d079e9fdc523c",
+      "width": 308,
+      "height": 51,
+      "format": "JPEG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/icone-accueil.png",
+      "bytes": 634,
+      "git_blob_sha": "ad35a3bbe2e79bc41020e3ca870f4c8035dd3c6d",
+      "sha256": "46ec477a48a6f6079694d9b8161b510216584a6c5160c1acb1309db19ff07c17",
+      "width": 16,
+      "height": 17,
+      "format": "PNG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/icone-artefact.png",
+      "bytes": 1059,
+      "git_blob_sha": "0b056e593e384160e73261979654f421726844e6",
+      "sha256": "4ae28b427852252d7e71cd81b9ea10f5e3666402896bbc59eada32640a62fbfb",
+      "width": 16,
+      "height": 17,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/icone-batiment.png",
+      "bytes": 742,
+      "git_blob_sha": "7f1a6b151cc9cfad9ddd2d369a553229983baef7",
+      "sha256": "52fcd13ac41a06d42954cfeba3a765a9b2aec3468d3696066250a6d41a1a8275",
+      "width": 16,
+      "height": 17,
+      "format": "PNG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/icone-combat.png",
+      "bytes": 484,
+      "git_blob_sha": "1a869460517cad2f2928e9c892e470b0cb416e7c",
+      "sha256": "991e6448e4fb130e71d742bd56893939ad2562074e8273311c7d588d2bf9ce48",
+      "width": 16,
+      "height": 17,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/icone-fleches-circulaires.png",
+      "bytes": 1128,
+      "git_blob_sha": "297f328b7d15c52d611196509dc6e2e0ec03eced",
+      "sha256": "dafffd3eb48a602957d82a139edfb4df967d549d1ae302f12c90be0bb5336fca",
+      "width": 16,
+      "height": 17,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/icone-heros.png",
+      "bytes": 1085,
+      "git_blob_sha": "a8b580aac18ab19c7d7b4a857aa0ed5223891d88",
+      "sha256": "2309b125ff6a96924268cc4c0b6e79f32fb77c037ada417b95a93c7eba47cd2e",
+      "width": 16,
+      "height": 16,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/icone-sorts.png",
+      "bytes": 517,
+      "git_blob_sha": "ce931fcfab61d583219c7ebac300263b7e15353e",
+      "sha256": "73467f4b34af4b507a3a6ab433d198e7bf2612bd93cce5f195a78cba04d167a5",
+      "width": 16,
+      "height": 17,
+      "format": "PNG",
+      "mode": "RGB",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/icone-troupes.png",
+      "bytes": 1102,
+      "git_blob_sha": "8d47205121d0eafbcf34afb403300b9ebf9bc5d2",
+      "sha256": "8a829e81be10c14acbb0d31cc9e0c86341c43026aab41c491f3eebe8af5ee5c7",
+      "width": 16,
+      "height": 17,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/info.png",
+      "bytes": 571,
+      "git_blob_sha": "d3c3996fe0e42695ba625f8dfe020ffd99491094",
+      "sha256": "1ea45326bdd70135fa5b78c6642c02a694757b60d1f441936618838759776d03",
+      "width": 24,
+      "height": 24,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/inversion.png",
+      "bytes": 166,
+      "git_blob_sha": "0c3c5b00b07980ed7551b66c7c77f8051d291221",
+      "sha256": "156e8d4e2519fc15e7de59169ef27546be49994a8f6fb4b24726769d9e6c1cfa",
+      "width": 11,
+      "height": 11,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/moins-cent.png",
+      "bytes": 189,
+      "git_blob_sha": "012def04d28f7452a6873033d128c26841b4afcc",
+      "sha256": "0e36791e8da39a35c7aed2c1809779b50139d67dd95c9424606aa0864787f7cb",
+      "width": 11,
+      "height": 22,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/moins-dix.png",
+      "bytes": 189,
+      "git_blob_sha": "9e659fc3cc269a9d9d3c27e7635301f489d4a15c",
+      "sha256": "ebf05133e54dc9f1b59302d3b8a286e1d8837f4ed9da62c8d36664733383d554",
+      "width": 11,
+      "height": 22,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/moins-survol.png",
+      "bytes": 185,
+      "git_blob_sha": "3d3b137c087b6d35f27c49ee5e3d235cd1c9f560",
+      "sha256": "5cd595434f975ae4c7930091cdd358de4d105e69ddcea840617ba6f8e78a7b71",
+      "width": 11,
+      "height": 22,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/moins-un.png",
+      "bytes": 185,
+      "git_blob_sha": "90a9d21824b9655a050bca9cf71642923a0c353d",
+      "sha256": "34679b1670a0307dfe62abdcd48a89dcc4f320a791d612222269a414f213b884",
+      "width": 11,
+      "height": 22,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/moins.png",
+      "bytes": 142,
+      "git_blob_sha": "9f2c96a2ca1c2b69917ae1916c2790b33fcf983a",
+      "sha256": "287b25e4fd4c8a967665e932fe3f48b09095925bf31bb1d72b2ae39e092df38a",
+      "width": 9,
+      "height": 9,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/plus-cent.png",
+      "bytes": 194,
+      "git_blob_sha": "f4502d02a94c5904bd7f7e4af6df40ba0ca7991c",
+      "sha256": "9ab7cae212a0c40c13e5c7dc2439e8740190c23c3caea5b10c077e7ce2bdd1c2",
+      "width": 11,
+      "height": 22,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/plus-dix.png",
+      "bytes": 193,
+      "git_blob_sha": "1a7e0a468e32b66e5ded535a043f72b8f27de2bb",
+      "sha256": "176c693ebfc6ff033014076889e64d76e6e11649114b6ee34649173ad0bdde44",
+      "width": 11,
+      "height": 22,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/plus-survol.png",
+      "bytes": 190,
+      "git_blob_sha": "00783647a0a4c7f2434579dbdf843d846b615521",
+      "sha256": "31c79f54a7b40f045dd34a5351e2518fec4789d166d8648cdce5f504787f7529",
+      "width": 11,
+      "height": 22,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/plus-un.png",
+      "bytes": 190,
+      "git_blob_sha": "8979c14b828a0f6db4f8a0710a986dc95bb13c94",
+      "sha256": "4f44b3a077796e16880ade13639e11f59f5618b5e7c7050195d8645fa3c68f47",
+      "width": 11,
+      "height": 22,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/plus.png",
+      "bytes": 146,
+      "git_blob_sha": "0a9eba06bc9b9078e011f22a99dbfadb0270fd3e",
+      "sha256": "b951b7f1285b542e29f8594f5f4669f4b61f9e7f98c36c5b5e28e31f8866050d",
+      "width": 9,
+      "height": 9,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": false
+    },
+    {
+      "path": "data/Jactari/src/images/score-rempli.png",
+      "bytes": 215,
+      "git_blob_sha": "7da87b8d3e3fc7d9408480f60626b09d92a1a173",
+      "sha256": "bd623309fc6069ab292bb3fcd91969e0f29b53a3db0a67b506e2d0811b8f96ec",
+      "width": 80,
+      "height": 8,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/score-vide.png",
+      "bytes": 174,
+      "git_blob_sha": "cfad950ca5500c783842b5346a08d48118212817",
+      "sha256": "543c1a53b39d0d41aaaccd182e5eabac56dad6d415a6d37cfadbe4d7a4f70c24",
+      "width": 80,
+      "height": 8,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/ui-anim_basic_16x16.gif",
+      "bytes": 1553,
+      "git_blob_sha": "085ccaecaf5fa5c34bc14cd2c2ed5cbbd8e25dcb",
+      "sha256": "d3e3944d4649450dee66a55c69eeced2d825b6ca1a349f72c75fd3780ae3f006",
+      "width": 16,
+      "height": 16,
+      "format": "GIF",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/ui-bg_diagonals-thick_18_b81900_40x40.png",
+      "bytes": 384,
+      "git_blob_sha": "29460f0ef34db4f18a80f960518e9b04dada21d6",
+      "sha256": "ee2600ed743ecd4fb2903e3459952604593ae2ea71e2c9633d7888b005d3c86f",
+      "width": 40,
+      "height": 40,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/ui-bg_diagonals-thick_20_666666_40x40.png",
+      "bytes": 251,
+      "git_blob_sha": "64ece5707d91a6edf9fad4bfcce0c4dbcafcf58d",
+      "sha256": "26d009d09ea27a9e08717c252c6451e473faf3fdabff911e6726c7d143a7afc1",
+      "width": 40,
+      "height": 40,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/ui-bg_flat_10_000000_40x100.png",
+      "bytes": 178,
+      "git_blob_sha": "abdc01082bf3534eafecc5819d28c9574d44ea89",
+      "sha256": "0e1ac198171a7efb4e331b0aa097a8aa1d4ebdbade5b29c4861bb422f95f1be7",
+      "width": 40,
+      "height": 100,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/ui-bg_glass_100_f6f6f6_1x400.png",
+      "bytes": 104,
+      "git_blob_sha": "9b383f4d2eab09c0f2a739d6b232c32934bc620b",
+      "sha256": "29205b2d198ce4eed569d38a5ce0a55ef27a0c8e643473c375d623ced7d24ca8",
+      "width": 1,
+      "height": 400,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/ui-bg_glass_100_fdf5ce_1x400.png",
+      "bytes": 125,
+      "git_blob_sha": "a23baad25b1d1ff36e17361eab24271f2e9b7326",
+      "sha256": "1cbf4bb8af5ce70ba8228e90a81eddba4733cce35bbbe469e952b8fc7cd49b8d",
+      "width": 1,
+      "height": 400,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/ui-bg_glass_65_ffffff_1x400.png",
+      "bytes": 105,
+      "git_blob_sha": "42ccba269b6e91bef12ad0fa18be651b5ef0ee68",
+      "sha256": "f0e6cd91b837d5c5644d026e5ffeccd907953317cd5c0f689901733afda260b2",
+      "width": 1,
+      "height": 400,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/ui-bg_highlight-soft_100_eeeeee_1x100.png",
+      "bytes": 90,
+      "git_blob_sha": "f1273672d253263b7564e9e21d69d7d9d0b337d9",
+      "sha256": "41ff65fb4f9b6f2fa9c9d025c2e9b0c9e09a2aee6f32266d19ee93c8af4dacbf",
+      "width": 1,
+      "height": 100,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/ui-bg_highlight-soft_75_ffe45c_1x100.png",
+      "bytes": 129,
+      "git_blob_sha": "359397acffdd84bd102f0e8a951c9d744f278db5",
+      "sha256": "1e1cfb209f291f1ebe33adf0301d27f03089d77db5a59d2288c54cde5d044973",
+      "width": 1,
+      "height": 100,
+      "format": "PNG",
+      "mode": "RGBA",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/unite-absente.png",
+      "bytes": 180,
+      "git_blob_sha": "0f43f98e9a7d621eb632dd00ecee94f2143dc35f",
+      "sha256": "70985f6b0b1586783a7988f9d75cf8311ebdfdb40779fd9f0c4641f160077710",
+      "width": 23,
+      "height": 22,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/unite-suppression.png",
+      "bytes": 175,
+      "git_blob_sha": "e7471be4ad778e96e9768312421181c847e7a0da",
+      "sha256": "a0166505270e769641d5e210bd8a4f641cd0413cc748ddaa85fc895ca4540315",
+      "width": 23,
+      "height": 22,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    },
+    {
+      "path": "data/Jactari/src/images/unite.png",
+      "bytes": 153,
+      "git_blob_sha": "728e61f38dc71c65f1333ed4f4c318ae7b630732",
+      "sha256": "c543f453e2e1860891754c8e4fd90b2dcfc3f2564a684e95a30a89de1dda0686",
+      "width": 51,
+      "height": 52,
+      "format": "PNG",
+      "mode": "P",
+      "has_alpha": true
+    }
+  ],
+  "missing_literal_mentions": [
+    {
+      "name": "-survol.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "01_flat.png",
+      "mentioned_by": [
+        "data/Jactari/src/styles/jq-ui-1.8.css"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "02_glass.png",
+      "mentioned_by": [
+        "data/Jactari/src/styles/jq-ui-1.8.css"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "03_highlight_soft.png",
+      "mentioned_by": [
+        "data/Jactari/src/styles/jq-ui-1.8.css"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "08_diagonals_thick.png",
+      "mentioned_by": [
+        "data/Jactari/src/styles/jq-ui-1.8.css"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "12_gloss_wave.png",
+      "mentioned_by": [
+        "data/Jactari/src/styles/jq-ui-1.8.css"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "Hero_ACADEMY_2.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "Hero_DUNGEON_2.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "Hero_HAVEN_2.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "Hero_INFERNO_2.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "Hero_NECROPOLIS_2.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "Hero_SYLVAN_2.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "_2.jpg",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "artefact-inconnu.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "bandeau-guerrier.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "bandeau-mage-guerrier.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "bandeau-mage.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "croix-survol.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "croix.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "equipe.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "fleche-bas-survol.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "fleche-bas.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "fleche-haut-survol.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "fleche-haut.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "hero-green.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "hero-other.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "hero-purple.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "hero-red.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "icone-stats.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    },
+    {
+      "name": "info-survol.png",
+      "mentioned_by": [
+        "data/Jactari/src/scripts/heros.min.js",
+        "data/Jactari/src/scripts/images.min.js"
+      ],
+      "status": "literal_mention_missing_not_necessarily_loaded"
+    }
+  ],
+  "reference_comparison": [
+    {
+      "file": "combat.min.js",
+      "git_blob_sha": "b022a1c94dccd74f0887dbd6daccab78f60445bd",
+      "matches_pinned_reference": true
+    },
+    {
+      "file": "donnees.artefacts.min.js",
+      "git_blob_sha": "14be968d05ae6432a7517faa7be765fb3aa490f7",
+      "matches_pinned_reference": true
+    },
+    {
+      "file": "donnees.batiments.min.js",
+      "git_blob_sha": "21ce2a8160be40b7b53b25faf43ebe6039b078f0",
+      "matches_pinned_reference": true
+    },
+    {
+      "file": "donnees.creatures.min.js",
+      "git_blob_sha": "7fef6962b2f442cd352b6c5bfdf42a56467c5dd4",
+      "matches_pinned_reference": true
+    },
+    {
+      "file": "donnees.general.min.js",
+      "git_blob_sha": "4ee3411616a8c0932f40d079986a0101af9f84a0",
+      "matches_pinned_reference": true
+    },
+    {
+      "file": "donnees.heros.min.js",
+      "git_blob_sha": "7468b20a8a19be103c860e616b9fe306361d9c79",
+      "matches_pinned_reference": true
+    },
+    {
+      "file": "donnees.sorts.min.js",
+      "git_blob_sha": "5c8e177c62c60ea54430b212b2902d8968583a2c",
+      "matches_pinned_reference": true
+    }
+  ]
+}

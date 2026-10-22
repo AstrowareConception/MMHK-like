@@ -61,3 +61,7 @@ Les unions dynastiques/factions et l’héritier sont des mécanismes distincts 
 ## Clôture — proposition de contrat
 
 La fin doit produire un résultat unique : vainqueur, état final des classements, contributions, hérédité calculée et version du barème. Les ordres en cours reçoivent un traitement explicite ; aucun transfert économique ne doit continuer après le gel si le profil l’interdit. Le décompte des monuments doit utiliser des objets effectivement actifs, sans compter une Larme détenue, une construction inachevée et un monument détruit comme trois contributions équivalentes.
+
+## Statut de périmètre après confirmation utilisateur
+
+**DECISION-USER, 22/10/2026 :** le profil à reconstruire est le PvP classique avec Guerre des Larmes. Les sections tournoi S4 et hérédité tardive restent ici pour documenter les différences, sans entrer dans le socle. Les captures ajoutées ne contiennent pas d’écran complet de Guerre des Larmes ou d’alliance : elles n’augmentent pas le degré de preuve des seuils, du maintien, du vol ou de la clôture. Voir [profil confirmé](../specifications/PROFIL-PVP-CLASSIQUE.md), U31–U35 et les guides associés.

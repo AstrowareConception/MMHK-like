@@ -42,3 +42,16 @@ Pour un sort : `ecole`, `type`, `cible`, `unite` indexent les tables du même fi
 Les effets ont leur propre table. La liste `effets` d’un artéfact contient des références d’effet et de niveau ; la signification de ce niveau se vérifie contre la table `v`, sans supposer qu’il s’agit du niveau du héros. Les huit emplacements sont conservés. Les chaînes vides des sentinelles, les artéfacts d’événement et les ensembles restent dans l’extraction ; le filtre de disponibilité par saison manque.
 
 Les JSON sont la forme modifiable des données dérivées, sous GPL-3.0-or-later. Les auteurs du projet pourront construire une seconde couche normalisée (`UnitDefinition`, `BuildingDefinition`, etc.) sans modifier silencieusement ce référentiel historique. Les valeurs corrigées devront être accompagnées de leur preuve et d’un journal de migration.
+
+## Ressources visuelles ajoutées en révision 0.2
+
+`Jactari/src` et `Screenshots` sont les imports historiques fournis par l’utilisateur, conservés sans modification. Les résultats de l’analyse sont dans `analysis` :
+
+| Fichier | Contenu |
+| --- | --- |
+| [screenshots-inventory.json](analysis/screenshots-inventory.json) | 57 fichiers, dimensions, empreintes, doublons |
+| [screenshots-observations.json](analysis/screenshots-observations.json) | Lecture manuelle, famille, faits observés, limites pour chaque capture |
+| [jactari-inventory.json](analysis/jactari-inventory.json) | 153 fichiers, 96 images, mentions absentes et comparaison avec CODE-01 |
+| [sprite-manifest.json](analysis/sprite-manifest.json) | 1 317 liens objet/état/rectangle, avec diagnostic de présence et de bornes |
+
+Un rectangle valide géométriquement ne certifie pas à lui seul la disponibilité de l’objet dans la saison retenue. Les correspondances sont une couche de présentation ; les JSON `reference` ne changent pas. Les scripts `audit-visual-resources.py` (Pillow) et `extract-sprite-manifest.mjs` reproduisent les inventaires ; les observations humaines ne sont pas générées par une OCR.

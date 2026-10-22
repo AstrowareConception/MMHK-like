@@ -6,6 +6,8 @@ import json
 import math
 import re
 import sys
+import hashlib
+from urllib.parse import unquote
 
 ROOT = Path(__file__).resolve().parents[1]
 errors, notes = [], []
@@ -142,6 +144,49 @@ for case in fixtures['admission']:
         result = 'capture' if q<=2 else {3:'wound24',4:'wound18',5:'wound12',6:'wound6',7:'flee'}.get(q,'battle')
     check(result == case['expected'], f'Admission {case["id"]}: {result}')
 
+# Ressources importées : identité des fichiers, annotation exhaustive et atlas.
+visual = read('data/analysis/screenshots-inventory.json')
+assets = read('data/analysis/jactari-inventory.json')
+annotations = read('data/analysis/screenshots-observations.json')['observations']
+sprites = read('data/analysis/sprite-manifest.json')
+check(len(visual['files']) == visual['count'] == 57, 'Nombre de captures')
+check(len({x['git_blob_sha'] for x in visual['files']}) == visual['unique_count'] == 53, 'Captures distinctes')
+check(len(assets['files']) == assets['file_count'] == 153, 'Inventaire Jactari')
+check(len(assets['images']) == assets['image_count'] == 96, 'Images Jactari')
+by_shot = {x['id']:x for x in visual['files']}
+check(len(by_shot) == 57, 'IDs captures uniques')
+check(len(annotations) == 57 and {x['id'] for x in annotations} == set(by_shot), 'Couverture annotations')
+for x in annotations:
+    check(x['path'] == by_shot[x['id']]['path'] and bool(x['observed']) and bool(x['limits']), 'Annotation contextualisée '+x['id'])
+for x in visual['files']:
+    if x['duplicate_of']:
+        check(by_shot[x['duplicate_of']]['git_blob_sha']==x['git_blob_sha'], 'Doublon exact '+x['id'])
+for x in visual['files'] + assets['files']:
+    p = ROOT/x['path']
+    check(p.is_file(), 'Ressource absente '+x['path'])
+    if p.is_file():
+        raw=p.read_bytes()
+        check(hashlib.sha256(raw).hexdigest()==x['sha256'], 'Empreinte ressource '+x['path'])
+        check(hashlib.sha1(b'blob '+str(len(raw)).encode()+b'\0'+raw).hexdigest()==x['git_blob_sha'], 'Blob ressource '+x['path'])
+check(len(assets['reference_comparison'])==7 and all(x['matches_pinned_reference'] for x in assets['reference_comparison']), 'Identité des sept sources CODE-01')
+by_image = {x['path']:x for x in assets['images']}
+check(len({x['id'] for x in sprites['entries']})==len(sprites['entries'])==1317, 'IDs de sprites uniques')
+for x in sprites['entries']:
+    asset=by_image.get(x['sheet']);xx,yy,w,hh=x['rect']
+    actual_status='missing_file' if not asset else 'in_bounds' if xx>=0 and yy>=0 and xx+w<=asset['width'] and yy+hh<=asset['height'] else 'out_of_bounds'
+    check(x['status']==actual_status, 'Diagnostic sprite '+x['id'])
+    if x['status']=='missing_file':
+        check(x['sheet'].endswith('/artefact-inconnu.png') and x['id'].startswith('artifact.'), 'Absence non documentée '+x['id'])
+    if x['status']=='out_of_bounds':
+        check(x['id'] in ['unit.reference.106.small.normal','unit.reference.106.small.grey'], 'Débordement non documenté '+x['id'])
+check(Counter(x['status'] for x in sprites['entries'])==sprites['counts']=={'in_bounds':1152,'out_of_bounds':2,'missing_file':163}, 'Comptage diagnostics sprites')
+for i,x in enumerate(u['_unites']):
+    if x.get('faction') in range(5) and x.get('rang') in range(1,8) and x.get('plus') in [0,1]:
+        matches=[s for s in sprites['entries'] if s.get('unit_index')==i]
+        check(len(matches)==4 and all(s['status']=='in_bounds' for s in matches),'Sprites lignée ordinaire '+str(i))
+notes.append('Corpus visuel : 57 captures / 53 distinctes, 153 fichiers Jactari dont 96 images ; empreintes recalculées.')
+notes.append('1 317 correspondances : 1 152 bornées, 163 placeholders d’artefact absents, 2 rectangles Forteresse débordant d’un pixel. Anomalies historiques explicitement conservées.')
+
 markdown = list(ROOT.rglob('*.md'))
 requirements = set(re.findall(r'REQ-[A-Z]+-\d+', (ROOT/'docs/specifications/FONCTIONNEL.md').read_text()))
 acceptance = (ROOT/'docs/specifications/RECETTE.md').read_text()
@@ -156,7 +201,7 @@ for p in markdown:
     for target in re.findall(r'\[[^\]\n]+\]\(([^)]+)\)',body):
         if target.startswith(('http://','https://','mailto:','#')):
             continue
-        local=target.split('#')[0]
+        local=unquote(target.split('#')[0])
         check((p.parent/local).exists(),f'Lien cassé {p.relative_to(ROOT)} -> {target}')
 
 status='ÉCHEC' if errors else 'RÉUSSI'
@@ -164,7 +209,7 @@ report = '# Validation du dossier\n\n'
 report += f"État : **{status}**. Référentiel documentaire du {manifest['retrieved_on']}.\n\n"
 report += f"{checks} assertions de cohérence, {len(data)} fichiers JSON lus, {len(markdown)} fichiers Markdown inspectés. "
 report += f"{len(fixtures['duels'])} duels synthétiques et {len(fixtures['admission'])} cas d’admission contrôlés arithmétiquement.\n\n"
-report += '**Portée :** cohérence documentaire et extraction, pas test d’un jeu, d’un serveur, d’une interface ou validation contre des rapports historiques. Les empreintes des sources brutes sont vérifiées par l’extracteur avant génération ; elles ne sont pas recalculées ici en l’absence du cache amont.\n\n'
+report += '**Portée :** cohérence documentaire et extraction, pas test d’un jeu, d’un serveur, d’une interface ou validation contre des rapports historiques. Les empreintes des six tables déclaratives sont vérifiées par l’extracteur ; celles des 210 ressources importées sont recalculées ici. Les bornes de sprites et anomalies connues sont contrôlées ; aucune fidélité de rendu navigateur n’est revendiquée.\n\n'
 report += '## Inventaire contrôlé\n\n| Groupe | Entrées |\n| --- | --- |\n'
 report += ''.join(f'| {k} | {v} |\n' for k,v in actual.items())
 report += '\n## Particularités conservées\n\n'+''.join('- '+x+'\n' for x in notes)

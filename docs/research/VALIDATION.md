@@ -2,9 +2,9 @@
 
 État : **RÉUSSI**. Référentiel documentaire du 2026-10-22.
 
-1076 assertions de cohérence, 10 fichiers JSON lus, 22 fichiers Markdown inspectés. 7 duels synthétiques et 9 cas d’admission contrôlés arithmétiquement.
+3535 assertions de cohérence, 14 fichiers JSON lus, 26 fichiers Markdown inspectés. 7 duels synthétiques et 9 cas d’admission contrôlés arithmétiquement.
 
-**Portée :** cohérence documentaire et extraction, pas test d’un jeu, d’un serveur, d’une interface ou validation contre des rapports historiques. Les empreintes des sources brutes sont vérifiées par l’extracteur avant génération ; elles ne sont pas recalculées ici en l’absence du cache amont.
+**Portée :** cohérence documentaire et extraction, pas test d’un jeu, d’un serveur, d’une interface ou validation contre des rapports historiques. Les empreintes des six tables déclaratives sont vérifiées par l’extracteur ; celles des 210 ressources importées sont recalculées ici. Les bornes de sprites et anomalies connues sont contrôlées ; aucune fidélité de rendu navigateur n’est revendiquée.
 
 ## Inventaire contrôlé
 
@@ -30,6 +30,8 @@
 - Références régionales symboliques conservées : région 7: XmairieX, région 8: XRelai1X, région 9: XGM5X
 - Catalogue régional limité à dix entrées, non exhaustif.
 - 35 positions vides dans la table de fortifications, indices conservés.
-- 40 exigences fonctionnelles reliées à 52 scénarios spécifiés, non exécutés sur un jeu.
+- Corpus visuel : 57 captures / 53 distinctes, 153 fichiers Jactari dont 96 images ; empreintes recalculées.
+- 1 317 correspondances : 1 152 bornées, 163 placeholders d’artefact absents, 2 rectangles Forteresse débordant d’un pixel. Anomalies historiques explicitement conservées.
+- 57 exigences fonctionnelles reliées à 71 scénarios spécifiés, non exécutés sur un jeu.
 
 Ces particularités sont des limites du référentiel, pas des erreurs masquées. Les anomalies fonctionnelles du simulateur sont décrites dans [Combat](../game-design/04-COMBAT.md) et [Incertitudes](INCERTITUDES.md).

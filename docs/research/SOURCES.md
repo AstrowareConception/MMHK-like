@@ -7,6 +7,8 @@ Consultation : **22 octobre 2026**. Les sources publiques sont des traces histor
 | Marque | Sens | Ce que cela ne garantit pas |
 | --- | --- | --- |
 | OBS-CODE | Expression ou donnée lue dans une révision déterminée d’un outil communautaire | Identité avec l’algorithme Ubisoft |
+| OBS-IMAGE | Élément lisible ou visible dans une capture identifiée | Animation, formule, disponibilité universelle ou comportement après clic |
+| DECISION-USER | Choix explicite confirmé par le porteur du projet | Authenticité historique des paramètres associés |
 | DOC | Description explicite dans une source consultée | Exactitude, exhaustivité ou applicabilité à chaque saison |
 | COR | Recoupement compatible entre sources indépendantes | Absence de changement ultérieur |
 | HYP | Déduction signalée, à tester | Règle historique démontrée |
@@ -99,3 +101,15 @@ Corpus **heroesmmhk.ucoz.ru**, principalement 2012–2013, auteur/éditeur affic
 
 Les pages web ne sont pas archivées intégralement dans ce dépôt. Les liens, résumés limités et références sont conservés ; les données distribuées proviennent du corpus de code explicitement licencié. Les vidéos, écrans complets, probabilités serveur, générateurs de mondes et historiques de correctifs n’ont pas été reconstitués intégralement. Une page inaccessible et un extrait de moteur de recherche ne sont jamais traités comme un manuel lu.
 
+
+## Corpus ajouté et analysé en révision 0.2
+
+| ID | Source épinglée | Périmètre réellement examiné |
+| --- | --- | --- |
+| IMG-01 | [Captures du dépôt, commit 71f8ec7](https://github.com/AstrowareConception/MMHK-like/tree/71f8ec79cbea19246c539394bf33d75fc21f26b3/data/Screenshots) | 57 fichiers, 53 images distinctes ; classement et lecture visuelle de l’ensemble ; vues et modales représentatives examinées à pleine résolution |
+| CODE-02 | [Import Jactari, même commit](https://github.com/AstrowareConception/MMHK-like/tree/71f8ec79cbea19246c539394bf33d75fc21f26b3/data/Jactari/src) | Inventaire des 153 fichiers ; inspection des 96 images ; lecture ciblée images, héros, données, CSS et fonctions d’outil |
+| DECISION-USER | Instruction du porteur du projet, 22/10/2026 | PvP classique/Guerre des Larmes ; fidélité visuelle ; navigation JavaScript ; références historiques puis univers distinct |
+
+Les références `SS-001` à `SS-057` pointent vers [l’analyse des captures](ANALYSE-CAPTURES.md) et son inventaire à empreintes. CODE-02-IMAGES désigne `images.min.js`, CODE-02-HEROS `heros.min.js` et leurs CSS, dans le corpus épinglé. Les six tables et `combat.min.js` sont identiques à CODE-01 : ce ne sont pas deux témoignages indépendants du moteur serveur.
+
+Les conclusions de disposition sont issues d’images statiques. Les coûts contextuels, les langues et le numéro de client sont conservés lorsqu’ils sont lisibles ; une absence de date n’est pas comblée par une supposition. Aucune capture de la Guerre des Larmes elle-même n’est identifiée dans ce lot.

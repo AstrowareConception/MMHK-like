@@ -1,0 +1,519 @@
+{
+  "source_commit": "71f8ec79cbea19246c539394bf33d75fc21f26b3",
+  "method": "Lecture visuelle des 53 images distinctes ; vues représentatives et modales inspectées à pleine résolution. Transcriptions manuelles limitées aux éléments lisibles.",
+  "observations": [
+    {
+      "id": "SS-001",
+      "path": "data/Screenshots/Autres/23415-480.png",
+      "category": "Chargement",
+      "version_or_family": "illustration",
+      "observed": "Logo et barre de chargement.",
+      "limits": "Aucune géométrie interactive déductible.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-002",
+      "path": "data/Screenshots/Autres/5658dc21667427.563061b3de455.webp",
+      "category": "Vestige",
+      "version_or_family": "tardif non daté",
+      "observed": "Étage 2 sur 20, héros, troupes, récompense Poutre magique, sortir, combattre, renfort.",
+      "limits": "Module ultérieur ; hors socle classique tant que non daté.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-003",
+      "path": "data/Screenshots/Autres/621344-might-magic-heroes-kingdoms-asia-browser-screenshot-loading-1024x576.png",
+      "category": "Chargement Asia",
+      "version_or_family": "illustration",
+      "observed": "Écran de chargement de la déclinaison Asia.",
+      "limits": "Ne prouve aucune règle du serveur européen.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-004",
+      "path": "data/Screenshots/Autres/74c18b21667427.563061c765406.webp",
+      "category": "Planche d’artefacts",
+      "version_or_family": "illustration",
+      "observed": "Icônes d’équipements regroupées par palettes et familles.",
+      "limits": "Planche de présentation ; correspondances logiques à tirer du code.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-005",
+      "path": "data/Screenshots/Autres/Might_and_Magic_Heroes_Kingdoms_cover.webp",
+      "category": "Logo",
+      "version_or_family": "illustration",
+      "observed": "Identité et lettrage du jeu.",
+      "limits": "Pas un écran de gameplay.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-006",
+      "path": "data/Screenshots/Autres/ar61aw.webp",
+      "category": "Logo",
+      "version_or_family": "illustration",
+      "observed": "Variante de résolution du logo.",
+      "limits": "Pas un écran de gameplay.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-007",
+      "path": "data/Screenshots/Autres/ar61o4.jpg",
+      "category": "Ambiance Académie",
+      "version_or_family": "illustration",
+      "observed": "Illustration de faction, ville et portrait.",
+      "limits": "Pas un fond de ville interactif isolé.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-008",
+      "path": "data/Screenshots/Autres/ar61o5.jpg",
+      "category": "Chargement Inferno",
+      "version_or_family": "illustration",
+      "observed": "Création du royaume, illustration et portrait.",
+      "limits": "Pas une liste de bâtiments disponibles.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-009",
+      "path": "data/Screenshots/Autres/ar61o6.jpg",
+      "category": "Ambiance Nécropole",
+      "version_or_family": "illustration",
+      "observed": "Illustration de faction et portrait.",
+      "limits": "Pas une carte ou une région.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-010",
+      "path": "data/Screenshots/Autres/ar61o7.jpg",
+      "category": "Ambiance Havre",
+      "version_or_family": "illustration",
+      "observed": "Illustration de faction et portrait.",
+      "limits": "Pas une carte ou une région.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-011",
+      "path": "data/Screenshots/Autres/bde67b21667427.563061d57b3f3.webp",
+      "category": "Planche d’icônes",
+      "version_or_family": "illustration",
+      "observed": "Boucliers, anneaux, couronnes et objets en quatre palettes.",
+      "limits": "Signification mécanique non établie par l’image seule.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-012",
+      "path": "data/Screenshots/Autres/gallery_17_370_192607.jpg",
+      "category": "Bannière Inferno",
+      "version_or_family": "illustration",
+      "observed": "Décor promotionnel de faction.",
+      "limits": "Ne pas le confondre avec l’aire de jeu.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-013",
+      "path": "data/Screenshots/Autres/might-and-magic-heroes-kingdoms_0190000000815357.jpg",
+      "category": "Illustration de cavalier",
+      "version_or_family": "illustration",
+      "observed": "Personnage promotionnel.",
+      "limits": "Aucune statistique d’unité déductible.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-014",
+      "path": "data/Screenshots/Autres/might_and_magic_heroes_kingdoms (1).jpg",
+      "category": "Chargement composite",
+      "version_or_family": "illustration",
+      "observed": "Assemblage de factions, logo, progression.",
+      "limits": "Pas une vue monde.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-015",
+      "path": "data/Screenshots/Autres/might_and_magic_heroes_kingdoms.jpg",
+      "category": "Chargement composite",
+      "version_or_family": "doublon",
+      "observed": "Doublon exact de SS-014.",
+      "limits": "Ne constitue pas une seconde preuve indépendante.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-016",
+      "path": "data/Screenshots/Vue combat/4b11102da6a5cb6529c15ae1a1312ec1Might_Magic_Heroes_Kingdoms.jpg",
+      "category": "Préparation de combat",
+      "version_or_family": "classique non daté",
+      "observed": "Deux camps, sept lignes de pelotons, livre de sorts, deux sélecteurs de tour, rapports d’espionnage, engagement/annulation.",
+      "limits": "La préparation n’est pas un combat tactique en direct.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-017",
+      "path": "data/Screenshots/Vue combat/heroes-kingdoms-03_2202491.jpg",
+      "category": "Rapport de combat",
+      "version_or_family": "v1.5.0.17-4-MTR",
+      "observed": "Rapport dans le courrier ; tours numérotés ; sort avant duel, flèche BONUS, effectifs et pertes ; colonne du royaume conservée.",
+      "limits": "Rapport partiel, équipements inconnus : pas un oracle complet des pertes.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-018",
+      "path": "data/Screenshots/Vue combat/sc13rc1.jpg",
+      "category": "Préparation de combat",
+      "version_or_family": "v4.1.19-MTR",
+      "observed": "Puissances 99 792 et 174 028 ; sept emplacements ; barres sans bonus/héros/troupes/fortifications ; deux sorts programmables ; durée affichée 5 min et 0 halte.",
+      "limits": "Les deux emplacements ne prouvent pas deux sorts gratuits pour tout héros ; cinq minutes n’est pas une durée par round.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-019",
+      "path": "data/Screenshots/Vue héros/26101.jpg",
+      "category": "Résumé du héros",
+      "version_or_family": "classique non daté",
+      "observed": "Zoltan niveau 23, caractéristiques 26/26/26, trois carrières ; onglets Résumé, Talents, Inventaire, Sorts.",
+      "limits": "Ni déblocage des carrières ni calendrier de points lisibles.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-020",
+      "path": "data/Screenshots/Vue héros/HMMKingdoms_4.jpg",
+      "category": "Résumé du héros",
+      "version_or_family": "classique non daté",
+      "observed": "Mage de guerre niveau 18, 18/9/27 ; Bâtisseur, Destruction et Meneur ; effets listés dont accès T7.",
+      "limits": "Les bonus sont ceux de ce héros, non des bonus automatiques d’archétype.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-021",
+      "path": "data/Screenshots/Vue héros/HMMKingdoms_4_m.jpg",
+      "category": "Résumé du héros réduit",
+      "version_or_family": "classique non daté",
+      "observed": "Même présentation que SS-020 en résolution réduite.",
+      "limits": "Variante visuelle proche, fichier distinct ; pas de nouvelle règle.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-022",
+      "path": "data/Screenshots/Vue héros/heroes-kingdoms-02_2202490.jpg",
+      "category": "Inventaire du héros",
+      "version_or_family": "v1.5.0.17-4-MTR",
+      "observed": "Équipement, sac et stock de ville ; portrait, caractéristiques, info-bulle ; Sir Siggi niveau 28.",
+      "limits": "Les capacités maximales de sac/stock ne sont pas visibles.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-023",
+      "path": "data/Screenshots/Vue héros/might-magic-heroes-kingdoms_2123145.jpg",
+      "category": "Inventaire du héros",
+      "version_or_family": "classique non daté",
+      "observed": "Lancelot niveau 23, huit emplacements ; Sac à dos et Dans la cité paginés ; info-bulle d’objet avec effets et main gauche.",
+      "limits": "La capture ne prouve ni glisser-déposer ni échange à distance.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-024",
+      "path": "data/Screenshots/Vue héros/mightandmagicheroes2.jpg",
+      "category": "Inventaire recadré",
+      "version_or_family": "classique non daté",
+      "observed": "Variante cadrée de l’équipement et des inventaires ; objets équipés différents de SS-023.",
+      "limits": "Pas un doublon exact ; aucune règle de transfert supplémentaire.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-025",
+      "path": "data/Screenshots/Vue héros/sc13rc4.jpg",
+      "category": "Résumé du héros",
+      "version_or_family": "v1.5.0.51-3-MTR",
+      "observed": "Niveau 17, 0/29/29 ; Bâtisseur, Destruction, Marchand ; bonus vente 27 % et capacité caravane 50 %.",
+      "limits": "Chiffres propres à ce héros ; version client distincte du numéro de saison.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-026",
+      "path": "data/Screenshots/Vue monde/865 (1).jpg",
+      "category": "Monde politique",
+      "version_or_family": "v0.7.94 Tech Beta",
+      "observed": "Territoires colorés, repères, zoom inférieur, flèches de déplacement ; panneau DISTANT JAIL pour un héros capturé.",
+      "limits": "Bêta ; statut de prisonnier observé, procédure de libération non visible.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-027",
+      "path": "data/Screenshots/Vue monde/865.jpg",
+      "category": "Monde politique",
+      "version_or_family": "doublon",
+      "observed": "Doublon exact de SS-026.",
+      "limits": "Pas une deuxième observation de la capture de héros.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-028",
+      "path": "data/Screenshots/Vue monde/8982.jpg",
+      "category": "Monde ancien",
+      "version_or_family": "v0.1.10, marque Heroes V",
+      "observed": "Carte, trajets bleus, brouillard périphérique, panneau sombre ancien.",
+      "limits": "Interface très précoce ; ne pas la fusionner avec le gabarit v1.5.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-029",
+      "path": "data/Screenshots/Vue monde/KingdomsGameplay (1).webp",
+      "category": "Monde détaillé",
+      "version_or_family": "classique non daté",
+      "observed": "Terrain naturel en losanges, villes, sélection, trajet bleu pointillé.",
+      "limits": "Distance, vitesse et interpolation non mesurables sur image fixe.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-030",
+      "path": "data/Screenshots/Vue monde/heroes-kingdoms-01_2202489.jpg",
+      "category": "Monde et info-bulle",
+      "version_or_family": "v1.5.0.17-4-MTR",
+      "observed": "Terrain, villes, frontières, routes et informations de cible ; décor promotionnel hors cadre.",
+      "limits": "Les informations de la cible dépendent potentiellement du renseignement.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-031",
+      "path": "data/Screenshots/Vue monde/heroes-kingdoms-06_2202494.jpg",
+      "category": "Reconnaissance",
+      "version_or_family": "v1.5.0.17-4-MTR",
+      "observed": "Héros Willi niveau 10 ; choix troupes/ville/région ; curseur de durée ; 4 h 34 min 28 s et valeur d’information 130.",
+      "limits": "Relation entre durée, score et chances de capture non retrouvée.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-032",
+      "path": "data/Screenshots/Vue monde/might-magic-heroes-kingdoms_2123146.jpg",
+      "category": "Monde politique encadré",
+      "version_or_family": "classique non daté",
+      "observed": "Carte dense colorée et royaume dans un cadre de faction.",
+      "limits": "Distinguer bordure décorative et surface réellement interactive.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-033",
+      "path": "data/Screenshots/Vue monde/sc13rc2.jpg",
+      "category": "Monde détaillé",
+      "version_or_family": "v1.5.0.51-3-MTR",
+      "observed": "Terrain isométrique, villes par faction, frontières, trajet pointillé, sélection ; barre globe/ville, chronologie et royaume fixe.",
+      "limits": "La ville Inferno en flammes n’est pas une preuve d’incendie de siège.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-034",
+      "path": "data/Screenshots/Vue monde/sc13rc3.jpg",
+      "category": "Monde politique éloigné",
+      "version_or_family": "v1.5.0.51-3-MTR",
+      "observed": "Grille dense colorée, petits glyphes de villes et curseur de navigation à une autre position.",
+      "limits": "Changement d’échelle attesté ; automatisme du filtre politique non démontré.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-035",
+      "path": "data/Screenshots/Vue monde/scr8k4.webp",
+      "category": "Monde détaillé",
+      "version_or_family": "doublon",
+      "observed": "Doublon exact de SS-029.",
+      "limits": "Pas une preuve de zoom supplémentaire.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-036",
+      "path": "data/Screenshots/Vue région/1886171_original.webp",
+      "category": "Quête sur région",
+      "version_or_family": "classique non daté",
+      "observed": "Fenêtre Quête 1 — Cité assiégée, récompenses d’unités, Continuer, région Nécropole derrière.",
+      "limits": "Titre narratif : ne prouve pas un siège PvP actif.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-037",
+      "path": "data/Screenshots/Vue région/868 (1).jpg",
+      "category": "Région Nécropole",
+      "version_or_family": "v0.7.94 Tech Beta",
+      "observed": "Grille locale, ville centrale, mines et balises verticales ; royaume et prisonnier distant.",
+      "limits": "Bêta : valeurs de production et droits à vérifier ailleurs.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-038",
+      "path": "data/Screenshots/Vue région/868.jpg",
+      "category": "Région Nécropole",
+      "version_or_family": "doublon",
+      "observed": "Doublon exact de SS-037.",
+      "limits": "Aucun état supplémentaire.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-039",
+      "path": "data/Screenshots/Vue région/8984.jpg",
+      "category": "Région Académie ancienne",
+      "version_or_family": "v0.1.10, marque Heroes V",
+      "observed": "Grille locale et ville centrale, quatre sites de mine, retour à la carte.",
+      "limits": "Interface ancienne, distincte de la référence v1.5.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-040",
+      "path": "data/Screenshots/Vue région/9821f221667427.563061cc17556.webp",
+      "category": "Colonisation",
+      "version_or_family": "v0.7.34-x200, test",
+      "observed": "Droit Richesse à 4 villes ; coût affiché 30 000 or, 50 bois, 50 minerai ; nom ; limite gratuite 3 villes, 6 avec abonnement ; attente 50 jours.",
+      "limits": "Serveur de test x200 et menu Triche : ces coûts/plafonds ne deviennent pas des constantes du profil classique.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-041",
+      "path": "data/Screenshots/Vue région/heroes-kingdoms-05_2202493.jpg",
+      "category": "Estimation de pillage",
+      "version_or_family": "v1.5.0.17-4-MTR",
+      "observed": "Cible principale mine de soufre, dégâts estimés 19 h 33 min 30 s ; cibles secondaires 3 h 54 min 42 s ; butins inconnus « ? » et cible inconnue sans butin.",
+      "limits": "Rapport 5:1 dans cet exemple ; formule universelle et butin non démontrés.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-042",
+      "path": "data/Screenshots/Vue région/heroes-kingdoms-07_2202495.jpg",
+      "category": "Région aménagée et entrepôt",
+      "version_or_family": "v1.5.0.17-4-MTR",
+      "observed": "Entrepôt : +50 % de capacité ; 1 construit, 5 maximum, effet cumulatif ; grille et aménagements.",
+      "limits": "Corrobore G16 pour cette version ; pas les règles d’arrondi ni le plafond d’or.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-043",
+      "path": "data/Screenshots/Vue région/maxresdefault (8).jpg",
+      "category": "Défi solo",
+      "version_or_family": "vidéo promotionnelle tardive",
+      "observed": "Cadre SOLO-HERAUSFORDERUNG et région ; accès aux options régionales.",
+      "limits": "Variante solo hors campagne PvP classique ; texte fin à vérifier avant transcription.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-044",
+      "path": "data/Screenshots/Vue région/might-magic-heroes-kingdoms_2123144.jpg",
+      "category": "Quête sur région, cadre complet",
+      "version_or_family": "classique non daté",
+      "observed": "Présentation complète de la quête de SS-036 dans le décor extérieur.",
+      "limits": "Même situation recadrée, pas deux validations de règle.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-045",
+      "path": "data/Screenshots/Vue région/sc13rbv (1).jpg",
+      "category": "Région Sylvan",
+      "version_or_family": "v4.1.16-MTR",
+      "observed": "Grille 5×5, ville arbre centrale, quatre mines et balises, PNJ, décor périphérique ; barre d’icônes et Region options.",
+      "limits": "Famille d’interface tardive ; pas de déduction de règles S2 depuis S4.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-046",
+      "path": "data/Screenshots/Vue région/sc13rbv.jpg",
+      "category": "Région Sylvan redimensionnée",
+      "version_or_family": "v4.1.16-MTR",
+      "observed": "Même scène que SS-045 à une autre résolution.",
+      "limits": "Proche visuellement, non identique octet par octet.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-047",
+      "path": "data/Screenshots/Vue région/sc13rbw.jpg",
+      "category": "Région Académie développée",
+      "version_or_family": "v1.5.0.51-6-MTR",
+      "observed": "Ville centrale et sites régionaux développés ; anciennes commandes de navigation.",
+      "limits": "Les bâtiments régionaux ne sont pas les bâtiments de la vue ville.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-048",
+      "path": "data/Screenshots/Vue région/sc13rbx.jpg",
+      "category": "Région Nécropole développée",
+      "version_or_family": "v1.5.0.51-3-MTR",
+      "observed": "Terra et aménagements régionaux, mines, balises ; navigation ancienne.",
+      "limits": "Ne suffit pas à reconstituer tous les prix et prérequis régionaux.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-049",
+      "path": "data/Screenshots/Vue ville/8981.jpg",
+      "category": "Ville Havre ancienne",
+      "version_or_family": "v0.1.10, marque Heroes V",
+      "observed": "Château, rivière et emplacements de bâtiments dans une scène dédiée.",
+      "limits": "Pas une grille régionale agrandie.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-050",
+      "path": "data/Screenshots/Vue ville/HMMKingdoms_2.jpeg",
+      "category": "Ville Académie",
+      "version_or_family": "capture marquée 2010",
+      "observed": "Îlots flottants, bâtiments et médaillons ; cité Forkriver niveau 18 ; message de droit à une cité par Domination.",
+      "limits": "Le niveau de ville affiché n’est pas un degré de zoom.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-051",
+      "path": "data/Screenshots/Vue ville/heroes-kingdoms-04_2202492.jpg",
+      "category": "Ville Havre et bâtiment",
+      "version_or_family": "v1.5.0.17-4-MTR",
+      "observed": "Scène du château ; info-bulle Gehöfte : +5 paysans/conscrits par jour, 20 000 or, 30 bois, 30 minerai.",
+      "limits": "Coût et bonus correspondent à l’entrée 67, Fermes, du catalogue ; durée et déroulement du chantier non prouvés par cette image.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-052",
+      "path": "data/Screenshots/Vue ville/maxresdefault (7).jpg",
+      "category": "Ville Sylvan débutante",
+      "version_or_family": "vidéo promotionnelle tardive",
+      "observed": "Petite ville arbre, Village Hall, 2 000 or/jour, options de construction.",
+      "limits": "Ne prouve pas quels modules commerciaux sont actifs sur le serveur classique.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-053",
+      "path": "data/Screenshots/Vue ville/might-magic-heroes-kingdoms_2123147.jpg",
+      "category": "Marché et caravane",
+      "version_or_family": "classique non daté",
+      "observed": "Marchand/Caravane/Hôtel des ventes (23) ; sept ressources ; charge max ; destination ; « 4 fois », quantité exacte, pas d’attente.",
+      "limits": "Listes complètes de politiques non visibles ; ne pas additionner les capacités maximales par ressource.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-054",
+      "path": "data/Screenshots/Vue ville/sc13rby.jpg",
+      "category": "Ville Sylvan développée",
+      "version_or_family": "v4.1.16-MTR",
+      "observed": "Grand arbre, plateformes, passerelles et bâtiments ; Lorelai niveau 31 ; barre d’icônes, Building options.",
+      "limits": "Scène de ville spécifique ; son niveau 31 n’est pas un niveau de zoom.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-055",
+      "path": "data/Screenshots/Vue ville/sc13rbz.jpg",
+      "category": "Ville Inferno",
+      "version_or_family": "v1.5.0.51-3-MTR",
+      "observed": "Roche volcanique, lave et bâtiments avec médaillons ; Wastelands niveau 19.",
+      "limits": "Flammes de décor de faction, pas indicateur suffisant de siège.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-056",
+      "path": "data/Screenshots/Vue ville/sc13rc0.jpg",
+      "category": "Ville Nécropole",
+      "version_or_family": "v1.5.0.51-3-MTR",
+      "observed": "Tours sombres, lumière verte et médaillons de bâtiments ; Terra niveau 31.",
+      "limits": "Décor dédié ; coordonnées de hotspots non récupérées dans Jactari.",
+      "evidence": "OBS-IMAGE"
+    },
+    {
+      "id": "SS-057",
+      "path": "data/Screenshots/Vue ville/sc13rc5.jpg",
+      "category": "Taverne",
+      "version_or_family": "v1.5.0.51-3-MTR",
+      "observed": "Deux offres Arcane Mage/Warmaster ; courbes de stats ; 46 000 or et 10 h ; renouvellement 3 200 or, 23:59 ; limite gratuite et attente 8 jours.",
+      "limits": "Prix et attente contextuels ; ne pas les généraliser à tout recrutement.",
+      "evidence": "OBS-IMAGE"
+    }
+  ]
+}

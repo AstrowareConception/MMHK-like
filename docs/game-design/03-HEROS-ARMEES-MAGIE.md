@@ -44,7 +44,7 @@ Les quinze archétypes définissent trois courbes : attaque, défense et magie. 
 | Rôdeur | Espionnage et reconnaissance |
 | Tenancier | Actions de taverne et entretien |
 
-Les 74 talents et leurs valeurs figurent dans le catalogue. Huit groupes tardifs de talents légendaires apparaissent après les treize carrières, sans nomenclature de carrière complète : ne pas les activer dans un profil ancien. Le nombre de carrières cumulables, les niveaux d’ouverture et le calendrier exact d’acquisition des points nécessitent encore une référence complète.
+Les 74 talents et leurs valeurs figurent dans le catalogue. Huit groupes tardifs de talents légendaires apparaissent après les treize carrières, sans nomenclature de carrière complète : ne pas les activer dans un profil ancien. La révision 0.2 précise le nombre de carrières et le budget de points grâce au configurateur de héros ; les niveaux d’ouverture et le calendrier serveur restent à qualifier, voir ci-dessous.
 
 ### Règles complémentaires — DOC
 
@@ -73,3 +73,31 @@ Huit emplacements : tête, collier, anneau, main gauche, buste, main droite, pie
 Les effets touchent des statistiques de héros, l’armée, la magie, l’économie ou les durées ; ils ne doivent pas être tous réduits à un unique bonus de puissance. La disponibilité par saison, les probabilités de butin, les règles de liaison/déliaison, les transferts entre cités et les conditions exactes d’activation des ensembles restent à compléter.
 
 Quinze compétences héréditaires sont récupérées, notamment moral élevé, résistance magique, résurrection, tir de barrage, recrutement quotidien, richesse personnelle et mysticisme. Les valeurs sont dans `bonus.json`. Leur achat à la création d’un nouveau monde et leurs interactions avec le classement des voies appartiennent au module d’hérédité ; elles ne sont pas des talents ordinaires gagnés au fil d’un combat.
+
+## Compléments de l’import Jactari et des captures — révision 0.2
+
+### Carrières et points — OBS-CODE, corroboration visuelle partielle
+
+`heros.min.js`, fonctions `controle_validite_carrieres`, `active_carriere`, `change_carriere`, `maj_comp` et `change_talent`, expose **trois emplacements de carrière**. Ouvrir une carrière consomme **un point**, deux emplacements ne peuvent pas choisir la même carrière. Une carrière magique exige un archétype différent de `guerrier` et une école autorisée par la faction. Les captures SS-019/020/025 montrent effectivement trois carrières sur un héros. [CODE-02-HEROS ; IMG-01]
+
+Le budget du configurateur vaut :
+
+```text
+points = niveau + bonus_tenancier − 2 × réorientations
+       + bonus éventuel Héros talentueux
+       + bonus éventuel Révélation de talents
+```
+
+Pour chaque compétence héréditaire, le bonus est arrondi par `Math.round(valeurDuRang × (1 + 0,10 × rangDeVoieAssocié))`. Révélation de talents ne contribue qu’à partir du niveau 15 et multiplie ce résultat par `floor(niveau/15)`. Ce sont des branches du configurateur tardif : les compétences disponibles doivent être filtrées par profil.
+
+La table `_apprentissage = [0,1,3,6]` donne le coût **cumulé** des rangs 0–3, donc des coûts supplémentaires de **1, 2 puis 3 points**. Exemple sans bonus ni réorientation : niveau 18, trois carrières ouvertes → budget total 18, dont 3 déjà dépensés, donc 15 pour les talents. Ne pas confondre rang 3 et coût total de trois points.
+
+**Scribe et Maître des arcanes sont partagés entre carrières magiques** dans le configurateur : leur progression est synchronisée et le coût n’est pas payé une seconde fois pour un rang déjà acquis. Les branches de désactivation ajustent aussi le remboursement selon l’autre carrière. Un futur moteur doit traiter ce partage explicitement. La possibilité de modifier librement un formulaire Jactari ne prouve pas qu’une réorientation réelle soit immédiate ou gratuite.
+
+### Taverne, équipement et préparation — OBS-IMAGE
+
+SS-057 présente deux offres de héros, leurs courbes d’attaque/défense/magie, coût et délai de recrutement, puis coût et temporisation du renouvellement. Elle sépare blocage de compte gratuit et délai de recrutement. Prix 46 000 or/10 h et renouvellement 3 200 or sont des **observations contextuelles**, non une courbe de prix.
+
+SS-023 distingue huit emplacements d’équipement, **sac à dos** du héros et objets **dans la cité**, avec pagination et info-bulles d’effets. Le nombre d’icônes visibles n’est pas la capacité maximale d’inventaire. SS-016/018 montrent sept positions militaires et deux emplacements de programmation de sorts ; cela ne supprime pas les conditions de talent donnant accès au second sort.
+
+Les images d’unités, héros, carrières, talents et objets sont reliées aux données dans le [manifeste des sprites](../../data/analysis/sprite-manifest.json). Les ressources des grandes fiches de héros ne sont pas toutes présentes : les bandes de petits portraits ne remplacent pas les illustrations en pied.

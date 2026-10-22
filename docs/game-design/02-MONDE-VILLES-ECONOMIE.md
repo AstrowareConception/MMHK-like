@@ -76,3 +76,12 @@ Exemple de contrôle, sans bonus ni monument : à l’indice administratif 3, `P
 ## Règles de cohérence proposées
 
 Une dépense réserve ou débite des ressources dans une transaction ; un ordre ne peut pas les dépenser deux fois. La production doit être calculée jusqu’à l’instant d’un changement de bonus. Une capacité plafonnée doit préciser le devenir de l’excédent, selon qu’il provient de production, récompense, marché ou retour de convoi. Les actions d’un héros mobilisé et celles d’un héros libre doivent être distinguées. La cadence de recrutement, les files simultanées, annulations, remboursements et bonus à l’arrivée font partie des incertitudes bloquantes du module économique.
+
+## Précisions visuelles — révision 0.2, OBS-IMAGE
+
+- **Entrepôt régional, SS-042 :** l’info-bulle indique +50 % de stockage, un entrepôt construit sur cinq maximum, effet cumulatif. Cela corrobore G16 pour le client v1.5.0.17-4-MTR, sans résoudre les arrondis ni le plafond d’or.
+- **Construction Havre, SS-051 :** Gehöfte augmente de 5/jour la production de paysans et conscrits ; prix affiché 20 000 or, 30 bois et 30 minerai. Le coût et le bonus correspondent à l’entrée 67 « Fermes » du catalogue de 2013 : corroboration locale, sans certification de toutes les constructions.
+- **Colonisation, SS-040 :** le formulaire sépare droit lié au classement Richesse, coût, nom de cité, plafond commercial et attente. Le prix 30 000 or/50 bois/50 minerai est affiché sur un contexte x200 de test, non adopté comme constante classique.
+- **Caravane, SS-053 :** sept quantités, destination, capacité, données de stock/plafond/revenu de la destination et réglages « 4 fois », « La quantité exacte », « Pas d’attente ». Les maxima par ressource ne sont pas présumés simultanément cumulables. Il manque la formule de charge et les listes complètes de choix.
+
+Un convoi répété nécessite, dans le modèle proposé, de distinguer le programme d’envois de chacun des trajets et de revalider stock, capacité et destination à chaque départ. L’image ne prouve pas une réservation immédiate de toutes les répétitions. Voir [interface](../specifications/INTERFACE-ET-RENDU-ISOMETRIQUE.md) et [analyse des captures](../research/ANALYSE-CAPTURES.md).

@@ -58,3 +58,11 @@ Le diagramme décrit les états à gérer ; il ne résout pas à lui seul les co
 ## Rapports militaires et droits d’information
 
 Une attaque doit produire un rapport avec départ, arrivée, cible, forces connues, héros, lieu, sort par tour, dispersions, morts, XP, butin, bâtiments détruits et événements de capture. La vue du propriétaire, de l’adversaire et des officiers d’alliance peut différer. Les détails obtenus par reconnaissance ne doivent pas devenir des données publiques via une API de carte. Cette exigence est une proposition de reconstruction cohérente avec l’existence d’espionnage et de rôles d’alliance, et non une reproduction démontrée du protocole historique.
+
+## Renseignements ajoutés par les captures
+
+**OBS-IMAGE :** SS-031 expose les trois cibles de reconnaissance — troupes, ville, région — ainsi qu’un curseur de durée, un temps et une valeur d’information. Le couple 4 h 34 min 28 s / 130 est un point de mesure, insuffisant pour retrouver une formule de qualité ou de capture. SS-026/037 montrent un héros en prison distante, sans les modalités de libération.
+
+SS-041 distingue une cible principale de pillage et des cibles secondaires, une durée estimée de dégâts et du butin inconnu. Les temps 19 h 33 min 30 s et 3 h 54 min 42 s ont ici un rapport de cinq ; cela ne prouve pas un coefficient universel sans connaissance des caractéristiques et cases. Les « ? » sont des informations manquantes, pas un butin nul.
+
+Les trajets pointillés et les frontières sont visibles sur le monde. Les captures ne déterminent ni la distance parcourue réellement, ni la vitesse, ni la gestion des diagonales. Ces inconnues restent U09 ; le JavaScript du futur client assurera l’affichage et le serveur l’exécution temporelle.

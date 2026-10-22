@@ -113,3 +113,32 @@ La construction d’un monument consomme une Larme identifiée et n’augmente l
 ## Réponses d’échec à prévoir
 
 `WORLD_CLOSED`, `WRONG_WORLD`, `NOT_OWNER`, `ROLE_REQUIRED`, `HERO_BUSY`, `HERO_UNAVAILABLE`, `INSUFFICIENT_RESOURCES`, `PREREQUISITE_MISSING`, `CAPACITY_REACHED`, `TARGET_CHANGED`, `TARGET_PROTECTED`, `DIPLOMACY_BLOCKS_ACTION`, `ORDER_ALREADY_PROCESSED`, `RULE_NOT_CONFIGURED`. Ces noms sont proposés pour l’API ; les messages affichés doivent être français et contextualisés. Une règle non configurée doit empêcher l’action de test concernée, sans prendre silencieusement zéro comme coût ou durée.
+
+## Périmètre confirmé et compléments des captures — v0.2
+
+Le [profil PvP classique](PROFIL-PVP-CLASSIQUE.md) est confirmé. `REQ-TOURNAMENT-01` et `REQ-COOP-01` sont conservées comme exigences d’archives hors du socle ; leurs scénarios ne conditionnent pas la livraison classique. Les services tardifs visibles dans une capture ne sont pas automatiquement activés.
+
+| ID | Exigence | Preuve / origine |
+| --- | --- | --- |
+| REQ-PROFILE-01 | Le profil classique active la Guerre des Larmes et refuse tournoi S4, victoire Arkath et contenu non qualifié | DEC-001 ; contrat de filtrage PROP |
+| REQ-HERO-03 | Modéliser trois carrières distinctes, coût d’ouverture et coûts cumulés des talents, budget et partage Scribe/Arcanes selon le profil | CODE-02-HEROS ; SS-019/020/025 |
+| REQ-HERO-04 | Distinguer recruter une offre et renouveler les offres de taverne, avec coûts, durées et restrictions séparés | SS-057 ; paramètres U24/U40 |
+| REQ-EQUIP-02 | Distinguer équipement, sac du héros et réserve de cité ; toute mutation conserve l’unicité d’un objet | SS-023 ; atomicité PROP |
+| REQ-CONVOY-02 | Un programme de caravanes expose répétition, politique de quantité et attente ; chaque trajet revalide ressources et destination | SS-053 ; sémantique complète U28 |
+
+## Présentation et interactions — contrats détaillés dans la spécification de rendu
+
+| ID | Exigence | Preuve / origine |
+| --- | --- | --- |
+| REQ-UI-01 | Conserver la structure scène/royaume/chronologie/navigation pendant les changements de vue | SS-033/034/045/054 ; gabarit PROP |
+| REQ-UI-02 | Distinguer monde détaillé, monde politique éloigné, région et ville ; conserver la sélection au retour | SS-033/034/045/054 ; conservation PROP |
+| REQ-UI-03 | Sélectionner correctement une case isométrique malgré caméra, bord et objets en surplomb ; exclure le décor périphérique | SS-045/047 ; algorithme PROP |
+| REQ-UI-04 | Afficher une scène de ville propre à la faction et des zones de bâtiments/états ; niveau urbain distinct du zoom | SS-050/051/054/055/056 |
+| REQ-UI-05 | Afficher routes, haltes et comptes à rebours depuis les missions serveur ; une animation ne résout pas un ordre | SS-033/018 ; cohérence PROP |
+| REQ-UI-06 | Préparer une bataille avec sept positions, unités, puissance expliquée, sorts/tours, durée, annuler/engager | SS-016/018 ; disponibilité du second sort selon règle |
+| REQ-UI-07 | Lire un rapport par tours, avec magie, bonus d’arme et pertes, dans un panneau défilant | SS-017 |
+| REQ-UI-08 | Montrer les onglets héros et les trois conteneurs d’objets, avec effets et pagination sans capacité inventée | SS-019/023/025 |
+| REQ-UI-09 | Proposer une reconnaissance troupes/ville/région, durée et valeur d’information sans dévoiler les données cachées | SS-031 ; U23 |
+| REQ-UI-10 | Présenter caravanes, colonisation et taverne en séparant coûts, délais, capacité et verrous commerciaux éventuels | SS-040/053/057 |
+| REQ-UI-11 | Résoudre les sprites depuis un manifeste ; gérer explicitement fichier absent, rectangle débordant et variante indisponible | CODE-02-IMAGES ; adaptation PROP |
+| REQ-UI-12 | Reproduire une famille graphique cohérente, avec textes lisibles et contrôle des états aux dimensions de référence | IMG-01 ; DEC-002 ; adaptation PROP |

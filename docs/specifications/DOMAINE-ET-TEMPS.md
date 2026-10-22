@@ -126,3 +126,11 @@ Les API de carte doivent appliquer les mêmes limites de connaissance que l’in
 ## Opérations d’un monde
 
 Prévoir ouverture, sauvegarde, restauration vérifiée, suspension planifiée, reprise, clôture, export des résultats et archivage en lecture seule. Les métriques utiles sont retard de traitement des ordres, nombre d’effets rejoués, stocks négatifs empêchés, incohérences d’appartenance, rapports impossibles à reproduire et distribution des ressources. Les seuils de charge et objectifs de service seront fixés lors du dimensionnement, pas déduits d’une population historique approximative.
+
+## Compléments issus des écrans — PROP
+
+Séparer `HeroEquipment`, `HeroBackpack` et `CityArtifactInventory` : les trois conteneurs sont visibles dans SS-023, mais leurs capacités et conditions de transfert restent à établir. Une localisation d’objet est exclusive ; la pagination est une présentation, pas une règle de capacité.
+
+Un `ConvoyProgram` représente les réglages de répétition/attente de SS-053, et produit des ordres `ConvoyLeg` individuellement identifiés. Compteur de répétitions, politique de quantité, attente et règle de réservation restent versionnés ; « 4 fois » ne suffit pas à fixer leur sémantique exacte. Interrompre un programme ne supprime pas rétroactivement un trajet déjà parti.
+
+Une mission de reconnaissance porte un périmètre (`troops`, `city`, `region`) et la durée demandée ; le score affiché est issu du calcul serveur. L’état de caméra et les animations JavaScript ne participent pas à la résolution persistante. Voir [interface](INTERFACE-ET-RENDU-ISOMETRIQUE.md).

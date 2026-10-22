@@ -59,3 +59,9 @@ Avant un ordre coûteux, afficher cible, héros, armée, coût, durée, heure d�
 | Campagne finie | Clôture explicite et progression intermondes distincte | Hérédité |
 
 Le futur changement d’univers pourra remplacer noms, images et récit sans imposer un changement des formules. Les modifications de rythme, d’entretien, de monétisation ou de victoire seront enregistrées comme décisions de design du successeur, et non présentées comme une restitution du jeu original.
+
+## Périmètre et présentation confirmés — révision 0.2
+
+Le porteur du projet a confirmé le **PvP classique avec Guerre des Larmes**, une forte proximité graphique et la navigation JavaScript. Le [profil](../specifications/PROFIL-PVP-CLASSIQUE.md) remplace les propositions de mode de la v0.1.
+
+Le [corpus visuel](../research/ANALYSE-CAPTURES.md) distingue monde détaillé et monde politique éloigné, région en grille isométrique 5×5 et ville illustrée avec zones de bâtiment. Le passage d’une vue à l’autre change la composition ; la ville n’est pas un agrandissement de la grille régionale. La colonne du royaume, les ressources, héros, missions et la chronologie assurent la continuité entre ces écrans.

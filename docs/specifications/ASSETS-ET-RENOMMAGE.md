@@ -1,6 +1,6 @@
 # Références visuelles et futur changement d’univers
 
-Cette étape ne collecte ni ne publie les images du jeu. Elle prépare leur identification pour le développement envisagé et leur remplacement ultérieur, sans mêler les règles aux ressources graphiques. Les tables de données conservent les noms historiques afin de rendre les comparaisons possibles.
+La révision 0.2 analyse les images importées par l’utilisateur : 57 captures et 96 images Jactari. Les fichiers historiques restent intacts ; inventaire et correspondances sont ajoutés séparément. Cette analyse prépare leur usage de référence et leur remplacement ultérieur, sans mêler les règles aux ressources graphiques. Les tables de données conservent les noms historiques afin de rendre les comparaisons possibles.
 
 ## Familles à inventorier
 
@@ -25,8 +25,8 @@ Pour un asset de référence : origine, date de récupération, fichier source, 
 
 | Identifiant | Référence MMHK | Remplacement du successeur | Statut actuel |
 | --- | --- | --- | --- |
-| `unit.reference.000` | Gremlin, Académie T1 | À concevoir | Donnée chiffrée récupérée ; image non ajoutée |
-| `spell.reference.000` | Poing de la colère | À concevoir | Effet mécanique documenté |
+| `unit.reference.000` | Gremlin, Académie T1 | À concevoir | Donnée et sprites petite taille/bataille reliés au manifeste |
+| `spell.reference.000` | Poing de la colère | À concevoir | Effet et rectangle de sprite documentés |
 | `building.reference.001` | Conseil du village, Académie | À concevoir | Coût/prérequis récupérés |
 | `faction.reference.0` | Académie | À concevoir | Écoles et lignée documentées |
 
@@ -35,3 +35,12 @@ Les textes de récit et descriptions d’ambiance n’ont pas été copiés dans
 ## Vérification visuelle future
 
 Produire des captures de chaque vue à plusieurs tailles, avec cités débutantes et développées, siège, héros indisponible, stocks plafonnés et victoire en cours. Contrôler lisibilité des ressources, distinction des armes, visibilité des délais et navigation entre les trois échelles. Cette recette visuelle s’ajoutera à la recette mécanique ; aucune capture d’un jeu reconstruit n’est revendiquée dans le présent dossier.
+
+## Registres désormais disponibles
+
+- [Inventaire Jactari](../../data/analysis/jactari-inventory.json) : 153 fichiers avec empreintes, dont 96 images avec dimensions/formats.
+- [Inventaire captures](../../data/analysis/screenshots-inventory.json) et [observations](../../data/analysis/screenshots-observations.json) : 57 références, doublons et limites d’interprétation.
+- [Manifeste des sprites](../../data/analysis/sprite-manifest.json) : 1 317 correspondances, état de présence et bornes.
+- [Audit détaillé](../research/AUDIT-JACTARI-ASSETS.md) : formules de découpe, anciennes/nouvelles planches, placeholders absents et limite de couverture.
+
+Il manque notamment les tuiles du monde, le kit complet de région, les scènes de ville par faction, les couches de bâtiments et leurs positions interactives. Les références SS-050/051/054/055/056 documentent l’apparence des cinq villes sans fournir ces couches. La [spécification de rendu](INTERFACE-ET-RENDU-ISOMETRIQUE.md) définit leur contrat futur.

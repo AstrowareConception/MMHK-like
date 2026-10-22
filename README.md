@@ -2,13 +2,19 @@
 
 **Objectif : reconstruire le fonctionnement de Might & Magic Heroes Kingdoms avant de développer son successeur jouable par navigateur.** Le présent dépôt contient un référentiel de gameplay, des spécifications fonctionnelles, des données historiques extraites et un plan de validation. Il ne contient pas encore de jeu exécutable.
 
-Version documentaire **0.1 — 22 octobre 2026**. Recherche réalisée à partir des neuf liens fournis, de leurs archives accessibles, de guides communautaires et du code public de MMHK-Plus/Jactari. Les mécanismes retrouvés sont distingués des hypothèses et des propositions de reconstruction. **Ce dossier n’est pas une copie certifiée du serveur Ubisoft : plusieurs règles ont changé selon les saisons et certaines informations manquent.**
+Version documentaire **0.2 — 22 octobre 2026**. Recherche réalisée à partir des neuf liens fournis, de leurs archives accessibles, de guides communautaires et du code public de MMHK-Plus/Jactari. Les mécanismes retrouvés sont distingués des hypothèses et des propositions de reconstruction. **Ce dossier n’est pas une copie certifiée du serveur Ubisoft : plusieurs règles ont changé selon les saisons et certaines informations manquent.**
+
+La révision 0.2 intègre **57 captures (53 distinctes)** et les **153 fichiers Jactari, dont 96 images**, fournis dans le dépôt. Elle confirme le périmètre **PvP classique avec Guerre des Larmes**, détaille les interfaces et relie les objets aux planches graphiques. Les décors complets de monde/région/ville restent à retrouver ou reconstruire.
 
 ## Lire le dossier
 
 | Besoin | Document |
 | --- | --- |
 | Comprendre le jeu dans son ensemble | [Game design : vision, boucles et interfaces](docs/game-design/01-VISION-ET-BOUCLES.md) |
+| Lire l’analyse image par image | [Analyse des 57 captures](docs/research/ANALYSE-CAPTURES.md) |
+| Identifier les assets utilisables et manquants | [Audit Jactari et 1 317 correspondances de sprites](docs/research/AUDIT-JACTARI-ASSETS.md) |
+| Reproduire le rendu et la navigation | [Interface et rendu isométrique](docs/specifications/INTERFACE-ET-RENDU-ISOMETRIQUE.md) |
+| Retrouver le périmètre confirmé | [Profil PvP classique et décisions](docs/specifications/PROFIL-PVP-CLASSIQUE.md) |
 | Choisir une version cohérente | [Saisons et profils de règles](docs/research/VERSIONS.md) |
 | Développer villes, mines et économie | [Économie, villes, régions](docs/game-design/02-MONDE-VILLES-ECONOMIE.md) |
 | Comprendre les héros, armées et sorts | [Héros et progression militaire](docs/game-design/03-HEROS-ARMEES-MAGIE.md) |
@@ -37,9 +43,9 @@ Consulter les [unités](docs/game-design/CATALOGUE-UNITES.md), [bâtiments](docs
 
 ## Convention essentielle
 
-`OBS-CODE` = observé dans un outil communautaire ; `DOC` = décrit par une source ; `COR` = corroboré ; `HYP` = hypothèse ; `PROP` = proposition pour le nouveau jeu ; `INCONNU` = non retrouvé. Un chiffre sans version ni source ne devient pas une règle historique.
+`OBS-IMAGE` = visible dans une capture ; `DECISION-USER` = choix confirmé du projet ; `OBS-CODE` = observé dans un outil communautaire ; `DOC` = décrit par une source ; `COR` = corroboré ; `HYP` = hypothèse ; `PROP` = proposition pour le nouveau jeu ; `INCONNU` = non retrouvé. Un chiffre sans version ni source ne devient pas une règle historique.
 
-Le point de départ recommandé est le **PvP classique à alliances et Guerre des Larmes**, avec les trois vues monde/région/ville, puis les variantes ultérieures séparées. C’est une proposition de périmètre, pas une décision déjà prise sur la saison cible. Aucun assemblage « saison 2 + entretien tardif + victoire saison 4 » n’est présenté comme authentique.
+Le périmètre **confirmé par l’utilisateur** est le **PvP classique à alliances et Guerre des Larmes**, avec les vues monde/région/ville et une forte fidélité visuelle. La saison exacte des tables reste à qualifier ; tournoi S4, Arkath et défis solo sont archivés hors du socle. Aucun assemblage « saison 2 + entretien tardif + victoire saison 4 » n’est présenté comme authentique.
 
 ## Reproduire et contrôler
 
@@ -54,4 +60,14 @@ Pour une extraction hors ligne, remplacer `--download` par `--input` et fournir 
 
 ## Attribution et ressources graphiques
 
-Les tables dérivées et leur extracteur conservent la licence **GPL-3.0-or-later** et les attributions Jactari, Aspirin et Aendawyn ; voir [NOTICE](data/reference/NOTICE.md). Aucune licence globale n’est imposée au reste du projet. Aucun asset graphique Ubisoft n’est ajouté dans cette étape documentaire. Le [plan d’assets](docs/specifications/ASSETS-ET-RENOMMAGE.md) prépare les références historiques de développement et leur remplacement par un univers distinct.
+Les tables dérivées et leur extracteur conservent la licence **GPL-3.0-or-later** et les attributions Jactari, Aspirin et Aendawyn ; voir [NOTICE](data/reference/NOTICE.md). Aucune licence globale n’est imposée au reste du projet. Les ressources graphiques importées par l’utilisateur sont maintenant inventoriées dans `data/analysis` ; les fichiers historiques de `data/Jactari` et `data/Screenshots` sont conservés sans modification. Le [plan d’assets](docs/specifications/ASSETS-ET-RENOMMAGE.md) prépare les références historiques de développement et leur remplacement par un univers distinct.
+
+## Contrôler la révision visuelle
+
+```bash
+python3 tools/audit-visual-resources.py
+node tools/extract-sprite-manifest.mjs
+python3 tools/validate.py
+```
+
+L’audit d’images nécessite Pillow. Ces commandes contrôlent les fichiers, empreintes, rectangles de sprites et liens documentaires ; elles ne testent pas un client de jeu. Voir le [rapport de validation](docs/research/VALIDATION.md).

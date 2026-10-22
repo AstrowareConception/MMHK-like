@@ -8,7 +8,7 @@ Le dépôt contient une première rétroconception large, un corpus de données 
 
 | Étape | Livrable concret | Condition de passage |
 | --- | --- | --- |
-| 1. Verrouiller la référence | Fiche de monde : saison, pays, mode, trêve, services et catalogues | U01/U02 résolues ou réglages de test explicitement acceptés |
+| 1. Qualifier la référence classique | Mode/Guerre des Larmes confirmés ; préciser saison, pays, trêve, services et catalogues | Partie mode de U01 résolue ; valeurs et U02 encore à qualifier |
 | 2. Constituer les preuves de combat | Rapports historiques structurés, comparaison avec Jactari | Cas simples puis magie/pertes/égalités expliqués sans écart silencieux |
 | 3. Construire le noyau de calcul | Référentiels normalisés, simulateur déterministe sans interface riche | Cas de recette et rapports réels reproduits ; anomalies isolées par version |
 | 4. Construire la boucle locale | Ville, région, mines, bâtiments, héros, recrutement, PvE et trois vues minimales | Partie locale complète avec progression hors connexion et ressources cohérentes |
@@ -32,7 +32,7 @@ La version qualifiée de « campagne classique reconstruite » devra ensuite inc
 2. Calculateurs TotG d’entretien et de siège, annoncés dans les archives mais non récupérés lors de cette recherche.
 3. Captures des files de construction/recrutement et formulaires de colonisation.
 4. Journal de fin de monde classique montrant obtention, perte et maintien des monuments.
-5. Vidéos ou captures datées des trois vues pour documenter commandes et informations réellement visibles.
+5. Compléter les 57 captures analysées par des séquences avant/clic/résultat, des écrans alliance/Guerre des Larmes et les décors séparés manquants.
 
 Ces travaux peuvent compléter ce dépôt progressivement. Ils ne nécessitent pas de refaire l’extraction du corpus déjà épinglé.
 
@@ -45,3 +45,9 @@ Chaque décision reçoit identifiant, date, problème, options, preuve, choix, v
 Une règle est « documentée » si source et version sont identifiées ; « implémentée » si le comportement existe ; « vérifiée » si un cas concret en confirme l’issue ; « fidèle » si une preuve historique adaptée confirme aussi ce comportement. Ces quatre états ne sont pas synonymes.
 
 Le suivi doit mesurer les mécanismes couverts, les incertitudes P0 restantes, les rapports historiques reproduits et les scénarios de campagne terminés. Le nombre de lignes de code ou le nombre d’images réutilisées ne constitue pas une mesure de fidélité.
+
+## Avancement après les nouveaux imports
+
+Le mode cible est confirmé, les 57 captures sont classées et les ressources graphiques Jactari inventoriées. Les trois carrières, coûts de points et inventaires de héros sont mieux documentés. Les contrats d’interface et de rendu sont désormais disponibles ; cela ne signifie pas que le client soit implémenté.
+
+Prochain travail concret : construire une tranche verticale de présentation à partir du [gabarit](INTERFACE-ET-RENDU-ISOMETRIQUE.md), avec monde détaillé/politique, région, scène de ville, colonne du royaume et une modale de héros/combat ; brancher les sprites validés et signaler les décors de remplacement. En parallèle documentaire, les plus forts manques du profil sont les écrans de Guerre des Larmes, les formules de déplacement et les rapports de combat complets. L’implémentation du moteur et les jalons militaires suivent le plan existant.

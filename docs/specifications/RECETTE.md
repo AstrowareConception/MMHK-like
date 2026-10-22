@@ -81,3 +81,29 @@ Un résultat avec équipement inconnu n’est pas un oracle exact. Il reste util
 | Fidèle au profil | Résultats comparés à des preuves historiques contextualisées |
 
 La présente livraison atteint le niveau documentaire avec vérification de ses fichiers et de certaines arithmétiques de référence. Elle n’atteint pas les trois niveaux d’exécution du jeu.
+
+## Compléments de recette issus des captures et de Jactari — v0.2
+
+Ces scénarios sont **spécifiés, non exécutés sur un jeu**. Les contrôles d’empreintes, d’inventaire et de rectangles sont exécutés séparément par les outils de documentation. T43 et T44 concernent les variantes archivées, hors acceptation du profil classique.
+
+| Cas | Exigences | Situation et résultat à vérifier | Référence |
+| --- | --- | --- | --- |
+| T53 | REQ-UI-01 | À 1 005×680, changer de vue et ouvrir une modale conserve le panneau droit et la chronologie ; aucun recouvrement des stocks | SS-033 ; gabarit |
+| T54 | REQ-UI-02 | Monde détaillé → politique → région → ville → retour : entités et caméra reviennent au contexte prévu ; aucune mission créée par navigation | SS-033/034/045/054 ; PROP |
+| T55 | REQ-UI-03 | À plusieurs positions de caméra, sélectionner les 25 cases, leurs arêtes et une case masquée par un arbre ; ne jamais sélectionner le décor extérieur | SS-045 ; projection PROP |
+| T56 | REQ-UI-04 | Vérifier les cinq factions, cité débutante/développée, bâtiment absent/en chantier/amélioré ; le niveau 31 ne devient pas un zoom 31 | SS-050/051/052/054/055/056 |
+| T57 | REQ-UI-05, REQ-TIME-01 | Suspendre l’onglet puis revenir après arrivée ; mission conforme au serveur, compte à rebours resynchronisé, aucun combat résolu par animation | PROP ; SS-033 |
+| T58 | REQ-UI-06 | Sept pelotons, puissance brute et bonus distincts, un ou deux sorts selon talent ; annuler ne débite rien ; double engagement ne crée qu’un ordre | SS-016/018 ; contrat |
+| T59 | REQ-UI-07 | Rapport de plusieurs tours avec magie et déroute ; défilement interne, résultat et pertes cohérents, pas de données secrètes supplémentaires | SS-017 |
+| T60 | REQ-UI-08 | Équipement/sac/cité distincts ; changement de page conserve la sélection et l’identité ; info-bulle du bon objet et emplacement | SS-023 |
+| T61 | REQ-UI-09 | Changer troupes/ville/région et durée met à jour l’estimation du profil ; cible sans renseignement reste inconnue | SS-031 ; formule U23 |
+| T62 | REQ-UI-10 | Coût, délai de mission, délai de renouvellement et verrou de service sont affichés séparément ; aucun prix de la bêta x200 appliqué implicitement | SS-040/053/057 |
+| T63 | REQ-UI-11 | Vérifier toutes les lignées ordinaires, les sorts et les états ; placeholder absent et pixel manquant produisent un affichage explicite, pas une autre unité | Audit des sprites |
+| T64 | REQ-UI-12 | Comparer famille v1.5, états sélectionnés et cinq scènes ; vérifier densité, sprites natifs, lisibilité et comportement à largeur réduite | DEC-002/004 ; adaptation PROP |
+| T65 | REQ-HERO-03 | Héros 18 sans bonus : trois carrières coûtent 3 points, il reste 15 ; les rangs de talent coûtent cumulativement 1/3/6 | CODE-02-HEROS |
+| T66 | REQ-HERO-03 | Deux carrières magiques partageant Scribe/Arcanes ne paient pas deux fois le même rang ; désactivation conserve un budget cohérent | CODE-02-HEROS |
+| T67 | REQ-HERO-03 | Refuser une quatrième carrière, un doublon, une école de faction interdite ou une carrière magique à un guerrier ; −2 points par réorientation dans le profil de référence outil | CODE-02-HEROS ; qualification saison requise |
+| T68 | REQ-HERO-04 | Renouveler les offres ne recrute pas un héros ; coût et minuterie indépendants ; empêcher l’achat concurrent d’une offre remplacée | SS-057 ; concurrence PROP |
+| T69 | REQ-EQUIP-02 | Transfert entre les trois conteneurs interrompu/rejoué : une localisation finale et un seul objet ; conditions de distance selon profil | SS-023 ; PROP |
+| T70 | REQ-CONVOY-02 | Programme répété, puis stock insuffisant ou destination conquise : appliquer la politique nommée sans duplication ; compteur de répétitions conforme au profil explicite | SS-053 ; politique U28 |
+| T71 | REQ-PROFILE-01 | Un monde classique refuse les commandes de tournoi/Arkath et n’affiche pas une offre ou un talent tardif sans qualification de contenu | DEC-001 ; PROP |

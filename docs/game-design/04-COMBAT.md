@@ -123,3 +123,9 @@ Le modificateur d’honneur brut d’un camp est `(puissance_adverse − puissan
 | Catalogue et calculateur de périodes différentes | Combinaisons non historiques | Versionner toutes les entrées du rapport |
 
 La future qualification « combat fidèle » exigera un corpus de rapports authentiques couvrant ces branches. Les [cas de référence](../../data/combat-reference-cases.json) ne sont que des résultats calculés d’après les formules, explicitement identifiés comme tels.
+
+## Preuves visuelles ajoutées
+
+SS-016 et SS-018 montrent la **préparation** : sept lignes, organisation des pelotons, contributions de puissance, rapports d’espionnage et tours de magie programmés. SS-017 montre la **lecture d’un rapport dans le courrier**, avec sorts, duels, bonus de contre-arme, effectifs et pertes. Ce corpus confirme la distinction entre préparer et lire un résultat automatique ; il ne démontre aucun contrôle tactique en direct.
+
+Le rapport est tronqué et les bonus complets des héros manquent. Il ne rejoint donc pas les oracles chiffrés complets recherchés. La mention « 5 min (0 halte) » dans SS-018 décrit la durée affichée de l’action, pas cinq minutes par tour de résolution. [IMG-01 ; analyse dans `docs/research/ANALYSE-CAPTURES.md`]
