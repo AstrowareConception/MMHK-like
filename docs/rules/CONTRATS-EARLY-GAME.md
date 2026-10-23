@@ -1,5 +1,7 @@
 # Contrats métier détaillés — early game
 
+**Mise à jour :** cette version initiale des contrats est complétée et, en cas de divergence sur la politique du futur jeu, **supplantée par les [84 décisions P0](../decisions/DECISIONS-P0-2026-10-23.md) et le [profil S2](../../data/rules/mmhk-like-s2-policy-draft.json)**. Une inconnue historique mentionnée ici peut désormais avoir une règle **décidée pour MMHK-like** sans preuve que le serveur d'Ubisoft utilisait la même. Le [référentiel des 90 RM](../../data/rules/early-game.rules.json) contient les correspondances et éventuels `project_contract_override`.
+
 **Portée : règles RM-WRD, RM-REG, RM-ECO, RM-CIT, RM-HER, RM-ARM, RM-COM, RM-TIM.** Ces contrats traduisent des preuves et des propositions ; lorsqu'une règle historique ne peut pas être vérifiée, le comportement du futur jeu est annoté *PROP*, jamais attribué implicitement à Ubisoft.
 
 ## 1. Entrer dans un monde et obtenir un royaume
