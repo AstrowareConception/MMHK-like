@@ -1,5 +1,7 @@
 # Incertitudes, contradictions et preuves manquantes
 
+**Les [84 décisions P0](../decisions/DECISIONS-P0-2026-10-23.md) définissent désormais de nombreuses règles de MMHK-like, mais ce registre reste la référence pour ce qui n'est **pas prouvé historiquement** sur le serveur Ubisoft S2. Ne pas supprimer U03/U05/U06/U20/U47 sous prétexte que le projet a choisi une variante.**
+
 Ce registre sépare **information absente**, **sources contradictoires**, **anomalie d’outil** et **choix du successeur**. Une case inconnue ne prend pas une valeur de zéro par défaut. Les propositions techniques n’effacent pas les incertitudes historiques.
 
 Priorités : **P0** bloque la fidélité du socle ; **P1** bloque un module ou une campagne complète ; **P2** complète le contenu ou l’exploitation. La priorité n’oblige pas à bloquer toute recherche : les autres modules peuvent avancer.
