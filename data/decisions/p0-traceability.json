@@ -1,0 +1,1626 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-23",
+  "sources": [
+    "data/decisions/p0-2026-10-23.json",
+    "data/rules/early-game.rules.json",
+    "data/rules/mmhk-like-s2-policy-draft.json"
+  ],
+  "warning": "Linking RM/US does not close historical Uxx or mark a story as ready.",
+  "counts": {
+    "user_questions": 84,
+    "registered_rules": 90,
+    "linked_questions": 84,
+    "new_rules_since_initial_60": 30,
+    "resolved_p0_assessment": "project decisions captured but historic formulas still unverified"
+  },
+  "mappings": [
+    {
+      "question_id": "Q01",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-WRD-001",
+        "RM-CIT-001",
+        "RM-WRD-009"
+      ],
+      "us": [
+        "US-ACC-001",
+        "US-ACC-003",
+        "US-CIT-002",
+        "US-CIT-003",
+        "US-HER-001"
+      ],
+      "uncertainties": [
+        "U01",
+        "U02",
+        "U35"
+      ]
+    },
+    {
+      "question_id": "Q02",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-WRD-001",
+        "RM-CIT-001"
+      ],
+      "us": [
+        "US-ACC-001",
+        "US-CIT-002",
+        "US-CIT-003"
+      ],
+      "uncertainties": [
+        "U01",
+        "U02"
+      ]
+    },
+    {
+      "question_id": "Q03",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-WRD-001"
+      ],
+      "us": [
+        "US-ACC-001"
+      ],
+      "uncertainties": [
+        "U01",
+        "U02"
+      ]
+    },
+    {
+      "question_id": "Q04",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-WRD-001",
+        "RM-WRD-003"
+      ],
+      "us": [
+        "US-ACC-001",
+        "US-ACC-002",
+        "US-ACC-003"
+      ],
+      "uncertainties": [
+        "U01",
+        "U02"
+      ]
+    },
+    {
+      "question_id": "Q05",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-WRD-001",
+        "RM-WRD-003",
+        "RM-ARM-002"
+      ],
+      "us": [
+        "US-ACC-001",
+        "US-ACC-002",
+        "US-ACC-003",
+        "US-ARM-002",
+        "US-ARM-005"
+      ],
+      "uncertainties": [
+        "U01",
+        "U02",
+        "U06"
+      ]
+    },
+    {
+      "question_id": "Q06",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-WRD-001",
+        "RM-TIM-001",
+        "RM-TIM-005"
+      ],
+      "us": [
+        "US-ACC-001",
+        "US-CIT-005",
+        "US-CIT-006",
+        "US-COM-002",
+        "US-ECO-003",
+        "US-MOV-004"
+      ],
+      "uncertainties": [
+        "U01",
+        "U02",
+        "U03",
+        "U10",
+        "U14"
+      ]
+    },
+    {
+      "question_id": "Q07",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-WRD-002",
+        "RM-WRD-010"
+      ],
+      "us": [
+        "US-ACC-001",
+        "US-ACC-003",
+        "US-MON-001"
+      ],
+      "uncertainties": [
+        "U09",
+        "U16",
+        "U17",
+        "U47"
+      ]
+    },
+    {
+      "question_id": "Q08",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-WRD-010"
+      ],
+      "us": [
+        "US-ACC-001",
+        "US-MON-001"
+      ],
+      "uncertainties": [
+        "U09",
+        "U17"
+      ]
+    },
+    {
+      "question_id": "Q09",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-WRD-004",
+        "RM-WRD-010"
+      ],
+      "us": [
+        "US-ACC-001",
+        "US-ACC-003",
+        "US-MON-001",
+        "US-MON-006"
+      ],
+      "uncertainties": [
+        "U09",
+        "U17",
+        "U47"
+      ]
+    },
+    {
+      "question_id": "Q10",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-WRD-014"
+      ],
+      "us": [
+        "US-MON-006",
+        "US-MON-007"
+      ],
+      "uncertainties": [
+        "U15",
+        "U16"
+      ]
+    },
+    {
+      "question_id": "Q11",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-WRD-007",
+        "RM-REG-001",
+        "RM-REG-002",
+        "RM-REG-003",
+        "RM-REG-009"
+      ],
+      "us": [
+        "US-ACC-004",
+        "US-ECO-001",
+        "US-REG-001",
+        "US-REG-002"
+      ],
+      "uncertainties": [
+        "U01",
+        "U02",
+        "U17",
+        "U24"
+      ]
+    },
+    {
+      "question_id": "Q12",
+      "decision_status": "delegated_to_research_or_design",
+      "rule_ids": [
+        "RM-REG-002",
+        "RM-REG-004",
+        "RM-REG-005",
+        "RM-REG-009"
+      ],
+      "us": [
+        "US-ACC-003",
+        "US-ACC-004",
+        "US-REG-001",
+        "US-REG-002"
+      ],
+      "uncertainties": [
+        "U17"
+      ]
+    },
+    {
+      "question_id": "Q13",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-REG-002",
+        "RM-REG-004",
+        "RM-REG-009"
+      ],
+      "us": [
+        "US-ACC-003",
+        "US-ACC-004",
+        "US-REG-001",
+        "US-REG-002"
+      ],
+      "uncertainties": [
+        "U17"
+      ]
+    },
+    {
+      "question_id": "Q14",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-REG-003",
+        "RM-REG-004",
+        "RM-REG-009"
+      ],
+      "us": [
+        "US-ACC-003",
+        "US-ACC-004",
+        "US-ECO-001",
+        "US-REG-001"
+      ],
+      "uncertainties": [
+        "U17"
+      ]
+    },
+    {
+      "question_id": "Q15",
+      "decision_status": "delegated_to_research_or_design",
+      "rule_ids": [
+        "RM-REG-001",
+        "RM-REG-005",
+        "RM-REG-009"
+      ],
+      "us": [
+        "US-ACC-003",
+        "US-ACC-004",
+        "US-REG-001"
+      ],
+      "uncertainties": [
+        "U17"
+      ]
+    },
+    {
+      "question_id": "Q16",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-REG-006",
+        "RM-REG-010"
+      ],
+      "us": [
+        "US-REG-002",
+        "US-REG-003"
+      ],
+      "uncertainties": [
+        "U13",
+        "U17",
+        "U39"
+      ]
+    },
+    {
+      "question_id": "Q17",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-REG-006",
+        "RM-REG-010"
+      ],
+      "us": [
+        "US-REG-002",
+        "US-REG-003"
+      ],
+      "uncertainties": [
+        "U13",
+        "U17",
+        "U39"
+      ]
+    },
+    {
+      "question_id": "Q18",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-REG-005",
+        "RM-REG-008",
+        "RM-REG-011"
+      ],
+      "us": [
+        "US-ACC-003",
+        "US-MON-001",
+        "US-REG-001",
+        "US-REL-001"
+      ],
+      "uncertainties": [
+        "U17",
+        "U33"
+      ]
+    },
+    {
+      "question_id": "Q19",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-WRD-002",
+        "RM-WRD-004",
+        "RM-WRD-011"
+      ],
+      "us": [
+        "US-ACC-003",
+        "US-MON-006"
+      ],
+      "uncertainties": [
+        "U16",
+        "U17",
+        "U47"
+      ]
+    },
+    {
+      "question_id": "Q20",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-WRD-005",
+        "RM-WRD-011"
+      ],
+      "us": [
+        "US-ACC-003"
+      ],
+      "uncertainties": [
+        "U47"
+      ]
+    },
+    {
+      "question_id": "Q21",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-WRD-005",
+        "RM-WRD-011"
+      ],
+      "us": [
+        "US-ACC-003"
+      ],
+      "uncertainties": [
+        "U47"
+      ]
+    },
+    {
+      "question_id": "Q22",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-WRD-005",
+        "RM-WRD-011"
+      ],
+      "us": [
+        "US-ACC-003"
+      ],
+      "uncertainties": [
+        "U47"
+      ]
+    },
+    {
+      "question_id": "Q23",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-WRD-006",
+        "RM-WRD-012"
+      ],
+      "us": [
+        "US-ACC-011",
+        "US-MON-007",
+        "US-PVP-004"
+      ],
+      "uncertainties": [
+        "U20"
+      ]
+    },
+    {
+      "question_id": "Q24",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-WRD-006",
+        "RM-WRD-012"
+      ],
+      "us": [
+        "US-ACC-011",
+        "US-MON-007",
+        "US-PVP-004"
+      ],
+      "uncertainties": [
+        "U20"
+      ]
+    },
+    {
+      "question_id": "Q25",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-WRD-006",
+        "RM-WRD-012"
+      ],
+      "us": [
+        "US-ACC-011",
+        "US-MON-007",
+        "US-PVP-004"
+      ],
+      "uncertainties": [
+        "U20"
+      ]
+    },
+    {
+      "question_id": "Q26",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-WRD-006",
+        "RM-WRD-012"
+      ],
+      "us": [
+        "US-ACC-011",
+        "US-MON-007",
+        "US-PVP-004"
+      ],
+      "uncertainties": [
+        "U20"
+      ]
+    },
+    {
+      "question_id": "Q27",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-WRD-007",
+        "RM-WRD-013"
+      ],
+      "us": [
+        "US-ACC-004",
+        "US-ACC-006",
+        "US-ACC-010"
+      ],
+      "uncertainties": [
+        "U01",
+        "U02",
+        "U17",
+        "U24",
+        "U38"
+      ]
+    },
+    {
+      "question_id": "Q28",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-WRD-007",
+        "RM-WRD-013"
+      ],
+      "us": [
+        "US-ACC-004",
+        "US-ACC-006",
+        "US-ACC-010"
+      ],
+      "uncertainties": [
+        "U01",
+        "U02",
+        "U17",
+        "U24",
+        "U38"
+      ]
+    },
+    {
+      "question_id": "Q29",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-WRD-007",
+        "RM-HER-003",
+        "RM-HER-004",
+        "RM-WRD-009",
+        "RM-WRD-013",
+        "RM-HER-007"
+      ],
+      "us": [
+        "US-ACC-003",
+        "US-ACC-004",
+        "US-ACC-006",
+        "US-ACC-010",
+        "US-HER-001",
+        "US-HER-002",
+        "US-HER-003"
+      ],
+      "uncertainties": [
+        "U01",
+        "U02",
+        "U17",
+        "U24",
+        "U25",
+        "U35",
+        "U38"
+      ]
+    },
+    {
+      "question_id": "Q30",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-WRD-007",
+        "RM-ARM-002",
+        "RM-WRD-013"
+      ],
+      "us": [
+        "US-ACC-004",
+        "US-ACC-006",
+        "US-ACC-010",
+        "US-ARM-002",
+        "US-ARM-005"
+      ],
+      "uncertainties": [
+        "U01",
+        "U02",
+        "U06",
+        "U17",
+        "U24",
+        "U38"
+      ]
+    },
+    {
+      "question_id": "Q31",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-WRD-013"
+      ],
+      "us": [
+        "US-ACC-004",
+        "US-ACC-006",
+        "US-ACC-010"
+      ],
+      "uncertainties": [
+        "U24",
+        "U38"
+      ]
+    },
+    {
+      "question_id": "Q32",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-ECO-002",
+        "RM-ECO-003",
+        "RM-ECO-011",
+        "RM-ECO-012"
+      ],
+      "us": [
+        "US-ECO-001",
+        "US-ECO-002",
+        "US-ECO-003",
+        "US-ECO-012"
+      ],
+      "uncertainties": [
+        "U03",
+        "U04",
+        "U30"
+      ]
+    },
+    {
+      "question_id": "Q33",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-ECO-002",
+        "RM-ECO-012"
+      ],
+      "us": [
+        "US-ECO-002",
+        "US-ECO-003"
+      ],
+      "uncertainties": [
+        "U03",
+        "U04"
+      ]
+    },
+    {
+      "question_id": "Q34",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-ECO-003",
+        "RM-ECO-012"
+      ],
+      "us": [
+        "US-ECO-002",
+        "US-ECO-003"
+      ],
+      "uncertainties": [
+        "U03",
+        "U04"
+      ]
+    },
+    {
+      "question_id": "Q35",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-ECO-001",
+        "RM-ECO-004",
+        "RM-ECO-006",
+        "RM-ECO-013"
+      ],
+      "us": [
+        "US-ECH-012",
+        "US-ECO-001",
+        "US-ECO-004",
+        "US-ECO-006",
+        "US-ECO-010"
+      ],
+      "uncertainties": [
+        "U04",
+        "U28",
+        "U30"
+      ]
+    },
+    {
+      "question_id": "Q36",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-ECO-001",
+        "RM-ECO-004",
+        "RM-ECO-013"
+      ],
+      "us": [
+        "US-ECH-012",
+        "US-ECO-001",
+        "US-ECO-004",
+        "US-ECO-006",
+        "US-ECO-010"
+      ],
+      "uncertainties": [
+        "U04",
+        "U28",
+        "U30"
+      ]
+    },
+    {
+      "question_id": "Q37",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-ECO-001",
+        "RM-ECO-002",
+        "RM-ECO-004",
+        "RM-ECO-013"
+      ],
+      "us": [
+        "US-ECH-012",
+        "US-ECO-001",
+        "US-ECO-003",
+        "US-ECO-004",
+        "US-ECO-006",
+        "US-ECO-010"
+      ],
+      "uncertainties": [
+        "U03",
+        "U04",
+        "U28",
+        "U30"
+      ]
+    },
+    {
+      "question_id": "Q38",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-ECO-004",
+        "RM-ECO-011",
+        "RM-ECO-014"
+      ],
+      "us": [
+        "US-ACC-010",
+        "US-ECO-001",
+        "US-ECO-004",
+        "US-ECO-010",
+        "US-ECO-012"
+      ],
+      "uncertainties": [
+        "U04",
+        "U30",
+        "U38"
+      ]
+    },
+    {
+      "question_id": "Q39",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-REG-007",
+        "RM-ECO-003",
+        "RM-ECO-008",
+        "RM-ECO-009",
+        "RM-ECO-015"
+      ],
+      "us": [
+        "US-ECO-002",
+        "US-ECO-003",
+        "US-REG-003",
+        "US-REG-004",
+        "US-REG-005",
+        "US-REG-006",
+        "US-REG-009"
+      ],
+      "uncertainties": [
+        "U03",
+        "U04",
+        "U17"
+      ]
+    },
+    {
+      "question_id": "Q40",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-ECO-008",
+        "RM-CIT-001",
+        "RM-ECO-015"
+      ],
+      "us": [
+        "US-CIT-002",
+        "US-CIT-003",
+        "US-ECO-002",
+        "US-REG-004",
+        "US-REG-005",
+        "US-REG-006",
+        "US-REG-009"
+      ],
+      "uncertainties": [
+        "U02",
+        "U03",
+        "U04",
+        "U17"
+      ]
+    },
+    {
+      "question_id": "Q41",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-ECO-010",
+        "RM-ECO-016"
+      ],
+      "us": [
+        "US-ECO-007",
+        "US-ECO-008",
+        "US-ECO-009"
+      ],
+      "uncertainties": [
+        "U07",
+        "U08"
+      ]
+    },
+    {
+      "question_id": "Q42",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-ECO-010",
+        "RM-ECO-016"
+      ],
+      "us": [
+        "US-ECO-007",
+        "US-ECO-008",
+        "US-ECO-009"
+      ],
+      "uncertainties": [
+        "U07",
+        "U08"
+      ]
+    },
+    {
+      "question_id": "Q43",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-ECO-010",
+        "RM-ECO-016"
+      ],
+      "us": [
+        "US-ECO-007",
+        "US-ECO-008",
+        "US-ECO-009"
+      ],
+      "uncertainties": [
+        "U07",
+        "U08"
+      ]
+    },
+    {
+      "question_id": "Q44",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-CIT-002",
+        "RM-CIT-003",
+        "RM-CIT-004",
+        "RM-CIT-009"
+      ],
+      "us": [
+        "US-CIT-003",
+        "US-CIT-004",
+        "US-CIT-005",
+        "US-HER-003",
+        "US-REG-008"
+      ],
+      "uncertainties": [
+        "U02",
+        "U05"
+      ]
+    },
+    {
+      "question_id": "Q45",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-CIT-003",
+        "RM-CIT-004",
+        "RM-CIT-009"
+      ],
+      "us": [
+        "US-CIT-004",
+        "US-CIT-005",
+        "US-HER-003",
+        "US-REG-008"
+      ],
+      "uncertainties": [
+        "U05"
+      ]
+    },
+    {
+      "question_id": "Q46",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-CIT-004",
+        "RM-HER-002",
+        "RM-CIT-009"
+      ],
+      "us": [
+        "US-ARM-009",
+        "US-CIT-004",
+        "US-CIT-005",
+        "US-HER-003",
+        "US-REG-008"
+      ],
+      "uncertainties": [
+        "U05",
+        "U09"
+      ]
+    },
+    {
+      "question_id": "Q47",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-ECO-005",
+        "RM-ECO-006",
+        "RM-CIT-003",
+        "RM-CIT-007",
+        "RM-CIT-010"
+      ],
+      "us": [
+        "US-CIT-004",
+        "US-CIT-005",
+        "US-CIT-007",
+        "US-ECO-005",
+        "US-ECO-006"
+      ],
+      "uncertainties": [
+        "U05",
+        "U14",
+        "U19",
+        "U28",
+        "U30"
+      ]
+    },
+    {
+      "question_id": "Q48",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-CIT-007",
+        "RM-CIT-010"
+      ],
+      "us": [
+        "US-CIT-004",
+        "US-CIT-005",
+        "US-CIT-007"
+      ],
+      "uncertainties": [
+        "U05",
+        "U19"
+      ]
+    },
+    {
+      "question_id": "Q49",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-CIT-010"
+      ],
+      "us": [
+        "US-CIT-004",
+        "US-CIT-005",
+        "US-CIT-007"
+      ],
+      "uncertainties": [
+        "U05"
+      ]
+    },
+    {
+      "question_id": "Q50",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-CIT-002",
+        "RM-CIT-006",
+        "RM-CIT-011"
+      ],
+      "us": [
+        "US-CIT-003",
+        "US-CIT-004",
+        "US-CIT-006",
+        "US-CIT-007",
+        "US-CIT-008"
+      ],
+      "uncertainties": [
+        "U02",
+        "U05"
+      ]
+    },
+    {
+      "question_id": "Q51",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-ECO-007",
+        "RM-CIT-005",
+        "RM-CIT-006",
+        "RM-CIT-011"
+      ],
+      "us": [
+        "US-CIT-006",
+        "US-CIT-007",
+        "US-CIT-008",
+        "US-ECO-002"
+      ],
+      "uncertainties": [
+        "U02",
+        "U03",
+        "U05",
+        "U19"
+      ]
+    },
+    {
+      "question_id": "Q52",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-CIT-005",
+        "RM-CIT-008",
+        "RM-CIT-012"
+      ],
+      "us": [
+        "US-CIT-004",
+        "US-CIT-006",
+        "US-SIE-007"
+      ],
+      "uncertainties": [
+        "U05",
+        "U14",
+        "U19",
+        "U21"
+      ]
+    },
+    {
+      "question_id": "Q53",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-CIT-008",
+        "RM-CIT-012"
+      ],
+      "us": [
+        "US-CIT-004",
+        "US-CIT-006",
+        "US-SIE-007"
+      ],
+      "uncertainties": [
+        "U14",
+        "U19",
+        "U21"
+      ]
+    },
+    {
+      "question_id": "Q54",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-HER-003",
+        "RM-HER-007"
+      ],
+      "us": [
+        "US-HER-002",
+        "US-HER-003"
+      ],
+      "uncertainties": [
+        "U24",
+        "U25"
+      ]
+    },
+    {
+      "question_id": "Q55",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-HER-003",
+        "RM-HER-007"
+      ],
+      "us": [
+        "US-HER-002",
+        "US-HER-003"
+      ],
+      "uncertainties": [
+        "U24",
+        "U25"
+      ]
+    },
+    {
+      "question_id": "Q56",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-HER-003",
+        "RM-HER-007"
+      ],
+      "us": [
+        "US-HER-002",
+        "US-HER-003"
+      ],
+      "uncertainties": [
+        "U24",
+        "U25"
+      ]
+    },
+    {
+      "question_id": "Q57",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-HER-001",
+        "RM-HER-007"
+      ],
+      "us": [
+        "US-HER-001",
+        "US-HER-002",
+        "US-HER-003"
+      ],
+      "uncertainties": [
+        "U24",
+        "U25"
+      ]
+    },
+    {
+      "question_id": "Q58",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-HER-001",
+        "RM-HER-005",
+        "RM-HER-008"
+      ],
+      "us": [
+        "US-HER-001",
+        "US-HER-002",
+        "US-HER-009",
+        "US-HER-011"
+      ],
+      "uncertainties": [
+        "U25"
+      ]
+    },
+    {
+      "question_id": "Q59",
+      "decision_status": "delegated_to_research_or_design",
+      "rule_ids": [
+        "RM-HER-005",
+        "RM-HER-008"
+      ],
+      "us": [
+        "US-HER-009",
+        "US-HER-011"
+      ],
+      "uncertainties": [
+        "U25"
+      ]
+    },
+    {
+      "question_id": "Q60",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-HER-002",
+        "RM-HER-008"
+      ],
+      "us": [
+        "US-ARM-009",
+        "US-HER-003",
+        "US-HER-009",
+        "US-HER-011"
+      ],
+      "uncertainties": [
+        "U05",
+        "U09",
+        "U25"
+      ]
+    },
+    {
+      "question_id": "Q61",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-HER-006",
+        "RM-HER-009"
+      ],
+      "us": [
+        "US-ART-003",
+        "US-ART-005",
+        "US-HER-012"
+      ],
+      "uncertainties": [
+        "U27"
+      ]
+    },
+    {
+      "question_id": "Q62",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-HER-006",
+        "RM-HER-009"
+      ],
+      "us": [
+        "US-ART-003",
+        "US-ART-005",
+        "US-HER-012"
+      ],
+      "uncertainties": [
+        "U27"
+      ]
+    },
+    {
+      "question_id": "Q63",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-HER-010"
+      ],
+      "us": [
+        "US-MAG-004",
+        "US-MAG-005"
+      ],
+      "uncertainties": [
+        "U26"
+      ]
+    },
+    {
+      "question_id": "Q64",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-ARM-003",
+        "RM-ARM-008",
+        "RM-ARM-009"
+      ],
+      "us": [
+        "US-ARM-003",
+        "US-ARM-004",
+        "US-ARM-005"
+      ],
+      "uncertainties": [
+        "U03",
+        "U06"
+      ]
+    },
+    {
+      "question_id": "Q65",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-ARM-003",
+        "RM-ARM-008",
+        "RM-ARM-009"
+      ],
+      "us": [
+        "US-ARM-003",
+        "US-ARM-004",
+        "US-ARM-005"
+      ],
+      "uncertainties": [
+        "U03",
+        "U06"
+      ]
+    },
+    {
+      "question_id": "Q66",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-ARM-004",
+        "RM-ARM-006",
+        "RM-ARM-010"
+      ],
+      "us": [
+        "US-ARM-005",
+        "US-ARM-006",
+        "US-ARM-007",
+        "US-ARM-009",
+        "US-COM-002"
+      ],
+      "uncertainties": [
+        "U06",
+        "U14"
+      ]
+    },
+    {
+      "question_id": "Q67",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-ARM-007",
+        "RM-ARM-010"
+      ],
+      "us": [
+        "US-ARM-005",
+        "US-ARM-006",
+        "US-ARM-007",
+        "US-ARM-009"
+      ],
+      "uncertainties": [
+        "U06"
+      ]
+    },
+    {
+      "question_id": "Q68",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-ARM-001",
+        "RM-ARM-002",
+        "RM-ARM-005",
+        "RM-ARM-010"
+      ],
+      "us": [
+        "US-ARM-002",
+        "US-ARM-005",
+        "US-ARM-006",
+        "US-ARM-007",
+        "US-ARM-008",
+        "US-ARM-009",
+        "US-COM-001"
+      ],
+      "uncertainties": [
+        "U02",
+        "U06",
+        "U11",
+        "U18"
+      ]
+    },
+    {
+      "question_id": "Q69",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-COM-001",
+        "RM-COM-002",
+        "RM-COM-003",
+        "RM-COM-004",
+        "RM-COM-005",
+        "RM-COM-008"
+      ],
+      "us": [
+        "US-COM-001",
+        "US-COM-002",
+        "US-COM-004",
+        "US-COM-008",
+        "US-COM-010",
+        "US-COM-013",
+        "US-COM-014",
+        "US-COM-016",
+        "US-COM-017",
+        "US-COM-018",
+        "US-REG-003"
+      ],
+      "uncertainties": [
+        "U09",
+        "U11",
+        "U12",
+        "U13",
+        "U17",
+        "U42"
+      ]
+    },
+    {
+      "question_id": "Q70",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-COM-001",
+        "RM-COM-002",
+        "RM-COM-003",
+        "RM-COM-008"
+      ],
+      "us": [
+        "US-COM-001",
+        "US-COM-002",
+        "US-COM-004",
+        "US-COM-008",
+        "US-COM-010",
+        "US-COM-014",
+        "US-COM-017",
+        "US-COM-018",
+        "US-REG-003"
+      ],
+      "uncertainties": [
+        "U09",
+        "U11",
+        "U12",
+        "U13",
+        "U17",
+        "U42"
+      ]
+    },
+    {
+      "question_id": "Q71",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-COM-002",
+        "RM-COM-008"
+      ],
+      "us": [
+        "US-COM-001",
+        "US-COM-004",
+        "US-COM-010",
+        "US-COM-018"
+      ],
+      "uncertainties": [
+        "U11",
+        "U12",
+        "U13",
+        "U42"
+      ]
+    },
+    {
+      "question_id": "Q72",
+      "decision_status": "delegated_to_research_or_design",
+      "rule_ids": [
+        "RM-COM-008"
+      ],
+      "us": [
+        "US-COM-001",
+        "US-COM-004",
+        "US-COM-010",
+        "US-COM-018"
+      ],
+      "uncertainties": [
+        "U11",
+        "U12",
+        "U13",
+        "U42"
+      ]
+    },
+    {
+      "question_id": "Q73",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-COM-005",
+        "RM-COM-008"
+      ],
+      "us": [
+        "US-COM-001",
+        "US-COM-004",
+        "US-COM-010",
+        "US-COM-013",
+        "US-COM-014",
+        "US-COM-016",
+        "US-COM-018"
+      ],
+      "uncertainties": [
+        "U11",
+        "U12",
+        "U13",
+        "U42"
+      ]
+    },
+    {
+      "question_id": "Q74",
+      "decision_status": "delegated_to_research_or_design",
+      "rule_ids": [
+        "RM-COM-003",
+        "RM-COM-005",
+        "RM-COM-008"
+      ],
+      "us": [
+        "US-COM-001",
+        "US-COM-004",
+        "US-COM-008",
+        "US-COM-010",
+        "US-COM-013",
+        "US-COM-014",
+        "US-COM-016",
+        "US-COM-017",
+        "US-COM-018"
+      ],
+      "uncertainties": [
+        "U11",
+        "U12",
+        "U13",
+        "U42"
+      ]
+    },
+    {
+      "question_id": "Q75",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-COM-004",
+        "RM-COM-009"
+      ],
+      "us": [
+        "US-COM-016",
+        "US-COM-017",
+        "US-RAP-001",
+        "US-REG-003"
+      ],
+      "uncertainties": [
+        "U11",
+        "U13",
+        "U41"
+      ]
+    },
+    {
+      "question_id": "Q76",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-COM-007",
+        "RM-COM-008"
+      ],
+      "us": [
+        "US-COM-001",
+        "US-COM-002",
+        "US-COM-004",
+        "US-COM-010",
+        "US-COM-018"
+      ],
+      "uncertainties": [
+        "U11",
+        "U12",
+        "U13",
+        "U42"
+      ]
+    },
+    {
+      "question_id": "Q77",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-COM-007",
+        "RM-COM-008"
+      ],
+      "us": [
+        "US-COM-001",
+        "US-COM-002",
+        "US-COM-004",
+        "US-COM-010",
+        "US-COM-018"
+      ],
+      "uncertainties": [
+        "U11",
+        "U12",
+        "U13",
+        "U42"
+      ]
+    },
+    {
+      "question_id": "Q78",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-COM-005",
+        "RM-COM-009"
+      ],
+      "us": [
+        "US-COM-013",
+        "US-COM-014",
+        "US-COM-016",
+        "US-COM-017",
+        "US-RAP-001"
+      ],
+      "uncertainties": [
+        "U11",
+        "U13",
+        "U41",
+        "U42"
+      ]
+    },
+    {
+      "question_id": "Q79",
+      "decision_status": "confirmed_for_mmhk_like",
+      "rule_ids": [
+        "RM-COM-006",
+        "RM-COM-009"
+      ],
+      "us": [
+        "US-COM-016",
+        "US-COM-017",
+        "US-RAP-001"
+      ],
+      "uncertainties": [
+        "U13",
+        "U41"
+      ]
+    },
+    {
+      "question_id": "Q80",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-COM-001",
+        "RM-TIM-006"
+      ],
+      "us": [
+        "US-COM-002",
+        "US-MOV-003",
+        "US-MOV-005",
+        "US-MOV-006",
+        "US-REG-003"
+      ],
+      "uncertainties": [
+        "U09",
+        "U10",
+        "U13",
+        "U17"
+      ]
+    },
+    {
+      "question_id": "Q81",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-TIM-002",
+        "RM-TIM-003",
+        "RM-TIM-007"
+      ],
+      "us": [
+        "US-ARM-005",
+        "US-CIT-004",
+        "US-CIT-006",
+        "US-COM-002",
+        "US-ECO-003"
+      ],
+      "uncertainties": [
+        "U14"
+      ]
+    },
+    {
+      "question_id": "Q82",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-WRD-008",
+        "RM-TIM-001",
+        "RM-TIM-002",
+        "RM-TIM-004",
+        "RM-TIM-005"
+      ],
+      "us": [
+        "US-ACC-004",
+        "US-ARM-005",
+        "US-CIT-004",
+        "US-CIT-005",
+        "US-CIT-006",
+        "US-COM-002",
+        "US-ECO-003",
+        "US-MOV-004"
+      ],
+      "uncertainties": [
+        "U03",
+        "U10",
+        "U14"
+      ]
+    },
+    {
+      "question_id": "Q83",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-TIM-006"
+      ],
+      "us": [
+        "US-MOV-003",
+        "US-MOV-005",
+        "US-MOV-006"
+      ],
+      "uncertainties": [
+        "U09",
+        "U10"
+      ]
+    },
+    {
+      "question_id": "Q84",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "rule_ids": [
+        "RM-TIM-008"
+      ],
+      "us": [
+        "US-CIT-004",
+        "US-ECH-013"
+      ],
+      "uncertainties": [
+        "U28"
+      ]
+    }
+  ]
+}
