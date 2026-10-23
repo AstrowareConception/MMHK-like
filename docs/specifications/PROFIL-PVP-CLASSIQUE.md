@@ -10,8 +10,12 @@
 | DEC-002 | Confirmée par l’utilisateur | Forte fidélité visuelle, vues isométriques, interactions et déplacements visuels JavaScript | La fidélité de présentation est un critère de recette |
 | DEC-003 | Confirmée par l’utilisateur | Utiliser les ressources historiques disponibles pendant le développement, puis créer un univers distinct | Séparer règles, identifiants et habillage ; conserver le corpus brut |
 | DEC-004 | Proposition de travail | Gabarit visuel de la famille v1.5 pour le premier prototype | SS-033/034/047/048/055/056/057 comme références cohérentes ; le client affiché n’identifie pas seul une saison |
-| DEC-005 | Non tranchée | Saison/révision exacte des valeurs, trêve et services | Garder les paramètres incertains explicitement non qualifiés |
+| DEC-005 | **Saison 2 décidée (Q01)** ; tables non qualifiées | La S2 est la référence des règles, coûts et progression ; écarts ciblés documentés | Ne pas assimiler automatiquement les données Jactari 2013 aux chiffres S2, conserver les vérifications U02 |
 | DEC-006 | Proposition de travail | Bibliothèque visuelle des cinq factions étudiées | Donjon/Forteresse restent hors sélection jouable ; leur présence dans Jactari ne change pas le périmètre |
+| DEC-007 | **Décidé par l'utilisateur Q04–Q05** | Premier prototype : Havre, T1–T3 sans magie | Les autres factions, T4–T7 et sorts sont intégrés ultérieurement sans les retirer du jeu complet |
+| DEC-008 | **Décidé par l'utilisateur Q01–Q84** | Profil S2 avec 7 jours de protection, monde torique, économie locale, Jactari comme oracle principal et trêve 23 h–6 h | Voir [registre complet](../decisions/DECISIONS-P0-2026-10-23.md), [profil machine](../../data/rules/mmhk-like-s2-policy-draft.json) et inconnues à qualifier |
+
+La [réponse au questionnaire P0](../decisions/DECISIONS-P0-2026-10-23.md) confirme **la saison 2 comme référence de design**, pas la correspondance automatique des tables 2013. Le capital d'hérédité initial identique, les modes de construction, l'entretien et le recrutement sont des choix de MMHK-like à vérifier et à paramétrer.
 
 La confirmation du mode **ne confirme pas automatiquement chaque chiffre** du dossier. Les treize monuments et quatorze jours restent des valeurs documentées par G01 à recouper avec la référence choisie. La fidélité des tables de 2013 à une saison antérieure reste U02. Aucun réglage commercial observé sur une bêta x200 n’est adopté par défaut.
 
