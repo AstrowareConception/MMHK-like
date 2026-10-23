@@ -1,0 +1,63 @@
+{
+  "date": "2026-10-24",
+  "version": "jactari-v5.8",
+  "branch": "main",
+  "provenance": {
+    "original": "data/Jactari/src/scripts/combat.min.js",
+    "source_license": "GPL-3.0-or-later",
+    "mechanics": [
+      {
+        "name": "stack_duel",
+        "original_function": "simulation_combat",
+        "original_cases": 350,
+        "divergences": 0
+      },
+      {
+        "name": "post_duel_revival",
+        "original_function": "simulation_rencontre post-duel rez_a block",
+        "original_cases": 350,
+        "divergences": 0
+      },
+      {
+        "name": "temporary_final_cleanup",
+        "original_function": "simulation_rencontre attacker/defender victory branches",
+        "original_cases": 1000,
+        "divergences": 0
+      }
+    ]
+  },
+  "differential": {
+    "cases": 1700,
+    "mismatches": 0,
+    "method": "directly executed extracted original JS branches in an isolated V8 environment, compared to repo pure modules; not an end-to-end battle comparison"
+  },
+  "local_regression": {
+    "non_differential_tests_run": 87,
+    "passed": 87,
+    "failed": 0,
+    "node_version": "22.16.0",
+    "origin": "V5.7 archive and new local patches; original 259KB source absent from ZIP, so differential Node tests not included in 87"
+  },
+  "features": [
+    {
+      "file": "tools/jactari-port/terminal-cleanup.mjs",
+      "status": "integrated as terminalDisplay and terminalCleanup in magic-rounds, historical last-round cleanup only"
+    },
+    {
+      "file": "tools/jactari-port/summoning.mjs",
+      "status": "pure planner only; preserves two special slots 0 and 1 not included in ordinary army seven slots"
+    }
+  ],
+  "gaps": [
+    "Summoned creatures not yet inserted into combat round orchestration",
+    "No original client full battle parity test",
+    "Mana/skill access, summons end-of-combat, and spells not fully represented",
+    "CI run not verified",
+    "GPL requirements before product distribution"
+  ],
+  "archive": "MMHK_Jactari_V58_cleanup_summoning_2026-10-24.zip",
+  "references": [
+    "docs/game-design/25-JACTARI-V58-CLOTURE-INVOCATIONS.md",
+    "tools/jactari-port/terminal-cleanup-differential.test.mjs"
+  ]
+}
