@@ -160,6 +160,8 @@ Les états indiquent uniquement le degré de définition de la **règle du succe
 | Q83 | Rappel autorisé pendant l'aller, retour égal au temps d'aller déjà parcouru ; pas de halte en influence alliée ; haltes attaquables de deux heures au-delà d'une distance seuil | Orientation validée |
 | Q84 | Ne pas permettre de programmer des actions futures ou des files automatiques, sous réserve des exceptions historiques identifiées | Orientation validée |
 
+**Mise à jour du 23/10/2026 : les neuf précisions C01–C09 ont reçu une réponse.** Leurs choix confirmés se trouvent dans [C01–C09](P0-CLARIFICATIONS-C01-C09-2026-10-23.md) et dans le [profil S2 actualisé](../../data/rules/mmhk-like-s2-policy-draft.json). Les propositions du tableau suivant sont conservées pour l'historique du questionnement, **elles ne sont plus des questions ouvertes**.
+
 ## Précisions réellement utiles à demander
 
 Les décisions ci-dessous sont les **seules questions de clarification proposées à l'utilisateur à ce stade**. Les tarifs S2, probabilités, barèmes de carrière, créatures, pertes et vitesse historique du monde sont d'abord des **sujets de recherche**, pas des informations à inventer de mémoire.
