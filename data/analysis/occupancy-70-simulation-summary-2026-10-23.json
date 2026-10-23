@@ -1,0 +1,144 @@
+{
+  "schema_version": 1,
+  "simulation_date": "2026-10-23",
+  "status": "executed_experimental_not_historical",
+  "cases": 108,
+  "seeds": [
+    11,
+    23,
+    47
+  ],
+  "max_players": 100,
+  "fill_percents": [
+    20,
+    40,
+    55,
+    70,
+    85,
+    100
+  ],
+  "densities": [
+    140,
+    170,
+    200
+  ],
+  "spawns": [
+    "balanced",
+    "clustered"
+  ],
+  "city_count_at_end": "approx 3.3-3.6 per participant; under 10 city cap",
+  "modes": "8 phases; 7-day protection approximated as one phase from joining",
+  "influence": "synthetic per-city garrison-age power with thresholds; no radius 6 reached in test horizon",
+  "colonization": "candidates around existing player cities, hostile influence rejected, distance surcharge base*(1+0.38*d+0.1*d^2), finite synthetic budget",
+  "warning": "Results are one illustrative toy model, not predictive; alliance count varies with attendance; 'clustered' is a mild nearest-neighbor spawn preference, not explicit alliance clustering; critical staffing and military upkeep constraints simplified.",
+  "results": [
+    {
+      "regions_per_ref_player": 140,
+      "occupancy_percent": 20,
+      "rival_contact_pairs_balanced": 0,
+      "rival_contact_pairs_clustered": 0
+    },
+    {
+      "regions_per_ref_player": 140,
+      "occupancy_percent": 40,
+      "rival_contact_pairs_balanced": 0,
+      "rival_contact_pairs_clustered": 0
+    },
+    {
+      "regions_per_ref_player": 140,
+      "occupancy_percent": 55,
+      "rival_contact_pairs_balanced": 0.33,
+      "rival_contact_pairs_clustered": 0.33
+    },
+    {
+      "regions_per_ref_player": 140,
+      "occupancy_percent": 70,
+      "rival_contact_pairs_balanced": 0.33,
+      "rival_contact_pairs_clustered": 2
+    },
+    {
+      "regions_per_ref_player": 140,
+      "occupancy_percent": 85,
+      "rival_contact_pairs_balanced": 3,
+      "rival_contact_pairs_clustered": 3.33
+    },
+    {
+      "regions_per_ref_player": 140,
+      "occupancy_percent": 100,
+      "rival_contact_pairs_balanced": 7.33,
+      "rival_contact_pairs_clustered": 8
+    },
+    {
+      "regions_per_ref_player": 170,
+      "occupancy_percent": 20,
+      "rival_contact_pairs_balanced": 0,
+      "rival_contact_pairs_clustered": 0
+    },
+    {
+      "regions_per_ref_player": 170,
+      "occupancy_percent": 40,
+      "rival_contact_pairs_balanced": 0.33,
+      "rival_contact_pairs_clustered": 0.33
+    },
+    {
+      "regions_per_ref_player": 170,
+      "occupancy_percent": 55,
+      "rival_contact_pairs_balanced": 0.33,
+      "rival_contact_pairs_clustered": 0
+    },
+    {
+      "regions_per_ref_player": 170,
+      "occupancy_percent": 70,
+      "rival_contact_pairs_balanced": 0.33,
+      "rival_contact_pairs_clustered": 1
+    },
+    {
+      "regions_per_ref_player": 170,
+      "occupancy_percent": 85,
+      "rival_contact_pairs_balanced": 2.33,
+      "rival_contact_pairs_clustered": 1
+    },
+    {
+      "regions_per_ref_player": 170,
+      "occupancy_percent": 100,
+      "rival_contact_pairs_balanced": 4.33,
+      "rival_contact_pairs_clustered": 4
+    },
+    {
+      "regions_per_ref_player": 200,
+      "occupancy_percent": 20,
+      "rival_contact_pairs_balanced": 0,
+      "rival_contact_pairs_clustered": 0
+    },
+    {
+      "regions_per_ref_player": 200,
+      "occupancy_percent": 40,
+      "rival_contact_pairs_balanced": 0.33,
+      "rival_contact_pairs_clustered": 0
+    },
+    {
+      "regions_per_ref_player": 200,
+      "occupancy_percent": 55,
+      "rival_contact_pairs_balanced": 0.33,
+      "rival_contact_pairs_clustered": 0
+    },
+    {
+      "regions_per_ref_player": 200,
+      "occupancy_percent": 70,
+      "rival_contact_pairs_balanced": 0.33,
+      "rival_contact_pairs_clustered": 1
+    },
+    {
+      "regions_per_ref_player": 200,
+      "occupancy_percent": 85,
+      "rival_contact_pairs_balanced": 1.33,
+      "rival_contact_pairs_clustered": 0
+    },
+    {
+      "regions_per_ref_player": 200,
+      "occupancy_percent": 100,
+      "rival_contact_pairs_balanced": 2.67,
+      "rival_contact_pairs_clustered": 1
+    }
+  ]
+}
