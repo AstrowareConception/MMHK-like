@@ -1,0 +1,857 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-23",
+  "source": "docs/decisions/P0-REPONSES-ORIGINALES-2026-10-23.txt",
+  "scope": "Q01-Q84 (P0)",
+  "note": "L'answer_original est la réponse de l'utilisateur, decision en est une synthèse. Les souvenirs historiques ne prouvent pas le serveur Ubisoft ; 'confirmed' confirme seulement l'intention du produit.",
+  "counts": {
+    "total": 84,
+    "by_status": {
+      "confirmed_direction_with_parameters_open": 31,
+      "confirmed_for_mmhk_like": 48,
+      "delegated_to_research_or_design": 5
+    }
+  },
+  "answers": [
+    {
+      "id": "Q01",
+      "question": "Quelle période de MMHK souhaites-tu prendre comme référence principale ? La saison 1, la saison 2, la saison 3 classique, ou simplement la version classique dont tu gardes le meilleur souvenir ? Cela déterminera quelles tables de coûts, de temps et de progression nous devons privilégier.",
+      "answer_original": "la saison 2 était parfaite, et on pourrait systématiquement partir avec un capital de points d'hérité qui serait le même pour tous. Achacun de l'utiliser comme il veut",
+      "decision": "Saison 2 comme référence principale ; capital de points d'hérédité initial égal pour tous, dépensé librement",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "A - philosophie",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q02",
+      "question": "Lorsqu'une règle originale reste introuvable, quelle méthode préfères-tu ? Bloquer son implémentation jusqu'à retrouver une preuve, adopter provisoirement la solution historiquement la plus plausible, ou proposer une nouvelle règle équilibrée et révisable ?",
+      "answer_original": "adopter provisoirement la solution historiquement la plus plausible",
+      "decision": "Si la règle originale manque, adopter la reconstitution historiquement la plus plausible, explicitement provisoire",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "A - philosophie",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q03",
+      "question": "Lorsqu'une mécanique historique paraît frustrante ou déséquilibrée, faut-il la préserver ? Souhaites-tu une fidélité presque absolue, ou accepterais-tu quelques corrections ciblées à condition de les documenter ?",
+      "answer_original": "quelques corrections ciblées à condition de les documenter",
+      "decision": "Autoriser des corrections d'équilibrage ciblées à condition de les documenter",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "A - philosophie",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q04",
+      "question": "Pour le premier prototype jouable, souhaites-tu commencer avec une seule faction ? Je propose le Havre pour la proximité avec le jeu original. L'Académie est une alternative intéressante, car plusieurs données chiffrées sont déjà bien documentées.",
+      "answer_original": "commencer avec une seule faction, le havre",
+      "decision": "Prototyper une seule faction : Havre",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "A - philosophie",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q05",
+      "question": "Jusqu'où doit aller le contenu militaire du premier prototype ? Une première boucle avec T1–T3 sans magie, les sept tiers immédiatement, ou l'ensemble des unités, améliorations, héros et sorts avant les premiers essais ?",
+      "answer_original": "Une première boucle avec T1–T3 sans magie",
+      "decision": "Première boucle T1–T3, sans magie",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "A - philosophie",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q06",
+      "question": "Souhaites-tu conserver intégralement les durées originales ? Par exemple, une construction de 9 h 36 resterait-elle aussi longue, ou devons-nous prévoir un mode de test accéléré distinct des mondes classiques ?",
+      "answer_original": "mode de test accéléré sur la base d'un multiplicateur",
+      "decision": "Prévoir un multiplicateur de temps accéléré réservé aux tests",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "A - philosophie",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q07",
+      "question": "Quelle taille devrait faire un monde ? Doit-elle être identique à MMHK, fixe pour chaque campagne ou adaptable au nombre de joueurs ?",
+      "answer_original": "je veux plusieurs presets type \"Grande (jusqu'à 2000 joueurs)\", \"Petite (moins de 500 joueurs)\" , \"Très petite (moins de 200 joueurs)\", \"Moyenne … Très grande … \" avec des dimensions qui correspondent. Les serveur MMHK originaux étaient calibrés pour 3000 joueurs à la base je crois (ou bien 1000 je ne sais plus). Idéalement j'aimerais quand meme pouvoir faire tourner des serveur en nombre réduits genre 20, 50 ou 100 joueurs avec des maps adaptées",
+      "decision": "Configurer des tailles de monde et capacités par presets, des parties à 20–100 joueurs aux grandes campagnes jusqu'à environ 2 000 joueurs et davantage",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "B - monde",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q08",
+      "question": "Combien de joueurs un monde devrait-il pouvoir accueillir ? Souhaites-tu viser une population historique comparable à MMHK ou dimensionner les premiers mondes pour des communautés plus petites ?",
+      "answer_original": "voir réponse précédente",
+      "decision": "Capacité dépendante des presets de taille de monde (référence Q07)",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "B - monde",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q09",
+      "question": "La carte du monde doit-elle se refermer sur elle-même ? Le calculateur historique suggère une géométrie torique : sortir par le bord droit permettrait de réapparaître à gauche, et de même pour le haut et le bas. Souhaites-tu reproduire cela ?",
+      "answer_original": "oui même procédé sinon ça créé un gameplay trop asymétrique",
+      "decision": "Géométrie torique avec raccordement horizontal et vertical",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "B - monde",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q10",
+      "question": "Quelles régions doivent être interdites à la colonisation ? Montagnes, océans, terrains spéciaux, zones d'événements, voisinage de certaines structures ou uniquement cases déjà occupées ?",
+      "answer_original": "par défaut uniquement les cases non occupées (reliques/villes), mais j'aimerais un systéme de cases spéciales type montagnes, mers etc ... a voir car ça va necessairement joueur ensuite sur les déplacement, donc à voir. Il y a aussi la notion de zone d'influence. On ne peut pas coloniser n'importe où, il faut que ce soit dans la zone d'influence du joueur et de son alliance. De mémoire MMHK permettait de coloniser a une ou deux cases de distance de la zone d'influence mais c'était limlité. Et interdiction de coloniser dans la zone d'influence de quelqu'un d'autre",
+      "decision": "Colonisation sur case libre éligible dans la zone d'influence propre/alliée ; exclure influence étrangère ; extensions hors zone limitées à étudier ; terrains spéciaux ultérieurs",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "B - monde",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q11",
+      "question": "Faut-il garantir une répartition équitable des régions de départ ? Par exemple, éviter qu'un joueur commence dans une zone très pauvre en ressources ou complètement encerclée par des obstacles.",
+      "answer_original": "niveau ressource la ville de départ sera toujours Or/Bois/Pierre/(ressource rare principale de la faction, cristal pour le havre). Quant à la position sur la map, peu importe",
+      "decision": "Région initiale toujours dotée d'or, bois, minerai et ressource rare de faction (cristal pour Havre) ; placement géographique sans garantie supplémentaire",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "B - monde",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q12",
+      "question": "Quelle distribution des quatre mines souhaites-tu retenir ? Devons-nous favoriser fortement la combinaison de ton souvenir — or, bois, minerai, une ressource rare — tout en autorisant des exceptions ?",
+      "answer_original": "pour la ville de départ, la répartition est imposée, ensuite je te laisse réfléchir à la façon de répartir toutes les combinaisons qui existent",
+      "decision": "Répartir les quatre mines des régions non initiales selon un algorithme à concevoir",
+      "decision_status": "delegated_to_research_or_design",
+      "section": "B - monde",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q13",
+      "question": "Jusqu'où autorisons-nous les doublons de ressources ? Deux mines de bois, deux mines d'or, trois mines identiques, voire quatre identiques ? Les configurations extrêmes doivent-elles être impossibles ou simplement très rares ?",
+      "answer_original": "maxi 2 ressources identiques, et pas possible d'avoir 2 doubles\", aucune ressource obligatoire et donc 3 ou 4 ressources différentes par slot",
+      "decision": "Au plus une paire de mines identiques, pas de double paire ou triple : chaque région comporte trois ou quatre types de ressources",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "B - monde",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q14",
+      "question": "Les quatre ressources rares doivent-elles avoir la même probabilité d'apparition ? Ou leur répartition devrait-elle dépendre de la faction, du terrain ou de la position géographique ?",
+      "answer_original": "même probabilité",
+      "decision": "Même probabilité pour cristal, gemmes, soufre et mercure",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "B - monde",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q15",
+      "question": "La position des mines dans une région doit-elle être totalement aléatoire ? Ou faut-il garantir certains espacements par rapport à la cité et entre mines, pour faciliter les constructions régionales ?",
+      "answer_original": "je n'ai pas de préférence, je te laisse décider",
+      "decision": "Délégation de la règle spatiale de placement des quatre mines",
+      "decision_status": "delegated_to_research_or_design",
+      "section": "B - monde",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q16",
+      "question": "Quelle difficulté doivent avoir les créatures neutres qui occupent les cases de départ ? Une difficulté uniforme, progressive selon la distance au centre, ou variable en fonction de la valeur de la mine et de la récompense ?",
+      "answer_original": "progressive suivant la distance. Plus facile à proximité du centre, plus difficile en périphérie",
+      "decision": "Force des occupants neutres croissante avec l'éloignement du centre régional",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "B - monde",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q17",
+      "question": "Les créatures neutres doivent-elles réapparaître après leur défaite ? Et si oui, sur quelles cases, à quelle fréquence et sous quelles conditions ?",
+      "answer_original": "dans le jeu de base elles ne reapparaissaient pas (du moins pas avant l'arrivée de la boutique). J'aimerais qu'on ajoute une règle qui fasse repoper les créatures automatiquement sur une casse si par exemple cette case n'a pas été utilisée par le joueur au bout de X jours. Si le joueur utilise la case, pas d emonstres. Si le joueurs accepte de ne pas exploiter la case, il peut réaffronter des monstres (xp, artefacts etc)",
+      "decision": "Réapparition optionnelle des PNJ après X jours d'inutilisation de la case libérée ; pas de réapparition sur case exploitée ; gains possibles XP/artéfacts",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "B - monde",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q18",
+      "question": "Comment distribuer les sites spéciaux à l'échelle du monde ? Sphinx, obélisques, ruines, dolmens, bâtiments neutres et autres sites doivent-ils être uniformément dispersés, regroupés dans certaines zones ou soumis à des distances minimales ?",
+      "answer_original": "il faut définir des règles. Je veux une répartition aléatoires des sites spéciaux par rapport à leur type mais avec des contraintes géographiques. Par exemple deux sphinx peuvent être voisins, mais avec un minimum de 15 cases d'écart. Deux sites doivent toujours avoir un minimum de X cases qui les sépare, tout autour d'eux sur la map. C'est donc la taille de la map qui définit la quantité de sites. µJe pense qu'on peut ensuite répartir équitablement les types de sites (autant de sphinx que de dolmens et obélisques à l'échelle du monde, mais distribués aléatoirement)",
+      "decision": "Sites spéciaux aléatoires, sous contraintes de distances géographiques et densité liée à la taille du monde ; types globalement répartis équitablement",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "B - monde",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q19",
+      "question": "Comment répartir les joueurs arrivant sans code ami ? Complètement au hasard, à proximité d'autres débutants ou selon un système qui équilibre progressivement la population sur la carte ?",
+      "answer_original": "système qui équilibre progressivement la population sur la carte",
+      "decision": "Placement sans code ami répartissant progressivement la population sur la carte",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "C - arrivee et protection",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q20",
+      "question": "À quelle distance d'un joueur existant un nouveau joueur utilisant son code ami devrait-il apparaître ? Une distance fixe, une distance maximale, ou simplement la région disponible la plus proche dans une zone définie ?",
+      "answer_original": "une distance maximale. Les villes gagnent en zone d'influence donc faut pas que les villes soient collées, mais pas trop loin non plus. Disons entre 4 et 10 cases environ (à ajuster si besoin)",
+      "decision": "Placement proche d'un ami visé entre environ quatre et dix cases, réglable",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "C - arrivee et protection",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q21",
+      "question": "Que faire lorsqu'il n'y a plus de région disponible près de l'ami ? Refuser l'inscription proche, proposer une implantation aléatoire ou élargir progressivement le rayon de recherche ?",
+      "answer_original": "élargir progressivement le rayon de recherche jusqu'à trouver une case éligible",
+      "decision": "Si la proximité est saturée, étendre progressivement le rayon à une case éligible",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "C - arrivee et protection",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q22",
+      "question": "Comment doivent fonctionner les codes amis ? Un code permanent et réutilisable, un code temporaire, un code unique par invitation ou un code limité à un monde et à une campagne ?",
+      "answer_original": "chaque joueur possède 3 codes amis fournis à son inscription. Ca favorise la dispersion et évite une trop forte concentration",
+      "decision": "Délivrer trois codes amis à chaque joueur lors de son inscription",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "C - arrivee et protection",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q23",
+      "question": "La protection débutant de sept jours doit-elle protéger uniquement la première cité ? C'est ton souvenir principal. Faut-il aussi empêcher les pillages de sa région, les sièges, l'espionnage et les attaques contre ses autres cités ?",
+      "answer_original": "oui 7 jours, mais pendant la protection débutant il était aussi impossible de coloniser une seconde ville. Quand un joueur n'a qu'une ville, on ne peut pas lui prendre par un siège. En revanche, une fois la protection débutant finie, elle peut être pillée",
+      "decision": "Protection débutant sept jours, pas de seconde colonie pendant ce délai ; dernière ville jamais capturable par siège, mais pillable après protection",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "C - arrivee et protection",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q24",
+      "question": "Un joueur doit-il pouvoir renoncer volontairement à sa protection débutant ? Par exemple, si un débutant lance lui-même une attaque hostile, perd-il sa protection immédiatement, ou reste-t-elle active ?",
+      "answer_original": "ne peut pas être annulée, c'est la même règle pour tous",
+      "decision": "Aucune suppression anticipée de la protection débutant",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "C - arrivee et protection",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q25",
+      "question": "À quel instant vérifie-t-on la protection ? Lors de l'envoi de l'armée, à son arrivée, ou aux deux moments ? Cette différence devient importante si une armée part avant l'expiration et arrive après.",
+      "answer_original": "sur la carte, une ville protégée par la protection débutant apparait différemment. Ensuite, on vérifie à l'envoi des troupes, on refuse un envoi si la destination ou la source sont sous protection",
+      "decision": "Marquage graphique des villes protégées ; refus au départ de troupes si source ou destination protégée",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "C - arrivee et protection",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q26",
+      "question": "Un joueur rejoignant tardivement une campagne bénéficie-t-il de la même protection ? Doit-il obtenir sept jours pleins, même si la Guerre des Larmes a déjà commencé ?",
+      "answer_original": "oui, cette protection est là pour le protéger et lui permettre de se développer. En revanche il peut recevoir des convois de marchandise de ses alliés",
+      "decision": "Protection complète même pour les arrivants tardifs, y compris pendant la Guerre des Larmes ; convois alliés entrants autorisés",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "C - arrivee et protection",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q27",
+      "question": "Quelles ressources le nouveau joueur possède-t-il à son arrivée ? Souhaites-tu retrouver exactement la dotation historique ou définir une dotation provisoire qui permette de lancer les premières constructions ?",
+      "answer_original": "les dotations historiques marchaient bien, mais si on retrouve pas c'est pas génant on adapte",
+      "decision": "Préférence pour la dotation historique initiale ; si introuvable, définir une dotation adaptée",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "D - demarrage",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q28",
+      "question": "Quels bâtiments sont déjà construits dans la première cité ? Uniquement le Conseil du village et les bâtiments indispensables, ou d'autres constructions de départ ?",
+      "answer_original": "uniquement le strict minimum. Hormis le conseil du village, tout est à construire soi même",
+      "decision": "Seul le Conseil du village est construit initialement ; tous les autres bâtiments sont à réaliser",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "D - demarrage",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q29",
+      "question": "Le joueur commence-t-il avec un héros ? Un héros prédéfini, un héros choisi, une offre gratuite de taverne ou aucun héros avant son premier recrutement ?",
+      "answer_original": "le joueur commence avec un héros sur lequel il peut éventuellement affecter des compétence d'hérédité (saison 2). Ensuite c'est à la taverne que les héros se recrutent. Dans la taverne le joueur peut choisir entre deux héros avec des archétypes différents. Si aucun ne lui convient, il peut reset les héros une fois tous les 12 heures. Chaque héros a un coût en or croissant (jusqu'à 15 héros en tout). Ensuite chaque héros recruté doit arriver en ville. Le délai est de plus en plus long en fonction du nombre de héros recrutés. Le premier arrive 15 minutes plus tard, le 15ème met 3 jours je crois.",
+      "decision": "Héros initial pouvant recevoir des compétences d'hérédité ; taverne deux offres, renouvellement gratuit 12 h, coûts croissants, délais croissants avec arrivée après recrutement",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "D - demarrage",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q30",
+      "question": "Dispose-t-il déjà de troupes ? Si oui, lesquelles, en quelle quantité et sous quelle forme : armée constituée, garnison ou recrues disponibles ?",
+      "answer_original": "oui il a quelques unités. Uniquement des T1, T2 et T3 distribués de sorte à avoir une puissance globale de X environ (puissance assez faible dans tous les cas, juste bon pour commencer)",
+      "decision": "Troupes de départ de tiers T1–T3, faible puissance totale X à définir",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "D - demarrage",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q31",
+      "question": "Souhaites-tu un tutoriel qui guide les premières actions ? Une suite de quêtes obligatoires, des conseils facultatifs ou une liberté complète d'exploration avec aide contextuelle ?",
+      "answer_original": "oui le jeu disposait d'un tuto sous forme de quête qui obligeait le joueur à faire les premières actions indispensables pour bien débuter la partie. Ces quêtes apportées xp et ressources et un joueur expérimenté pouvait maximiser ce tuto pour prendre un meilleur départ que les autres",
+      "decision": "Tutoriel en quêtes obligatoires, procurant XP et ressources et permettant une optimisation du départ",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "D - demarrage",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q32",
+      "question": "Comment les ressources sont-elles créditées ? En continu, à chaque heure, à une échéance quotidienne commune ou par une autre cadence ? Nous avons retrouvé des rendements journaliers, pas encore la fréquence historique exacte de crédit.",
+      "answer_original": "les productions sont indiquées en fréquence journalière (exemple, or : 50 000 par jour) mais c'est crédité par intervalles réguliers (toutes les 15 minutes par exemple, à ajuster)",
+      "decision": "Rendements annoncés par jour mais crédités à échéances régulières, intervalle indicatif 15 minutes",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "E - economie",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q33",
+      "question": "Comment doit-on gérer les fractions de ressources ? Conserver une précision invisible jusqu'à accumulation d'une unité, arrondir à chaque période, ou arrondir séparément la production de chaque mine ?",
+      "answer_original": "Conserver une précision invisible jusqu'à accumulation d'une unité, seule une unité pleinement produite peut être acquise et utilisée",
+      "decision": "Fractions de production accumulées en interne ; seule une unité entière est disponible et dépensable",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "E - economie",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q34",
+      "question": "Dans quel ordre appliquer les bonus économiques ? Les bonus des bâtiments, mines, héros, recherches et monuments sont-ils additifs, multiplicatifs ou soumis à une priorité précise ?",
+      "answer_original": "de mémoire dans le jeu de base c'est cumulatif. Tous les bonus s'ajoutaient, formaient un bonus total et ce bonus est ensuite appliqué à la production de base",
+      "decision": "Bonus de production additionnés puis appliqués en une fois à la production de base",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "E - economie",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q35",
+      "question": "Les ressources doivent-elles rester propres à chaque cité ? Faut-il toujours transporter les ressources entre deux villes, ou certains stocks sont-ils accessibles à l'ensemble du royaume ?",
+      "answer_original": "stocks propres à chaque ville, les entrepots permettent d'augmenter les capacités de stockage. Si un stock est plein, la ville ne produit plus. La capacité d'or dépend du niveau de la ville (hotel de ville). Les caravanes servent à acheminer des ressources entre les villes. Les caravanes ne peuvent pas être attaquées/pillées quand elle se déplacent. Les caravanes ont une capacité qui se développe au marché de chaque ville",
+      "decision": "Stocks et plafonds séparés par cité, capacité d'or liée à l'administration ; caravanes sûres, capacité améliorée au marché, transfert inter-cités",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "E - economie",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q36",
+      "question": "Comment fixer les capacités de stockage ? Devons-nous reprendre les silos, entrepôts et plafonds historiques, avec une gestion distincte pour l'or ?",
+      "answer_original": "voir réponse ci dessus.",
+      "decision": "Conserver la logique de stockage local, silos et entrepôts explicitée Q35",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "E - economie",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q37",
+      "question": "Que deviennent les ressources produites lorsque le stock est plein ? Sont-elles définitivement perdues, suspendues jusqu'à libération de capacité ou conservées dans une réserve inaccessible ?",
+      "answer_original": "elles sont perdues, si un stock est plein la ville ne produit plus de cette ressource.",
+      "decision": "Production excédant un stock plein définitivement perdue ; la production de cette ressource cesse tant que le stockage est saturé",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "E - economie",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q38",
+      "question": "Les récompenses de quêtes, de combats et de commerce doivent-elles subir les mêmes plafonds ? Ou faut-il des exceptions, telles qu'un coffre ou une récompense différée ?",
+      "answer_original": "les récompenses de quête apparaissent dans des messages et peuvent être \"encaissées\" quand le joueur le souhaite. Tant que le joueur n'encaisse pas une récompense, elle reste disponible dans ses messages.",
+      "decision": "Récompenses de quête envoyées en messages, encaissables au moment choisi, conservées en attente tant que non réclamées",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "E - economie",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q39",
+      "question": "Une mine commence-t-elle automatiquement à produire après sa libération ? Ou le joueur doit-il effectuer une action supplémentaire pour la mettre en exploitation ?",
+      "answer_original": "dès qu'une mine est libérée elle produit immédiatement. Mais sa production augmente si le joueur aménage les cases adjacentes à la mine avec les bons bâtiments de région. Je me demande aussi s'il ne faudrait pas ajouter des améliorations directement dans la mine. Genre payer un cout d'amélioration (\"creuser la mine\"), immobiliser un héros un certain temps, et suspendre la production pendant ce temps, ensuite la mine produit plus. On pourrait faire ça sur 5 niveaux.",
+      "decision": "Mine libérée produisant immédiatement ; bonus d'aménagements adjacents ; idée d'amélioration supplémentaire « creuser la mine » sur cinq niveaux, héros immobilisé et production suspendue",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "E - economie",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q40",
+      "question": "Souhaites-tu retenir provisoirement les rendements et coûts miniers de 2013 ? Ou préfères-tu attendre une corroboration plus ancienne avant de choisir notre référence numérique ?",
+      "answer_original": "les coûts de la S2 étaient bons on peut partir là dessus comme base et ajuster/adapter/ajouter quand on a besoin",
+      "decision": "Partir des prix et rendements de saison 2 si retrouvés et les ajuster quand nécessaire",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "E - economie",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q41",
+      "question": "Quel barème d'entretien des armées faut-il utiliser ? Nous avons plusieurs références historiques qui divergent. Faut-il prendre celle du calculateur de 2013 en attendant de retrouver le profil exact ?",
+      "answer_original": "je crois que ce calcul a changé au fil du temps, on doit se baser sur le calcul de S1 ou S2. De mémoire c'était une sorte d'augmentation exponentielle. Peu d'armée coutaient rien en entretien (or), et dès qu'on atteint certaines puissances d'armée stationnées ça commencer à douiller et à couter plus d'or que ce que la ville pouvait produire. Je veux que ça reste comme ça dans l'esprit, une très grosse armée stationnée sur une seule ville, ça devient quasi impossible en terme de logistique",
+      "decision": "Barème d'entretien inspiré de S1/S2 : gratuit sous un seuil, puis croissance fortement non linéaire, pénalisant les armées massées",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "E - economie",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q42",
+      "question": "À quelle cité doit être imputé l'entretien ? À la ville d'origine des unités, à la cité dans laquelle elles sont stationnées, au royaume ou selon une règle liée au héros ?",
+      "answer_original": "c'est la ville qui contient l'armée qui paye l'entretien. L'entretien est payé chaque heure.",
+      "decision": "Entretien horaire imputé à la cité accueillant les troupes",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "E - economie",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q43",
+      "question": "Que se passe-t-il lorsque le joueur ne peut plus payer l'entretien ? Dette, blocage du recrutement, pénalité, pertes de troupes, désertion après délai ou autre comportement ?",
+      "answer_original": "attrition. Chaque heure qui passe où le joueur ne peut pas payer l'entretien de son armée c'est 10% des troupes (10% de chaque troupe) qui meurent immédiatement. Comme l'armée diminue, l'entretien diminue aussi, jusqu'à descendre mécaniquement jusqu'au seuil où le joueur pourra payer.",
+      "decision": "À chaque heure impayée, 10 % de chaque peloton meurt ; entretien réévalué après pertes",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "E - economie",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q44",
+      "question": "Combien de constructions peut-on lancer simultanément dans une même cité ? Une seule, plusieurs chantiers selon le nombre de héros disponibles, ou une file d'attente de constructions successives ?",
+      "answer_original": "on ne peut lancer qu'un seul bâtiment à la fois dans la vue ville. Ca ne monopolise aucun héros. Pas de file d'attente. En revanche dans la vue région, possibilité de construire plusieurs bâtiments en parallèle car chaque bâtiment monopolise un héros durant toute la construction (+ temps de déplacements)",
+      "decision": "Une construction urbaine à la fois, sans héros ni file d'attente ; plusieurs chantiers régionaux simultanés, chacun avec héros et trajets",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "F - batiments",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q45",
+      "question": "Un héros est-il nécessaire pour chaque construction ? Tous les bâtiments, seulement certaines constructions, ou uniquement pour obtenir des bonus de vitesse et de coût ?",
+      "answer_original": "voir réponse précédente",
+      "decision": "Aucun héros nécessaire pour construire en ville, mais héros nécessaire pour chaque construction régionale (Q44)",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "F - batiments",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q46",
+      "question": "Que devient un héros affecté à un chantier ? Est-il totalement immobilisé, disponible pour certaines actions ou simplement utilisé au moment où la construction est lancée ?",
+      "answer_original": "complètement bloqué, il ne pourra pas non plus défendre la ville si celle-ci est attaquée",
+      "decision": "Héros bâtisseur régional entièrement indisponible, y compris pour défendre la cité",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "F - batiments",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q47",
+      "question": "À quel moment les ressources d'une construction sont-elles dépensées ? Au lancement, à l'achèvement, ou réservées dès le lancement puis définitivement consommées ensuite ?",
+      "answer_original": "dépensées au lancement, annulation impossible.",
+      "decision": "Coûts débités au lancement, sans possibilité d'annuler",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "F - batiments",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q48",
+      "question": "Peut-on annuler une construction ? Si oui, quel remboursement appliquer et dans quelles conditions l'annulation devient-elle impossible ?",
+      "answer_original": "pas d'annulation, le joueur doit bien réfléchir",
+      "decision": "Annulation de chantier interdite, sans remboursement",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "F - batiments",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q49",
+      "question": "Comment fonctionnent les accélérations de construction ? Doit-on reproduire les bonus des carrières et les arbitrages historiques entre construction rapide, normale et économique ?",
+      "answer_original": "oui c'était une bonne idée. De mémoire on pouvait volontairement choisir de payer +40% du coût de base pour un gain de temps de 20% ou alors payer 20% de moins et accepter un temps de construction de +40%. Ces ajustements ne sont possibles que pour les bâtiments de la ville et parce qu'on ne peut en faire qu'un à la fois.",
+      "decision": "Mode urbain rapide : coût +40 %, durée −20 % ; économique : coût −20 %, durée +40 % ; pas d'option de ce type pour les bâtiments régionaux",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "F - batiments",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q50",
+      "question": "Comment calcule-t-on précisément le niveau d'une cité ? Quels bâtiments comptent, les améliorations remplacent-elles les niveaux précédents et comment traite-t-on les constructions particulières comme les silos ?",
+      "answer_original": "de mémoire chaque batiment ou amélioration ajoute un niveau de cité",
+      "decision": "Chaque construction et amélioration augmente d'un niveau la cité, selon souvenir ; exceptions à préciser",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "F - batiments",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q51",
+      "question": "Lorsqu'un bâtiment est amélioré, ses effets remplacent-ils totalement les précédents ? C'est notamment important pour la production d'or et les bâtiments de recrutement.",
+      "answer_original": "oui il faut alors prendre en compte les nouveaux effets de l'amélioration immédiatement",
+      "decision": "Remplacement immédiat des effets antérieurs par les effets améliorés dès l'achèvement",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "F - batiments",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q52",
+      "question": "Que deviennent les constructions pendant un siège ? Les chantiers en cours continuent-ils, peut-on les accélérer ou les annuler, et les nouvelles constructions sont-elles interdites ?",
+      "answer_original": "elles continuent, on ne peut ni annuler ni accélérer. Interdiction de lancer une nouvelle construction.",
+      "decision": "Pendant le siège, chantiers en cours maintenus sans annulation ni accélération ; nouveaux chantiers interdits",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "F - batiments",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q53",
+      "question": "Que se passe-t-il si un bâtiment est détruit alors que d'autres dépendent de lui ? Les bâtiments dépendants deviennent-ils inactifs, restent-ils fonctionnels ou sont-ils également détruits ?",
+      "answer_original": "ces bâtiments deviennent inactifs",
+      "decision": "Les bâtiments privés d'un prérequis détruit deviennent inactifs, sans être détruits automatiquement",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "F - batiments",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q54",
+      "question": "Combien de héros doit proposer la taverne ? Deux offres simultanées, comme dans certaines captures, ou un nombre dépendant de la progression de la cité ?",
+      "answer_original": "j'ai répondu plus haut. Deux à la fois, renouvelable gratuitement une fois toutes les 12h.",
+      "decision": "Deux héros à la taverne ; renouvellement gratuit une fois toutes les 12 heures",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "G - heros et armees",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q55",
+      "question": "Comment évoluent le prix et le délai de recrutement des héros ? Souhaites-tu reproduire les offres historiques et leur renouvellement, avec coût croissant ou délai de disponibilité ?",
+      "answer_original": "oui on conserve les coûts historiques et augmentation des délais",
+      "decision": "Prix historiques et délais de recrutement croissants en fonction du rang de recrutement",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "G - heros et armees",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q56",
+      "question": "Combien de héros un joueur peut-il posséder ? Le plafond doit-il dépendre des villes, des bâtiments, du rang personnel ou d'autres paramètres ?",
+      "answer_original": "15 maxi pour la partie entière. avec l'augmentation des couts et des délais, c'est au joueur de gérer ses recrutements. Pas de contraintes autres",
+      "decision": "Maximum 15 héros possédés sur l'ensemble d'une campagne, sans condition supplémentaire",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "G - heros et armees",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q57",
+      "question": "Souhaites-tu conserver la progression historique des héros jusqu'au niveau 40 ? Y compris les courbes de caractéristiques par archétype et les contraintes associées ?",
+      "answer_original": "oui on reste sur les valeurs historiques, ça marchait bien",
+      "decision": "Progression historique des héros jusqu'au niveau 40",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "G - heros et armees",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q58",
+      "question": "Conservons-nous les trois emplacements de carrière et le système de talents retrouvé dans Jactari ? Faut-il autoriser toutes les carrières immédiatement ou les débloquer progressivement ?",
+      "answer_original": "on garde le système de carrières. J'aime bien l'idée de les débloquer au fur et à mesure. Ca veut dire qu'il y a un intérêt à faire monter tous les héros et pas se focaliser sur un seul",
+      "decision": "Trois carrières et talents historiques, ouverture progressive à affiner",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "G - heros et armees",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q59",
+      "question": "Comment doit fonctionner une réorientation de carrière ? Coût, délai, perte de points, réinitialisation des talents et éventuelles restrictions pendant une mission.",
+      "answer_original": "je n'ai pas souvenir de comment c'était gérer, je te laisse voir et décider en te basant sur les valeurs historiques.",
+      "decision": "Réorientation de carrière : retrouver les règles historiques puis proposer une implémentation cohérente",
+      "decision_status": "delegated_to_research_or_design",
+      "section": "G - heros et armees",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q60",
+      "question": "Les bonus passifs d'un héros s'appliquent-ils lorsqu'il est absent ? Par exemple, un héros spécialisé dans l'économie continue-t-il à améliorer les revenus de sa cité pendant une expédition militaire ?",
+      "answer_original": "non pour que les bonus passifs s'appliquent le héros doit être dans la ville et ni en déplacement sur la carte du monde, ni en déplacement sur une case de la région.",
+      "decision": "Bonus passifs uniquement si le héros est physiquement présent dans sa cité, sans déplacement mondial ou régional",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "G - heros et armees",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q61",
+      "question": "Comment les artéfacts doivent-ils circuler entre les héros, leur sac et les cités ? Transferts immédiats dans la même ville, transport entre villes, restrictions de niveau et objets liés à leur propriétaire ?",
+      "answer_original": "le héros possède un inventaire de X cases (prendre valeur historique), et chaque héros peut équiper plusieurs artefacts, en fonction de l'emplacement de l'artefact (cou, bras, jambe, dos, tête, torse etc …)",
+      "decision": "Inventaire du héros de capacité historique à retrouver, équipement par emplacements, et stockage en ville",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "G - heros et armees",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q62",
+      "question": "Comment acquiert-on les artéfacts ? Butin de combats, quêtes, ruines, commerce, événements, récompenses d'hérédité ? Quelles catégories d'objets faut-il autoriser dès le début ?",
+      "answer_original": "butin de combat dans les combats de région (garantir X cases avec des artefacts dans chaque ville, par exemple 5). Certaines quêtes peuvent aussi offrir un artefact. Un artefact peut etre transmis d'un héros à un autre. La ville possède son propre inventaire, pour échanger un artefact d'un héros à l'autre on dépose l'artefact du héros dans la ville, puis on déplace depuis l'inventaire de la ville vers le héros. Si une ville est prise avec des artefacts dedans, c'ets un butin de guerre pour l'assiégeant. Il peut aussi y avoir des artefacts comme récompense d'hérédité.",
+      "decision": "Artéfacts issus de combats régionaux (X cases récompensées), quêtes et hérédité ; échanges héros ↔ dépôt de ville ; dépôt capturable lors d'un siège",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "G - heros et armees",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q63",
+      "question": "Comment gère-t-on l'utilisation des sorts ? Conservation de la programmation préalable aux combats, nombre de sorts préparables, cercles accessibles et délais de recharge historiques ?",
+      "answer_original": "Il faut d'abord débloququer les sorts dans la ville (guilde des mages). Chaque niveau de la guilde (1 à 5) débloque un sort de ce niveau. Une guilde ne peut proposer qu'un sort par niveau/cercle alors que chaque faction dispose de plusieurs sorts par cercle. Il faut donc plusieurs guildes dans plusieurs villes pour débloquer tous les sorts. Le héros peut mémoriser 2 ou 3 sorts (prendre valeur historique). Un sort qui sera automatiquement lancé au tour 1 du combat, un sort pour le tour 2 et je crois que c'est tout. A voir s'il y avait aussi un tour 3 ? Plus ? Le héros doit etre dans la ville pour qu'on puisse changer les sorts qu'il connait.",
+      "decision": "Guilde des mages donnant un sort par cercle/niveau 1–5, variété entre cités ; héros mémorisant un petit nombre de sorts, programmés par tour ; changement en ville",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "G - heros et armees",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q64",
+      "question": "À quelle cadence apparaissent les nouvelles recrues dans les bâtiments ? Les valeurs nominales T1–T7 de 15, 10, 7, 5, 3, 2 et 1 sont retrouvées, mais leur fréquence effective doit encore être qualifiée.",
+      "answer_original": "je pense qu'on mettre à jour les valeurs une fois par heure, et comme pour les ressources seules les unités pleinement produites apparaissent en stock",
+      "decision": "Recrues créditées une fois par heure, conservation des fractions jusqu'à unité complète",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "G - heros et armees",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q65",
+      "question": "Les bâtiments améliorés partagent-ils leurs réserves de recrues avec les bâtiments précédents ? Ou chaque variante possède-t-elle son propre stock de recrutement ?",
+      "answer_original": "c'est partagé. Si j'ai 12 recrues disponible en T5, je peux recruter 12 T5+, ou alors 8 T5+ et 4 T5 ou 12 T5 de base mais pas plus de 12.",
+      "decision": "Réserve commune à un tier et sa variante améliorée",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "G - heros et armees",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q66",
+      "question": "L'achat d'unités disponibles est-il instantané ou nécessite-t-il un délai ? Le héros doit-il être présent dans la cité et une file de recrutement existe-t-elle ?",
+      "answer_original": "achat immédiat. La troupe se positionne dans l'inventaire/garnison de la ville. Les stacks d'unités peuvent être affectées à un héros se trouvant dans la ville (on peut réorganiser les stacks)",
+      "decision": "Achat instantané depuis la réserve, unités déposées en garnison ; transfert aux héros physiquement en ville",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "G - heros et armees",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q67",
+      "question": "Comment se déroule l'amélioration d'une unité ? Conversion immédiate, délai, coût supplémentaire, bâtiment spécialisé et possibilité de transformer seulement une partie d'un peloton ?",
+      "answer_original": "la conversion porte sur une stack d'unité basique. La conversion coute une quantité de ressource par unité à convertir. On paye pour la stack entière ou pas du tout. Conversion immédiate ensuite",
+      "decision": "Amélioration instantanée de tout un peloton, paiement unitaire sur l'effectif entier, sans amélioration partielle",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "G - heros et armees",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q68",
+      "question": "Conservons-nous sept pelotons ordinaires par armée de combat ? Quelle limite appliquer aux garnisons, aux armées en déplacement, aux renforts et aux unités temporaires invoquées ?",
+      "answer_original": "7 oui, on garde les valeurs historiques",
+      "decision": "Sept pelotons ordinaires par armée combattante ; autres limites historiques à retrouver",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "G - heros et armees",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q69",
+      "question": "Souhaites-tu utiliser le moteur de calcul Jactari comme référence principale ? Et lorsqu'une anomalie est identifiée dans son code, faut-il chercher à reproduire le comportement réel du serveur Ubisoft plutôt que son erreur ?",
+      "answer_original": "jactari était très précis de mémoire on peut se baser la dessus. Sinon j'ai téléchargé l'intégralité des ressources liées aux différences versions du jeu provenant de cdn, on peut aussi voir si ça matche. Mais je pense que jactari est une source idéale.",
+      "decision": "Jactari comme référence principale de calcul ; comparer au client/CDN quand possible",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "H - combat",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q70",
+      "question": "Comment vérifier l'ordre exact des opérations d'un combat ? Admission, tirs préalables, sorts, duels, résurrections, dispersion, morts définitives et expérience : acceptons-nous l'ordre retrouvé dans le calculateur tant qu'il n'est pas contredit ?",
+      "answer_original": "oui on se base sur le calculateur jactari il était parfaitement fidèle",
+      "decision": "Conserver l'ordre des phases de combat du calculateur Jactari",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "H - combat",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q71",
+      "question": "Dans quelles conditions une armée doit-elle fuir avant un combat ? Souhaites-tu conserver les seuils d'admission PvE et PvP du calculateur, après validation de leurs différences ?",
+      "answer_original": "on conserve les seuils et valeurs historique (voir encore jactari pour ça)",
+      "decision": "Conserver les seuils de fuite/admission de Jactari",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "H - combat",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q72",
+      "question": "Comment gérer les égalités et destructions mutuelles ? Peut-il y avoir un véritable match nul ou un camp est-il toujours déclaré vainqueur selon une règle précise ?",
+      "answer_original": "voir ce que dit jactari. Je crois que ça peut finir en match nul.",
+      "decision": "S'appuyer sur Jactari pour les égalités et destructions mutuelles ; nul possible selon souvenir à vérifier",
+      "decision_status": "delegated_to_research_or_design",
+      "section": "H - combat",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q73",
+      "question": "Comment déterminer les pertes permanentes ? Faut-il reproduire strictement les proportions de dispersion et de morts, y compris leurs modificateurs de talents et d'artéfacts ?",
+      "answer_original": "voir jactari. De mémoire c'était 20 ou 30% des pertes qui sont définitives. Pourquoi pas avoir un talent ou un artefact qui impacte ce pourcentage.",
+      "decision": "Pertes définitives selon Jactari (souvenir 20–30 %) ; prévoir effets de talents/artéfacts",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "H - combat",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q74",
+      "question": "Comment traiter les créatures neutres, les invocations et les résurrections ? Ont-elles les mêmes règles de pertes que les troupes permanentes et que deviennent les unités temporaires après la bataille ?",
+      "answer_original": "que dit jactari là dessus ? pour toutes les règles de combat on se réfère à la référence jactari.",
+      "decision": "Gestion PNJ, invocations et résurrections alignée sur Jactari",
+      "decision_status": "delegated_to_research_or_design",
+      "section": "H - combat",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q75",
+      "question": "Que devient un héros vaincu ? Blessure, indisponibilité, retour à la cité, capture, emprisonnement ou disparition selon le contexte du combat ?",
+      "answer_original": "retour à la cité puis indisponibilité pour blessure pour une durée qui dépend de son niveau (plus le niveau est élevé plus l'arret maladie est long)",
+      "decision": "Héros vaincu retourne en cité puis devient blessé ; durée d'indisponibilité croissante avec son niveau",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "H - combat",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q76",
+      "question": "Quelle part de hasard souhaites-tu conserver dans les combats ? Une résolution entièrement déterministe à composition identique ou des tirages aléatoires contrôlés par le serveur ?",
+      "answer_original": "100% déterministe comme avant, voir jactari. On pouvait planifier les combats à l'unité près",
+      "decision": "Combats entièrement déterministes à composition et paramètres identiques",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "H - combat",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q77",
+      "question": "Souhaites-tu proposer un simulateur de combat au joueur ? Une estimation sommaire des risques, une simulation détaillée ou aucune prédiction afin de préserver la dimension stratégique ?",
+      "answer_original": "je veux proposer un simulateur exactement comme l'avait fait jactari. Toute l'optimisation du jeu venait de là",
+      "decision": "Fournir au joueur un simulateur de combat complet de type Jactari",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "H - combat",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q78",
+      "question": "Comment attribuer précisément l'expérience et les récompenses d'une victoire PvE ? Sur la puissance vaincue, les pertes définitives, la difficulté, l'Honneur ou plusieurs facteurs ?",
+      "answer_original": "je crois que c'était un ratio entre puissance engagée et puissance vaincue multipliée par la puissance vaincue. Genre : plus je tue de troupe plus je gagne d'XP, et si en plus mon combat était optimisé, j'ai un multiplicateur qui me fait gagner encore plus. N'oublie pas qu'il y avait aussi les bonus de roue et l'augmentation de la puissance des armées qui dépendait des compétences du héros. Ca jouait beaucoup dans l'optimisation.",
+      "decision": "XP proportionnelle aux forces vaincues et à l'optimisation du rapport de force ; bonus roue, héros et compétences à vérifier",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "H - combat",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q79",
+      "question": "Quel niveau de détail doivent présenter les rapports de bataille ? Tous les tours, les sorts, les pertes et leurs calculs ? Et quelles informations doivent rester cachées à l'adversaire ?",
+      "answer_original": "oui, toutes ces infos sont visibles a priori. Tu peux te baser sur les rapports de jactari comme référence. On peut afficher la même chose.",
+      "decision": "Rapports complets des combats, selon la granularité Jactari",
+      "decision_status": "confirmed_for_mmhk_like",
+      "section": "H - combat",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q80",
+      "question": "Quelle durée doit avoir une expédition locale entre la cité et une case régionale ? Est-elle instantanée, dépendante de la distance, ou soumise à un temps d'aller et de retour ?",
+      "answer_original": "temps d'aller retour qui dépend de la distance",
+      "decision": "Trajet aller-retour local dépendant de la distance",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "I - temps et ordres",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q81",
+      "question": "Comment départager deux événements arrivant à la même seconde ? Par exemple, un renfort et une attaque, la fin d'une construction et la capture d'une cité, ou la destruction d'un monument au moment exact d'une victoire.",
+      "answer_original": "non déterministe. ne action passera avant l'autre, peu importe laquelle",
+      "decision": "Pour des événements exactement simultanés, accepter qu'un traitement passe avant l'autre sans priorité métier prédéfinie",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "I - temps et ordres",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q82",
+      "question": "Que doit-il se passer lors d'une interruption du serveur ? Le monde reprend-il en recalculant tout le temps écoulé, ou les horloges sont-elles suspendues pour tous les joueurs ?",
+      "answer_original": "le serveur reprend avec le temps écoulé. D'ailleurs je ne sais pas si tu as noté, mais il y avait la trêve nocturne ! aucun déplacement sur la carte du monde (attaque, convois, déplacement de héros - la troupe s'arrete sur la carte et fait une halte) entre 23h et 6h du matin ! du coup ça dicte comment gérer l'interruption, il faut tenir compte du temps qui a passé sinon ça peut tout fausser.",
+      "decision": "Reprise après indisponibilité en comptabilisant le temps écoulé ; trêve mondiale de 23 h à 6 h bloquant les déplacements de carte",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "I - temps et ordres",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q83",
+      "question": "Peut-on rappeler ou annuler une mission déjà partie ? Si oui, dans quelles conditions et avec quel délai de retour ?",
+      "answer_original": "tant que la destination n'a pas été atteinte (phase aller) on peut annuler. Le temps de retour sera le meme que le temps écoulé dans la phase aller avant le retour. Dans le jeu d'origine quand on traversait des cases sur la carte du monde qui sont dans la zone d'influence de l'alliance du joueur, aucune halte ne se produisait. Si le joueur devait traverser l'équivalent de X cases/points (== distance précise à retrouver) alors le héros faisait une halte de 2h à cet endroit et sa halte pouvait être attaquée par un joueur à portée !",
+      "decision": "Rappel autorisé pendant l'aller, retour égal au temps d'aller déjà parcouru ; pas de halte en influence alliée ; haltes attaquables de deux heures au-delà d'une distance seuil",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "I - temps et ordres",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    },
+    {
+      "id": "Q84",
+      "question": "Un joueur peut-il programmer plusieurs actions à l'avance ? Une file de constructions, plusieurs recrutements, des convois répétés ou des missions conditionnelles, ou devons-nous limiter l'automatisation à celle du jeu original ?",
+      "answer_original": "pas de programmation ! comme dans le jeu d'origine il me semble",
+      "decision": "Ne pas permettre de programmer des actions futures ou des files automatiques, sous réserve des exceptions historiques identifiées",
+      "decision_status": "confirmed_direction_with_parameters_open",
+      "section": "I - temps et ordres",
+      "source_kind": "user_explicit_answer",
+      "historical_proof_status": "not_automatically_inferred"
+    }
+  ]
+}
