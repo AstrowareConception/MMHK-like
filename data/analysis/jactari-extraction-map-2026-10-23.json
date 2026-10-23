@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "source": "data/Jactari/src/scripts/combat.min.js",
+  "source_bytes": 259611,
+  "upstream_license": "GPL-3.0-or-later (source header)",
+  "status": "read_and_analyzed_original_functions_not_ported",
+  "entrypoints": [
+    {
+      "name": "simulation_rencontre",
+      "offset": 107859,
+      "approx_bytes": 67535,
+      "role": "full encounter orchestrator includes morale, ranged/siege/magic, rounds, final reports"
+    },
+    {
+      "name": "simulation_combat",
+      "offset": 93596,
+      "approx_bytes": 6115,
+      "role": "one unit stack duel with attack/defence bonuses, dispersal and losses"
+    },
+    {
+      "name": "bonus_attaque_defense",
+      "offset": 87218,
+      "approx_bytes": 6368,
+      "role": "hero, unit and weapon synergy, forts and special modifiers"
+    },
+    {
+      "name": "lancement_sorts",
+      "offset": 36177,
+      "approx_bytes": 51019,
+      "role": "magic execution intertwined with mutable UI/global game state"
+    },
+    {
+      "name": "tir_engins_siege",
+      "offset": 116157,
+      "approx_bytes": 2234,
+      "role": "siege engine ranged event"
+    },
+    {
+      "name": "tri_pelotons_puissance",
+      "offset": 175416,
+      "approx_bytes": 918,
+      "role": "re-ordering troop stack power"
+    }
+  ],
+  "technical_observations": [
+    "The 259KB source is DOM/JQuery-driven: many functions access input elements directly, so it cannot be safely treated as a headless combat module without separating UI and core.",
+    "Combat routines access mutable globals _unites, pelotons_attaquant, pelotons_defenseur and id_heros; snapshot these into a pure request context.",
+    "Core uses explicit floor/round integer boundaries; preserve exact rounding in golden fixtures.",
+    "At least seven stack slots are accessed as indexes 2..8; preserve fixed ordering.",
+    "Source header declares GPL; check licensing implications before embedding GPL-derived source into project's distributed server.",
+    "Seven synthetic oracles in V5.3 are not an exhaustive Jactari regression suite."
+  ],
+  "next_delivery": "Build a pure JS Jactari-compatible adapter driven by complete input fixtures, with no fallback invented combat result; extract and test phases incrementally."
+}
