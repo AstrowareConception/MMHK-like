@@ -120,3 +120,28 @@ node --test tools/jactari-port/*.test.mjs
 ### Prochain raccordement nécessaire
 
 Un combat a deux niveaux de pertes : **pertes/dispersion pendant les tours**, puis **morts définitives après les bonus, récupérations et résurrections**. Le rapport final doit les afficher séparément. L'orchestrateur `battle.mjs` **n'appelle pas encore automatiquement** les nouveaux modules, afin de ne pas calculer un résultat final historique lorsque la magie complète, les héros et les règles de fin de combat manquent. Les modules sont donc réutilisables mais constituent toujours **une implémentation partielle** de Jactari.
+
+
+## Intégration du rapport de pertes — V5.5 (23 octobre 2026)
+
+`report.mjs` expose `simulateBattleWithLossReport()`. Il appelle l'orchestrateur des **phases actuellement supportées** (salves puis mêlée ordonnée) et transmet les pertes de chaque peloton à `finalizePermanentLosses()`. Il construit un rapport structuré avec :
+- événements de tir et de duel, puissance et dispersion ;
+- pertes provisoires par slot, **sans compter deux fois les pertes des salves** ;
+- pertes définitives après coefficient, compétence de héros, relèvement des morts et résurrection ;
+- coût en or et ressources rares des morts définitives.
+
+Le consommateur doit **fournir explicitement** le `lossPolicy.lossFactor` ; aucune valeur S2 n'est introduite par défaut. Les coefficients de bonus, les compétences et les coûts des unités restent des **données injectées** dont la provenance doit être validée.
+
+```js
+import { simulateBattleWithLossReport } from './report.mjs';
+const result = simulateBattleWithLossReport({
+  attackers: [{count:100,weapon:'I',unitPower:10,goldCost:5},null,null,null,null,null,null],
+  defenders: [{count:50,weapon:'I',unitPower:10,goldCost:5},null,null,null,null,null,null],
+  lossPolicy: { lossFactor: 0.25, source:'demonstration-only' }
+});
+console.log(result.permanent.attacker.totals);
+```
+
+Sept tests `report.test.mjs` sont ajoutés, couvrant la conversion, l'addition des salves, la résurrection, l'immuabilité et les rejets. **Le workflow CI doit encore confirmer leur passage.**
+
+Limite critique : les **sorts généraux, résurrections pendant le combat, fuite, blessures et sièges** ne sont pas intégrés au rapport. Les fonctions `losses.mjs` et `magic-revival.mjs` sont disponibles séparément ; appliquer arbitrairement des effets en cours de combat fausserait la simulation complète. Les scénarios non supportés sont refusés. Cette API **n'est pas un arbitre de combat S2 certifié**.
