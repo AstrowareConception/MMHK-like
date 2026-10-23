@@ -172,9 +172,30 @@
       "mandatory_wood": false,
       "mandatory_ore": false,
       "rare_weight_equal": true,
-      "complete_sampling_algorithm": null
+      "complete_sampling_algorithm": null,
+      "design_hypothesis_not_approved": {
+        "paired_region_probability": 0.18,
+        "all_distinct_probability": 0.82,
+        "type_weights": {
+          "G": 1.6,
+          "w": 1.5,
+          "o": 1.5,
+          "m": 1,
+          "c": 1,
+          "s": 1,
+          "g": 1
+        },
+        "all_four_rare_weights_equal": true,
+        "source": "docs/game-design/09-GENERATEUR-P0-PROPOSITIONS.md"
+      }
     },
-    "mine_position_algorithm": null,
+    "mine_position_algorithm": {
+      "type": "proposal_only_2_first_chebyshev_ring_and_2_second_ring",
+      "first_ring_count": 2,
+      "outer_ring_count": 2,
+      "seeded": true,
+      "source": "docs/game-design/09-GENERATEUR-P0-PROPOSITIONS.md"
+    },
     "pve_difficulty_by_distance": "increases_from_city_center",
     "pnj_respawn": {
       "enabled_on_unused_cleared_plots": true,
@@ -202,7 +223,8 @@
       "Q16",
       "Q17",
       "Q18"
-    ]
+    ],
+    "region_generation_warning": "Weights, duplicate probability, and mine positions are designer proposals Q12/Q15, not Ubisoft S2 historical values nor accepted player decisions."
   },
   "economy": {
     "resource_account": "per_city",
