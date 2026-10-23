@@ -36,7 +36,7 @@ def city_score(city,cell,width,height,days=6,falloff_exponent=2):
     power=city_power(city,days)
     distance=toric_distance((city.x,city.y),cell,width,height)
     if distance>radius(power): return 0.
-    return power/(1+distance)**falloff_exponent
+    return max(1,power)/(1+distance)**falloff_exponent
 
 def cell_owner(cell,cities,width,height,days=6,allied_aggregation='sum',tie_epsilon=1e-8):
     scores={}
