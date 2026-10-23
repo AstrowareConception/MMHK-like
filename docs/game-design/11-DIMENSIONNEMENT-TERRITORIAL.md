@@ -4,6 +4,8 @@
 
 **Nouvelle vérification (simulations du 23 octobre 2026) :** le [rapport de simulations territoriales](12-SIMULATION-INFLUENCE-COLONISATION.md) montre que le preset d'environ **300 régions par joueur** laisse très peu de contacts d'influence entre alliances dans une campagne test de six phases (trois villes par joueur en moyenne, rayons modestes). La plage **160–180 régions/joueur** doit être testée avec une économie militaire et coloniale réellement couplée avant de la substituer aux presets actifs. **Le tableau à 300 reste une proposition non validée**, et non un engagement de taille.
 
+**Décision plus récente :** les nouveaux presets sont désormais **calibrés à 70 % de leur capacité maximale**, et non à 100 %. Les dimensions expérimentales ont été recalculées en conséquence. Lire [calibrage des mondes à 70 %](13-CALIBRAGE-70-POURCENT.md). Les tableaux historiques de cette page expliquent le raisonnement mais ne sont plus les dimensions actives.
+
 ## Ajustement validé de l'orientation — densité et frictions d'alliance
 
 **23 octobre 2026, second arbitrage utilisateur :** le modèle à 500 régions/joueur était trop généreux. Le plafond **10 villes** est une limite, pas l'état normal de tous les joueurs. Il faut créer une **pression territoriale progressive** afin que les alliances cherchent réellement à fermer les accès aux régions colonisables. Les dimensions du tableau « hypothèse 500 » ci-dessous sont conservées comme étape de réflexion, mais **ne constituent plus les presets actifs du laboratoire**.
