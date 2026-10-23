@@ -250,4 +250,15 @@ const csvVal = s => {
 };
 const csv = [cols.join(';'),...records.map(a=>cols.map(k=>csvVal(Array.isArray(a[k]) ? a[k].join('|') : a[k])).join(';'))].join('\n')+'\n';
 writeFileSync(resolve(root,'data/analysis/assets-catalog.csv'),csv);
+const cityCols = ['faction','asset_type','logical_path','building_tags','status','in_repo','repo_path'];
+const cityCsv = [cityCols.join(';'), ...records.filter(a=>a.expected_city).map(a=>[
+  a.logical_path.split('/')[2],
+  a.category === 'ville/fond_vierge' ? 'background' : 'building',
+  a.logical_path,
+  (a.building_tags || []).join('|'),
+  a.availability,
+  a.in_repo,
+  a.repo_path || ''
+].map(csvVal).join(';'))].join('\n')+'\n';
+writeFileSync(resolve(root, 'data/analysis/city-assets-checklist.csv'), cityCsv);
 console.log(JSON.stringify(asset.counts,null,2));
