@@ -1,0 +1,665 @@
+{
+  "schema_version": 1,
+  "version": "early-game-fixtures/0.1-draft",
+  "as_of": "2026-10-23",
+  "warning": "Les données chiffrées marquées synthetic/test ne sont PAS des constantes historiques. Les cas de combat synthétiques dérivent du simulateur communautaire et non d'un rapport serveur.",
+  "count": 18,
+  "fixtures": [
+    {
+      "id": "FX-START-001",
+      "kind": "proposed_contract",
+      "rules": [
+        "RM-WRD-002",
+        "RM-WRD-004",
+        "RM-WRD-007",
+        "RM-WRD-008"
+      ],
+      "us": [
+        "US-ACC-003",
+        "US-ACC-004"
+      ],
+      "given": {
+        "world": "demo-1",
+        "state": "open",
+        "player": "p-1",
+        "faction": "HAVEN",
+        "placement_strategy": "random",
+        "free_regions": 2,
+        "starter_pack": "test-fixture-explicit",
+        "idempotency_key": "enter-p1"
+      },
+      "when": [
+        "createKingdom",
+        "retryCreateKingdomWithSameIdempotencyKey",
+        "reconnect"
+      ],
+      "then": [
+        "one WorldPlayer for (demo-1,p-1)",
+        "one city reserved atomically",
+        "only one starter grant",
+        "reconnect returns same city"
+      ],
+      "numeric_status": "no_historical_initial_stocks_claimed",
+      "notes": "La cité initiale de la fixture est injectée explicitement et ne constitue pas la dotation Ubisoft."
+    },
+    {
+      "id": "FX-START-002",
+      "kind": "proposed_contract",
+      "rules": [
+        "RM-WRD-005"
+      ],
+      "us": [
+        "US-ACC-003"
+      ],
+      "given": {
+        "world": "demo-1",
+        "inviter_world": "demo-1",
+        "friend_key": "opaque-test-key",
+        "near_available": true
+      },
+      "when": [
+        "checkFriendKey",
+        "createKingdomWithNearMode",
+        "submitFriendKeyForAnotherWorld",
+        "disableWorldSubscriptionsAndRetry"
+      ],
+      "then": [
+        "valid key resolves inviter in same world",
+        "server alone selects free legal region",
+        "wrong world rejected without allocation",
+        "when near unavailable the server must refuse or follow explicitly configured fallback; this fixture does not select a historical fallback"
+      ],
+      "numeric_status": "near_radius_unknown",
+      "notes": "Le rayon est U47 ; aucun chiffre n'est attribué à Ubisoft."
+    },
+    {
+      "id": "FX-PROTECT-001",
+      "kind": "project_recollection_lab_only",
+      "rules": [
+        "RM-WRD-006"
+      ],
+      "us": [
+        "US-ACC-011",
+        "US-PVP-004"
+      ],
+      "given": {
+        "test_policy_only": {
+          "duration_days": 7,
+          "protected_city_scope": "initial_city",
+          "end_inclusive": false
+        },
+        "start": "2026-10-23T10:00:00Z",
+        "end": "2026-10-30T10:00:00Z"
+      },
+      "when": [
+        "hostileAttackAt:2026-10-30T09:59:59Z",
+        "hostileAttackAt:2026-10-30T10:00:00Z"
+      ],
+      "then": [
+        "before end is rejected for protected initial city",
+        "at end protection is inactive under this LAB policy"
+      ],
+      "numeric_status": "seven_days_recollection_not_server_certification",
+      "notes": "La portée first_city et la fin exclusive sont des valeurs de simulation à approuver."
+    },
+    {
+      "id": "FX-REG-001",
+      "kind": "proposed_fixture_with_documented_geometry",
+      "rules": [
+        "RM-REG-001",
+        "RM-REG-002",
+        "RM-REG-003",
+        "RM-REG-004",
+        "RM-REG-005"
+      ],
+      "us": [
+        "US-ACC-004",
+        "US-REG-001"
+      ],
+      "given": {
+        "width": 5,
+        "height": 5,
+        "city": [
+          2,
+          2
+        ],
+        "seed": "lab-42",
+        "mines": [
+          {
+            "cell": [
+              0,
+              1
+            ],
+            "resource": "w"
+          },
+          {
+            "cell": [
+              1,
+              4
+            ],
+            "resource": "G"
+          },
+          {
+            "cell": [
+              3,
+              0
+            ],
+            "resource": "w"
+          },
+          {
+            "cell": [
+              4,
+              3
+            ],
+            "resource": "c"
+          }
+        ]
+      },
+      "when": [
+        "generateAndValidateRegion",
+        "generateAgainWithSameInputs"
+      ],
+      "then": [
+        "25 cells",
+        "one city centered",
+        "four mines on distinct non-central cells",
+        "duplicate wood permitted",
+        "same seed/version gives same base topology"
+      ],
+      "numeric_status": "distribution_and_coordinates_are_synthetic",
+      "notes": "Le doublon est voulu pour ne pas enfermer le modèle dans 4 types distincts."
+    },
+    {
+      "id": "FX-ECON-001",
+      "kind": "proposed_contract",
+      "rules": [
+        "RM-ECO-001",
+        "RM-ECO-006",
+        "RM-ECO-011"
+      ],
+      "us": [
+        "US-ECO-001",
+        "US-ECO-006"
+      ],
+      "given": {
+        "city": "academy-A",
+        "resource": "w",
+        "owned": 10,
+        "reserved": 3,
+        "transit": 0
+      },
+      "when": [
+        "queryAvailableBalance"
+      ],
+      "then": [
+        "available=7",
+        "the ledger distinguishes owned/reserved/transit"
+      ],
+      "expected": {
+        "available": 7
+      }
+    },
+    {
+      "id": "FX-ECON-002",
+      "kind": "proposed_fixture_not_historical_cadence",
+      "rules": [
+        "RM-ECO-002",
+        "RM-WRD-008",
+        "RM-TIM-002",
+        "RM-TIM-004"
+      ],
+      "us": [
+        "US-ECO-003"
+      ],
+      "given": {
+        "city": "A",
+        "resource": "w",
+        "balance": 10,
+        "rate_per_day": 24,
+        "cap": 100,
+        "from": "2026-10-23T00:00:00Z",
+        "to": "2026-10-23T12:00:00Z"
+      },
+      "when": [
+        "settleProductionToNoon",
+        "replaySameSettlement",
+        "disconnectReconnect"
+      ],
+      "then": [
+        "12 units credited",
+        "balance becomes 22",
+        "no second credit on replay"
+      ],
+      "expected": {
+        "credit": 12,
+        "balance": 22
+      },
+      "numeric_status": "24_per_day_is_a_test_number"
+    },
+    {
+      "id": "FX-ECON-003",
+      "kind": "proposed_fixture_not_historical_cadence",
+      "rules": [
+        "RM-ECO-002",
+        "RM-ECO-003",
+        "RM-ECO-009"
+      ],
+      "us": [
+        "US-ECO-002",
+        "US-ECO-003"
+      ],
+      "given": {
+        "resource": "w",
+        "balance": 0,
+        "rate_segments": [
+          {
+            "from": "2026-10-23T00:00:00Z",
+            "to": "2026-10-23T06:00:00Z",
+            "rate_per_day": 24
+          },
+          {
+            "from": "2026-10-23T06:00:00Z",
+            "to": "2026-10-23T12:00:00Z",
+            "rate_per_day": 48
+          }
+        ]
+      },
+      "when": [
+        "settleToNoon"
+      ],
+      "then": [
+        "first interval credits 6",
+        "second credits 12",
+        "total credited 18"
+      ],
+      "expected": {
+        "credit": 18
+      },
+      "numeric_status": "rates_are_synthetic"
+    },
+    {
+      "id": "FX-ECON-004",
+      "kind": "proposed_fixture_not_historical_overflow_rule",
+      "rules": [
+        "RM-ECO-004"
+      ],
+      "us": [
+        "US-ECO-004",
+        "US-ECO-010"
+      ],
+      "given": {
+        "resource": "w",
+        "balance": 19,
+        "cap": 20,
+        "earned": 6,
+        "test_policy": "discard_excess_production"
+      },
+      "when": [
+        "settleProduction"
+      ],
+      "then": [
+        "balance capped at 20",
+        "excess 5 is not credited under this synthetic policy"
+      ],
+      "expected": {
+        "balance": 20,
+        "discarded": 5
+      },
+      "numeric_status": "production_overflow_policy_pending_U30"
+    },
+    {
+      "id": "FX-ECON-005",
+      "kind": "catalogue_2013_reference_not_verified_server",
+      "rules": [
+        "RM-ECO-007",
+        "RM-CIT-006"
+      ],
+      "us": [
+        "US-CIT-008",
+        "US-ECO-002"
+      ],
+      "given": {
+        "faction": "ACADEMY",
+        "administration_before": {
+          "catalogue_building_index": 1,
+          "gold_day": 2000
+        },
+        "administration_after": {
+          "catalogue_building_index": 2,
+          "gold_day": 4000
+        }
+      },
+      "when": [
+        "completeTownHallUpgrade"
+      ],
+      "then": [
+        "active administrative gold/day is 4000, not 6000"
+      ],
+      "expected": {
+        "gold_per_day": 4000
+      },
+      "numeric_status": "reference_entry_values_2013",
+      "notes": "Ne prouve pas la cadence exacte du crédit d'or."
+    },
+    {
+      "id": "FX-BUILD-001",
+      "kind": "catalogue_2013_reference_with_proposed_order_contract",
+      "rules": [
+        "RM-CIT-001",
+        "RM-CIT-002",
+        "RM-CIT-003"
+      ],
+      "us": [
+        "US-CIT-003",
+        "US-CIT-004"
+      ],
+      "given": {
+        "catalogue": "Jactari-4.1.3",
+        "faction": "ACADEMY",
+        "city_level": 3,
+        "built_indices": [
+          1
+        ],
+        "target_building_index": 2,
+        "resources_before": {
+          "G": 7000,
+          "w": 10,
+          "o": 12
+        },
+        "cost": {
+          "G": 6000,
+          "w": 8,
+          "o": 10
+        },
+        "duration_minutes": 576,
+        "start": "2026-10-23T09:00:00Z"
+      },
+      "when": [
+        "startConstruction"
+      ],
+      "then": [
+        "order created only if preconditions met",
+        "exact cost debited once",
+        "due_at=2026-10-23T18:36:00Z",
+        "resources_after_G=1000_w=2_o=2"
+      ],
+      "expected": {
+        "resources_after": {
+          "G": 1000,
+          "w": 2,
+          "o": 2
+        },
+        "due_at": "2026-10-23T18:36:00Z"
+      },
+      "numeric_status": "cost_duration_preconditions_are_from_2013_catalogue;initial_stocks_are_test_values"
+    },
+    {
+      "id": "FX-BUILD-002",
+      "kind": "proposed_contract",
+      "rules": [
+        "RM-CIT-003",
+        "RM-ECO-005",
+        "RM-ECO-006",
+        "RM-TIM-002"
+      ],
+      "us": [
+        "US-CIT-004",
+        "US-ECO-005"
+      ],
+      "given": {
+        "target_building_index": 2,
+        "resources_before": {
+          "G": 7000,
+          "w": 7,
+          "o": 12
+        },
+        "cost": {
+          "G": 6000,
+          "w": 8,
+          "o": 10
+        },
+        "idempotency_key": "build-2-once"
+      },
+      "when": [
+        "attemptConstructionWithInsufficientWood",
+        "then_retrySameOperationAfterRestoringWood",
+        "sendDuplicateRequest"
+      ],
+      "then": [
+        "first attempt rejected, no partial debit",
+        "successful first accepted operation debits once",
+        "duplicate operation returns same accepted order and does not debit again"
+      ],
+      "expected": {
+        "after_failed_attempt": {
+          "G": 7000,
+          "w": 7,
+          "o": 12
+        }
+      },
+      "numeric_status": "initial_balances_synthetic"
+    },
+    {
+      "id": "FX-BUILD-003",
+      "kind": "proposed_contract",
+      "rules": [
+        "RM-CIT-005",
+        "RM-TIM-001",
+        "RM-TIM-004"
+      ],
+      "us": [
+        "US-CIT-006"
+      ],
+      "given": {
+        "building_index": 2,
+        "due_at": "2026-10-23T18:36:00Z",
+        "initial_status": "under_construction"
+      },
+      "when": [
+        "tickAt:2026-10-23T18:35:59Z",
+        "tickAt:2026-10-23T18:36:00Z",
+        "replayCompletion"
+      ],
+      "then": [
+        "no active bonus one second before due",
+        "building active at exact due",
+        "completion emitted exactly once"
+      ],
+      "expected": {
+        "completed_events": 1
+      }
+    },
+    {
+      "id": "FX-ARM-001",
+      "kind": "proposed_contract_using_simulator_limit",
+      "rules": [
+        "RM-ARM-001"
+      ],
+      "us": [
+        "US-ARM-008",
+        "US-ARM-009"
+      ],
+      "given": {
+        "stack_limit": 7
+      },
+      "when": [
+        "submitArmyWithSevenStacks",
+        "submitArmyWithEightStacks",
+        "submitStackWithZeroUnits"
+      ],
+      "then": [
+        "seven valid stacks accepted",
+        "eight ordinary stacks refused",
+        "zero-count stack refused"
+      ],
+      "numeric_status": "limit_7_from_simulator_reference"
+    },
+    {
+      "id": "FX-ARM-002",
+      "kind": "catalogue_2013_reference_with_injected_pool",
+      "rules": [
+        "RM-ARM-003",
+        "RM-ARM-004",
+        "RM-ARM-005",
+        "RM-ARM-008"
+      ],
+      "us": [
+        "US-ARM-005",
+        "US-ARM-009"
+      ],
+      "given": {
+        "faction": "ACADEMY",
+        "unit": "Gremlin",
+        "unit_index": 0,
+        "unmodified": true,
+        "unit_cost_G": 189,
+        "unit_power": 71,
+        "quantity": 3,
+        "available_recruits": 3,
+        "gold_before": 1000,
+        "recruitment_duration": "not_asserted"
+      },
+      "when": [
+        "recruitThreeGremlinsFromExistingPool"
+      ],
+      "then": [
+        "pay 567 gold exactly once",
+        "three recruits removed from pool",
+        "three purchased units added to roster",
+        "raw power 213"
+      ],
+      "expected": {
+        "total_cost_G": 567,
+        "gold_after": 433,
+        "recruits_after": 0,
+        "new_unit_count": 3,
+        "raw_power": 213
+      },
+      "numeric_status": "cost_and_power_reference_2013;pool_count_is_injected_fixture;recruitment_time_unknown"
+    },
+    {
+      "id": "FX-HERO-001",
+      "kind": "proposed_contract",
+      "rules": [
+        "RM-HER-002",
+        "RM-ARM-006"
+      ],
+      "us": [
+        "US-HER-003",
+        "US-ARM-009"
+      ],
+      "given": {
+        "hero": "hero-A",
+        "status": "available"
+      },
+      "when": [
+        "commitAttackMission",
+        "startSecondExclusiveActionWithSameHero"
+      ],
+      "then": [
+        "first order changes hero to committed",
+        "second order rejected without resource or army mutation"
+      ],
+      "numeric_status": "exclusive_action_invariant"
+    },
+    {
+      "id": "FX-PVE-001",
+      "kind": "proposed_contract_without_numeric_oracle",
+      "rules": [
+        "RM-COM-001",
+        "RM-COM-004",
+        "RM-COM-006",
+        "RM-REG-006",
+        "RM-REG-007"
+      ],
+      "us": [
+        "US-COM-002",
+        "US-REG-003",
+        "US-REG-004"
+      ],
+      "given": {
+        "region_plot": "mine-A",
+        "occupant": "npc-stack",
+        "initial_state": "occupied",
+        "hero": "hero-A"
+      },
+      "when": [
+        "resolveOneBattleAsLossInControlledFixture",
+        "resolveAnotherIndependentBattleAsVictory"
+      ],
+      "then": [
+        "in loss branch plot remains occupied and mine nonproductive",
+        "in independent victory branch plot becomes cleared and a production-eligible mine"
+      ],
+      "numeric_status": "battle_winners_are_injected;server_battle_formula_not_assumed"
+    },
+    {
+      "id": "FX-PVE-002",
+      "kind": "community_simulator_oracle_not_ubisoft_server",
+      "rules": [
+        "RM-COM-002",
+        "RM-COM-003",
+        "RM-COM-005"
+      ],
+      "us": [
+        "US-COM-004",
+        "US-COM-014"
+      ],
+      "given": {
+        "oracle_file": "data/combat-reference-cases.json",
+        "oracle_case_id": "counter_I_C",
+        "attack": {
+          "count": 100,
+          "arm": "I",
+          "toy_unit_power": 100
+        },
+        "defense": {
+          "count": 100,
+          "arm": "C",
+          "toy_unit_power": 100
+        }
+      },
+      "when": [
+        "executeReferenceSimulatorScenario"
+      ],
+      "then": [
+        "attacker wins",
+        "dispersed attacker 50 and defender 100",
+        "permanent deaths attacker 15 and defender 30"
+      ],
+      "expected": {
+        "winner": "a",
+        "dispersed_a": 50,
+        "dispersed_d": 100,
+        "deaths_a": 15,
+        "deaths_d": 30,
+        "overrun": false
+      },
+      "numeric_status": "synthetic_community_oracle_only_not_historical_server"
+    },
+    {
+      "id": "FX-MINE-001",
+      "kind": "proposed_contract",
+      "rules": [
+        "RM-REG-007"
+      ],
+      "us": [
+        "US-REG-004"
+      ],
+      "given": {
+        "mine": "mine-A",
+        "state": "occupied",
+        "nominal_resource": "w"
+      },
+      "when": [
+        "attemptProductionBeforeClearance",
+        "applyVictoryAndActivateMine"
+      ],
+      "then": [
+        "occupied mine cannot produce",
+        "cleared mine can be activated according to configured mine_activation rule"
+      ],
+      "numeric_status": "activation_mode_unknown"
+    }
+  ]
+}
