@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "version": "heritage-lab-v0.1",
+  "status": "experimental_proposal_not_user_approved",
+  "budget": 1000,
+  "reset_each_world": true,
+  "interworld_gains": false,
+  "skill_ranks": 5,
+  "rank_incremental_costs": [
+    30,
+    50,
+    80,
+    120,
+    170
+  ],
+  "cost_note": "incremental rank costs, total rank 5=450, proposed not historical",
+  "groups": [
+    {
+      "id": "economy",
+      "title": "Économie",
+      "skills": [
+        {
+          "id": "resource_yield",
+          "label": "Production locale",
+          "effect": "sum of resource yield bonus for owned cities",
+          "per_rank_percent": 1.5
+        },
+        {
+          "id": "warehouse",
+          "label": "Capacité de stockage",
+          "effect": "city store capacity bonus excluding gold if gold cap separate",
+          "per_rank_percent": 3
+        },
+        {
+          "id": "urban_build",
+          "label": "Bâtisseur urbain",
+          "effect": "city construction duration reduction",
+          "per_rank_percent": 1
+        }
+      ]
+    },
+    {
+      "id": "military",
+      "title": "Militaire",
+      "skills": [
+        {
+          "id": "attack",
+          "label": "Puissance offensive",
+          "effect": "hero-controlled unit attack bonus",
+          "per_rank_percent": 1
+        },
+        {
+          "id": "defense",
+          "label": "Défense de garnison",
+          "effect": "defense bonus when hero stationed in city",
+          "per_rank_percent": 1
+        },
+        {
+          "id": "casualties",
+          "label": "Secours aux blessés",
+          "effect": "permanent combat losses reduction percentage",
+          "per_rank_percent": 1
+        }
+      ]
+    },
+    {
+      "id": "logistics",
+      "title": "Logistique",
+      "skills": [
+        {
+          "id": "world_speed",
+          "label": "Déplacement",
+          "effect": "world-map movement duration reduction outside mandatory truce",
+          "per_rank_percent": 1
+        },
+        {
+          "id": "caravan_capacity",
+          "label": "Caravaniers",
+          "effect": "maximum safe caravan transport",
+          "per_rank_percent": 4
+        },
+        {
+          "id": "upkeep",
+          "label": "Intendance",
+          "effect": "hourly army upkeep charge reduction, not paid-when-insolvent attrition override",
+          "per_rank_percent": 2
+        }
+      ]
+    },
+    {
+      "id": "knowledge",
+      "title": "Savoir",
+      "skills": [
+        {
+          "id": "hero_xp",
+          "label": "Formation des héros",
+          "effect": "combat XP bonus",
+          "per_rank_percent": 2
+        },
+        {
+          "id": "recruitment",
+          "label": "Recrutement",
+          "effect": "hourly unit recruit growth bonus with fractions",
+          "per_rank_percent": 2
+        },
+        {
+          "id": "scouting",
+          "label": "Éclaireurs",
+          "effect": "intelligence report quality bonus, future P1",
+          "per_rank_percent": 3
+        }
+      ]
+    }
+  ],
+  "constraints": {
+    "ranks_integers": true,
+    "rank_min": 0,
+    "rank_max": 5,
+    "all_players_share_catalogue": true,
+    "unspent_points_allowed": true,
+    "restricted_by_game_mode": [
+      "scouting P1 not needed for first slice",
+      "magic absent in HAVEN T1–T3 first slice"
+    ],
+    "cap_note": "bonuses additive within same category by project rule Q34, multiplicative order against equipment and world bonuses not yet ratified"
+  },
+  "validation": {
+    "test_cases": [
+      {
+        "id": "empty",
+        "build": {},
+        "cost": 0
+      },
+      {
+        "id": "single5",
+        "build": {
+          "resource_yield": 5
+        },
+        "cost": 450
+      },
+      {
+        "id": "two5",
+        "build": {
+          "resource_yield": 5,
+          "attack": 5
+        },
+        "cost": 900
+      },
+      {
+        "id": "too_much",
+        "build": {
+          "resource_yield": 5,
+          "attack": 5,
+          "upkeep": 5
+        },
+        "cost": 1350,
+        "should_reject": true
+      }
+    ],
+    "must_test": [
+      "starting build does not transfer across worlds",
+      "specializations viable in economic/combat/logistics starts",
+      "no permanent combat advantage becomes mandatory for all players",
+      "economy bonuses cannot trivialize gold-upkeep attrition",
+      "new player sees meaningful progression without knowing previous seasons"
+    ]
+  }
+}
