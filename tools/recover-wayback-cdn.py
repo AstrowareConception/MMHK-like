@@ -68,12 +68,17 @@ def safe_path(original: str) -> Path:
     path = "/" + u.path.lstrip("/")
     if not path.startswith(CDN_PREFIX):
         raise ValueError("Unknown CDX path prefix")
-    suffix = unquote(path[len(CDN_PREFIX):])
-    if not suffix or "\x00" in suffix or "\\" in suffix:
+    raw_suffix = unquote(path[len(CDN_PREFIX):])
+    if not raw_suffix or "\x00" in raw_suffix or "\\" in raw_suffix:
         raise ValueError("Invalid filename")
+    if any(p in {".", ".."} for p in raw_suffix.split("/")):
+        raise ValueError("Relative / parent path segment")
+    # Wayback indexed old client URLs containing redundant slashes such as
+    # img//portal. Keep the original URL in the ledger, normalize the disk path.
+    suffix = re.sub(r"/+", "/", raw_suffix)
+    if suffix.startswith("/") or suffix.endswith("/"):
+        raise ValueError("Unsafe absolute or directory-only URL")
     parts = PurePosixPath(suffix).parts
-    if any(p in {"", ".", ".."} for p in suffix.split("/")):
-        raise ValueError("Empty / relative / parent path segment")
     if not parts or any(":" in p for p in parts):
         raise ValueError("Unsafe filename")
     if u.query or u.fragment:
@@ -237,7 +242,7 @@ def main() -> int:
     parser.add_argument("--dry-run", action="store_true", help="Report candidates, do not download")
     args = parser.parse_args()
 
-    allowed = set(args.kinds.split(","))
+    allowed = {part.strip() for part in args.kinds.split(",")}
     if not allowed or not allowed.issubset(KNOWN_KINDS):
         parser.error("Invalid kinds; choose from " + ",".join(sorted(KNOWN_KINDS)))
     if args.limit < 0 or args.retries < 0 or args.delay < 0 or args.max_bytes < 1:
@@ -275,7 +280,8 @@ def main() -> int:
             old = success.get(rel)
             if target.is_file():
                 existing_hash = sha256(target)
-                if old and existing_hash == old.get("sha256"):
+                if (old and existing_hash == old.get("sha256")
+                        and old.get("cdx_digest") == r["cdx_digest"]):
                     totals["skipped_verified"] += 1
                     continue
                 if not old:
@@ -283,7 +289,7 @@ def main() -> int:
                                error="Preserved local file with no verified provenance")
                     totals["existing_untracked"] += 1
                     continue
-                # Never overwrite a mismatched file silently.
+                # Never overwrite files with mismatched hash or provenance silently.
                 add_ledger(log, r, "hash-mismatch", sha256=existing_hash,
                            expected_sha256=old.get("sha256"))
                 totals["failed"] += 1
