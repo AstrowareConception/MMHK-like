@@ -23,7 +23,7 @@ Pour chaque fiche retenue : résoudre les questions bloquantes, écrire au moins
 
 ## 2. Fixer les règles nécessaires au premier jalon
 
-Il n'est pas nécessaire de résoudre les 46 inconnues avant tout développement. Il faut traiter celles qui déterminent les résultats de la boucle choisie.
+Il n'est pas nécessaire de résoudre toutes les inconnues avant tout développement. Il faut traiter celles qui déterminent les résultats de la boucle choisie.
 
 | Décision ou preuve | Résultat concret attendu | Effet sur la réalisation |
 | --- | --- | --- |
@@ -90,3 +90,9 @@ La [recherche du 23 octobre](../research/RECHERCHE-ASSETS-2026-10-23.md) apporte
 5. Tenir séparées les références historiques, les visuels provisoires et les futurs assets du nouvel univers.
 
 Le premier ticket concret proposé est donc : **préparer et réaliser le parcours « créer ma cité → produire → construire → recruter → libérer une mine → revenir après déconnexion », sur une seule faction**. L'affinage des 16 pivots donne le contenu exact et l'estimation ; aucun calendrier fiable ne peut être déduit du seul nombre de stories.
+
+## Complément : génération du monde et première implantation — 23 octobre 2026
+
+Le nouveau [rapport de rétroconception](../research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md) confirme au niveau des sources les quatre mines pour une région de 5×5, les actions du client `friendKey` et `spawn=near/random`, et l'état daté de protection débutant. Les pondérations des mines, l'espacement des sites spéciaux, le rayon du placement ami et la durée universelle de protection **ne sont pas retrouvés**. L'inconnue **U47** documente désormais l'implantation des nouveaux joueurs.
+
+Avant d'ouvrir un monde multijoueur, prévoir un générateur à graine stable, la représentation de quatre mines **non nécessairement distinctes**, l'occupation atomique de la première région, une politique de placement ami avec fallback contrôlé, et une horloge de protection versionnée. Les valeurs proposées pour un prototype doivent être marquées `PROP` et couvertes par des tests déterministes de reprise et de concurrence ; elles ne prouvent pas l'algorithme Ubisoft.
