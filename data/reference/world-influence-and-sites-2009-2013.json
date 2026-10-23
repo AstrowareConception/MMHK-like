@@ -1,0 +1,89 @@
+{
+  "schema_version": 1,
+  "status": "historical_2009_documented_not_s2_certified",
+  "sources": [
+    {
+      "id": "G2009",
+      "url": "https://forum.hardware.fr/hfr/JeuxVideo/PC/kingdom-tactic-gratuit-sujet_154147_1.htm",
+      "notes": "copie tutoriel 2009, effects and cumulatively additive"
+    },
+    {
+      "id": "R2013",
+      "url": "https://www.might-and-magic.ru/articles/_/heroes-kingdoms/hk-towns/hk_city_faq",
+      "notes": "2013 FAQ city military and building domination four-day average and influence thresholds"
+    }
+  ],
+  "influence": {
+    "rolling_mean_days_reference": 4,
+    "roll_daily": true,
+    "domination_components": [
+      "mean_stationed_army_power",
+      "completed_building_domination"
+    ],
+    "thresholds": [
+      {
+        "radius": 1,
+        "min": 0
+      },
+      {
+        "radius": 2,
+        "min": 30000
+      },
+      {
+        "radius": 3,
+        "min": 100000
+      },
+      {
+        "radius": 4,
+        "min": 250000
+      },
+      {
+        "radius": 5,
+        "min": 500000
+      },
+      {
+        "radius": 6,
+        "min": 1000000
+      }
+    ],
+    "distance_attenuation_formula": "not recovered; candidate 1/(1+d)^2",
+    "contested_case_rule": "compare influence per tile, original exact formula not recovered"
+  },
+  "sites": [
+    {
+      "id": "sphinx",
+      "name_fr": "Sphinx",
+      "effect_key": "city_maintenance_percent_reduction",
+      "value_per_site": 7,
+      "unit": "percent",
+      "scope": "all_players_in_controlling_alliance",
+      "stacking": "additive"
+    },
+    {
+      "id": "dwarven_treasury",
+      "name_fr": "Trésorerie des Nains",
+      "effect_key": "gold_production_percent_bonus",
+      "value_per_site": 5,
+      "unit": "percent",
+      "scope": "all_players_in_controlling_alliance",
+      "stacking": "additive"
+    },
+    {
+      "id": "knowledge_dolmen",
+      "name_fr": "Dolmen du savoir",
+      "effect_key": "hero_battle_xp_percent_bonus",
+      "value_per_site": 10,
+      "unit": "percent",
+      "scope": "all_players_in_controlling_alliance",
+      "stacking": "additive"
+    }
+  ],
+  "claims": {
+    "controlled_when": "site located in winning alliance area of influence after daily refresh",
+    "ownership_shift": "change in influence can change site controller",
+    "solo_player": "may benefit from their own influence as documented 2009",
+    "scope_of_s2_exceptions": "unknown",
+    "bonus_application_floor_and_caps": "unknown",
+    "monument_and_war_of_tears": "separate from these neutral world bonus buildings"
+  }
+}
