@@ -1,0 +1,13 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {calculateSalvo,resolveSimultaneousSalvos} from './ranged.mjs';
+const slot=(count,unitPower=100,weapon='R',siege=false)=>({count,unitPower,weapon,siege});
+const a=(...stacks)=>Array.from({length:7},(_,i)=>stacks[i]??null);
+test('archer salvo uses ranged stacks only',()=>{const r=calculateSalvo({shooters:a(slot(10),slot(50,100,'I')),targets:a(slot(5),slot(20))});assert.deepEqual(r.casualties.slice(0,2),[5,5]);});
+test('salvo equal power does not spill to next slot',()=>{const r=calculateSalvo({shooters:a(slot(5)),targets:a(slot(5),slot(10))});assert.deepEqual(r.casualties.slice(0,2),[5,0]);});
+test('fractional power uses historic floor',()=>{const r=calculateSalvo({shooters:a(slot(1)),targets:a(slot(50)),percent:33.9});assert.equal(r.casualties[0],0);});
+test('siege power historical 300 maps to 1100',()=>{const r=calculateSalvo({shooters:a(slot(1,300,'I',true)),targets:a(slot(20,100)),kind:'E'});assert.equal(r.casualties[0],11);});
+test('siege power other than 300 maps to 1600',()=>{const r=calculateSalvo({shooters:a(slot(1,400,'I',true)),targets:a(slot(20,100)),kind:'E'});assert.equal(r.casualties[0],16);});
+test('simultaneous fire both sides preserved',()=>{const s=a(slot(10));const r=resolveSimultaneousSalvos({attackers:s,defenders:s,attackerSalvos:[{kind:'R',percent:100}],defenderSalvos:[{kind:'R',percent:100}]});assert.equal(r.attacker.killed[0],10);assert.equal(r.defender.killed[0],10);assert.equal(s[0].count,10);});
+test('invalid number of stacks refused',()=>assert.throws(()=>calculateSalvo({shooters:[],targets:a(slot(1))}),RangeError));
+test('empty salvo has no effect',()=>assert.deepEqual(calculateSalvo({shooters:a(),targets:a(slot(20))}).casualties,Array(7).fill(0)));
