@@ -18,6 +18,7 @@ La révision 0.5 analyse la [génération du monde, les sites spéciaux, le code
 | --- | --- |
 | Comprendre les règles de génération et d'arrivée des joueurs | [Mines, sites, code ami et protection débutant](docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md) |
 | Relancer la récupération historique | [Outil Wayback](tools/recover-wayback-cdn.py) et [méthode](docs/research/RECHERCHE-ASSETS-2026-10-23.md#7-reprise-de-la-collecte-wayback-après-interruption) |
+| **Règles métier early game et affinage des US** | **[Référentiel de 60 RM et 18 fixtures](docs/rules/README.md)**, [contrats métier](docs/rules/CONTRATS-EARLY-GAME.md), [affinage des US](docs/rules/AFFINAGE-US-L1.md) |
 | Savoir quoi réaliser maintenant | [Prochaines étapes et premier lot de stories](docs/specifications/PROCHAINES-ETAPES.md) |
 | **Suivre chaque image retrouvée/manquante** | **[Catalogue des 1 425 références](docs/research/CATALOGUE-RESSOURCES-GRAPHIQUES.md)**, [CSV](data/analysis/assets-catalog.csv), [JSON](data/analysis/assets-catalog.json) et [outil de collecte ciblée](tools/recover-wayback-assets.py) |
 | Accéder aux nouveaux assets retrouvés | [Fichiers récupérés](data/assets-recovered/README.md), [recherche et limites](docs/research/RECHERCHE-ASSETS-2026-10-23.md) |
