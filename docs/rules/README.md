@@ -15,6 +15,8 @@ Le périmètre est le **PvP classique, avec Guerre des Larmes en cible**. Le pre
 | [Profil S2 de conception](../../data/rules/mmhk-like-s2-policy-draft.json) | Profil de produit dérivé des réponses, non exécutable tant que les paramètres essentiels sont inconnus |
 | [Traçabilité des réponses](../../data/decisions/p0-traceability.json) | Correspondances complètes Q → RM → US → Uxx |
 | [Vérification des réponses P0](../../tools/validate-p0-decisions.mjs) | Contrôles automatiques de cohérence et d'attribution, pas tests de moteur |
+| [15 cas d'acceptation supplémentaires des décisions P0](../../data/decisions/p0-acceptance-examples.json) | Testent les contraintes de mines, protection, entretien, chantiers, trêve, codes amis ; attentes seulement, aucun moteur exécuté |
+| [Proposition de générateur délégué](../game-design/09-GENERATEUR-P0-PROPOSITIONS.md) | Pondérations et positions proposées pour Q12/Q15, à simuler avant validation |
 | [18 fixtures](../../data/rules/early-game.fixtures.json) | Exemples concrets, avec distinction entre chiffres de 2013, nombres fictifs et propositions de test |
 | [Expérience du premier royaume](../game-design/08-EXPERIENCE-EARLY-GAME.md) | Parcours joueur, arbitrages, progression et métriques d'équilibrage sans attribuer des chiffres fictifs à Ubisoft |
 | [Contrats et invariants](CONTRATS-EARLY-GAME.md) | Description métier du déroulé, transitions, formules candidates, droits, refus et temps |
