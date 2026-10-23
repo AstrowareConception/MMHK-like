@@ -1,0 +1,24 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-23",
+  "experiment": "resource_mine_type_sampling",
+  "generator_config": "data/game-design/world-generator-lab.json",
+  "sample_regions": 10000,
+  "method": "independent JS sampling using committed weight/pair formulas; not execution of node CLI file",
+  "pair_probability_target": 0.18,
+  "observed_paired": 1817,
+  "observed_paired_percent": 18.17,
+  "invalid_patterns": 0,
+  "total_mines": 40000,
+  "type_counts": {
+    "G": 6938,
+    "w": 6563,
+    "o": 6640,
+    "c": 4958,
+    "g": 4960,
+    "s": 4990,
+    "m": 4951
+  },
+  "scope": "SYNTHETIC_DESIGN_ONLY",
+  "interpretation": "Rare resources symmetric in weights and near-equiprobable empirically; no Ubisoft distribution inferred. Test geographic positions, specific seed reproducibility, equity of initial-city constraints and special-site lattice separately."
+}
