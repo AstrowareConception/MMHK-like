@@ -1,0 +1,42 @@
+{
+  "as_of": "2026-10-23",
+  "version": "v5.3-case-oracle-bridge",
+  "status": "20_assertions_passed_scope_limited",
+  "archive": "MMHK_V5_3_oracle_bridge_2026-10-23.zip",
+  "implemented": [
+    "simultaneous orders based on shared snapshot",
+    "troop reservation/idempotence",
+    "three-hour example arrival",
+    "hourly city gold and 10% per-stack attrition",
+    "four-day military influence",
+    "seven exact synthetic Jactari-derived oracle cases",
+    "explicit rejection for unsupported battle formations"
+  ],
+  "validated": {
+    "checks": 20,
+    "casualty_example": {
+      "initial_A_infantry": 100,
+      "initial_B_cavalry": 100,
+      "mutual_arrivals_hour": 3,
+      "final_A_infantry": 70,
+      "final_B_cavalry": 40
+    },
+    "ledger_rows_4_days_2_cities": 192,
+    "simultaneous_arrival_order_mismatches": 0
+  },
+  "not_implemented": [
+    "full Jactari combat.js engine",
+    "seven ordered stacks combinatorics",
+    "hero/spell/equipment modifiers",
+    "movement/truce/weather",
+    "siege/pillage/capture",
+    "real direct relic transfer in this scenario",
+    "S2 server oracle equivalence"
+  ],
+  "provenance": {
+    "reference_file": "data/combat-reference-cases.json",
+    "oracle": "community_synthetic_not_original_server",
+    "unit_power_case": "toy power 100 per unit"
+  },
+  "caveat": "No interpolation between reference combat cases: unknown compositions reject; mission format is an integration scaffold, not full MMHK operation."
+}
