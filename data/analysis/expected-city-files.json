@@ -1,0 +1,1618 @@
+{
+  "source_layout": "original-city-layouts-4.1.3.json",
+  "note": "175 chemins attendus : 5 bases et 170 GIF ; noms dérivés du client, pas 175 images récupérées. TAVERN récupéré en 4.1.27, placement extrait de 4.1.3 : compatibilité à vérifier.",
+  "files": [
+    {
+      "relative_path": "img/city/HAVEN/VILLAGE_HALL.gif",
+      "kind": "building",
+      "building_tags": [
+        "VILLAGE_HALL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/TOWN_HALL.gif",
+      "kind": "building",
+      "building_tags": [
+        "TOWN_HALL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/CITY_HALL.gif",
+      "kind": "building",
+      "building_tags": [
+        "CITY_HALL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/CAPITOL.gif",
+      "kind": "building",
+      "building_tags": [
+        "CAPITOL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/TAVERN.gif",
+      "kind": "building",
+      "building_tags": [
+        "TAVERN"
+      ],
+      "status": "recovered_other_version",
+      "recovered_files": [
+        "data/assets-recovered/ubisoft-archive/4.1.27-MTR/img/city/HAVEN/TAVERN.gif"
+      ]
+    },
+    {
+      "relative_path": "img/city/HAVEN/MARKETPLACE.gif",
+      "kind": "building",
+      "building_tags": [
+        "MARKETPLACE"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/SILO.gif",
+      "kind": "building",
+      "building_tags": [
+        "RESSOURCE_SILO_LVL1",
+        "RESSOURCE_SILO_LVL2",
+        "RESSOURCE_SILO_LVL3",
+        "RESSOURCE_SILO_LVL4",
+        "RESSOURCE_SILO_LVL5",
+        "RESSOURCE_SILO_LVL6",
+        "RESSOURCE_SILO_LVL7",
+        "RESSOURCE_SILO_LVL8",
+        "RESSOURCE_SILO_LVL9",
+        "RESSOURCE_SILO_LVL10"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/MAGIC_GUILD_LVL1.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL1"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/MAGIC_GUILD_LVL2.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL2"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/MAGIC_GUILD_LVL3.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL3"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/MAGIC_GUILD_LVL4.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL4"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/MAGIC_GUILD_LVL5.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL5"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/FORT.gif",
+      "kind": "building",
+      "building_tags": [
+        "FORT"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/CITADEL.gif",
+      "kind": "building",
+      "building_tags": [
+        "CITADEL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/CASTLE.gif",
+      "kind": "building",
+      "building_tags": [
+        "CASTLE"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/RECRUIT_T1.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T1"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/RECRUIT_T1P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T1P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/RECRUIT_T2.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T2"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/RECRUIT_T2P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T2P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/RECRUIT_T3.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T3"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/RECRUIT_T3P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T3P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/RECRUIT_T4.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T4"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/RECRUIT_T4P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T4P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/RECRUIT_T5.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T5"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/RECRUIT_T5P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T5P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/RECRUIT_T6.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T6"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/RECRUIT_T6P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T6P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/RECRUIT_T7.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T7"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/RECRUIT_T7P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T7P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/BLACKSMITH.gif",
+      "kind": "building",
+      "building_tags": [
+        "BLACKSMITH"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/ADVANCED_BLACKSMITH.gif",
+      "kind": "building",
+      "building_tags": [
+        "ADVANCED_BLACKSMITH"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/GRAIL_STRUCTURE.gif",
+      "kind": "building",
+      "building_tags": [
+        "GRAIL_STRUCTURE"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/GRAIL_STRUCTURE_STOLEN.gif",
+      "kind": "building",
+      "building_tags": [
+        "GRAIL_STRUCTURE_STOLEN"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/FARMS.gif",
+      "kind": "building",
+      "building_tags": [
+        "FARMS"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/HAVEN/base.jpg",
+      "kind": "background",
+      "building_tags": [],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/VILLAGE_HALL.gif",
+      "kind": "building",
+      "building_tags": [
+        "VILLAGE_HALL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/TOWN_HALL.gif",
+      "kind": "building",
+      "building_tags": [
+        "TOWN_HALL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/CITY_HALL.gif",
+      "kind": "building",
+      "building_tags": [
+        "CITY_HALL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/CAPITOL.gif",
+      "kind": "building",
+      "building_tags": [
+        "CAPITOL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/TAVERN.gif",
+      "kind": "building",
+      "building_tags": [
+        "TAVERN"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/MARKETPLACE.gif",
+      "kind": "building",
+      "building_tags": [
+        "MARKETPLACE"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/SILO.gif",
+      "kind": "building",
+      "building_tags": [
+        "RESSOURCE_SILO_LVL1",
+        "RESSOURCE_SILO_LVL2",
+        "RESSOURCE_SILO_LVL3",
+        "RESSOURCE_SILO_LVL4",
+        "RESSOURCE_SILO_LVL5",
+        "RESSOURCE_SILO_LVL6",
+        "RESSOURCE_SILO_LVL7",
+        "RESSOURCE_SILO_LVL8",
+        "RESSOURCE_SILO_LVL9",
+        "RESSOURCE_SILO_LVL10"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/MAGIC_GUILD_LVL1.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL1"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/MAGIC_GUILD_LVL2.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL2"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/MAGIC_GUILD_LVL3.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL3"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/MAGIC_GUILD_LVL4.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL4"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/MAGIC_GUILD_LVL5.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL5"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/FORT.gif",
+      "kind": "building",
+      "building_tags": [
+        "FORT"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/CITADEL.gif",
+      "kind": "building",
+      "building_tags": [
+        "CITADEL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/CASTLE.gif",
+      "kind": "building",
+      "building_tags": [
+        "CASTLE"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/RECRUIT_T1.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T1"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/RECRUIT_T1P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T1P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/RECRUIT_T2.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T2"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/RECRUIT_T2P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T2P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/RECRUIT_T3.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T3"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/RECRUIT_T3P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T3P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/RECRUIT_T4.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T4"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/RECRUIT_T4P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T4P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/RECRUIT_T5.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T5"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/RECRUIT_T5P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T5P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/RECRUIT_T6.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T6"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/RECRUIT_T6P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T6P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/RECRUIT_T7.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T7"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/RECRUIT_T7P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T7P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/BLACKSMITH.gif",
+      "kind": "building",
+      "building_tags": [
+        "BLACKSMITH"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/ADVANCED_BLACKSMITH.gif",
+      "kind": "building",
+      "building_tags": [
+        "ADVANCED_BLACKSMITH"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/GRAIL_STRUCTURE.gif",
+      "kind": "building",
+      "building_tags": [
+        "GRAIL_STRUCTURE"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/GRAIL_STRUCTURE_STOLEN.gif",
+      "kind": "building",
+      "building_tags": [
+        "GRAIL_STRUCTURE_STOLEN"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/HALLS_OF_HORROR.gif",
+      "kind": "building",
+      "building_tags": [
+        "HALLS_OF_HORROR"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/INFERNO/base.jpg",
+      "kind": "background",
+      "building_tags": [],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/VILLAGE_HALL.gif",
+      "kind": "building",
+      "building_tags": [
+        "VILLAGE_HALL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/TOWN_HALL.gif",
+      "kind": "building",
+      "building_tags": [
+        "TOWN_HALL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/CITY_HALL.gif",
+      "kind": "building",
+      "building_tags": [
+        "CITY_HALL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/CAPITOL.gif",
+      "kind": "building",
+      "building_tags": [
+        "CAPITOL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/TAVERN.gif",
+      "kind": "building",
+      "building_tags": [
+        "TAVERN"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/MARKETPLACE.gif",
+      "kind": "building",
+      "building_tags": [
+        "MARKETPLACE"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/SILO.gif",
+      "kind": "building",
+      "building_tags": [
+        "RESSOURCE_SILO_LVL1",
+        "RESSOURCE_SILO_LVL2",
+        "RESSOURCE_SILO_LVL3",
+        "RESSOURCE_SILO_LVL4",
+        "RESSOURCE_SILO_LVL5",
+        "RESSOURCE_SILO_LVL6",
+        "RESSOURCE_SILO_LVL7",
+        "RESSOURCE_SILO_LVL8",
+        "RESSOURCE_SILO_LVL9",
+        "RESSOURCE_SILO_LVL10"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/MAGIC_GUILD_LVL1.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL1"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/MAGIC_GUILD_LVL2.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL2"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/MAGIC_GUILD_LVL3.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL3"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/MAGIC_GUILD_LVL4.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL4"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/MAGIC_GUILD_LVL5.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL5"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/FORT.gif",
+      "kind": "building",
+      "building_tags": [
+        "FORT"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/CITADEL.gif",
+      "kind": "building",
+      "building_tags": [
+        "CITADEL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/CASTLE.gif",
+      "kind": "building",
+      "building_tags": [
+        "CASTLE"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/RECRUIT_T1.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T1"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/RECRUIT_T1P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T1P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/RECRUIT_T2.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T2"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/RECRUIT_T2P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T2P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/RECRUIT_T3.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T3"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/RECRUIT_T3P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T3P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/RECRUIT_T4.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T4"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/RECRUIT_T4P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T4P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/RECRUIT_T5.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T5"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/RECRUIT_T5P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T5P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/RECRUIT_T6.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T6"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/RECRUIT_T6P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T6P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/RECRUIT_T7.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T7"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/RECRUIT_T7P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T7P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/BLACKSMITH.gif",
+      "kind": "building",
+      "building_tags": [
+        "BLACKSMITH"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/ADVANCED_BLACKSMITH.gif",
+      "kind": "building",
+      "building_tags": [
+        "ADVANCED_BLACKSMITH"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/GRAIL_STRUCTURE.gif",
+      "kind": "building",
+      "building_tags": [
+        "GRAIL_STRUCTURE"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/GRAIL_STRUCTURE_STOLEN.gif",
+      "kind": "building",
+      "building_tags": [
+        "GRAIL_STRUCTURE_STOLEN"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/TREASURE_CAVE.gif",
+      "kind": "building",
+      "building_tags": [
+        "TREASURE_CAVE"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/ACADEMY/base.jpg",
+      "kind": "background",
+      "building_tags": [],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/VILLAGE_HALL.gif",
+      "kind": "building",
+      "building_tags": [
+        "VILLAGE_HALL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/TOWN_HALL.gif",
+      "kind": "building",
+      "building_tags": [
+        "TOWN_HALL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/CITY_HALL.gif",
+      "kind": "building",
+      "building_tags": [
+        "CITY_HALL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/CAPITOL.gif",
+      "kind": "building",
+      "building_tags": [
+        "CAPITOL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/TAVERN.gif",
+      "kind": "building",
+      "building_tags": [
+        "TAVERN"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/MARKETPLACE.gif",
+      "kind": "building",
+      "building_tags": [
+        "MARKETPLACE"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/SILO.gif",
+      "kind": "building",
+      "building_tags": [
+        "RESSOURCE_SILO_LVL1",
+        "RESSOURCE_SILO_LVL2",
+        "RESSOURCE_SILO_LVL3",
+        "RESSOURCE_SILO_LVL4",
+        "RESSOURCE_SILO_LVL5",
+        "RESSOURCE_SILO_LVL6",
+        "RESSOURCE_SILO_LVL7",
+        "RESSOURCE_SILO_LVL8",
+        "RESSOURCE_SILO_LVL9",
+        "RESSOURCE_SILO_LVL10"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/MAGIC_GUILD_LVL1.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL1"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/MAGIC_GUILD_LVL2.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL2"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/MAGIC_GUILD_LVL3.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL3"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/MAGIC_GUILD_LVL4.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL4"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/MAGIC_GUILD_LVL5.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL5"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/FORT.gif",
+      "kind": "building",
+      "building_tags": [
+        "FORT"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/CITADEL.gif",
+      "kind": "building",
+      "building_tags": [
+        "CITADEL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/CASTLE.gif",
+      "kind": "building",
+      "building_tags": [
+        "CASTLE"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/RECRUIT_T1.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T1"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/RECRUIT_T1P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T1P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/RECRUIT_T2.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T2"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/RECRUIT_T2P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T2P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/RECRUIT_T3.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T3"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/RECRUIT_T3P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T3P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/RECRUIT_T4.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T4"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/RECRUIT_T4P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T4P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/RECRUIT_T5.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T5"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/RECRUIT_T5P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T5P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/RECRUIT_T6.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T6"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/RECRUIT_T6P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T6P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/RECRUIT_T7.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T7"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/RECRUIT_T7P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T7P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/BLACKSMITH.gif",
+      "kind": "building",
+      "building_tags": [
+        "BLACKSMITH"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/ADVANCED_BLACKSMITH.gif",
+      "kind": "building",
+      "building_tags": [
+        "ADVANCED_BLACKSMITH"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/GRAIL_STRUCTURE.gif",
+      "kind": "building",
+      "building_tags": [
+        "GRAIL_STRUCTURE"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/GRAIL_STRUCTURE_STOLEN.gif",
+      "kind": "building",
+      "building_tags": [
+        "GRAIL_STRUCTURE_STOLEN"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/UNEARTHED_GRAVES.gif",
+      "kind": "building",
+      "building_tags": [
+        "UNEARTHED_GRAVES"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/NECROPOLIS/base.jpg",
+      "kind": "background",
+      "building_tags": [],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/VILLAGE_HALL.gif",
+      "kind": "building",
+      "building_tags": [
+        "VILLAGE_HALL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/TOWN_HALL.gif",
+      "kind": "building",
+      "building_tags": [
+        "TOWN_HALL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/CITY_HALL.gif",
+      "kind": "building",
+      "building_tags": [
+        "CITY_HALL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/CAPITOL.gif",
+      "kind": "building",
+      "building_tags": [
+        "CAPITOL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/TAVERN.gif",
+      "kind": "building",
+      "building_tags": [
+        "TAVERN"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/MARKETPLACE.gif",
+      "kind": "building",
+      "building_tags": [
+        "MARKETPLACE"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/SILO.gif",
+      "kind": "building",
+      "building_tags": [
+        "RESSOURCE_SILO_LVL1",
+        "RESSOURCE_SILO_LVL2",
+        "RESSOURCE_SILO_LVL3",
+        "RESSOURCE_SILO_LVL4",
+        "RESSOURCE_SILO_LVL5",
+        "RESSOURCE_SILO_LVL6",
+        "RESSOURCE_SILO_LVL7",
+        "RESSOURCE_SILO_LVL8",
+        "RESSOURCE_SILO_LVL9",
+        "RESSOURCE_SILO_LVL10"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/MAGIC_GUILD_LVL1.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL1"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/MAGIC_GUILD_LVL2.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL2"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/MAGIC_GUILD_LVL3.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL3"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/MAGIC_GUILD_LVL4.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL4"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/MAGIC_GUILD_LVL5.gif",
+      "kind": "building",
+      "building_tags": [
+        "MAGIC_GUILD_LVL5"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/FORT.gif",
+      "kind": "building",
+      "building_tags": [
+        "FORT"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/CITADEL.gif",
+      "kind": "building",
+      "building_tags": [
+        "CITADEL"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/CASTLE.gif",
+      "kind": "building",
+      "building_tags": [
+        "CASTLE"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/RECRUIT_T1.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T1"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/RECRUIT_T1P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T1P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/RECRUIT_T2.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T2"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/RECRUIT_T2P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T2P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/RECRUIT_T3.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T3"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/RECRUIT_T3P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T3P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/RECRUIT_T4.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T4"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/RECRUIT_T4P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T4P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/RECRUIT_T5.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T5"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/RECRUIT_T5P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T5P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/RECRUIT_T6.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T6"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/RECRUIT_T6P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T6P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/RECRUIT_T7.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T7"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/RECRUIT_T7P.gif",
+      "kind": "building",
+      "building_tags": [
+        "RECRUIT_T7P"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/BLACKSMITH.gif",
+      "kind": "building",
+      "building_tags": [
+        "BLACKSMITH"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/ADVANCED_BLACKSMITH.gif",
+      "kind": "building",
+      "building_tags": [
+        "ADVANCED_BLACKSMITH"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/GRAIL_STRUCTURE.gif",
+      "kind": "building",
+      "building_tags": [
+        "GRAIL_STRUCTURE"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/GRAIL_STRUCTURE_STOLEN.gif",
+      "kind": "building",
+      "building_tags": [
+        "GRAIL_STRUCTURE_STOLEN"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/TREANT_SAPLINGS.gif",
+      "kind": "building",
+      "building_tags": [
+        "TREANT_SAPLINGS"
+      ],
+      "status": "not_recovered",
+      "recovered_files": []
+    },
+    {
+      "relative_path": "img/city/SYLVAN/base.jpg",
+      "kind": "background",
+      "building_tags": [],
+      "status": "not_recovered",
+      "recovered_files": []
+    }
+  ]
+}

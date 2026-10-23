@@ -2,16 +2,20 @@
 
 **Objectif : reconstruire le fonctionnement de Might & Magic Heroes Kingdoms avant de développer son successeur jouable par navigateur.** Le présent dépôt contient un référentiel de gameplay, des spécifications fonctionnelles, des données historiques extraites et un plan de validation. Il ne contient pas encore de jeu exécutable.
 
-Version documentaire **0.3 — 22 octobre 2026**. Recherche réalisée à partir des neuf liens fournis, de leurs archives accessibles, de guides communautaires et du code public de MMHK-Plus/Jactari. Les mécanismes retrouvés sont distingués des hypothèses et des propositions de reconstruction. **Ce dossier n’est pas une copie certifiée du serveur Ubisoft : plusieurs règles ont changé selon les saisons et certaines informations manquent.**
+Version documentaire **0.4 — 23 octobre 2026**. Recherche réalisée à partir des neuf liens fournis, de leurs archives accessibles, de guides communautaires, du code public de MMHK-Plus/Jactari et désormais de fichiers du client Ubisoft archivés. Les mécanismes retrouvés sont distingués des hypothèses et des propositions de reconstruction. **Ce dossier n’est pas une copie certifiée du serveur Ubisoft : plusieurs règles ont changé selon les saisons et certaines informations manquent.**
 
-La révision 0.2 intègre **57 captures (53 distinctes)** et les **153 fichiers Jactari, dont 96 images**, fournis dans le dépôt. Elle confirme le périmètre **PvP classique avec Guerre des Larmes**, détaille les interfaces et relie les objets aux planches graphiques. Les décors complets de monde/région/ville restent à retrouver ou reconstruire.
+La révision 0.2 intègre **57 captures (53 distinctes)** et les **153 fichiers Jactari, dont 96 images**, fournis dans le dépôt. Elle confirme le périmètre **PvP classique avec Guerre des Larmes**, détaille les interfaces et relie les objets aux planches graphiques.
 
 La révision 0.3 ajoute un **[backlog de 300 user stories](docs/backlog/README.md)**, réparties en 23 catégories et reliées aux phases de campagne. Chaque fiche comprend les 3 C, cinq critères d’acceptation, un examen INVEST, la DoD, les dépendances et les inconnues. Les 55 exigences classiques actives sont couvertes ; les scénarios restent à exécuter lors du développement.
+
+La révision 0.4 ajoute **[29 images retrouvées sur Internet](data/assets-recovered/README.md)** : cinq scènes de ville assemblées, des fonds de monde/région, quatre planches de miniatures de bâtiments, une taverne individuelle et des éléments d'interface. Trois fichiers du client historique ont permis d'extraire **215 configurations de placement**. Les fonds de ville vides et la majorité des bâtiments individuels restent manquants. Le [rapport de recherche](docs/research/RECHERCHE-ASSETS-2026-10-23.md) distingue fichiers récupérés et pistes d'archives ; les [prochaines étapes](docs/specifications/PROCHAINES-ETAPES.md) préparent une première boucle jouable et ses stories.
 
 ## Lire le dossier
 
 | Besoin | Document |
 | --- | --- |
+| Savoir quoi réaliser maintenant | [Prochaines étapes et premier lot de stories](docs/specifications/PROCHAINES-ETAPES.md) |
+| Accéder aux nouveaux assets retrouvés | [Fichiers récupérés](data/assets-recovered/README.md), [recherche et limites](docs/research/RECHERCHE-ASSETS-2026-10-23.md) |
 | Piloter le développement par les besoins joueur | [Backlog de 300 user stories](docs/backlog/README.md), [index complet](docs/backlog/INDEX-STORIES.md) |
 | Organiser les versions et les phases de campagne | [Story map](docs/backlog/STORY-MAP.md) |
 | Affiner, estimer et accepter une fonctionnalité | [3 C, INVEST et Definition of Done](docs/backlog/METHODE-ET-QUALITE.md) |
@@ -49,7 +53,7 @@ Consulter les [unités](docs/game-design/CATALOGUE-UNITES.md), [bâtiments](docs
 
 ## Convention essentielle
 
-`OBS-IMAGE` = visible dans une capture ; `DECISION-USER` = choix confirmé du projet ; `OBS-CODE` = observé dans un outil communautaire ; `DOC` = décrit par une source ; `COR` = corroboré ; `HYP` = hypothèse ; `PROP` = proposition pour le nouveau jeu ; `INCONNU` = non retrouvé. Un chiffre sans version ni source ne devient pas une règle historique.
+`OBS-IMAGE` = visible dans une capture ; `DECISION-USER` = choix confirmé du projet ; `OBS-CODE` = observé dans un outil communautaire ; `OBS-CLIENT-ARCHIVE` = observé dans un fichier du client Ubisoft archivé ; `DOC` = décrit par une source ; `COR` = corroboré ; `HYP` = hypothèse ; `PROP` = proposition pour le nouveau jeu ; `INCONNU` = non retrouvé. Un chiffre sans version ni source ne devient pas une règle historique.
 
 Le périmètre **confirmé par l’utilisateur** est le **PvP classique à alliances et Guerre des Larmes**, avec les vues monde/région/ville et une forte fidélité visuelle. La saison exacte des tables reste à qualifier ; tournoi S4, Arkath et défis solo sont archivés hors du socle. Aucun assemblage « saison 2 + entretien tardif + victoire saison 4 » n’est présenté comme authentique.
 

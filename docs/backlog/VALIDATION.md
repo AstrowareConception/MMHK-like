@@ -36,6 +36,8 @@ node tools/validate-backlog.mjs
 
 La commande produit un JSON et un code de sortie non nul si le contrôle échoue. Elle ne télécharge rien et n’exécute aucun code du jeu.
 
+**Complément du 23 octobre 2026 :** après la collecte d'assets et l'ajout du plan d'action, le lanceur Node a effectivement été exécuté sur le dépôt local : 30 387 assertions, 4 395 liens, aucune erreur. Les 300 stories et leurs 1 500 critères sont inchangés. Les vérifications négatives décrites ci-dessous appartiennent à la validation initiale ; elles n'ont pas été répétées pour cet ajout documentaire.
+
 ## Vérifications négatives du validateur
 
 Des copies temporaires des données ont été altérées intentionnellement : identifiant dupliqué, dépendance circulaire, référence inconnue, critère manquant, lien cassé et divergence JSON. Le contrôle doit refuser chaque copie. Ces copies ne sont pas livrées dans le dépôt.

@@ -1,0 +1,505 @@
+{
+  "evidence": "COMMUNITY_HTML_MAP",
+  "note": "74 zones du guide AcidCave ; ne pas confondre avec les 215 placements du client Ubisoft. Coordonnées conservées brutes ; adaptation et bornes à vérifier au rendu.",
+  "towns": [
+    {
+      "faction": "przystan",
+      "page": "https://www.heroeskingdoms.acidcave.net/frakcje_przystan.html",
+      "image_url": "https://www.heroeskingdoms.acidcave.net/sphinx/haven_map.png",
+      "native_dimensions": [
+        680,
+        552
+      ],
+      "areas": [
+        {
+          "shape": "poly",
+          "coords": "425,500,680,500,680,235",
+          "alt": "lvl1",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "280,170,310,305",
+          "alt": "lvl2",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "310,165,360,340",
+          "alt": "lvl3",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "230,150,285,300",
+          "alt": "lvl4",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "410,165,30",
+          "alt": "lvl5",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "275,320,35",
+          "alt": "lvl6",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "105,45,220,275",
+          "alt": "lvl7",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "145,335,30",
+          "alt": "lvl8",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "65,405,85",
+          "alt": "spec",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "285,30,365,160",
+          "alt": "capitol",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "285,400,50",
+          "alt": "fort",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "poly",
+          "coords": "460,0,550,0,500,350",
+          "alt": "mageguild",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "360,370,35",
+          "alt": "tavern",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "215,355,40",
+          "alt": "targ",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "455,215,500,365",
+          "alt": "graal",
+          "href": "javascript:void(0);"
+        }
+      ]
+    },
+    {
+      "faction": "akademia",
+      "page": "https://www.heroeskingdoms.acidcave.net/frakcje_akademia.html",
+      "image_url": "https://www.heroeskingdoms.acidcave.net/sphinx/130903115903academy.png",
+      "native_dimensions": [
+        680,
+        552
+      ],
+      "areas": [
+        {
+          "shape": "rect",
+          "coords": "135,135,240,165",
+          "alt": "lvl1",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "poly",
+          "coords": "190,210,235,215,250,260,230,275",
+          "alt": "lvl2",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "poly",
+          "coords": "420,100,450,80,535,145,490,175",
+          "alt": "lvl3",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "poly",
+          "coords": "510,185,565,180,520,330",
+          "alt": "lvl4",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "poly",
+          "coords": "390,345,440,330,495,425,420,460",
+          "alt": "lvl5",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "poly",
+          "coords": "170,245,215,300,130,360,70,305",
+          "alt": "lvl6",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "330,40,50",
+          "alt": "lvl7",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "420,240,30",
+          "alt": "lvl8",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "525,370,30",
+          "alt": "spec",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "330,140,40",
+          "alt": "capitol",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "260,235,380,305",
+          "alt": "fort",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "145,0,245,100",
+          "alt": "mageguild",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "300,415,40",
+          "alt": "tavern",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "105,195,40",
+          "alt": "targ",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "poly",
+          "coords": "270,235,245,390,175,440,185,345",
+          "alt": "graal",
+          "href": "javascript:void(0);"
+        }
+      ]
+    },
+    {
+      "faction": "inferno",
+      "page": "https://www.heroeskingdoms.acidcave.net/frakcje_inferno.html",
+      "image_url": "https://www.heroeskingdoms.acidcave.net/sphinx/130913130810inferno.png",
+      "native_dimensions": [
+        679,
+        550
+      ],
+      "areas": [
+        {
+          "shape": "circ",
+          "coords": "470,445,35",
+          "alt": "lvl1",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "240,280,30",
+          "alt": "lvl2",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "225,130,275,240",
+          "alt": "lvl3",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "435,310,20",
+          "alt": "lvl4",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "415,165,30",
+          "alt": "lvl5",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "poly",
+          "coords": "270,100,355,130,435,100,435,135,360,155,280,135",
+          "alt": "lvl6",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "357,180,35",
+          "alt": "lvl7",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "280,350,40",
+          "alt": "lvl8",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "420,205,30",
+          "alt": "spec",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "360,255,40",
+          "alt": "capitol",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "350,435,45",
+          "alt": "fort",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "poly",
+          "coords": "450,175,495,175,455,385",
+          "alt": "mageguild",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "540,380,20",
+          "alt": "tavern",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "45,260,180,400",
+          "alt": "targ",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "317,20,397,150",
+          "alt": "graal",
+          "href": "javascript:void(0);"
+        }
+      ]
+    },
+    {
+      "faction": "necropolis",
+      "page": "https://www.heroeskingdoms.acidcave.net/frakcje_necropolis.html",
+      "image_url": "https://www.heroeskingdoms.acidcave.net/sphinx/necropolis_town.png",
+      "native_dimensions": [
+        680,
+        552
+      ],
+      "areas": [
+        {
+          "shape": "rect",
+          "coords": "260,245,330,290",
+          "alt": "lvl1",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "375,330,30",
+          "alt": "lvl2",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "150,65,210,240",
+          "alt": "lvl3",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "430,410,45",
+          "alt": "lvl4",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "20,205,120,400",
+          "alt": "lvl5",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "580,345,65",
+          "alt": "lvl6",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "460,45,555,265",
+          "alt": "lvl7",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "210,350,30",
+          "alt": "lvl8",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "230,280,375,305",
+          "alt": "spec",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "280,40,335,255",
+          "alt": "capitol",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "285,300,30",
+          "alt": "fort",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "95,90,175,365",
+          "alt": "mageguild",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "310,370,35",
+          "alt": "tavern",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "425,270,45",
+          "alt": "targ",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "265,165,305,270",
+          "alt": "graal",
+          "href": "javascript:void(0);"
+        }
+      ]
+    },
+    {
+      "faction": "sylvan",
+      "page": "https://www.heroeskingdoms.acidcave.net/frakcje_sylvan.html",
+      "image_url": "https://www.heroeskingdoms.acidcave.net/sphinx/sylvan_town.png",
+      "native_dimensions": [
+        680,
+        552
+      ],
+      "areas": [
+        {
+          "shape": "rect",
+          "coords": "135,165,260,235",
+          "alt": "lvl1",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "415,255,55",
+          "alt": "lvl2",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "135,320,190,410",
+          "alt": "lvl3",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "135,275,35",
+          "alt": "lvl4",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "70,375,45",
+          "alt": "lvl5",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "430,365,45",
+          "alt": "lvl6",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "190,235,220,295",
+          "alt": "lvl7",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "310,420,25",
+          "alt": "lvl8",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "300,255,380,405",
+          "alt": "capitol",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "poly",
+          "coords": "400,552,400,430,680,330,680,552",
+          "alt": "fort",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "260,290,35",
+          "alt": "mageguild",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "235,385,30",
+          "alt": "tavern",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "rect",
+          "coords": "100,410,240,510",
+          "alt": "targ",
+          "href": "javascript:void(0);"
+        },
+        {
+          "shape": "circ",
+          "coords": "290,160,40",
+          "alt": "graal",
+          "href": "javascript:void(0);"
+        }
+      ]
+    }
+  ]
+}

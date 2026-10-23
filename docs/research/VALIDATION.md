@@ -2,7 +2,7 @@
 
 État : **RÉUSSI**. Référentiel documentaire du 2026-10-22.
 
-3535 assertions de cohérence, 14 fichiers JSON lus, 26 fichiers Markdown inspectés. 7 duels synthétiques et 9 cas d’admission contrôlés arithmétiquement.
+7679 assertions de cohérence, 22 fichiers JSON lus, 60 fichiers Markdown inspectés. 7 duels synthétiques et 9 cas d’admission contrôlés arithmétiquement.
 
 **Portée :** cohérence documentaire et extraction, pas test d’un jeu, d’un serveur, d’une interface ou validation contre des rapports historiques. Les empreintes des six tables déclaratives sont vérifiées par l’extracteur ; celles des 210 ressources importées sont recalculées ici. Les bornes de sprites et anomalies connues sont contrôlées ; aucune fidélité de rendu navigateur n’est revendiquée.
 

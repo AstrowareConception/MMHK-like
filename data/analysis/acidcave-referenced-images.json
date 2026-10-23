@@ -1,0 +1,824 @@
+[
+  {
+    "page": "https://www.heroeskingdoms.acidcave.net/frakcje_przystan.html",
+    "images": [
+      {
+        "src": "cron/images/eye_22.png",
+        "alt": "",
+        "style": "border:0; margin-right:5px; display:inline-block; float:left;"
+      },
+      {
+        "src": "cron/images/menuicon_gray.png",
+        "alt": ""
+      },
+      {
+        "src": "images/rog1.png",
+        "alt": ""
+      },
+      {
+        "src": "images/gora.png",
+        "alt": "",
+        "class": "bar_img"
+      },
+      {
+        "src": "images/rog2.png",
+        "alt": ""
+      },
+      {
+        "src": "cron/images/sidelogo.png",
+        "alt": "",
+        "title": "Kwasowa Grota"
+      },
+      {
+        "src": "cron/images/rssicon.png",
+        "alt": "RSS",
+        "class": "welcomeicon"
+      },
+      {
+        "src": "cron/images/fb.png",
+        "alt": "FB",
+        "class": "welcomeicon fbicon"
+      },
+      {
+        "src": "cron/images/logoac.png",
+        "alt": "",
+        "class": "welcomeicon"
+      },
+      {
+        "src": "sphinx/130915135047haven_banner.jpg",
+        "alt": "",
+        "style": " border:0;"
+      },
+      {
+        "src": "images/hr.png",
+        "class": "hrbar",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_haven_1.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_haven_2.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_haven_3.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_haven_4.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_haven_5.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_haven_6.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_haven_7.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/siege_1.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_haven_1_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_haven_2_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_haven_3_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_haven_4_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_haven_5_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_haven_6_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_haven_7_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/siege_2.png",
+        "alt": ""
+      },
+      {
+        "src": "images/hr.png",
+        "class": "hrbar",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/haven_map.png",
+        "alt": "haventownmap",
+        "usemap": "#haventown"
+      },
+      {
+        "src": "images/hr.png",
+        "class": "hrbar",
+        "alt": ""
+      },
+      {
+        "id": "ipic11158",
+        "src": "sphinx/mini/waitbghaven.jpg",
+        "class": "miniat",
+        "alt": ""
+      },
+      {
+        "src": "images/rog3.png",
+        "alt": ""
+      },
+      {
+        "src": "images/dol.png",
+        "alt": "",
+        "class": "bar_img"
+      },
+      {
+        "src": "images/rog4.png",
+        "alt": ""
+      }
+    ],
+    "status": "referenced_in_html_not_all_downloaded"
+  },
+  {
+    "page": "https://www.heroeskingdoms.acidcave.net/frakcje_akademia.html",
+    "images": [
+      {
+        "src": "cron/images/eye_22.png",
+        "alt": "",
+        "style": "border:0; margin-right:5px; display:inline-block; float:left;"
+      },
+      {
+        "src": "cron/images/menuicon_gray.png",
+        "alt": ""
+      },
+      {
+        "src": "images/rog1.png",
+        "alt": ""
+      },
+      {
+        "src": "images/gora.png",
+        "alt": "",
+        "class": "bar_img"
+      },
+      {
+        "src": "images/rog2.png",
+        "alt": ""
+      },
+      {
+        "src": "cron/images/sidelogo.png",
+        "alt": "",
+        "title": "Kwasowa Grota"
+      },
+      {
+        "src": "cron/images/rssicon.png",
+        "alt": "RSS",
+        "class": "welcomeicon"
+      },
+      {
+        "src": "cron/images/fb.png",
+        "alt": "FB",
+        "class": "welcomeicon fbicon"
+      },
+      {
+        "src": "cron/images/logoac.png",
+        "alt": "",
+        "class": "welcomeicon"
+      },
+      {
+        "src": "sphinx/academy_banner.jpg",
+        "alt": "",
+        "style": " border:0;"
+      },
+      {
+        "src": "images/hr.png",
+        "class": "hrbar",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_academy_1.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_academy_2.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_academy_3.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_academy_4.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_academy_5.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_academy_6.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_academy_7.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/siege_1.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_academy_1_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_academy_2_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_academy_3_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_academy_4_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_academy_5_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_academy_6_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_academy_7_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/siege_2.png",
+        "alt": ""
+      },
+      {
+        "src": "images/hr.png",
+        "class": "hrbar",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/130903115903academy.png",
+        "alt": "academytownmap",
+        "usemap": "#academytown"
+      },
+      {
+        "src": "images/hr.png",
+        "class": "hrbar",
+        "alt": ""
+      },
+      {
+        "id": "ipic10560",
+        "src": "sphinx/mini/waitbgacademy.jpg",
+        "class": "miniat",
+        "alt": ""
+      },
+      {
+        "id": "ipic10561",
+        "src": "sphinx/mini/academy_choose.jpg",
+        "class": "miniat",
+        "alt": ""
+      },
+      {
+        "id": "ipic10562",
+        "src": "sphinx/mini/academy_fight.jpg",
+        "class": "miniat",
+        "alt": ""
+      },
+      {
+        "id": "ipic10563",
+        "src": "sphinx/mini/academy_firstrecruit.jpg",
+        "class": "miniat",
+        "alt": ""
+      },
+      {
+        "src": "images/rog3.png",
+        "alt": ""
+      },
+      {
+        "src": "images/dol.png",
+        "alt": "",
+        "class": "bar_img"
+      },
+      {
+        "src": "images/rog4.png",
+        "alt": ""
+      }
+    ],
+    "status": "referenced_in_html_not_all_downloaded"
+  },
+  {
+    "page": "https://www.heroeskingdoms.acidcave.net/frakcje_inferno.html",
+    "images": [
+      {
+        "src": "cron/images/eye_22.png",
+        "alt": "",
+        "style": "border:0; margin-right:5px; display:inline-block; float:left;"
+      },
+      {
+        "src": "cron/images/menuicon_gray.png",
+        "alt": ""
+      },
+      {
+        "src": "images/rog1.png",
+        "alt": ""
+      },
+      {
+        "src": "images/gora.png",
+        "alt": "",
+        "class": "bar_img"
+      },
+      {
+        "src": "images/rog2.png",
+        "alt": ""
+      },
+      {
+        "src": "cron/images/sidelogo.png",
+        "alt": "",
+        "title": "Kwasowa Grota"
+      },
+      {
+        "src": "cron/images/rssicon.png",
+        "alt": "RSS",
+        "class": "welcomeicon"
+      },
+      {
+        "src": "cron/images/fb.png",
+        "alt": "FB",
+        "class": "welcomeicon fbicon"
+      },
+      {
+        "src": "cron/images/logoac.png",
+        "alt": "",
+        "class": "welcomeicon"
+      },
+      {
+        "src": "sphinx/inferno_banner.jpg",
+        "alt": "",
+        "style": " border:0;"
+      },
+      {
+        "src": "images/hr.png",
+        "class": "hrbar",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_inferno_1.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_inferno_2.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_inferno_3.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_inferno_4.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_inferno_5.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_inferno_6.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_inferno_7.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/siege_1.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_inferno_1_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_inferno_2_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_inferno_3_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_inferno_4_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_inferno_5_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_inferno_6_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_inferno_7_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/siege_2.png",
+        "alt": ""
+      },
+      {
+        "src": "images/hr.png",
+        "class": "hrbar",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/130913130810inferno.png",
+        "alt": "infernotownmap",
+        "usemap": "#infernotown"
+      },
+      {
+        "src": "images/hr.png",
+        "class": "hrbar",
+        "alt": ""
+      },
+      {
+        "id": "ipic11087",
+        "src": "sphinx/mini/waitbginferno.jpg",
+        "class": "miniat",
+        "alt": ""
+      },
+      {
+        "id": "ipic11152",
+        "src": "sphinx/mini/inferno_choose.png",
+        "class": "miniat",
+        "alt": ""
+      },
+      {
+        "id": "ipic11153",
+        "src": "sphinx/mini/inferno_hero.png",
+        "class": "miniat",
+        "alt": ""
+      },
+      {
+        "id": "ipic11154",
+        "src": "sphinx/mini/inferno_start.png",
+        "class": "miniat",
+        "alt": ""
+      },
+      {
+        "src": "images/rog3.png",
+        "alt": ""
+      },
+      {
+        "src": "images/dol.png",
+        "alt": "",
+        "class": "bar_img"
+      },
+      {
+        "src": "images/rog4.png",
+        "alt": ""
+      }
+    ],
+    "status": "referenced_in_html_not_all_downloaded"
+  },
+  {
+    "page": "https://www.heroeskingdoms.acidcave.net/frakcje_necropolis.html",
+    "images": [
+      {
+        "src": "cron/images/eye_22.png",
+        "alt": "",
+        "style": "border:0; margin-right:5px; display:inline-block; float:left;"
+      },
+      {
+        "src": "cron/images/menuicon_gray.png",
+        "alt": ""
+      },
+      {
+        "src": "images/rog1.png",
+        "alt": ""
+      },
+      {
+        "src": "images/gora.png",
+        "alt": "",
+        "class": "bar_img"
+      },
+      {
+        "src": "images/rog2.png",
+        "alt": ""
+      },
+      {
+        "src": "cron/images/sidelogo.png",
+        "alt": "",
+        "title": "Kwasowa Grota"
+      },
+      {
+        "src": "cron/images/rssicon.png",
+        "alt": "RSS",
+        "class": "welcomeicon"
+      },
+      {
+        "src": "cron/images/fb.png",
+        "alt": "FB",
+        "class": "welcomeicon fbicon"
+      },
+      {
+        "src": "cron/images/logoac.png",
+        "alt": "",
+        "class": "welcomeicon"
+      },
+      {
+        "src": "sphinx/necropolis_banner.jpg",
+        "alt": "",
+        "style": " border:0;"
+      },
+      {
+        "src": "images/hr.png",
+        "class": "hrbar",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_necropolis_1.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_necropolis_2.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_necropolis_3.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_necropolis_4.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_necropolis_5.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_necropolis_6.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_necropolis_7.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/siege_1.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_necropolis_1_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_necropolis_2_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_necropolis_3_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_necropolis_4_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_necropolis_5_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_necropolis_6_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_necropolis_7_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/siege_2.png",
+        "alt": ""
+      },
+      {
+        "src": "images/hr.png",
+        "class": "hrbar",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/necropolis_town.png",
+        "alt": "necrotownmap",
+        "usemap": "#necrotown"
+      },
+      {
+        "src": "images/hr.png",
+        "class": "hrbar",
+        "alt": ""
+      },
+      {
+        "id": "ipic11155",
+        "src": "sphinx/mini/waitbgnecro.jpg",
+        "class": "miniat",
+        "alt": ""
+      },
+      {
+        "id": "ipic11156",
+        "src": "sphinx/mini/domination_necropolis.jpg",
+        "class": "miniat",
+        "alt": ""
+      },
+      {
+        "id": "ipic11157",
+        "src": "sphinx/mini/honor_necropolis.jpg",
+        "class": "miniat",
+        "alt": ""
+      },
+      {
+        "src": "images/rog3.png",
+        "alt": ""
+      },
+      {
+        "src": "images/dol.png",
+        "alt": "",
+        "class": "bar_img"
+      },
+      {
+        "src": "images/rog4.png",
+        "alt": ""
+      }
+    ],
+    "status": "referenced_in_html_not_all_downloaded"
+  },
+  {
+    "page": "https://www.heroeskingdoms.acidcave.net/frakcje_sylvan.html",
+    "images": [
+      {
+        "src": "cron/images/eye_22.png",
+        "alt": "",
+        "style": "border:0; margin-right:5px; display:inline-block; float:left;"
+      },
+      {
+        "src": "cron/images/menuicon_gray.png",
+        "alt": ""
+      },
+      {
+        "src": "images/rog1.png",
+        "alt": ""
+      },
+      {
+        "src": "images/gora.png",
+        "alt": "",
+        "class": "bar_img"
+      },
+      {
+        "src": "images/rog2.png",
+        "alt": ""
+      },
+      {
+        "src": "cron/images/sidelogo.png",
+        "alt": "",
+        "title": "Kwasowa Grota"
+      },
+      {
+        "src": "cron/images/rssicon.png",
+        "alt": "RSS",
+        "class": "welcomeicon"
+      },
+      {
+        "src": "cron/images/fb.png",
+        "alt": "FB",
+        "class": "welcomeicon fbicon"
+      },
+      {
+        "src": "cron/images/logoac.png",
+        "alt": "",
+        "class": "welcomeicon"
+      },
+      {
+        "src": "sphinx/sylvan_banner.jpg",
+        "alt": "",
+        "style": " border:0;"
+      },
+      {
+        "src": "images/hr.png",
+        "class": "hrbar",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_sylvan_1.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_sylvan_2.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_sylvan_3.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_sylvan_4.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_sylvan_5.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_sylvan_6.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_sylvan_7.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/siege_1.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_sylvan_1_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_sylvan_2_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_sylvan_3_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_sylvan_4_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_sylvan_5_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_sylvan_6_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/unit_sylvan_7_u.png",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/siege_2.png",
+        "alt": ""
+      },
+      {
+        "src": "images/hr.png",
+        "class": "hrbar",
+        "alt": ""
+      },
+      {
+        "src": "sphinx/sylvan_town.png",
+        "alt": "sylvantownmap",
+        "usemap": "#sylvantown"
+      },
+      {
+        "src": "images/hr.png",
+        "class": "hrbar",
+        "alt": ""
+      },
+      {
+        "src": "images/rog3.png",
+        "alt": ""
+      },
+      {
+        "src": "images/dol.png",
+        "alt": "",
+        "class": "bar_img"
+      },
+      {
+        "src": "images/rog4.png",
+        "alt": ""
+      }
+    ],
+    "status": "referenced_in_html_not_all_downloaded"
+  }
+]

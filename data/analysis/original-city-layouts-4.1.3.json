@@ -1,0 +1,1470 @@
+{
+  "schema_version": 1,
+  "evidence": "OBS-CLIENT-ARCHIVE",
+  "source": {
+    "provider": "Ubisoft CDN via Internet Archive",
+    "kind": "client_source",
+    "source_url": "http://static5.cdn.ubi.com/u/HOMMK/mightandmagicheroeskingdoms.ubi.com/4.1.3-MTR/js/prod.js",
+    "archive_url": "https://web.archive.org/web/20130315160854id_/http://static5.cdn.ubi.com/u/HOMMK/mightandmagicheroeskingdoms.ubi.com/4.1.3-MTR/js/prod.js",
+    "archive_capture": "20130315160854",
+    "archive_digest": "I27LBZINZMSH7GYWPEMXLV2W3PX6OY4Q",
+    "source_version": "4.1.3-MTR",
+    "path": "data/assets-recovered/ubisoft-archive/4.1.3-MTR/js/prod.js",
+    "bytes": 1997286,
+    "sha256": "b8e9bcc4241e0868168a42fbc17c34671a5e5caa6edc1c53e64dd7a919c54d5c",
+    "retrieved_at": "2026-10-23",
+    "rights_status": "historical_reference_no_open_graphics_license_identified",
+    "validation": "read_as_text_not_executed"
+  },
+  "native_canvas": {
+    "width": 680,
+    "height": 552,
+    "evidence": "prod.css 4.1.3-MTR, sélecteur .cityViewBase"
+  },
+  "extraction": "Lecture des objets littéraux CITYVIEW_CONF ; aucun JavaScript historique exécuté.",
+  "factions": {
+    "HAVEN": {
+      "VILLAGE_HALL": {
+        "x": 304,
+        "y": 138
+      },
+      "TOWN_HALL": {
+        "x": 289,
+        "y": 94,
+        "buildIconX": 304,
+        "buildIconY": 111
+      },
+      "CITY_HALL": {
+        "x": 284,
+        "y": 78,
+        "buildIconX": 304,
+        "buildIconY": 74
+      },
+      "CAPITOL": {
+        "x": 284,
+        "y": 31,
+        "buildIconX": 304,
+        "buildIconY": 58
+      },
+      "TAVERN": {
+        "x": 328,
+        "y": 333,
+        "zindex": 4,
+        "buildIconX": 339,
+        "buildIconY": 355,
+        "frameLink": "TavernFrame"
+      },
+      "MARKETPLACE": {
+        "x": 174,
+        "y": 329,
+        "zindex": 1,
+        "buildIconX": 203,
+        "buildIconY": 345,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL1": {
+        "x": 164,
+        "y": 329,
+        "file": "SILO",
+        "zindex": 1,
+        "buildIconX": 153,
+        "buildIconY": 364,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL2": {
+        "x": 171,
+        "y": 329,
+        "file": "SILO",
+        "zindex": 1,
+        "buildIconX": 153,
+        "buildIconY": 364,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL3": {
+        "x": 171,
+        "y": 329,
+        "file": "SILO",
+        "zindex": 1,
+        "buildIconX": 153,
+        "buildIconY": 364,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL4": {
+        "x": 171,
+        "y": 329,
+        "file": "SILO",
+        "zindex": 1,
+        "buildIconX": 153,
+        "buildIconY": 364,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL5": {
+        "x": 171,
+        "y": 329,
+        "file": "SILO",
+        "zindex": 1,
+        "buildIconX": 153,
+        "buildIconY": 364,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL6": {
+        "x": 171,
+        "y": 329,
+        "file": "SILO",
+        "zindex": 1,
+        "buildIconX": 153,
+        "buildIconY": 364,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL7": {
+        "x": 171,
+        "y": 329,
+        "file": "SILO",
+        "zindex": 1,
+        "buildIconX": 153,
+        "buildIconY": 364,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL8": {
+        "x": 171,
+        "y": 329,
+        "file": "SILO",
+        "zindex": 1,
+        "buildIconX": 153,
+        "buildIconY": 364,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL9": {
+        "x": 171,
+        "y": 329,
+        "file": "SILO",
+        "zindex": 1,
+        "buildIconX": 153,
+        "buildIconY": 364,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL10": {
+        "x": 171,
+        "y": 329,
+        "file": "SILO",
+        "zindex": 1,
+        "buildIconX": 153,
+        "buildIconY": 364,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "MAGIC_GUILD_LVL1": {
+        "x": 423,
+        "y": 179,
+        "buildIconX": 490,
+        "buildIconY": 210,
+        "frameLink": "MagicGuildFrame"
+      },
+      "MAGIC_GUILD_LVL2": {
+        "x": 423,
+        "y": 126,
+        "buildIconX": 490,
+        "buildIconY": 210,
+        "frameLink": "MagicGuildFrame"
+      },
+      "MAGIC_GUILD_LVL3": {
+        "x": 423,
+        "y": 102,
+        "buildIconX": 490,
+        "buildIconY": 210,
+        "frameLink": "MagicGuildFrame"
+      },
+      "MAGIC_GUILD_LVL4": {
+        "x": 432,
+        "y": 63,
+        "buildIconX": 500,
+        "buildIconY": 210,
+        "frameLink": "MagicGuildFrame"
+      },
+      "MAGIC_GUILD_LVL5": {
+        "x": 432,
+        "y": 0,
+        "buildIconX": 500,
+        "buildIconY": 210,
+        "frameLink": "MagicGuildFrame"
+      },
+      "FORT": {
+        "x": 219,
+        "y": 387,
+        "zindex": 2,
+        "buildIconX": 273,
+        "buildIconY": 417
+      },
+      "CITADEL": {
+        "x": 219,
+        "y": 357,
+        "zindex": 2,
+        "buildIconX": 258,
+        "buildIconY": 425
+      },
+      "CASTLE": {
+        "x": 219,
+        "y": 326,
+        "zindex": 2,
+        "buildIconX": 275,
+        "buildIconY": 391
+      },
+      "RECRUIT_T1": {
+        "x": 432,
+        "y": 392,
+        "zindex": 4,
+        "buildIconX": 523,
+        "buildIconY": 430,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T1P": {
+        "x": 432,
+        "y": 286,
+        "zindex": 4,
+        "buildIconX": 523,
+        "buildIconY": 430,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T2": {
+        "x": 256,
+        "y": 174,
+        "zindex": 1,
+        "buildIconX": 282,
+        "buildIconY": 239,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T2P": {
+        "x": 256,
+        "y": 169,
+        "zindex": 1,
+        "buildIconX": 282,
+        "buildIconY": 239,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T3": {
+        "x": 345,
+        "y": 202,
+        "zindex": 3,
+        "buildIconX": 379,
+        "buildIconY": 291,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T3P": {
+        "x": 345,
+        "y": 202,
+        "zindex": 3,
+        "buildIconX": 379,
+        "buildIconY": 291,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T4": {
+        "x": 238,
+        "y": 164,
+        "buildIconX": 232,
+        "buildIconY": 252,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T4P": {
+        "x": 238,
+        "y": 149,
+        "buildIconX": 229,
+        "buildIconY": 210,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T5": {
+        "x": 370,
+        "y": 126,
+        "buildIconX": 401,
+        "buildIconY": 154,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T5P": {
+        "x": 370,
+        "y": 118,
+        "buildIconX": 415,
+        "buildIconY": 144,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T6": {
+        "x": 243,
+        "y": 307,
+        "zindex": 2,
+        "buildIconX": 256,
+        "buildIconY": 311,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T6P": {
+        "x": 243,
+        "y": 169,
+        "zindex": 2,
+        "buildIconX": 322,
+        "buildIconY": 280,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T7": {
+        "x": 83,
+        "y": 51,
+        "buildIconX": 136,
+        "buildIconY": 233,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T7P": {
+        "x": 83,
+        "y": 51,
+        "buildIconX": 136,
+        "buildIconY": 233,
+        "frameLink": "RecruitmentFrame"
+      },
+      "BLACKSMITH": {
+        "x": 121,
+        "y": 320,
+        "buildIconX": 126,
+        "buildIconY": 321,
+        "frameLink": "RecruitmentFrame"
+      },
+      "ADVANCED_BLACKSMITH": {
+        "x": 121,
+        "y": 313,
+        "buildIconX": 108,
+        "buildIconY": 338,
+        "frameLink": "RecruitmentFrame"
+      },
+      "GRAIL_STRUCTURE": {
+        "x": 421,
+        "y": 215,
+        "zindex": 3,
+        "buildIconX": 479,
+        "buildIconY": 305,
+        "frameLink": "GrailStructureFrame",
+        "buildIcon": "BUILD_GRAIL_FROM_REGULAR_TEAR_ICON"
+      },
+      "GRAIL_STRUCTURE_STOLEN": {
+        "x": 421,
+        "y": 215,
+        "zindex": 3,
+        "buildIconX": 429,
+        "buildIconY": 305,
+        "frameLink": "GrailStructureFrame",
+        "buildIcon": "BUILD_GRAIL_FROM_STOLEN_TEAR_ICON"
+      },
+      "FARMS": {
+        "x": 0,
+        "y": 353,
+        "buildIconX": 49,
+        "buildIconY": 376
+      }
+    },
+    "INFERNO": {
+      "VILLAGE_HALL": {
+        "x": 315,
+        "y": 222,
+        "zindex": 1
+      },
+      "TOWN_HALL": {
+        "x": 311,
+        "y": 223,
+        "zindex": 1,
+        "buildIconX": 339,
+        "buildIconY": 265
+      },
+      "CITY_HALL": {
+        "x": 311,
+        "y": 223,
+        "zindex": 1
+      },
+      "CAPITOL": {
+        "x": 311,
+        "y": 210,
+        "zindex": 1
+      },
+      "TAVERN": {
+        "x": 518,
+        "y": 361,
+        "frameLink": "TavernFrame"
+      },
+      "MARKETPLACE": {
+        "x": 90,
+        "y": 306,
+        "buildIconX": 117,
+        "buildIconY": 342,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL1": {
+        "x": 61,
+        "y": 303,
+        "file": "SILO",
+        "buildIconX": 58,
+        "buildIconY": 367,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL2": {
+        "x": 61,
+        "y": 303,
+        "file": "SILO",
+        "buildIconX": 58,
+        "buildIconY": 367,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL3": {
+        "x": 61,
+        "y": 303,
+        "file": "SILO",
+        "buildIconX": 58,
+        "buildIconY": 367,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL4": {
+        "x": 61,
+        "y": 303,
+        "file": "SILO",
+        "buildIconX": 58,
+        "buildIconY": 367,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL5": {
+        "x": 61,
+        "y": 303,
+        "file": "SILO",
+        "buildIconX": 58,
+        "buildIconY": 367,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL6": {
+        "x": 61,
+        "y": 303,
+        "file": "SILO",
+        "buildIconX": 58,
+        "buildIconY": 367,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL7": {
+        "x": 61,
+        "y": 303,
+        "file": "SILO",
+        "buildIconX": 58,
+        "buildIconY": 367,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL8": {
+        "x": 61,
+        "y": 303,
+        "file": "SILO",
+        "buildIconX": 58,
+        "buildIconY": 367,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL9": {
+        "x": 61,
+        "y": 303,
+        "file": "SILO",
+        "buildIconX": 58,
+        "buildIconY": 367,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL10": {
+        "x": 61,
+        "y": 303,
+        "file": "SILO",
+        "buildIconX": 58,
+        "buildIconY": 367,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "MAGIC_GUILD_LVL1": {
+        "x": 405,
+        "y": 185,
+        "buildIconX": 475,
+        "buildIconY": 191,
+        "frameLink": "MagicGuildFrame"
+      },
+      "MAGIC_GUILD_LVL2": {
+        "x": 410,
+        "y": 191,
+        "buildIconX": 475,
+        "buildIconY": 191,
+        "frameLink": "MagicGuildFrame"
+      },
+      "MAGIC_GUILD_LVL3": {
+        "x": 410,
+        "y": 191,
+        "buildIconX": 475,
+        "buildIconY": 191,
+        "frameLink": "MagicGuildFrame"
+      },
+      "MAGIC_GUILD_LVL4": {
+        "x": 410,
+        "y": 201,
+        "buildIconX": 475,
+        "buildIconY": 191,
+        "frameLink": "MagicGuildFrame"
+      },
+      "MAGIC_GUILD_LVL5": {
+        "x": 410,
+        "y": 201,
+        "buildIconX": 475,
+        "buildIconY": 191,
+        "frameLink": "MagicGuildFrame"
+      },
+      "FORT": {
+        "x": 299,
+        "y": 416
+      },
+      "CITADEL": {
+        "x": 295,
+        "y": 405
+      },
+      "CASTLE": {
+        "x": 298,
+        "y": 399
+      },
+      "RECRUIT_T1": {
+        "x": 455,
+        "y": 404,
+        "buildIconX": 452,
+        "buildIconY": 431,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T1P": {
+        "x": 447,
+        "y": 402,
+        "buildIconX": 479,
+        "buildIconY": 434,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T2": {
+        "x": 210,
+        "y": 255,
+        "buildIconX": 215,
+        "buildIconY": 260,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T2P": {
+        "x": 210,
+        "y": 255,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T3": {
+        "x": 235,
+        "y": 155,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T3P": {
+        "x": 235,
+        "y": 130,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T4": {
+        "x": 387,
+        "y": 285,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T4P": {
+        "x": 387,
+        "y": 275,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T5": {
+        "x": 396,
+        "y": 190,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T5P": {
+        "x": 396,
+        "y": 190,
+        "buildIconX": 411,
+        "buildIconY": 175,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T6": {
+        "x": 277,
+        "y": 99,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T6P": {
+        "x": 275,
+        "y": 92,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T7": {
+        "x": 337,
+        "y": 147,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T7P": {
+        "x": 337,
+        "y": 144,
+        "frameLink": "RecruitmentFrame"
+      },
+      "BLACKSMITH": {
+        "x": 244,
+        "y": 314,
+        "buildIconX": 251,
+        "buildIconY": 353,
+        "frameLink": "RecruitmentFrame"
+      },
+      "ADVANCED_BLACKSMITH": {
+        "x": 244,
+        "y": 314,
+        "buildIconX": 241,
+        "buildIconY": 361,
+        "frameLink": "RecruitmentFrame"
+      },
+      "GRAIL_STRUCTURE": {
+        "x": 317,
+        "y": 15,
+        "frameLink": "GrailStructureFrame",
+        "buildIconX": 347,
+        "buildIconY": 15,
+        "buildIcon": "BUILD_GRAIL_FROM_REGULAR_TEAR_ICON"
+      },
+      "GRAIL_STRUCTURE_STOLEN": {
+        "x": 317,
+        "y": 15,
+        "frameLink": "GrailStructureFrame",
+        "buildIconX": 297,
+        "buildIconY": 15,
+        "buildIcon": "BUILD_GRAIL_FROM_STOLEN_TEAR_ICON"
+      },
+      "HALLS_OF_HORROR": {
+        "x": 389,
+        "y": 137
+      }
+    },
+    "ACADEMY": {
+      "VILLAGE_HALL": {
+        "x": 293,
+        "y": 194,
+        "zindex": 1
+      },
+      "TOWN_HALL": {
+        "x": 297,
+        "y": 61,
+        "zindex": 1,
+        "buildIconX": 312,
+        "buildIconY": 108
+      },
+      "CITY_HALL": {
+        "x": 279,
+        "y": 62,
+        "zindex": 1,
+        "buildIconX": 312,
+        "buildIconY": 108
+      },
+      "CAPITOL": {
+        "x": 261,
+        "y": 62,
+        "zindex": 1,
+        "buildIconX": 312,
+        "buildIconY": 108
+      },
+      "TAVERN": {
+        "x": 257,
+        "y": 368,
+        "frameLink": "TavernFrame"
+      },
+      "MARKETPLACE": {
+        "x": 78,
+        "y": 160,
+        "buildIconX": 88,
+        "buildIconY": 160,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL1": {
+        "x": 59,
+        "y": 148,
+        "file": "SILO",
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL2": {
+        "x": 59,
+        "y": 148,
+        "file": "SILO",
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL3": {
+        "x": 59,
+        "y": 148,
+        "file": "SILO",
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL4": {
+        "x": 59,
+        "y": 148,
+        "file": "SILO",
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL5": {
+        "x": 59,
+        "y": 148,
+        "file": "SILO",
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL6": {
+        "x": 59,
+        "y": 148,
+        "file": "SILO",
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL7": {
+        "x": 59,
+        "y": 148,
+        "file": "SILO",
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL8": {
+        "x": 59,
+        "y": 148,
+        "file": "SILO",
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL9": {
+        "x": 59,
+        "y": 148,
+        "file": "SILO",
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL10": {
+        "x": 59,
+        "y": 148,
+        "file": "SILO",
+        "frameLink": "MarketPlaceFrame"
+      },
+      "MAGIC_GUILD_LVL1": {
+        "x": 150,
+        "y": 45,
+        "zindex": 1,
+        "frameLink": "MagicGuildFrame"
+      },
+      "MAGIC_GUILD_LVL2": {
+        "x": 150,
+        "y": 45,
+        "zindex": 1,
+        "frameLink": "MagicGuildFrame"
+      },
+      "MAGIC_GUILD_LVL3": {
+        "x": 150,
+        "y": 22,
+        "zindex": 1,
+        "frameLink": "MagicGuildFrame"
+      },
+      "MAGIC_GUILD_LVL4": {
+        "x": 150,
+        "y": 11,
+        "zindex": 1,
+        "frameLink": "MagicGuildFrame"
+      },
+      "MAGIC_GUILD_LVL5": {
+        "x": 150,
+        "y": 0,
+        "zindex": 1,
+        "frameLink": "MagicGuildFrame"
+      },
+      "FORT": {
+        "x": 285,
+        "y": 237,
+        "zindex": 2,
+        "buildIconX": 297,
+        "buildIconY": 245
+      },
+      "CITADEL": {
+        "x": 260,
+        "y": 235,
+        "zindex": 2,
+        "buildIconX": 297,
+        "buildIconY": 233
+      },
+      "CASTLE": {
+        "x": 260,
+        "y": 207,
+        "zindex": 2,
+        "buildIconX": 297,
+        "buildIconY": 215
+      },
+      "RECRUIT_T1": {
+        "x": 153,
+        "y": 95,
+        "buildIconX": 163,
+        "buildIconY": 143,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T1P": {
+        "x": 134,
+        "y": 87,
+        "buildIconX": 163,
+        "buildIconY": 143,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T2": {
+        "x": 197,
+        "y": 213,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T2P": {
+        "x": 197,
+        "y": 213,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T3": {
+        "x": 409,
+        "y": 87,
+        "zindex": 2,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T3P": {
+        "x": 409,
+        "y": 87,
+        "zindex": 2,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T4": {
+        "x": 453,
+        "y": 149,
+        "zindex": 3,
+        "buildIconX": 475,
+        "buildIconY": 195,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T4P": {
+        "x": 453,
+        "y": 149,
+        "zindex": 3,
+        "buildIconX": 475,
+        "buildIconY": 195,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T5": {
+        "x": 381,
+        "y": 289,
+        "zindex": 1,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T5P": {
+        "x": 380,
+        "y": 289,
+        "zindex": 1,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T6": {
+        "x": 78,
+        "y": 245,
+        "buildIconX": 145,
+        "buildIconY": 275,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T6P": {
+        "x": 78,
+        "y": 245,
+        "buildIconX": 125,
+        "buildIconY": 270,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T7": {
+        "x": 268,
+        "y": 11,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T7P": {
+        "x": 268,
+        "y": 7,
+        "frameLink": "RecruitmentFrame"
+      },
+      "BLACKSMITH": {
+        "x": 400,
+        "y": 221,
+        "frameLink": "RecruitmentFrame"
+      },
+      "ADVANCED_BLACKSMITH": {
+        "x": 400,
+        "y": 208,
+        "frameLink": "RecruitmentFrame"
+      },
+      "GRAIL_STRUCTURE": {
+        "x": 153,
+        "y": 312,
+        "frameLink": "GrailStructureFrame",
+        "buildIconX": 183,
+        "buildIconY": 312,
+        "buildIcon": "BUILD_GRAIL_FROM_REGULAR_TEAR_ICON"
+      },
+      "GRAIL_STRUCTURE_STOLEN": {
+        "x": 153,
+        "y": 312,
+        "frameLink": "GrailStructureFrame",
+        "buildIconX": 133,
+        "buildIconY": 312,
+        "buildIcon": "BUILD_GRAIL_FROM_STOLEN_TEAR_ICON"
+      },
+      "TREASURE_CAVE": {
+        "x": 476,
+        "y": 338
+      }
+    },
+    "NECROPOLIS": {
+      "VILLAGE_HALL": {
+        "x": 295,
+        "y": 131
+      },
+      "TOWN_HALL": {
+        "x": 293,
+        "y": 134
+      },
+      "CITY_HALL": {
+        "x": 293,
+        "y": 119
+      },
+      "CAPITOL": {
+        "x": 291,
+        "y": 120
+      },
+      "TAVERN": {
+        "x": 288,
+        "y": 326,
+        "frameLink": "TavernFrame"
+      },
+      "MARKETPLACE": {
+        "x": 411,
+        "y": 264,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL1": {
+        "x": 410,
+        "y": 220,
+        "file": "SILO",
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL2": {
+        "x": 410,
+        "y": 220,
+        "file": "SILO",
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL3": {
+        "x": 410,
+        "y": 220,
+        "file": "SILO",
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL4": {
+        "x": 410,
+        "y": 220,
+        "file": "SILO",
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL5": {
+        "x": 410,
+        "y": 220,
+        "file": "SILO",
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL6": {
+        "x": 410,
+        "y": 220,
+        "file": "SILO",
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL7": {
+        "x": 410,
+        "y": 220,
+        "file": "SILO",
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL8": {
+        "x": 410,
+        "y": 220,
+        "file": "SILO",
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL9": {
+        "x": 410,
+        "y": 220,
+        "file": "SILO",
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL10": {
+        "x": 410,
+        "y": 220,
+        "file": "SILO",
+        "frameLink": "MarketPlaceFrame"
+      },
+      "MAGIC_GUILD_LVL1": {
+        "x": 131,
+        "y": 192,
+        "frameLink": "MagicGuildFrame"
+      },
+      "MAGIC_GUILD_LVL2": {
+        "x": 129,
+        "y": 182,
+        "frameLink": "MagicGuildFrame"
+      },
+      "MAGIC_GUILD_LVL3": {
+        "x": 127,
+        "y": 119,
+        "frameLink": "MagicGuildFrame"
+      },
+      "MAGIC_GUILD_LVL4": {
+        "x": 109,
+        "y": 107,
+        "frameLink": "MagicGuildFrame"
+      },
+      "MAGIC_GUILD_LVL5": {
+        "x": 100,
+        "y": 89,
+        "frameLink": "MagicGuildFrame"
+      },
+      "FORT": {
+        "x": 268,
+        "y": 279,
+        "zindex": 4
+      },
+      "CITADEL": {
+        "x": 268,
+        "y": 268,
+        "zindex": 4
+      },
+      "CASTLE": {
+        "x": 268,
+        "y": 249,
+        "zindex": 4
+      },
+      "RECRUIT_T1": {
+        "x": 295,
+        "y": 210,
+        "zindex": 2,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T1P": {
+        "x": 264,
+        "y": 210,
+        "zindex": 2,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T2": {
+        "x": 344,
+        "y": 303,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T2P": {
+        "x": 344,
+        "y": 296,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T3": {
+        "x": 163,
+        "y": 62,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T3P": {
+        "x": 161,
+        "y": 62,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T4": {
+        "x": 387,
+        "y": 378,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T4P": {
+        "x": 387,
+        "y": 374,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T5": {
+        "x": 33,
+        "y": 204,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T5P": {
+        "x": 33,
+        "y": 198,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T6": {
+        "x": 511,
+        "y": 280,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T6P": {
+        "x": 519,
+        "y": 261,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T7": {
+        "x": 459,
+        "y": 33,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T7P": {
+        "x": 459,
+        "y": 33,
+        "frameLink": "RecruitmentFrame"
+      },
+      "BLACKSMITH": {
+        "x": 184,
+        "y": 337,
+        "frameLink": "RecruitmentFrame"
+      },
+      "ADVANCED_BLACKSMITH": {
+        "x": 184,
+        "y": 300,
+        "frameLink": "RecruitmentFrame"
+      },
+      "GRAIL_STRUCTURE": {
+        "x": 275,
+        "y": 175,
+        "zindex": 1,
+        "frameLink": "GrailStructureFrame",
+        "buildIconX": 305,
+        "buildIconY": 175,
+        "buildIcon": "BUILD_GRAIL_FROM_REGULAR_TEAR_ICON"
+      },
+      "GRAIL_STRUCTURE_STOLEN": {
+        "x": 275,
+        "y": 175,
+        "zindex": 1,
+        "frameLink": "GrailStructureFrame",
+        "buildIconX": 255,
+        "buildIconY": 175,
+        "buildIcon": "BUILD_GRAIL_FROM_STOLEN_TEAR_ICON"
+      },
+      "UNEARTHED_GRAVES": {
+        "x": 232,
+        "y": 268,
+        "zindex": 3
+      }
+    },
+    "SYLVAN": {
+      "VILLAGE_HALL": {
+        "x": 256,
+        "y": 254
+      },
+      "TOWN_HALL": {
+        "x": 256,
+        "y": 254,
+        "zindex": 3,
+        "buildIconX": 354,
+        "buildIconY": 300
+      },
+      "CITY_HALL": {
+        "x": 256,
+        "y": 254,
+        "zindex": 3,
+        "buildIconX": 354,
+        "buildIconY": 300
+      },
+      "CAPITOL": {
+        "x": 256,
+        "y": 254,
+        "zindex": 3,
+        "buildIconX": 350,
+        "buildIconY": 300
+      },
+      "TAVERN": {
+        "x": 185,
+        "y": 345,
+        "zindex": 3,
+        "buildIconX": 220,
+        "buildIconY": 355,
+        "frameLink": "TavernFrame"
+      },
+      "MARKETPLACE": {
+        "x": 137,
+        "y": 396,
+        "zindex": 3,
+        "buildIconX": 190,
+        "buildIconY": 420,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL1": {
+        "x": 82,
+        "y": 396,
+        "file": "SILO",
+        "zindex": 3,
+        "buildIconX": 153,
+        "buildIconY": 395,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL2": {
+        "x": 82,
+        "y": 396,
+        "file": "SILO",
+        "zindex": 3,
+        "buildIconX": 153,
+        "buildIconY": 395,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL3": {
+        "x": 82,
+        "y": 396,
+        "file": "SILO",
+        "zindex": 3,
+        "buildIconX": 153,
+        "buildIconY": 395,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL4": {
+        "x": 82,
+        "y": 396,
+        "file": "SILO",
+        "zindex": 3,
+        "buildIconX": 153,
+        "buildIconY": 395,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL5": {
+        "x": 82,
+        "y": 396,
+        "file": "SILO",
+        "zindex": 3,
+        "buildIconX": 153,
+        "buildIconY": 395,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL6": {
+        "x": 82,
+        "y": 396,
+        "file": "SILO",
+        "zindex": 3,
+        "buildIconX": 153,
+        "buildIconY": 395,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL7": {
+        "x": 82,
+        "y": 396,
+        "file": "SILO",
+        "zindex": 3,
+        "buildIconX": 153,
+        "buildIconY": 395,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL8": {
+        "x": 82,
+        "y": 396,
+        "file": "SILO",
+        "zindex": 3,
+        "buildIconX": 153,
+        "buildIconY": 395,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL9": {
+        "x": 82,
+        "y": 396,
+        "file": "SILO",
+        "zindex": 3,
+        "buildIconX": 153,
+        "buildIconY": 395,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "RESSOURCE_SILO_LVL10": {
+        "x": 82,
+        "y": 396,
+        "file": "SILO",
+        "zindex": 3,
+        "buildIconX": 153,
+        "buildIconY": 395,
+        "frameLink": "MarketPlaceFrame"
+      },
+      "MAGIC_GUILD_LVL1": {
+        "x": 247,
+        "y": 243,
+        "buildIconX": 255,
+        "buildIconY": 255,
+        "frameLink": "MagicGuildFrame"
+      },
+      "MAGIC_GUILD_LVL2": {
+        "x": 239,
+        "y": 243,
+        "buildIconX": 265,
+        "buildIconY": 235,
+        "frameLink": "MagicGuildFrame"
+      },
+      "MAGIC_GUILD_LVL3": {
+        "x": 239,
+        "y": 243,
+        "buildIconX": 265,
+        "buildIconY": 235,
+        "frameLink": "MagicGuildFrame"
+      },
+      "MAGIC_GUILD_LVL4": {
+        "x": 223,
+        "y": 243,
+        "buildIconX": 265,
+        "buildIconY": 235,
+        "frameLink": "MagicGuildFrame"
+      },
+      "MAGIC_GUILD_LVL5": {
+        "x": 223,
+        "y": 243,
+        "buildIconX": 265,
+        "buildIconY": 235,
+        "frameLink": "MagicGuildFrame"
+      },
+      "FORT": {
+        "x": 442,
+        "y": 358,
+        "zindex": 2,
+        "buildIconX": 550,
+        "buildIconY": 400
+      },
+      "CITADEL": {
+        "x": 435,
+        "y": 358,
+        "zindex": 2,
+        "buildIconX": 600,
+        "buildIconY": 400
+      },
+      "CASTLE": {
+        "x": 434,
+        "y": 358,
+        "zindex": 2,
+        "buildIconX": 605,
+        "buildIconY": 370
+      },
+      "RECRUIT_T1": {
+        "x": 161,
+        "y": 162,
+        "zindex": 4,
+        "buildIconX": 190,
+        "buildIconY": 180,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T1P": {
+        "x": 135,
+        "y": 162,
+        "zindex": 4,
+        "buildIconX": 260,
+        "buildIconY": 170,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T2": {
+        "x": 370,
+        "y": 256,
+        "zindex": 1,
+        "buildIconX": 400,
+        "buildIconY": 265,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T2P": {
+        "x": 370,
+        "y": 231,
+        "zindex": 1,
+        "buildIconX": 450,
+        "buildIconY": 275,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T3": {
+        "x": 134,
+        "y": 313,
+        "zindex": 2,
+        "buildIconX": 150,
+        "buildIconY": 330,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T3P": {
+        "x": 73,
+        "y": 313,
+        "zindex": 2,
+        "buildIconX": 110,
+        "buildIconY": 330,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T4": {
+        "x": 96,
+        "y": 252,
+        "buildIconX": 100,
+        "buildIconY": 250,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T4P": {
+        "x": 46,
+        "y": 252,
+        "buildIconX": 65,
+        "buildIconY": 250,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T5": {
+        "x": 7,
+        "y": 338,
+        "buildIconX": 40,
+        "buildIconY": 320,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T5P": {
+        "x": 7,
+        "y": 306,
+        "buildIconX": 45,
+        "buildIconY": 330,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T6": {
+        "x": 391,
+        "y": 322,
+        "zindex": 2,
+        "buildIconX": 415,
+        "buildIconY": 340,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T6P": {
+        "x": 391,
+        "y": 322,
+        "zindex": 2,
+        "buildIconX": 460,
+        "buildIconY": 320,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T7": {
+        "x": 175,
+        "y": 227,
+        "buildIconX": 185,
+        "buildIconY": 255,
+        "frameLink": "RecruitmentFrame"
+      },
+      "RECRUIT_T7P": {
+        "x": 176,
+        "y": 227,
+        "buildIconX": 215,
+        "buildIconY": 225,
+        "frameLink": "RecruitmentFrame"
+      },
+      "BLACKSMITH": {
+        "x": 271,
+        "y": 397,
+        "zindex": 3,
+        "buildIconX": 295,
+        "buildIconY": 400,
+        "frameLink": "RecruitmentFrame"
+      },
+      "ADVANCED_BLACKSMITH": {
+        "x": 271,
+        "y": 397,
+        "zindex": 3,
+        "buildIconX": 320,
+        "buildIconY": 420,
+        "frameLink": "RecruitmentFrame"
+      },
+      "GRAIL_STRUCTURE": {
+        "x": 228,
+        "y": 106,
+        "zindex": 3,
+        "buildIconX": 285,
+        "buildIconY": 115,
+        "frameLink": "GrailStructureFrame",
+        "buildIcon": "BUILD_GRAIL_FROM_REGULAR_TEAR_ICON"
+      },
+      "GRAIL_STRUCTURE_STOLEN": {
+        "x": 228,
+        "y": 106,
+        "zindex": 3,
+        "buildIconX": 285,
+        "buildIconY": 155,
+        "frameLink": "GrailStructureFrame",
+        "buildIcon": "BUILD_GRAIL_FROM_STOLEN_TEAR_ICON"
+      },
+      "TREANT_SAPLINGS": {
+        "x": 377,
+        "y": 334,
+        "zindex": 3,
+        "buildIconX": 480,
+        "buildIconY": 350
+      }
+    }
+  }
+}

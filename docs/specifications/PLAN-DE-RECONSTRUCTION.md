@@ -1,5 +1,7 @@
 # Plan de reconstruction et critères de passage
 
+Le [plan d'action du 23 octobre 2026](PROCHAINES-ETAPES.md) précise le prochain jalon : une boucle locale persistante, 16 stories pivots et leurs dépendances, les décisions à qualifier et la démonstration de passage. Il complète la séquence générale ci-dessous avec les [nouveaux assets retrouvés](../research/RECHERCHE-ASSETS-2026-10-23.md).
+
 ## État livré
 
 Le dépôt contient une première rétroconception large, un corpus de données de 2013 épinglé, des contrats fonctionnels et une recette. Les règles documentées couvrent l’ensemble des grandes boucles demandées. Les valeurs du serveur d’origine, toutes les variantes saisonnières et tous les écrans ne sont pas certifiés. Aucun serveur de jeu ni client jouable n’a encore été implémenté dans cette étape.

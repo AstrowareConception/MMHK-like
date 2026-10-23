@@ -37,7 +37,7 @@ La famille SS-045/054 utilise un autre jeu d’icônes et des volets d’options
 | Monde détaillé | Cases en losanges, terrain, villes par faction, frontières, sélection, routes et marqueurs | Déplacer la caméra, changer d’échelle, inspecter une cible, ouvrir sa région, préparer une mission | Clic simple/double, touche et sens exact de la molette non retrouvés |
 | Monde politique éloigné | Grille dense colorée, emplacements, glyphes de villes | Repérer territoire/cible et revenir au détail | Filtre automatique ou commande séparée non démontrés |
 | Région | 25 cases, cité centrale, mines, PNJ et aménagements | Inspecter case, libérer/attaquer, améliorer/construire selon état ; entrer en ville | Commandes exactes selon propriété et reconnaissance à qualifier |
-| Ville | Décor de faction, bâtiments, emplacements/médaillons, nom et niveau | Inspecter bâtiment, construire/améliorer, ouvrir recrutement, marché, taverne, magie | Position des hotspots et états de chantier non fournis |
+| Ville | Décor de faction, bâtiments, emplacements/médaillons, nom et niveau | Inspecter bâtiment, construire/améliorer, ouvrir recrutement, marché, taverne, magie | Placements et ancres désormais extraits du client ; zones de clic et états de chantier à qualifier au rendu |
 
 La barre d’échelle est une **navigation entre représentations**, avec éventuellement plusieurs échelles internes au monde. Aucun nombre exact de niveaux de zoom n’est certifié. **PROP :** des états explicites `world_detail`, `world_political`, `region`, `city`, et un facteur de caméra séparé. L’animation de transition ne modifie pas la position du héros.
 
@@ -75,7 +75,9 @@ Le rendu peut utiliser une surface Canvas 2D pour la scène et du DOM/CSS pour t
 
 Une ville est une scène dédiée : fond par faction, objets de bâtiment/niveau, ancres et hotspots. Un emplacement « non construit » possède sa commande et sa représentation ; un bâtiment amélioré remplace ou complète la couche appropriée selon la preuve retrouvée. Les niveaux 18/19/31 visibles sont du développement urbain. Ils ne déclenchent pas une échelle de zoom par eux-mêmes.
 
-**Contrat proposé d’asset :** `logicalId`, fichier/atlas et rectangle, dimensions natives, ancre, zone de clic, faction, état, niveau, famille visuelle et provenance. Les données de règles ne contiennent pas de chemin d’image. Les 96 images Jactari couvrent une partie de cette table ; terrain et scènes de ville doivent encore être retrouvés ou reconstruits.
+**Contrat proposé d’asset :** `logicalId`, fichier/atlas et rectangle, dimensions natives, ancre, zone de clic, faction, état, niveau, famille visuelle et provenance. Les données de règles ne contiennent pas de chemin d’image. Les 96 images Jactari et les 29 images de la collecte complémentaire couvrent une partie de cette table ; le kit de calques reste incomplet.
+
+**OBS-CLIENT-ARCHIVE — complément du 23 octobre 2026 :** le client 4.1.3-MTR utilise un fond `img/city/<FACTION>/base.jpg`, puis des images GIF positionnées par `x`, `y` et `zindex`. Son CSS fixe `.cityViewBase` à 680 × 552. Les [215 configurations extraites](../../data/analysis/original-city-layouts-4.1.3.json) conservent aussi les ancres de chantier et les fenêtres à ouvrir. C'est une preuve du fonctionnement historique en DOM/CSS ; la proposition Canvas ci-dessus reste un choix de reconstruction, pas une observation de la technologie originale. Les fonds région/monde retrouvés font 680 × 562 : leur cadrage dans la scène doit être vérifié avec le client. Les scènes AcidCave sont assemblées et leurs 74 zones HTML ne sont pas assimilées aux données Ubisoft. Voir le [rapport de collecte](../research/RECHERCHE-ASSETS-2026-10-23.md).
 
 ## 5. Déplacements et temps : rôle du JavaScript
 
