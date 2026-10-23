@@ -102,3 +102,21 @@ node --test tools/jactari-port/*.test.mjs
 **Périmètre et honnêteté d'intégration :** les salves et la mêlée sont désormais composées, mais ni la magie, ni les résurrections, ni la fuite S2, ni le calcul final des morts permanentes ne sont portés. Le moteur **refuse** ces phases au lieu de fabriquer un combat complet. Dans Jactari, les règles d'ordre des tirs et les modificateurs dépendent de davantage de conditions que cet orchestrateur volontairement limité. Il faut donc le qualifier de **sous-ensemble expérimental du moteur Jactari**, non d'une implémentation historiquement équivalente.
 
 **Suite prioritaire :** exécuter et corriger si nécessaire les 350 vérifications différentielles, constituer des fixtures complètes issues du client d'origine, puis isoler les sorts, les pertes permanentes et la gestion exacte des combats au-delà des simples duels.
+
+
+## V5.4 — Extraction des pertes permanentes et d'un effet magique (23/10/2026)
+
+**Deux modules supplémentaires ont été commités :**
+
+- `losses.mjs` — `casualtyModifier()` et `finalizePermanentLosses()` : adaptation de la partie finale de `simulation_rencontre` dédiée au ratio de morts permanentes, aux effets des héros, aux morts relevés, à la résurrection limitée par un **budget de puissance partagé entre sept pelotons**, et au coût en or/ressources des pertes. Le calcul distingue les statuts PvP/PvE et les armées sans héros. Les paramètres `lossFactor`, taux de résurrection et données de chaque unité doivent être explicitement fournis. **Il ne s'agit pas de taux historiques certifiés pour S2.**
+- `magic-revival.mjs` — `resolvePostDuelRevival()` : portage de la petite branche **après duel** de `simulation_rencontre` pour les modes de résurrection `tmp` et `def`, conservant les plafonds du tour et le sentinelle historique de pertes `-1`. **Le choix du sort, la puissance, le mana et les autres effets magiques ne sont pas portés.**
+
+**18 cas de test supplémentaires ont été écrits** (12 pour les pertes, 6 pour l'effet magique). Ils sont versionnés dans `losses.test.mjs` et `magic-revival.test.mjs`. Leur exécution dans GitHub Actions **n'a pas pu être vérifiée dans cette intervention** ; ne pas annoncer 55 tests passants avant l'obtention du résultat CI. L'ensemble précédent annonçait 37 tests locaux validés, plus un test différentiel de 350 configurations dont l'exécution CI reste également à contrôler.
+
+```bash
+node --test tools/jactari-port/*.test.mjs
+```
+
+### Prochain raccordement nécessaire
+
+Un combat a deux niveaux de pertes : **pertes/dispersion pendant les tours**, puis **morts définitives après les bonus, récupérations et résurrections**. Le rapport final doit les afficher séparément. L'orchestrateur `battle.mjs` **n'appelle pas encore automatiquement** les nouveaux modules, afin de ne pas calculer un résultat final historique lorsque la magie complète, les héros et les règles de fin de combat manquent. Les modules sont donc réutilisables mais constituent toujours **une implémentation partielle** de Jactari.
