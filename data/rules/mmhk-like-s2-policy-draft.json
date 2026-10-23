@@ -46,7 +46,8 @@
     ],
     "earned_between_worlds": false,
     "carries_over_between_worlds": false,
-    "costs_status": "proposed_balance_pending"
+    "costs_status": "proposed_balance_pending",
+    "costs_proposal": "data/game-design/heritage-balance-lab.json"
   },
   "world": {
     "topology": "torus",
@@ -222,7 +223,8 @@
       "distribution": "near_regular_toroidal_lattice",
       "jitter_max_cells": 2,
       "all_types": true,
-      "spacing_cells": null
+      "spacing_cells": null,
+      "spacing_proposal_cells": 15
     },
     "question_refs": [
       "Q11",
@@ -525,5 +527,13 @@
     "all_decisions_consigned": true,
     "requires_rule_versioning": true
   },
-  "clarifications": "docs/decisions/P0-CLARIFICATIONS-C01-C09-2026-10-23.md"
+  "clarifications": "docs/decisions/P0-CLARIFICATIONS-C01-C09-2026-10-23.md",
+  "design_labs": {
+    "heritage": "data/game-design/heritage-balance-lab.json",
+    "world_generator": "data/game-design/world-generator-lab.json",
+    "document": "docs/game-design/10-LABS-HEREDITE-MONDE.md",
+    "status": "experimental_not_historical_not_approved",
+    "design_simulation_ready": true,
+    "game_server_ready": false
+  }
 }
