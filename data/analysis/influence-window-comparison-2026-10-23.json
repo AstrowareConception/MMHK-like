@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "source": "tools/influence_simulation_lab.py",
+  "historical_warning": "2009 tutorial = four-day rolling mean; user recollection = six-day mean; neither S2 validated",
+  "assumed_thresholds": {
+    "radius_1": 0,
+    "radius_2": 10000,
+    "radius_3": 30000,
+    "radius_4": 75000,
+    "radius_5": 150000,
+    "radius_6": 500000
+  },
+  "test_scenario": {
+    "world": [
+      40,
+      30
+    ],
+    "city_A": [
+      10,
+      10
+    ],
+    "city_B": [
+      20,
+      10
+    ],
+    "city_power_constant_each_day": 500000,
+    "daily_refresh": true,
+    "discrete_circle": true,
+    "toroidal": true
+  },
+  "test_output": {
+    "alliance_A_cells": 105,
+    "alliance_B_cells": 105,
+    "contested_cells": 7,
+    "neutral_cells": 983
+  },
+  "six_vs_four_day_ramp": {
+    "garrison_500000_days_inclusive": [
+      6,
+      11
+    ],
+    "garrison_0_from_day": 12,
+    "first_radius_6_day_four_day_window": 9,
+    "first_radius_6_day_six_day_window": 11,
+    "day_15_radius_four_days": 1,
+    "day_15_radius_six_days": 5
+  },
+  "status": "synthetic microtest executed, not actual Ubisoft rules"
+}
