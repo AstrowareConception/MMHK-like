@@ -1,0 +1,11 @@
+# Archives CDN Ubisoft récupérées localement : preuves de recherche non redistribuées.
+# Le petit corpus de référence déjà publié dans assets-recovered reste suivi.
+/data/assets-recovered/cdn-bulk/
+/data/analysis/wayback-recovery-ledger.jsonl
+
+# Fichiers temporaires des téléchargements et de Python
+*.partial-*
+__pycache__/
+*.py[cod]
+.venv/
+.DS_Store
