@@ -52,6 +52,16 @@ Le corpus [Jactari images](../../data/Jactari/src/images) comporte six planches 
 
 Le [manifeste des découpes](../../data/analysis/sprite-manifest.json) identifie 19 portraits sélectionnables pour chacune des cinq factions du jeu étudiées, soit **95 portraits sélectionnables**, chacun de **71 × 72 pixels**. La bande Donjon existe, mais sa présence ne suffit pas à confirmer l'accès à cette faction. Physiquement, les bandes comportent 21 emplacements : ne pas présumer que les deux derniers correspondent à des options de personnalisation.
 
+### Extraire les portraits déjà disponibles
+
+Pour disposer de fichiers individuels directement importables dans une interface, l'outil [export-hero-portraits.py](../../tools/export-hero-portraits.py) découpe les **95 portraits sélectionnables** d'après le manifeste, sans interpolation ni redimensionnement :
+
+~~~bash
+python3 tools/export-hero-portraits.py
+~~~
+
+La sortie sera dans **data/assets-derived/hero-portraits**, avec un manifeste indiquant pour chaque PNG la planche source, le rectangle de découpe et son empreinte. Il s'agit de **découpes produites depuis les planches JPG**, et non de la récupération de fichiers PNG originaux distincts. Cet export n'a pas été exécuté lors de la présente recherche.
+
 ### HeroWorld : nouvelle piste fournie par le projet
 
 [Galerie HeroWorld, album 13, page 1](https://heroworld.gamerhome.com/album.php?id=13&p=1).
