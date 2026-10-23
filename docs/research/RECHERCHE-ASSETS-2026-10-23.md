@@ -30,7 +30,7 @@ Une adresse conservée dans [MMHK-Plus, enhancedUI.js](https://github.com/Aendaw
 http://static5.cdn.ubi.com/u/HOMMK/mightandmagicheroeskingdoms.ubi.com/
 ```
 
-L'[index CDX récupéré](../../data/analysis/wayback-mmhk-cdx-2026-10-23.json) contient **3 907 URL archivées**, après filtrage des réponses historiques 200 et regroupement par URL. Parmi elles, **3 665 URL ont un type image**, correspondant à **1 007 empreintes CDX distinctes**. Plusieurs URL sont des versions successives d'un même contenu. Le portail, les annonces et l'interface sont également représentés.
+L'[index CDX récupéré](../../data/analysis/wayback-mmhk-cdx-2026-10-23.json) contient **3 906 URL archivées** (3 907 lignes JSON, en-tête compris), après filtrage des réponses historiques 200 et regroupement par URL. Parmi elles, **3 664 URL ont un type image**, correspondant à **1 006 empreintes CDX distinctes**. Plusieurs URL sont des versions successives d'un même contenu. Le portail, les annonces et l'interface sont également représentés.
 
 **Ce décompte n'est pas un pack de 1 007 assets de gameplay téléchargés.** Il s'agit d'un inventaire de pistes archivées. La collecte réalisée ici porte sur 24 images du CDN et 3 fichiers JS/CSS, auxquels s'ajoutent les 5 scènes AcidCave.
 
@@ -119,3 +119,7 @@ python3 tools/recover-wayback-cdn.py --limit 0
 La récupération nécessite un accès Internet au service Wayback. **Elle n'a pas été réexécutée dans la présente session**, l'environnement d'analyse ne disposant pas de résolution réseau vers Internet Archive. Le nombre final de succès ne pourra être annoncé qu'en lisant le journal d'exécution, et non en le déduisant du CDX. Le dossier volumineux `data/assets-recovered/cdn-bulk` et le registre `data/analysis/wayback-recovery-ledger.jsonl` sont exclus des commits par `.gitignore` : les anciens binaires Ubisoft n'ont pas de licence graphique libre identifiée.
 
 Les nouvelles preuves fonctionnelles tirées directement des scripts Ubisoft, notamment `friendKey`, `spawn=near/random` et `isNewbie`, sont analysées dans [le dossier de génération du monde et de protection](GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md).
+
+### Contrôle statique de l'inventaire
+
+La reprise du 23 octobre a reparsé les **3 906 URL** du CDX avec la politique de normalisation du téléchargeur : **3 906 chemins historiques utilisables, aucun chemin dangereux détecté et aucune collision après normalisation**. Ce contrôle porte sur les chemins du catalogue, **pas** sur le succès des téléchargements ni la validité des binaires distants. Suite de vérifications locales prévue : `python3 tools/test_recover_wayback_cdn.py`.
