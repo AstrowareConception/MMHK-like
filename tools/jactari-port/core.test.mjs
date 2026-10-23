@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {resolveStackDuel,validateArmySlots} from './core.mjs';
+const f=(a,d,m={})=>resolveStackDuel({attacker:{count:a,unitPower:10},defender:{count:d,unitPower:10},modifiers:m});
+test('attacker victory',()=>{const r=f(100,50);assert.equal(r.remaining.attacker,50);assert.equal(r.remaining.defender,0);});
+test('defender victory',()=>{const r=f(50,100);assert.equal(r.remaining.defender,50);});
+test('equal forces',()=>{const r=f(50,50);assert.equal(r.draw,true);assert.equal(r.remaining.defender,0);});
+test('attacker overwhelming',()=>{assert.equal(f(100,10,{attackStackHero:2}).losses.attacker,-1);});
+test('defender overwhelming',()=>{assert.equal(f(10,100,{defendStackHero:2}).losses.defender,-1);});
+test('weapon modifiers',()=>{const r=f(60,70,{attackWeapon:.2});assert.equal(r.totalPower.attacker,720);assert.equal(r.remaining.attacker,2);});
+test('bad stacks rejected',()=>{assert.throws(()=>f(0,1),RangeError);});
+test('seven ordered stack slots',()=>{assert.equal(validateArmySlots([null,null,null,null,null,null,{count:1,unitPower:2}]),true);assert.throws(()=>validateArmySlots([]),RangeError);});
