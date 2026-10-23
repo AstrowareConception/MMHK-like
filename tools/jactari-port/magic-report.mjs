@@ -22,7 +22,17 @@ export function simulateDualMagicBattleReport({attackers,defenders,attackerSpell
    playerControlled:opt.playerControlled??true,hasHero:opt.hasHero??true,
    raiseDeadRate:opt.raiseDeadRate??0,resurrectionPower:opt.resurrectionPower??0});
  }
- return {encounter,permanent,lossPolicy:{source:lossPolicy.source??'explicit-experimental',lossFactor:lossPolicy.lossFactor},
+ const persistentArmies={};
+ for(const [side,original] of [['attacker',attackers],['defender',defenders]]){
+  persistentArmies[side]=original.map((stack,i)=>{
+   if(!stack)return null;
+   const lost=permanent[side].reports[i].permanent;
+   if(!Number.isSafeInteger(lost)||lost<0||lost>stack.count)
+    throw new RangeError('Final losses outside original troop count at slot '+(i+1));
+   return {...stack,count:stack.count-lost};
+  });
+ }
+ return {encounter,permanent,persistentArmies,lossPolicy:{source:lossPolicy.source??'explicit-experimental',lossFactor:lossPolicy.lossFactor},
   completeness:'subset two-caster targeted/area magic, buff/debuff, melee and parametrized postbattle losses',
   limitations:['No mana or spell eligibility','No general Jactari spell catalog','No midcombat resurrection','No PvE retreat, siege or hero injuries']};
 }
