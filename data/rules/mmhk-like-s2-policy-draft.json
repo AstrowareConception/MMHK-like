@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "s2-c01-c09-territorial-v2-friction",
+  "version": "s2-population70-lab-v1",
   "product": "MMHK-like",
   "status": "decisions_recorded_not_fully_parameterized_not_yet_executable",
   "decision_registry": "data/decisions/p0-2026-10-23.json",
@@ -175,51 +175,75 @@
     "size_preset_variants": {
       "micro": {
         "max_players": 20,
-        "width": 80,
-        "height": 80,
-        "design_status": "experimental_conflict_target"
+        "reference_players": 14,
+        "width": 48,
+        "height": 48,
+        "regions_per_reference_player": 165,
+        "regions_per_full_player": 115,
+        "design_status": "experimental_population70"
       },
       "micro_plus": {
         "max_players": 50,
-        "width": 128,
-        "height": 128,
-        "design_status": "experimental_conflict_target"
+        "reference_players": 35,
+        "width": 80,
+        "height": 80,
+        "regions_per_reference_player": 183,
+        "regions_per_full_player": 128,
+        "design_status": "experimental_population70"
       },
       "small_community": {
         "max_players": 100,
-        "width": 176,
-        "height": 176,
-        "design_status": "experimental_conflict_target"
+        "reference_players": 70,
+        "width": 112,
+        "height": 112,
+        "regions_per_reference_player": 179,
+        "regions_per_full_player": 125,
+        "design_status": "experimental_population70"
       },
       "very_small": {
         "max_players": 199,
-        "width": 248,
-        "height": 248,
-        "design_status": "experimental_conflict_target"
+        "reference_players": 140,
+        "width": 152,
+        "height": 152,
+        "regions_per_reference_player": 165,
+        "regions_per_full_player": 116,
+        "design_status": "experimental_population70"
       },
       "small": {
         "max_players": 499,
-        "width": 392,
-        "height": 392,
-        "design_status": "experimental_conflict_target"
+        "reference_players": 350,
+        "width": 240,
+        "height": 240,
+        "regions_per_reference_player": 165,
+        "regions_per_full_player": 115,
+        "design_status": "experimental_population70"
       },
       "medium": {
         "max_players": 1000,
-        "width": 552,
-        "height": 552,
-        "design_status": "experimental_conflict_target"
+        "reference_players": 700,
+        "width": 344,
+        "height": 344,
+        "regions_per_reference_player": 169,
+        "regions_per_full_player": 118,
+        "design_status": "experimental_population70"
       },
       "large": {
         "max_players": 2000,
-        "width": 784,
-        "height": 784,
-        "design_status": "experimental_conflict_target"
+        "reference_players": 1400,
+        "width": 488,
+        "height": 488,
+        "regions_per_reference_player": 170,
+        "regions_per_full_player": 119,
+        "design_status": "experimental_population70"
       },
       "very_large": {
         "max_players": 3000,
-        "width": 952,
-        "height": 952,
-        "design_status": "experimental_conflict_target"
+        "reference_players": 2100,
+        "width": 600,
+        "height": 600,
+        "regions_per_reference_player": 171,
+        "regions_per_full_player": 120,
+        "design_status": "experimental_population70"
       }
     },
     "territorial_growth": {
@@ -228,16 +252,26 @@
       "influence_radius_max_cells": 6,
       "influence_shape": "pending historical research; euclidean radius-six disk used for planning only",
       "max_euclidean_disk_cells": 113,
-      "space_budget_target_world_regions_per_player": 300,
+      "space_budget_target_world_regions_per_player": 170,
       "owned_city_capacity_basis": "growth and increasing colonization cost; formula still to qualify",
       "simulation_required": "alliance saturation and contested influence",
-      "target_rationale": "Not all players reach ten cities; alliances need contested borders before late game, with no guaranteed ten-city space",
+      "target_rationale": "target territorial friction at 70% occupancy; 100% is intentionally congested",
       "alternate_density_scenarios": [
         200,
         300,
         400,
         500
       ]
+    },
+    "population_calibration": {
+      "referenceOccupancy": 0.7,
+      "softOverbookingStartsAbove": 0.7,
+      "hardCapacityInterpretation": "maximum registrations not ideal active population",
+      "referenceDensityRegionsPerActivePlayer": 170,
+      "referenceDensityStatus": "experimental_range_160_to_180",
+      "belowReference": "preserve engagement through spawn clustering or configurable active sectors, without changing world geometry mid-campaign",
+      "aboveReference": "allow rising congestion and territorial friction, but never guarantee elimination",
+      "doNotInferActivePlayersFromRegistered": "measure active participants separately"
     }
   },
   "region": {
