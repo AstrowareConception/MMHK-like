@@ -2,13 +2,36 @@
 
 **Décision produit confirmée :** un joueur peut posséder jusqu'à **10 cités**, pour un prix croissant ; la **zone d'influence maximale d'une cité peut atteindre 6 cases** sur la carte mondiale. Une alliance cherche à agrandir son territoire pour empêcher les implantations adverses. Par conséquent, les tailles de carte du laboratoire 0.1 étaient très insuffisantes.
 
+## Ajustement validé de l'orientation — densité et frictions d'alliance
+
+**23 octobre 2026, second arbitrage utilisateur :** le modèle à 500 régions/joueur était trop généreux. Le plafond **10 villes** est une limite, pas l'état normal de tous les joueurs. Il faut créer une **pression territoriale progressive** afin que les alliances cherchent réellement à fermer les accès aux régions colonisables. Les dimensions du tableau « hypothèse 500 » ci-dessous sont conservées comme étape de réflexion, mais **ne constituent plus les presets actifs du laboratoire**.
+
+**Nouvelle hypothèse de travail : environ 300 régions mondiales par joueur à capacité pleine**, avec tests comparatifs à 200, 300, 400 et 500. Les nouveaux côtés sont calculés pour rester proches d'un budget 300 et non pour garantir dix villes à chacun.
+
+| Joueurs à capacité maximale | Côté retenu pour la simulation | Superficie | Régions / joueur |
+| ---: | ---: | ---: | ---: |
+| 20 | 80 | 6 400 | 320 |
+| 50 | 128 | 16 384 | 328 |
+| 100 | 176 | 30 976 | 309,8 |
+| 199 | 248 | 61 504 | 309,1 |
+| 499 | 392 | 153 664 | 307,9 |
+| 1 000 | 552 | 304 704 | 304,7 |
+| 2 000 | 784 | 614 656 | 307,3 |
+| 3 000 | 952 | 906 304 | 302,1 |
+
+**Critères de réussite supplémentaires :** (1) un nouveau joueur n'est pas systématiquement bloqué dès sa première expansion ; (2) l'emprise des alliances rivales commence à se toucher à un stade intermédiaire raisonnable ; (3) des choix stratégiques de placement de villes et de négociation influencent l'accès aux frontières ; (4) le maximum de dix cités demeure théoriquement possible pour certains joueurs sans en faire une garantie pour tous ; (5) les codes amis ne doivent pas rendre les clusters systématiquement dominants.
+
+La **distribution 1–10 villes**, le nombre de joueurs actifs, les distances entre premières villes, la courbe d'accroissement de l'influence et les conditions d'expansion hors zone devront être simulés ensemble. Le rayon 6 représente une **valeur maximale de ville avancée** : l'appliquer d'emblée à toutes les premières villes produirait des collisions prématurées et fausserait l'analyse.
+
+---
+
 ## Unités et géométrie
 
 Une **case de carte du monde représente une région** ; chaque région possède ensuite sa propre vue locale en grille 5×5. Les dimensions du monde sont des dimensions en **régions**, non en emplacements locaux de construction.
 
 Pour quantifier l'échelle, l'hypothèse de calcul la plus simple est un disque euclidien de rayon entier 6 : une cité rayonne alors sur **113 cases mondiales**, si aucune restriction géographique n'intervient. La forme réelle de l'influence (disque, carré de Chebyshev, propagation, pondération territoriale) reste à retrouver dans MMHK S2. Un carré de rayon 6 couvre 169 cases : l'hypothèse influe sur les besoins de surface. Dix disques de 113 cases représenteraient **1 130 cases théoriques sans aucun chevauchement**, ce qui ne constitue pas une consommation réelle fixe : les zones se recouvrent fréquemment et l'influence d'alliance est une union d'emprises, pas une somme de surfaces.
 
-## Hypothèse expérimentale : environ 500 régions par joueur au plafond
+## Ancienne hypothèse expérimentale (remplacée) : environ 500 régions par joueur
 
 Le budget de 500 cases n'est **ni un droit territorial garanti, ni une preuve de bonne taille**. Il représente une cible initiale de densité spatiale : laisser des territoires disponibles dans l'early game et permettre aux frontières d'alliance de devenir conflictuelles progressivement.
 
