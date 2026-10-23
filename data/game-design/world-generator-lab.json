@@ -1,46 +1,54 @@
 {
-  "version": "world-generator-lab-v0.1",
+  "version": "world-generator-lab-v0.2-territorial",
   "status": "EXPERIMENTAL_NOT_HISTORICAL",
   "worldPresets": [
     {
       "name": "micro",
       "maxPlayers": 20,
-      "side": 16
+      "side": 104,
+      "areaPerPlayerAtCap": 541
     },
     {
       "name": "micro_plus",
       "maxPlayers": 50,
-      "side": 24
+      "side": 160,
+      "areaPerPlayerAtCap": 512
     },
     {
       "name": "small_community",
       "maxPlayers": 100,
-      "side": 32
+      "side": 224,
+      "areaPerPlayerAtCap": 502
     },
     {
       "name": "very_small",
       "maxPlayers": 199,
-      "side": 44
+      "side": 320,
+      "areaPerPlayerAtCap": 515
     },
     {
       "name": "small",
       "maxPlayers": 499,
-      "side": 72
+      "side": 512,
+      "areaPerPlayerAtCap": 525
     },
     {
       "name": "medium",
       "maxPlayers": 1000,
-      "side": 104
+      "side": 720,
+      "areaPerPlayerAtCap": 518
     },
     {
       "name": "large",
       "maxPlayers": 2000,
-      "side": 152
+      "side": 1024,
+      "areaPerPlayerAtCap": 524
     },
     {
       "name": "very_large",
       "maxPlayers": 3000,
-      "side": 192
+      "side": 1248,
+      "areaPerPlayerAtCap": 519
     }
   ],
   "regions": {
@@ -94,15 +102,30 @@
       "Q14",
       "Q15",
       "Q18",
-      "C02"
+      "C02",
+      "2026-10-23 max 10 cities per player and max influence radius 6; original map preset was too small"
     ],
     "proposed_parameters": [
       "pairProbability",
       "typeWeights",
       "spacingCells",
       "minePlacement",
-      "worldPresets.side"
+      "worldPresets.side",
+      "designTargetRegionsPerPlayerApprox",
+      "influenceGeometry"
     ],
     "historical_extraction": "not found"
+  },
+  "territory": {
+    "maxCitiesPerPlayer": 10,
+    "maxInfluenceRadiusCellsPerCity": 6,
+    "influenceGeometry": "euclidean_disk_hypothesis_pending_original_rule_verification",
+    "diskCellsAtRadius6": 113,
+    "designTargetRegionsPerPlayerApprox": 500,
+    "overlapExpected": true,
+    "territoryIsNotGuaranteedExclusivePerPlayer": true,
+    "initialSpawnPressure": "space for territorial growth, validate via multiplayer simulation",
+    "distanceMetric": "toroidal",
+    "influenceCompetition": "not_yet_implemented"
   }
 }
