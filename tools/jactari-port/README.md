@@ -66,3 +66,22 @@ Exécuter **tous les tests du sous-système** : `node --test tools/jactari-port/
 **Écart source à documenter avant un portage strict :** la fonction originale vérifie deux fois `heros_a.bonus_legendary_legwarrior_b` tout en ajoutant `heros_d.bonus_legendary_legwarrior_b`, ce qui ressemble à une anomalie de variable et à un doublon. L'adaptateur ne comptabilise actuellement la compétence du défenseur **qu'une fois**. C'est une décision d'adaptation explicite, non une preuve d'équivalence sur ce cas. Les paramètres `moral` et `special` sont fournis déjà agrégés ; les routines historiques qui les génèrent ne sont pas encore portées.
 
 **Restent non portés :** déroulement multi-pelotons `simulation_rencontre`, conditions de retraite, magie, engins de siège, rapports complets, coûts des pertes, expérience, données de créatures et instanciation des bonus historiques `_facteur_bonus` à partir de la saison. Ne pas utiliser ce sous-ensemble seul pour annoncer le vainqueur d'une bataille MMHK complète.
+
+
+## Ajout : pré-combat et rencontre sans magie
+
+L'extraction apporte désormais :
+- `ranged.mjs` : salves pré-combat (`R` tireurs, `T` tous les pelotons selon compétence, `E` engins de siège). Le calcul conserve la progression dans les sept slots et le `Math.floor` du code `tir_engins_siege`. `resolveSimultaneousSalvos` utilise un même état initial pour les deux camps, puis applique ensemble les pertes, sans mutation des entrées.
+- `encounter.mjs` : `simulateMeleeOnlyEncounter`, résolution des premiers pelotons encore actifs dans l'ordre original, avec journal de chaque duel et prise en compte des bonus du module précédent. Le résultat distingue **victoire de l'attaquant, du défenseur ou dispersion mutuelle** et conserve les pertes de tours.
+
+**Important :** ces deux briques ne sont pas encore raccordées dans un orchestrateur de combat intégral. L'orchestrateur `encounter.mjs` refuse explicitement magie, siège, pré-combat, fuite et phases spéciales ; il n'implémente pas la détermination des **pertes permanentes**, les résurrections ni les héros blessés. Les salves sont des calculs autonomes à intégrer ensuite selon le bon ordre historique. Le calcul des bonus est encore un adaptateur partiel.
+
+### Vérification
+
+```bash
+node --test tools/jactari-port/*.test.mjs
+```
+
+**31 tests validés localement** sur quatre suites : 8 duels, 7 bonus, 8 rencontres multi-pelotons et 8 tests de salves. Les résultats doivent encore être comparés **différentiellement** contre une exécution du Jactari original ; la correspondance des seules branches arithmétiques ne prouve pas une fidélité historique totale.
+
+Le sous-ensemble est réutilisable dans les futures opérations PvE, PvP et simulateur, **mais ne doit pas encore être utilisé comme arbitre de combat officiel d'un serveur multijoueur**. Son code est une adaptation de la source GPLv3+ de Jactari ; conserver les mentions de licence.
