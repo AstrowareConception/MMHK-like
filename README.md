@@ -22,6 +22,7 @@ La révision documentaire 0.6 consigne les **84 réponses P0** du porteur de pro
 | Relancer la récupération historique | [Outil Wayback](tools/recover-wayback-cdn.py) et [méthode](docs/research/RECHERCHE-ASSETS-2026-10-23.md#7-reprise-de-la-collecte-wayback-après-interruption) |
 | **Algorithme de génération proposé (Q12/Q15)** | [Quatre mines, pondérations et positions expérimentales](docs/game-design/09-GENERATEUR-P0-PROPOSITIONS.md) |
 | **Roadmap technique V5.4 → V7** | [Combat Jactari réel, missions horodatées, reliques, calibrage à 70 % et première version jouable](docs/game-design/23-ROADMAP-V5-4-V7.md) |
+| **Jactari : noyau JavaScript et 31 tests** | [Duel, bonus, salves, orchestration de 7 pelotons](tools/jactari-port/README.md), [CI Node](.github/workflows/jactari-port-test.yml) |
 | **V5.3 : passerelle contrôlée aux oracles Jactari** | [Rapport et limites du premier adaptateur](docs/game-design/22-SIMULATION-V5-3-PASSERELLE-JACTARI.md), [20 assertions et données](data/analysis/v5-3-oracle-integration-2026-10-23.json) |
 | **V5.2 : simulation d'ordres concurrents et entretien par peloton** | [Rapport des 30 simulations et 12 assertions](docs/game-design/21-SIMULATION-V5-2-CONCURRENCE-ORDRES.md), [résultats contrôlés](data/analysis/relic-v5-2-concurrent-order-regression-2026-10-23.json) |
 | **V5/V5.1 : confrontation active autour des reliques** | [Rapport 35 scénarios + 35 contre-essais](docs/game-design/20-SIMULATION-V5-CONFLITS-ACTIFS.md), [synthèse structurée](data/analysis/relic-v5-focused-35-runs-2026-10-23.json) |
