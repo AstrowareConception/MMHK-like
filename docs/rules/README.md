@@ -11,6 +11,8 @@ Le périmètre est le **PvP classique, avec Guerre des Larmes en cible**. Le pre
 | Fichier | Usage |
 | --- | --- |
 | [90 règles indexées](../../data/rules/early-game.rules.json) | Source structurée des identifiants RM-*, états de preuve, contrats, US, inconnues et paramètres |
+| [C01–C09 confirmées](../decisions/P0-CLARIFICATIONS-C01-C09-2026-10-23.md) | Hérédité uniforme, implantation des reliques, codes amis, PNJ, mine historique, entretien, protection, fuseau et caravanes |
+| [Modèles expérimentaux du monde et de l'hérédité](../game-design/10-LABS-HEREDITE-MONDE.md) | Générateur à graine fixe et 12 capacités d'hérédité proposées, non historiques |
 | [Décisions P0 Q01–Q84](../decisions/DECISIONS-P0-2026-10-23.md) | Choix du projet S2, arbitrages restant ouverts et liens vers les formulations originales |
 | [Profil S2 de conception](../../data/rules/mmhk-like-s2-policy-draft.json) | Profil de produit dérivé des réponses, non exécutable tant que les paramètres essentiels sont inconnus |
 | [Traçabilité des réponses](../../data/decisions/p0-traceability.json) | Correspondances complètes Q → RM → US → Uxx |
