@@ -1,0 +1,15 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {calculateEffectiveSpellPower} from './spell-power.mjs';
+const data={spell:{school:3,unit:1,circle:2,type:0,power:10,factors:{I:1,R:1.5,C:.5}},side:'attacker',attackerWeapon:'I',defenderWeapon:'R',hero:{magie:20}};
+const run=(overrides={})=>calculateEffectiveSpellPower({...data,...overrides});
+test('base, weapon coefficient and hero magic',()=>{const r=run();assert.equal(r.base,15);assert.equal(r.magic,20);assert.equal(r.power,300);});
+test('magic, instinct and direct artifact contributions',()=>{const r=run({hero:{magie:20,bonus_mp:50,bonus_instinct_3:5,bonus_m:2}});assert.equal(r.magic,37);assert.equal(r.power,555);});
+test('expert and school bonuses',()=>{const r=run({hero:{magie:20,bonus_expert_3:15,bonus_legendary_dragonkinght_b:5},schoolBonusPercent:10});assert.equal(r.power,390);});
+test('mastery only when circle is in range',()=>{const common={level:1,bonusPercent:15,maximumCircle:2,wayBonus:1};assert.equal(run({mastery:common}).power,390);assert.equal(run({mastery:{...common,maximumCircle:1}}).power,300);});
+test('resistance only on eligible spell types',()=>{const resistance={level:1,bonusPercent:20,wayBonus:0};assert.equal(run({resistance}).power,240);assert.equal(run({resistance,spell:{...data.spell,type:4}}).power,300);});
+test('antimagic stacks additively',()=>{assert.equal(run({antiMagic:{level:2,bonusPercentPerLevel:10}}).power,240);});
+test('target uses own weapon when unit code is 0',()=>{const r=run({spell:{...data.spell,unit:0}});assert.equal(r.affectedWeapon,'I');assert.equal(r.power,200);});
+test('defender targeting selects attacker weapon',()=>{const r=run({side:'defender'});assert.equal(r.affectedWeapon,'I');assert.equal(r.power,200);});
+test('invalid target weapon rejected',()=>assert.throws(()=>run({defenderWeapon:'X'}),RangeError));
+test('unresolved missing weapon factor rejected',()=>assert.throws(()=>run({spell:{...data.spell,factors:{I:1}}}),RangeError));
