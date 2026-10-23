@@ -1,6 +1,6 @@
 # Référentiel de règles métier — Early game MMHK-like
 
-**Révision : 0.1 (23 octobre 2026) · Statut : DRAFT, non approuvé, non implémenté.**
+**Révision : 0.2 (23 octobre 2026) · Les 84 choix P0 ont été consignés ; les 90 règles sont encore non implémentées et certaines valeurs restent à qualifier.**
 
 Ce dossier transforme les éléments de rétroconception en **contrats métier explicites**, pouvant guider l'affinage des US et l'implémentation future du moteur. Il ne transforme pas automatiquement les résultats du calculateur communautaire ou les témoignages historiques en règles authentifiées du serveur Ubisoft.
 
@@ -10,7 +10,11 @@ Le périmètre est le **PvP classique, avec Guerre des Larmes en cible**. Le pre
 
 | Fichier | Usage |
 | --- | --- |
-| [60 règles indexées](../../data/rules/early-game.rules.json) | Source structurée des identifiants RM-*, états de preuve, contrats, US, inconnues et paramètres |
+| [90 règles indexées](../../data/rules/early-game.rules.json) | Source structurée des identifiants RM-*, états de preuve, contrats, US, inconnues et paramètres |
+| [Décisions P0 Q01–Q84](../decisions/DECISIONS-P0-2026-10-23.md) | Choix du projet S2, arbitrages restant ouverts et liens vers les formulations originales |
+| [Profil S2 de conception](../../data/rules/mmhk-like-s2-policy-draft.json) | Profil de produit dérivé des réponses, non exécutable tant que les paramètres essentiels sont inconnus |
+| [Traçabilité des réponses](../../data/decisions/p0-traceability.json) | Correspondances complètes Q → RM → US → Uxx |
+| [Vérification des réponses P0](../../tools/validate-p0-decisions.mjs) | Contrôles automatiques de cohérence et d'attribution, pas tests de moteur |
 | [18 fixtures](../../data/rules/early-game.fixtures.json) | Exemples concrets, avec distinction entre chiffres de 2013, nombres fictifs et propositions de test |
 | [Expérience du premier royaume](../game-design/08-EXPERIENCE-EARLY-GAME.md) | Parcours joueur, arbitrages, progression et métriques d'équilibrage sans attribuer des chiffres fictifs à Ubisoft |
 | [Contrats et invariants](CONTRATS-EARLY-GAME.md) | Description métier du déroulé, transitions, formules candidates, droits, refus et temps |
@@ -19,7 +23,7 @@ Le périmètre est le **PvP classique, avec Guerre des Larmes en cible**. Le pre
 | [Proposition d'affinage des US pivots](AFFINAGE-US-L1.md) | Scénarios d'acceptation, décisions et pistes de découpage ; ne modifie pas les 300 US source |
 | [Traçabilité vers les US](TRACEABILITE-US.md) | Matrice règles ↔ backlog existant ; pistes de découpage et de révision |
 | [Profil de laboratoire](../../data/rules/early-game.profile-lab.json) | Paramètres explicitement fictifs pour des tests ; aucun profil historique certifié |
-| [État des validations](VALIDATION.md) | 463 contrôles croisés effectués, aucune exécution d'un moteur de jeu |
+| [État des validations](VALIDATION.md) | audit initial de 463 contrôles sur 60 RM ; nouvelle révision P0 contrôlée séparément |
 | [Vérificateur](../../tools/validate-early-game-rules.mjs) | Contrôle de structure, liens US, inconnues, prix de référence, durée, exemples et doublons |
 
 ### Lire correctement une règle
@@ -37,15 +41,15 @@ Le champ \`parameter_keys\` nomme ce que le profil de jeu devra fixer. Lorsque l
 
 | Domaine | Nombre | Exemples de règles |
 | --- | ---: | --- |
-| Monde et inscription | 8 | Faction autorisée, spawn random / near, protection et unicité |
-| Région et génération | 8 | 5 × 5, centre, quatre mines, doublons, occupation PNJ |
-| Économie | 11 | Stocks, fractions, plafonds, production, dépenses, entretien |
-| Constructions | 8 | Catalogue, prérequis, débit, files, achèvement, annulation |
-| Héros | 6 | Activité exclusive, archétypes, recrutement, talents et équipement |
-| Armées et recrues | 8 | Sept pelotons, pools, recrutement, puissance et améliorations |
-| Combat PvE | 7 | Préparation, contre-armes, résultat, pertes et rapport |
-| Temps partagé | 4 | UTC, échéances, idempotence, ordre des événements et reprise |
-| **Total** | **60** | **Statut : contrat de conception à affiner**, non moteur opérationnel |
+| Monde et inscription | 14 | Faction autorisée, spawn random / near, protection et unicité |
+| Région et génération | 11 | 5 × 5, centre, quatre mines, doublons, occupation PNJ |
+| Économie | 16 | Stocks, fractions, plafonds, production, dépenses, entretien |
+| Constructions | 12 | Catalogue, prérequis, débit, files, achèvement, annulation |
+| Héros | 10 | Activité exclusive, archétypes, recrutement, talents et équipement |
+| Armées et recrues | 10 | Sept pelotons, pools, recrutement, puissance et améliorations |
+| Combat PvE | 9 | Préparation, contre-armes, résultat, pertes et rapport |
+| Temps partagé | 8 | UTC, échéances, idempotence, ordre des événements et reprise |
+| **Total** | **90** | **Statut : contrat de conception à affiner**, non moteur opérationnel |
 
 ## Trois règles cardinales
 
@@ -55,7 +59,7 @@ Le champ \`parameter_keys\` nomme ce que le profil de jeu devra fixer. Lorsque l
 
 ## Points de décision bloquants
 
-La distinction entre **référence candidate** et **profil exécutable** est centrale. Pour préparer une première partie, il faudra statuer sur l'état initial, la cadence et les arrondis de production, les chantiers et héros mobilisés, l'entretien, la disponibilité des recrues, la temporalité du combat local et l'ordre d'événements simultanés. Le [registre priorisé](DECISIONS-ET-INCERTITUDES.md) propose un traitement de ces inconnues sans faire passer un choix de laboratoire pour une règle retrouvée.
+La distinction entre **référence candidate** et **profil exécutable** est centrale. Pour préparer une première partie, il faudra statuer sur l'état initial, la cadence et les arrondis de production, les chantiers et héros mobilisés, l'entretien, la disponibilité des recrues, la temporalité du combat local et l'ordre d'événements simultanés. Le [registre priorisé](DECISIONS-ET-INCERTITUDES.md) propose un traitement de ces inconnues sans faire passer un choix de laboratoire pour une règle retrouvée. Les choix du produit sont désormais liés au [registre P0](../decisions/DECISIONS-P0-2026-10-23.md).
 
 Les **300 US existantes** restent \`à affiner\`, non estimées et non implémentées : le référencement par des RM ne les clôture pas. Les 16 pivots et leur [fermeture de dépendances (37 US)](../../data/analysis/first-playable-story-selection.json) constituent la première tranche à affiner, et non un engagement de sprint.
 
