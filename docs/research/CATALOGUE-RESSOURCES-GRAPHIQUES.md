@@ -6,6 +6,7 @@
 
 - [Catalogue JSON](../../data/analysis/assets-catalog.json) — données structurées avec source, chemins, statuts, versions, empreintes et URL d'archives.
 - [Catalogue CSV](../../data/analysis/assets-catalog.csv) — format tabulaire UTF-8 séparé par des points-virgules, filtrable dans un tableur.
+- **[Check-list des 175 fichiers de villes](../../data/analysis/city-assets-checklist.csv)** — cinq factions, 5 fonds, 170 calques, état de possession et nom exact de chaque fichier.
 - [Générateur](../../tools/build-assets-catalog.mjs) — reconstruit les deux catalogues à partir des manifestes de référence.
 - [Collecteur Wayback](../../tools/recover-wayback-assets.py) — tente des récupérations ciblées, avec décodage et contrôle cryptographique. Son exécution réseau **n'a pas été réalisée** pendant cette révision.
 
