@@ -6,7 +6,7 @@ import {simulateMeleeOnlyEncounter} from './encounter.mjs';
 import {validateArmySlots} from './core.mjs';
 export function simulateSupportedBattle({attackers,defenders,attackerSalvos=[],defenderSalvos=[],context={}}){
   validateArmySlots(attackers);validateArmySlots(defenders);
-  if(context.magic||context.retreat||context.spells||context.resurrection||context.specialPhases)
+  if(context.magic||context.retreat||context.spells||context.resurrection||context.specialPhases||context.siege||context.prebattle)
     throw new Error('Unsupported historic battle phase');
   for(const s of [...attackerSalvos,...defenderSalvos])
     if(!['R','T','E'].includes(s.kind))throw new RangeError('Unrecognized salvo');
