@@ -4,6 +4,8 @@
 
 Les identifiants ci-dessous existent déjà dans le [backlog](../backlog/README.md). Les liens RM pointent vers les enregistrements de [règles](../../data/rules/early-game.rules.json), et les identifiants FX vers les [fixtures](../../data/rules/early-game.fixtures.json). Les valeurs de 2013 sont des références candidates de saison ; les nombres fictifs des tests ne sont pas les prix ou taux universels MMHK.
 
+**Complément Q01–Q84 du 23/10/2026 :** les arbitrages P0 sont désormais [consignés](../decisions/DECISIONS-P0-2026-10-23.md). **Le métier du projet est décidé** pour les chantiers urbains uniques, les héros mobilisés sur chantiers régionaux, l'annulation impossible, les sept jours de protection, la mine productive immédiatement, les recrues horaires, la réserve partagée et les combats déterministes fondés sur Jactari. Les mentions de ces sujets comme « à décider » dans les fiches de travail ci-dessous désignent soit **la vérification du serveur S2**, soit des paramètres (arrondis, formules, périmètre) encore ouverts. Les confirmations numériques doivent employer un **catalogue S2 qualifié** ou des cas explicitement synthétiques.
+
 ## US-ACC-003 — Créer mon royaume
 
 **Card conservée :** nouveau joueur → rejoindre un monde avec sa faction pour commencer une campagne persistante.
