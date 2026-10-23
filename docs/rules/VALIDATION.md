@@ -17,6 +17,7 @@
 | Générateur expérimental Q12/Q15 | **1 proposition, non simulée** |
 | Vérifications de cohérence réalisées | **1 810** |
 | Échecs détectés dans ces vérifications | **0** |
+| Liens Markdown internes contrôlés dans 14 documents du lot | **387, aucun lien de fichier absent** |
 | Tests du moteur de jeu réellement exécutés | **0** |
 
 Les contrôles ont couvert les IDs Q/RM, la couverture de toutes les questions, le rattachement aux US existantes et aux incertitudes Uxx, la présence des sources, les liens de traçabilité bilatéraux, le suivi des exemples d'acceptation et plusieurs contraintes structurantes du profil S2 (sept jours, torus, trois codes amis, quatre mines, attrition, chantiers, recrutements, trêve). Ces contrôles ne valident **ni le serveur Ubisoft, ni la fidélité des coûts S2, ni un jeu opérationnel**.
