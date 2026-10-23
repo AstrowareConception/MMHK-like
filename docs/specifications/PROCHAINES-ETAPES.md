@@ -2,6 +2,8 @@
 
 Proposition du 23 octobre 2026. Le périmètre confirmé reste le **PvP classique avec Guerre des Larmes**. Le dépôt contient une base documentaire et un backlog ; aucun jalon jouable n'est encore accepté.
 
+**État lot A (23/10/2026) :** le [référentiel de règles métier](../rules/README.md) est créé avec 60 RM, 18 fixtures, [contrats détaillés](../rules/CONTRATS-EARLY-GAME.md), [décisions ouvertes](../rules/DECISIONS-ET-INCERTITUDES.md), [scénarios Gherkin](../rules/RECETTE-GHERKIN.md), [matrice des US](../rules/TRACEABILITE-US.md) et [proposition d'affinage](../rules/AFFINAGE-US-L1.md). Les données sont spécifiées, **pas implémentées ni encore approuvées** ; les inconnues bloquantes restent documentées.
+
 La priorité proposée est de livrer une **boucle locale persistante avec le Havre**, puis de la faire fonctionner entre plusieurs joueurs. Le choix du Havre et le découpage ci-dessous sont des propositions de réalisation, pas des décisions déjà prises par l'utilisateur. Les autres factions et la Guerre des Larmes restent dans l'objectif final.
 
 ## 1. Transformer le premier lot en travail prêt à réaliser
