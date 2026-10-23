@@ -1,5 +1,8 @@
 # Influence territoriale : moyenne glissante, paliers et contestation
 
+**MISE À JOUR POSTÉRIEURE (23/10/2026) :** la [FAQ 2013](https://www.might-and-magic.ru/articles/_/heroes-kingdoms/hk-towns/hk_city_faq) fournit le tableau réel documenté de seuils (rayons 1 à 6 : 0 / 30 000 / 100 000 / 250 000 / 500 000 / **1 000 000**). Le porteur de projet privilégie désormais **quatre jours**. Les seuils à 10 000/30 000/75 000/150 000/500 000 et la fenêtre de six jours dans le texte ci-dessous sont **des hypothèses expérimentales antérieures, remplacées**. Le nouveau contrat est [Reliques et guerres d'influence](17-RELIQUES-ET-GUERRES-D-INFLUENCE.md).
+
+
 **23 octobre 2026 — nouvelle précision de game design.** Une cité projette initialement un contrôle local de **rayon 1**. L'influence est recalculée **une fois par jour**, selon la puissance militaire **stationnée** en ville lissée sur une fenêtre glissante. La valeur de travail du projet est **six jours**, avec seuil de rayon 6 vers **500 000 de puissance** selon souvenir utilisateur. L'entretien horaire rend cette puissance coûteuse à maintenir.
 
 ## Divergence historique à conserver
