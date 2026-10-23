@@ -12,6 +12,7 @@ Le périmètre est le **PvP classique, avec Guerre des Larmes en cible**. Le pre
 | --- | --- |
 | [60 règles indexées](../../data/rules/early-game.rules.json) | Source structurée des identifiants RM-*, états de preuve, contrats, US, inconnues et paramètres |
 | [18 fixtures](../../data/rules/early-game.fixtures.json) | Exemples concrets, avec distinction entre chiffres de 2013, nombres fictifs et propositions de test |
+| [Expérience du premier royaume](../game-design/08-EXPERIENCE-EARLY-GAME.md) | Parcours joueur, arbitrages, progression et métriques d'équilibrage sans attribuer des chiffres fictifs à Ubisoft |
 | [Contrats et invariants](CONTRATS-EARLY-GAME.md) | Description métier du déroulé, transitions, formules candidates, droits, refus et temps |
 | [Décisions ouvertes](DECISIONS-ET-INCERTITUDES.md) | Ce qui bloque la fidélité, options de prototype possibles, choix réellement attendus |
 | [Scénarios de recette](RECETTE-GHERKIN.md) | Parcours détaillés couvrant le nominal, les refus, les frontières, l'idempotence et la reconnexion |
