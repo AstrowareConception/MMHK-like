@@ -6,6 +6,7 @@ import {resolveStackDuel,validateArmySlots} from './core.mjs';
 import {calculateBonuses} from './bonuses.mjs';
 import {resolveSingleTargetDamageSpell,resolveAttackStackBuff,resolveHeroDefenseDebuff} from './magic-effects.mjs';
 import {resolvePostDuelRevival} from './magic-revival.mjs';
+import {projectTerminalTemporaryRevival} from './terminal-cleanup.mjs';
 const weapons=new Set(['I','R','C']);
 const clone=x=>x?{...x}:null;
 const active=a=>a.findIndex(s=>s&&s.remaining>0&&!s.dispersed);
@@ -80,21 +81,29 @@ export function simulateDualMagicEncounter({attackers,defenders,attackerSpells={
  if(['magic','spells','prebattle','siege','retreat','resurrection','specialPhases'].some(k=>context[k]))throw new Error('Unsupported additional phase');
  const a=prepare(attackers),d=prepare(defenders),heroes={attacker:clone(context.attackerHero),defender:clone(context.defenderHero)};
  const events=[];
+ let lastRoundRevival={};
  for(let turn=1;turn<=maxRounds;turn++){
   const index={attacker:active(a),defender:active(d)};
   if(index.attacker<0||index.defender<0){
    if([attackerSpells,defenderSpells].some(book=>Object.keys(book).some(k=>Number(k)>=turn)))throw new Error('Unreachable scheduled spell round '+turn);
-   return {status:index.attacker<0&&index.defender<0?'mutual-dispersion':index.attacker<0?'defender':'attacker',
-    rounds:events.filter(e=>e.phase==='duel').length,events,attacker:a,defender:d,heroes,
-    completeness:'two casters, targeted and area spells; no full Jactari phases'};
+   const status=index.attacker<0&&index.defender<0?'mutual-dispersion':index.attacker<0?'defender':'attacker';
+   const terminal=projectTerminalTemporaryRevival({status,attacker:a,defender:d,lastRevival:lastRoundRevival[status]??null});
+   return {status,rounds:events.filter(e=>e.phase==='duel').length,events,attacker:a,defender:d,heroes,
+    terminalDisplay:terminal.displayed,terminalCleanup:terminal.cleanup,
+    completeness:'supported dual-caster subset, terminal cleanup projection, not complete Jactari'};
   }
   // Jactari declares resurrection before the duel and resolves it after the duel.
+  lastRoundRevival={};
   const startOfRound={attacker:a[index.attacker].remaining,defender:d[index.defender].remaining};
   const pendingRevival={};
   if(Object.hasOwn(attackerSpells,turn))pendingRevival.attacker=cast('attacker',attackerSpells[turn],turn,index,a,d,heroes,events);
   if(Object.hasOwn(defenderSpells,turn))pendingRevival.defender=cast('defender',defenderSpells[turn],turn,index,a,d,heroes,events);
   const ai=active(a),di=active(d);
-  if(ai<0||di<0)continue;
+  if(ai<0||di<0){
+   if(pendingRevival.attacker||pendingRevival.defender)
+    throw new Error('Unsupported resurrection without a duel after spell damage');
+   continue;
+  }
   const x=a[ai],y=d[di];
   const modifiers=calculateBonuses({attackerWeapon:x.weapon,defenderWeapon:y.weapon,
    attackerHero:heroes.attacker,defenderHero:heroes.defender,morale:context.morale??{},special:context.special??{},
@@ -119,8 +128,10 @@ export function simulateDualMagicEncounter({attackers,defenders,attackerSpells={
    state.remaining=effect.remaining;
    if(plan.mode==='def')state.roundLosses+=effect.recordedLossAdjustment;
    else{state.raisedDuringBattle+=effect.revived;state.temporaryRevived+=effect.revived;}
-   events.push({turn,phase:'revival',side,slot:slot+1,mode:plan.mode,revived:effect.revived,
-    remaining:effect.remaining,recordedLossAdjustment:effect.recordedLossAdjustment});
+   const entry={turn,phase:'revival',side,slot:slot+1,mode:plan.mode,revived:effect.revived,
+    remaining:effect.remaining,recordedLossAdjustment:effect.recordedLossAdjustment};
+   events.push(entry);
+   lastRoundRevival[side]=entry;
   }
  }
  throw new Error('Round limit exceeded');
