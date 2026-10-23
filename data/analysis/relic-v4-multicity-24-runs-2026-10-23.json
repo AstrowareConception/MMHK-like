@@ -1,0 +1,174 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-10-23",
+  "model": "V4 synthetic multi-city lab",
+  "status": "executed_not_historical_and_not_production_ready",
+  "run_count": {
+    "main": 18,
+    "upkeep_sensitivity": 6
+  },
+  "source_package": "MMHK_V4_multivilles_reliques_2026-10-23.zip (conversation artifact)",
+  "design": {
+    "capacity": 40,
+    "densities_at_seventy_percent": [
+      120,
+      170,
+      220
+    ],
+    "fill_rates": [
+      0.4,
+      0.7,
+      1
+    ],
+    "policies": [
+      "spread",
+      "objective"
+    ],
+    "seeds_main": [
+      11
+    ],
+    "days": 35,
+    "average_city_count_target": "emergent around 3",
+    "max_cities_per_player": 10,
+    "rolling_window_days": 4,
+    "city_local_gold": true,
+    "caravans": "own-city daily delayed transfers",
+    "sites": "Sphinx/Treasury/Dolmen quasi-regular lattice",
+    "site_effects": "7% upkeep; 5% gold; 10% XP conceptual (XP no combat in model)",
+    "influence_thresholds": [
+      0,
+      30000,
+      100000,
+      250000,
+      500000,
+      1000000
+    ],
+    "out_of_influence_pricing": "prototype quadratic surcharge",
+    "hourly_upkeep_accuracy": "NOT implemented; one abstract daily settlement"
+  },
+  "main_results": [
+    {
+      "density": 120,
+      "fill": 40,
+      "site_share": 0.156,
+      "avg_cities": 3.093
+    },
+    {
+      "density": 120,
+      "fill": 70,
+      "site_share": 0.375,
+      "avg_cities": 2.947
+    },
+    {
+      "density": 120,
+      "fill": 100,
+      "site_share": 0.625,
+      "avg_cities": 3.138
+    },
+    {
+      "density": 170,
+      "fill": 40,
+      "site_share": 0.08,
+      "avg_cities": 2.907
+    },
+    {
+      "density": 170,
+      "fill": 70,
+      "site_share": 0.12,
+      "avg_cities": 3
+    },
+    {
+      "density": 170,
+      "fill": 100,
+      "site_share": 0.24,
+      "avg_cities": 2.913
+    },
+    {
+      "density": 220,
+      "fill": 40,
+      "site_share": 0.1,
+      "avg_cities": 3
+    },
+    {
+      "density": 220,
+      "fill": 70,
+      "site_share": 0.14,
+      "avg_cities": 3.178
+    },
+    {
+      "density": 220,
+      "fill": 100,
+      "site_share": 0.24,
+      "avg_cities": 3.212
+    }
+  ],
+  "policy_comparison": {
+    "spread": {
+      "site_control_fraction": 0.209,
+      "average_cities": 3.048,
+      "colonies_outside_influence": 56.889,
+      "unaffordable_attempts": 96.444
+    },
+    "objective": {
+      "site_control_fraction": 0.252,
+      "average_cities": 3.038,
+      "colonies_outside_influence": 55.222,
+      "unaffordable_attempts": 94.778
+    }
+  },
+  "upkeep_sensitivity_at_density170_fill70_seed23": [
+    {
+      "upkeep": 1,
+      "spread": {
+        "cities": 2.857,
+        "attrition_events": 0,
+        "site_fraction": 0.24
+      },
+      "objective": {
+        "cities": 3.107,
+        "attrition_events": 0,
+        "site_fraction": 0.2
+      }
+    },
+    {
+      "upkeep": 4,
+      "spread": {
+        "cities": 2.607,
+        "attrition_events": 0,
+        "site_fraction": 0.16
+      },
+      "objective": {
+        "cities": 2.393,
+        "attrition_events": 0,
+        "site_fraction": 0.28
+      }
+    },
+    {
+      "upkeep": 10,
+      "spread": {
+        "cities": 1.75,
+        "attrition_events": 90,
+        "site_fraction": 0.08
+      },
+      "objective": {
+        "cities": 1.786,
+        "attrition_events": 132,
+        "site_fraction": 0
+      }
+    }
+  ],
+  "findings": [
+    "Strong military upkeep substantially reduces achievable colonies and relic influence.",
+    "Site-oriented policy has small average site-share improvement but does not produce reliable direct opposing alliance transfers in these seeds.",
+    "Even V4 lacks active PvP, siege, realistic hourly upkeep, tiered army/combat, real S2 expansion costs and endgame.",
+    "The largest share of new cities is settled outside existing influence in this model; distance surcharge must be explicitly calibrated.",
+    "Only one main seed per configuration; no variance estimates, results cannot select final map preset."
+  ],
+  "limitations": [
+    "Main 18 runs only; 6 extra stress, synthetic coefficients.",
+    "Gold per city is tracked, but only own-city caravans are approximated and the administrative ledger is not equivalent to the real game.",
+    "No combat: Dolmen XP effect cannot be evaluated.",
+    "Potential bug/design discrepancy: army control and recruitment strategy are simplified; control transfer should be tested in targeted frontier scenarios.",
+    "Sphinx upkeep reduction capped at 80% as experimental safeguard."
+  ]
+}
