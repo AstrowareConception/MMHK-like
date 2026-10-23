@@ -75,9 +75,9 @@ def safe_path(original: str) -> Path:
         raise ValueError("Relative / parent path segment")
     # Wayback indexed old client URLs containing redundant slashes such as
     # img//portal. Keep the original URL in the ledger, normalize the disk path.
-    suffix = re.sub(r"/+", "/", raw_suffix)
-    if suffix.startswith("/") or suffix.endswith("/"):
-        raise ValueError("Unsafe absolute or directory-only URL")
+    suffix = re.sub(r"/+", "/", raw_suffix).lstrip("/")
+    if not suffix or suffix.endswith("/"):
+        raise ValueError("Unsafe directory-only URL")
     parts = PurePosixPath(suffix).parts
     if not parts or any(":" in p for p in parts):
         raise ValueError("Unsafe filename")
