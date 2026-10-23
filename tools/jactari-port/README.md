@@ -187,3 +187,54 @@ Le module enregistre un **journal ordonné** : événement de sort, puis événe
 **Limite impérative :** ce moteur **n'exécute pas les sorts du défenseur**, les zones, les résurrections durant le combat, les coûts de mana, les conditions d'accès aux sorts, ni l'application complète des sorts qui changent les caractéristiques d'un héros. Il ne remplace **pas** `battle.mjs` ni `report.mjs` et ne prétend pas produire un bilan définitif conforme à toutes les variantes S2. Les sorts restent pré-paramétrés et non résolus à partir de l'inventaire et des compétences.
 
 Utilisation : `node --test tools/jactari-port/magic-encounter.test.mjs` (Node 22+). Code dérivé identifié GPL-3.0-or-later.
+
+
+## Nouvelle tranche — magie des deux camps, zones et pertes définitives
+
+La génération suivante met fin à la restriction « sorts de l'attaquant uniquement » **sur un sous-ensemble défini du lanceur historique**. Deux API nouvelles, toutes deux sans DOM :
+
+- `magic-rounds.mjs` : `simulateDualMagicEncounter({ attackers, defenders, attackerSpells, defenderSpells, context })`. À chaque tour, le sort de **l'attaquant**, puis celui du **défenseur**, intervient avant le duel. Les pelotons restent ordonnés sur 7 slots.
+- `magic-report.mjs` : `simulateDualMagicBattleReport({ ..., lossPolicy })`. Transforme les pertes magiques et de mêlée **une seule fois** en pertes définitives, en appelant `losses.mjs`, avec récupération, résurrection de fin de bataille et facture de remplacement.
+
+### Sous-ensemble magique réellement interprété
+
+| Phase | Sort Jactari | Parties admises |
+| --- | --- | --- |
+| Dégâts ciblés | `type=0, cible=4` | unités 1, 3 et 7, pour chaque camp |
+| Dégâts de zone | `type=0, cible=3` | unités 1 et 3, **puissance pré-calculée par arme** via `powerByWeapon: { I, R, C }` |
+| Renforcement du camp lanceur | `type=4` | cible 5 pour l'attaquant, 6 pour le défenseur, unités 0–3 |
+| Affaiblissement de héros ennemi | `type=3` | cible 6 du défenseur par l'attaquant, cible 5 de l'attaquant par le défenseur, unités 5 et 6 |
+
+Lors d'un sort de zone, le code historique recalcule la puissance effective **pour chaque arme cible**. C'est pourquoi la nouvelle API exige `powerByWeapon` : **une puissance uniforme implicite serait historiquement incorrecte**. La puissance effective est obtenue ailleurs, notamment grâce au calcul partiellement extrait dans `spell-power.mjs`. Toutes les valeurs injectées doivent être sourcées et versionnées.
+
+Les pelotons conservent distinctement `magicLosses`, `roundLosses`, `bonusTroops`, `bonusLost` et `remaining`. Les caractéristiques modifiées des héros sont enregistrées dans une **copie de contexte** ; l'entrée de l'appelant n'est pas modifiée. Des ordres de sort non reconnus, des puissances manquantes ou des tours de sort inatteignables provoquent une erreur explicite.
+
+### Exemple API
+
+```js
+import { simulateDualMagicBattleReport } from './magic-report.mjs';
+
+const attackers = [{ count:100, weapon:'I', unitPower:10, goldCost:5 },
+  null,null,null,null,null,null];
+const defenders = [{ count:80, weapon:'I', unitPower:10, goldCost:5 },
+  null,null,null,null,null,null];
+
+const result = simulateDualMagicBattleReport({
+  attackers, defenders,
+  attackerSpells: { 1: { type:0, target:4, unit:7, power:100 } },
+  defenderSpells: { 1: { type:4, target:6, unit:3, power:25 } },
+  lossPolicy: { lossFactor:0.25, source:'demonstration-not-historical' },
+});
+console.log(result.encounter.events);
+console.log(result.permanent.defender.totals);
+```
+
+### Tests exécutés et limites
+
+**20 nouveaux tests locaux réussis** (15 pour les rounds, 5 pour le rapport) ; la suite locale avec les archives antérieures donne **59 tests réussis**, sans compter les autres suites du dépôt qui n'étaient pas présentes dans ces archives. Vérification effectuée avec Node.js 22.16.0. **Cela ne prouve pas que GitHub Actions ait réussi** : aucun statut CI n'a été obtenu.
+
+Ce portage est un **sous-ensemble déclaré** : il ne simule toujours pas le mana, les contraintes de lancement et de niveau du héros, la table complète des sorts, la magie de résurrection pendant le duel, les effets de morale et de contrôle non couverts, les sièges, la fuite ni les blessures. Il ne se substitue donc **pas** à `battle.mjs` pour les combats sans magie et ne doit pas servir d'arbitre S2 de production.
+
+De plus, **aucun test différentiel de ces nouveaux effets contre le Jactari original exécuté n'a encore été obtenu**. La conformité du calcul dans ces branches reste à confirmer grâce à un banc exécutant la référence communautaire.
+
+Sources à rapprocher : `lancement_sorts`, `simulation_rencontre` et `puissance_effective_sort` dans `data/Jactari/src/scripts/combat.min.js`. Le code adapté conserve la provenance et la licence **GPL-3.0-or-later**.
