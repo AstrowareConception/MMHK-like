@@ -18,6 +18,7 @@ La révision 0.5 analyse la [génération du monde, les sites spéciaux, le code
 | --- | --- |
 | Comprendre les règles de génération et d'arrivée des joueurs | [Mines, sites, code ami et protection débutant](docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md) |
 | Relancer la récupération historique | [Outil Wayback](tools/recover-wayback-cdn.py) et [méthode](docs/research/RECHERCHE-ASSETS-2026-10-23.md#7-reprise-de-la-collecte-wayback-après-interruption) |
+| **Règles métier early game et affinage des US** | **[Référentiel de 60 RM et 18 fixtures](docs/rules/README.md)**, [contrats métier](docs/rules/CONTRATS-EARLY-GAME.md), [affinage des US](docs/rules/AFFINAGE-US-L1.md) |
 | Savoir quoi réaliser maintenant | [Prochaines étapes et premier lot de stories](docs/specifications/PROCHAINES-ETAPES.md) |
 | **Suivre chaque image retrouvée/manquante** | **[Catalogue des 1 425 références](docs/research/CATALOGUE-RESSOURCES-GRAPHIQUES.md)**, [CSV](data/analysis/assets-catalog.csv), [JSON](data/analysis/assets-catalog.json) et [outil de collecte ciblée](tools/recover-wayback-assets.py) |
 | Accéder aux nouveaux assets retrouvés | [Fichiers récupérés](data/assets-recovered/README.md), [recherche et limites](docs/research/RECHERCHE-ASSETS-2026-10-23.md) |
@@ -25,6 +26,7 @@ La révision 0.5 analyse la [génération du monde, les sites spéciaux, le code
 | Organiser les versions et les phases de campagne | [Story map](docs/backlog/STORY-MAP.md) |
 | Affiner, estimer et accepter une fonctionnalité | [3 C, INVEST et Definition of Done](docs/backlog/METHODE-ET-QUALITE.md) |
 | Vérifier la couverture fonctionnelle | [Exigences vers stories](docs/backlog/COUVERTURE.md), [parcours intégrés](docs/backlog/RECETTE-PARCOURS.md) |
+| Concevoir le premier royaume jouable | [Expérience early game](docs/game-design/08-EXPERIENCE-EARLY-GAME.md), [règles métier](docs/rules/README.md), [validation du lot A](docs/rules/VALIDATION.md) |
 | Comprendre le jeu dans son ensemble | [Game design : vision, boucles et interfaces](docs/game-design/01-VISION-ET-BOUCLES.md) |
 | Lire l’analyse image par image | [Analyse des 57 captures](docs/research/ANALYSE-CAPTURES.md) |
 | Identifier les assets utilisables et manquants | [Audit Jactari et 1 317 correspondances de sprites](docs/research/AUDIT-JACTARI-ASSETS.md) |

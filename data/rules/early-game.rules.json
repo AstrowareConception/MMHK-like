@@ -1,0 +1,1609 @@
+{
+  "schema_version": 1,
+  "version": "early-game-rules/0.1-draft",
+  "as_of": "2026-10-23",
+  "status": "draft_not_approved_not_implemented",
+  "scope": "early-game classic_pvp",
+  "units": {
+    "construction_duration": "minutes",
+    "canonical_resource_keys": [
+      "G",
+      "w",
+      "o",
+      "m",
+      "c",
+      "s",
+      "g"
+    ]
+  },
+  "classification": "Les données 2013 et les guides sont des références candidates ; OBS-CODE concerne les outils communautaires, OBS-CLIENT-ARCHIVE le client archivé, DOC une source historique, PROP une convention à arbitrer, INCONNU un blocage pour la fidélité.",
+  "sources": {
+    "profile": "docs/specifications/PROFIL-PVP-CLASSIQUE.md",
+    "world": "docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md",
+    "economy": "docs/game-design/02-MONDE-VILLES-ECONOMIE.md",
+    "heroes": "docs/game-design/03-HEROS-ARMEES-MAGIE.md",
+    "combat": "docs/game-design/04-COMBAT.md",
+    "time": "docs/specifications/DOMAINE-ET-TEMPS.md",
+    "backlog": "docs/backlog/README.md",
+    "unknown": "docs/research/INCERTITUDES.md",
+    "buildings": "data/reference/batiments.json",
+    "units": "data/reference/creatures.json",
+    "general": "data/reference/general.json",
+    "combatCases": "data/combat-reference-cases.json"
+  },
+  "counts": {
+    "rules": 60,
+    "domains": {
+      "monde": 8,
+      "region": 8,
+      "economie": 11,
+      "construction": 8,
+      "heros": 6,
+      "armees": 8,
+      "combat": 7,
+      "temps": 4
+    },
+    "states": {
+      "confirmed_scope": 1,
+      "proposed_contract": 17,
+      "candidate_versioned": 16,
+      "historically_incomplete": 13,
+      "unconfirmed_recollection": 2,
+      "blocked_by_evidence": 7,
+      "reference_observed": 4
+    }
+  },
+  "rules": [
+    {
+      "id": "RM-WRD-001",
+      "domain": "monde",
+      "title": "Profil de campagne classique",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_scope",
+      "statement": "Le périmètre visé est le PvP classique avec Guerre des Larmes ; tournoi S4 et Arkath sont exclus du socle.",
+      "contract": "Toute création de monde exige un ruleset_id et catalogue_id versionnés ; ne pas activer des modules hors profil.",
+      "us": [
+        "US-ACC-001"
+      ],
+      "unknowns": [
+        "U01",
+        "U02"
+      ],
+      "source_documents": [
+        "docs/specifications/PROFIL-PVP-CLASSIQUE.md",
+        "docs/specifications/DOMAINE-ET-TEMPS.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [
+        "ruleset_id",
+        "catalogue_version"
+      ]
+    },
+    {
+      "id": "RM-WRD-002",
+      "domain": "monde",
+      "title": "Un royaume par compte et monde",
+      "evidence": "PROP",
+      "state": "proposed_contract",
+      "statement": "La notion d'un joueur inscrit dans un monde est distincte de son compte global.",
+      "contract": "Créer WorldPlayer et cité initiale dans une transaction unique, avec unicité (account_id,world_id) ; réessai idempotent.",
+      "us": [
+        "US-ACC-003"
+      ],
+      "unknowns": [
+        "U16",
+        "U47"
+      ],
+      "source_documents": [
+        "docs/specifications/DOMAINE-ET-TEMPS.md",
+        "docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md"
+      ],
+      "fixture_ids": [
+        "FX-START-001"
+      ],
+      "parameter_keys": [
+        "world_capacity",
+        "world_player_unique"
+      ]
+    },
+    {
+      "id": "RM-WRD-003",
+      "domain": "monde",
+      "title": "Sélection d'une faction jouable",
+      "evidence": "OBS-CODE",
+      "state": "candidate_versioned",
+      "statement": "Les cinq factions Académie, Havre, Inferno, Nécropole et Sylvain sont documentées pour le socle ; la présence Donjon/Forteresse dans les tables ne valide pas leur jouabilité.",
+      "contract": "Contrôler allowed_faction_ids par monde ; refuser une faction non disponible avant attribution de ville.",
+      "us": [
+        "US-ACC-002",
+        "US-ACC-003"
+      ],
+      "unknowns": [
+        "U01",
+        "U02"
+      ],
+      "source_documents": [
+        "docs/specifications/PROFIL-PVP-CLASSIQUE.md",
+        "data/reference/general.json"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [
+        "allowed_faction_ids"
+      ]
+    },
+    {
+      "id": "RM-WRD-004",
+      "domain": "monde",
+      "title": "Implantation aléatoire",
+      "evidence": "OBS-CLIENT-ARCHIVE",
+      "state": "historically_incomplete",
+      "statement": "Le client contient un mode de placement random ; l'algorithme serveur et ses contraintes de répartition ne sont pas retrouvés.",
+      "contract": "Générer les candidats depuis le monde figé et les contraintes du profil ; réserver une seule région libre atomiquement ; enregistrer placement_reason.",
+      "us": [
+        "US-ACC-003",
+        "US-MON-006"
+      ],
+      "unknowns": [
+        "U47",
+        "U17"
+      ],
+      "source_documents": [
+        "docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md",
+        "docs/specifications/DOMAINE-ET-TEMPS.md"
+      ],
+      "fixture_ids": [
+        "FX-START-001"
+      ],
+      "parameter_keys": [
+        "spawn_seed",
+        "spawn_constraints"
+      ]
+    },
+    {
+      "id": "RM-WRD-005",
+      "domain": "monde",
+      "title": "Invitation et placement proche",
+      "evidence": "OBS-CLIENT-ARCHIVE",
+      "state": "historically_incomplete",
+      "statement": "Le client valide friendKey pour worldId et expose near/random ; near est désactivé dans certains états d'inscription.",
+      "contract": "Vérifier clé, monde, état ouvert et place libre ; ne jamais accepter des coordonnées transmises par le client ; définir politique de refus/fallback à arbitrer.",
+      "us": [
+        "US-ACC-003"
+      ],
+      "unknowns": [
+        "U47"
+      ],
+      "source_documents": [
+        "docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md"
+      ],
+      "fixture_ids": [
+        "FX-START-002"
+      ],
+      "parameter_keys": [
+        "friend_key_scope",
+        "spawn_near_radius",
+        "near_fallback"
+      ]
+    },
+    {
+      "id": "RM-WRD-006",
+      "domain": "monde",
+      "title": "Protection débutant horodatée",
+      "evidence": "DECISION-USER",
+      "state": "unconfirmed_recollection",
+      "statement": "Une protection débutant et une date de fin sont visibles dans le client ; sept jours est un souvenir du projet, tandis que d'autres sources anciennes évoquent 14 ou 15 jours.",
+      "contract": "La durée et la portée doivent être paramétrées par profil. Un contrôle serveur à l'instant de résolution vérifie la cible protégée ; ne pas adopter sept jours comme vérité Ubisoft.",
+      "us": [
+        "US-ACC-011",
+        "US-PVP-004"
+      ],
+      "unknowns": [
+        "U20"
+      ],
+      "source_documents": [
+        "docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md",
+        "docs/specifications/PROFIL-PVP-CLASSIQUE.md"
+      ],
+      "fixture_ids": [
+        "FX-PROTECT-001"
+      ],
+      "parameter_keys": [
+        "newbie_days",
+        "newbie_scope",
+        "newbie_early_exit"
+      ]
+    },
+    {
+      "id": "RM-WRD-007",
+      "domain": "monde",
+      "title": "État initial du royaume",
+      "evidence": "INCONNU",
+      "state": "blocked_by_evidence",
+      "statement": "Les dotations exactes de départ, bâtiments, héros et garnisons ne sont pas certifiées pour la saison cible.",
+      "contract": "Versionner un starter_pack propre à la faction et au profil ; aucune valeur par défaut historique ne doit être inférée.",
+      "us": [
+        "US-ACC-004"
+      ],
+      "unknowns": [
+        "U01",
+        "U02",
+        "U17",
+        "U24"
+      ],
+      "source_documents": [
+        "docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md",
+        "docs/specifications/PROFIL-PVP-CLASSIQUE.md"
+      ],
+      "fixture_ids": [
+        "FX-START-001"
+      ],
+      "parameter_keys": [
+        "starter_pack"
+      ]
+    },
+    {
+      "id": "RM-WRD-008",
+      "domain": "monde",
+      "title": "Réactivation de session",
+      "evidence": "PROP",
+      "state": "proposed_contract",
+      "statement": "Un royaume persistant doit être retrouvé sans recevoir une deuxième dotation.",
+      "contract": "La reconnexion ne crée ni deuxième cité ni ressources additionnelles ; charger l'état serveur au dernier instant logique traité.",
+      "us": [
+        "US-ACC-004",
+        "US-ECO-003"
+      ],
+      "unknowns": [
+        "U03"
+      ],
+      "source_documents": [
+        "docs/specifications/DOMAINE-ET-TEMPS.md"
+      ],
+      "fixture_ids": [
+        "FX-START-001",
+        "FX-ECON-002"
+      ],
+      "parameter_keys": []
+    },
+    {
+      "id": "RM-REG-001",
+      "domain": "region",
+      "title": "Géométrie régionale",
+      "evidence": "DOC",
+      "state": "candidate_versioned",
+      "statement": "Une région ordinaire comporte 25 cases disposées en 5×5 et une cité au centre.",
+      "contract": "Utiliser des coordonnées locales (0..4,0..4), centre [2,2] dans le prototype ; distinguer local/world et région spéciale.",
+      "us": [
+        "US-REG-001",
+        "US-ACC-004"
+      ],
+      "unknowns": [
+        "U17"
+      ],
+      "source_documents": [
+        "docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md"
+      ],
+      "fixture_ids": [
+        "FX-REG-001"
+      ],
+      "parameter_keys": [
+        "region_size",
+        "city_cell"
+      ]
+    },
+    {
+      "id": "RM-REG-002",
+      "domain": "region",
+      "title": "Quatre mines ordinaires",
+      "evidence": "DOC",
+      "state": "candidate_versioned",
+      "statement": "Le modèle ordinaire comprend quatre cases minières, initialement occupées par des troupes neutres.",
+      "contract": "Placer quatre occurrences de Mine sur quatre cases distinctes hors centre, sans prétendre que leur type est toujours distinct.",
+      "us": [
+        "US-REG-001",
+        "US-REG-002"
+      ],
+      "unknowns": [
+        "U17"
+      ],
+      "source_documents": [
+        "docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md"
+      ],
+      "fixture_ids": [
+        "FX-REG-001"
+      ],
+      "parameter_keys": [
+        "mine_count"
+      ]
+    },
+    {
+      "id": "RM-REG-003",
+      "domain": "region",
+      "title": "Sept types de ressources",
+      "evidence": "OBS-CODE",
+      "state": "reference_observed",
+      "statement": "Les codes ressource sont G (or), w (bois), o (minerai), m (mercure), c (cristal), s (soufre), g (gemme).",
+      "contract": "Les quatre mines ne prennent que des valeurs de ce référentiel ; éviter un index positionnel implicite.",
+      "us": [
+        "US-REG-001",
+        "US-ECO-001"
+      ],
+      "unknowns": [],
+      "source_documents": [
+        "data/reference/general.json",
+        "docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md"
+      ],
+      "fixture_ids": [
+        "FX-REG-001"
+      ],
+      "parameter_keys": [
+        "resource_codes"
+      ]
+    },
+    {
+      "id": "RM-REG-004",
+      "domain": "region",
+      "title": "Doublons de ressources possibles",
+      "evidence": "DECISION-USER",
+      "state": "unconfirmed_recollection",
+      "statement": "La répartition dominante or/bois/minerai/rare et la rareté des doublons sont des souvenirs non mesurés ; certains doublons semblent possibles.",
+      "contract": "Ne pas imposer de contrainte d'unicité sur les types ; placer les probabilités dans un profil de génération marqué PROP et audité statistiquement.",
+      "us": [
+        "US-REG-001",
+        "US-ACC-003"
+      ],
+      "unknowns": [
+        "U17"
+      ],
+      "source_documents": [
+        "docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md"
+      ],
+      "fixture_ids": [
+        "FX-REG-001"
+      ],
+      "parameter_keys": [
+        "resource_distribution",
+        "duplicate_frequency"
+      ]
+    },
+    {
+      "id": "RM-REG-005",
+      "domain": "region",
+      "title": "Monde déterministe pour les tests",
+      "evidence": "PROP",
+      "state": "proposed_contract",
+      "statement": "Aucune graine serveur originale Ubisoft n'a été retrouvée.",
+      "contract": "Générer les régions depuis (world_seed, generator_version, region_coordinates) ; mêmes entrées donnent mêmes résultats, hors occupation joueur.",
+      "us": [
+        "US-ACC-003",
+        "US-REG-001"
+      ],
+      "unknowns": [
+        "U17"
+      ],
+      "source_documents": [
+        "docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md",
+        "docs/specifications/DOMAINE-ET-TEMPS.md"
+      ],
+      "fixture_ids": [
+        "FX-REG-001"
+      ],
+      "parameter_keys": [
+        "generator_version",
+        "world_seed"
+      ]
+    },
+    {
+      "id": "RM-REG-006",
+      "domain": "region",
+      "title": "Occupation et libération des cases",
+      "evidence": "DOC",
+      "state": "historically_incomplete",
+      "statement": "Les troupes neutres bloquent l'exploitation initiale de nombreuses cases, notamment des mines.",
+      "contract": "Conserver occupant, encounter_state et cleared_at ; seul le résultat accepté d'un combat admissible libère le site.",
+      "us": [
+        "US-REG-002",
+        "US-REG-003"
+      ],
+      "unknowns": [
+        "U13",
+        "U17"
+      ],
+      "source_documents": [
+        "docs/game-design/02-MONDE-VILLES-ECONOMIE.md",
+        "docs/game-design/04-COMBAT.md"
+      ],
+      "fixture_ids": [
+        "FX-PVE-001"
+      ],
+      "parameter_keys": [
+        "encounter_generation"
+      ]
+    },
+    {
+      "id": "RM-REG-007",
+      "domain": "region",
+      "title": "Mise en exploitation d'une mine",
+      "evidence": "DOC",
+      "state": "historically_incomplete",
+      "statement": "Une mine est une source de production après libération, avec niveau, extension et éventuel aménagement distincts.",
+      "contract": "Refuser l'exploitation d'un site encore occupé ; empêcher le double crédit ; définir si exploitation est automatique à la libération selon profil.",
+      "us": [
+        "US-REG-003",
+        "US-REG-004"
+      ],
+      "unknowns": [
+        "U17",
+        "U03"
+      ],
+      "source_documents": [
+        "docs/game-design/02-MONDE-VILLES-ECONOMIE.md",
+        "docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md"
+      ],
+      "fixture_ids": [
+        "FX-MINE-001"
+      ],
+      "parameter_keys": [
+        "mine_activation"
+      ]
+    },
+    {
+      "id": "RM-REG-008",
+      "domain": "region",
+      "title": "Sites spéciaux séparés",
+      "evidence": "OBS-CLIENT-ARCHIVE",
+      "state": "historically_incomplete",
+      "statement": "Le client distingue différents sites mondiaux ; aucune densité, espacement ou répartition universelle n'a été retrouvée.",
+      "contract": "Séparer site de monde, bâtiment régional, monument construit et objectif de quête ; aucune Larme générée comme simple mine.",
+      "us": [
+        "US-REL-001",
+        "US-MON-001"
+      ],
+      "unknowns": [
+        "U17",
+        "U33"
+      ],
+      "source_documents": [
+        "docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [
+        "special_site_generator"
+      ]
+    },
+    {
+      "id": "RM-ECO-001",
+      "domain": "economie",
+      "title": "Ledger local par cité",
+      "evidence": "PROP",
+      "state": "proposed_contract",
+      "statement": "Stocks, réservations, ressources en transit et marchés sont des états économiques distincts.",
+      "contract": "Ne pas utiliser un wallet mondial implicite : chaque compte de ressources a un propriétaire/conteneur et un statut.",
+      "us": [
+        "US-ECO-001",
+        "US-ECO-006"
+      ],
+      "unknowns": [
+        "U30"
+      ],
+      "source_documents": [
+        "docs/specifications/DOMAINE-ET-TEMPS.md",
+        "docs/game-design/02-MONDE-VILLES-ECONOMIE.md"
+      ],
+      "fixture_ids": [
+        "FX-ECON-001"
+      ],
+      "parameter_keys": [
+        "resource_container_types"
+      ]
+    },
+    {
+      "id": "RM-ECO-002",
+      "domain": "economie",
+      "title": "Production hors connexion",
+      "evidence": "DOC",
+      "state": "historically_incomplete",
+      "statement": "Le monde produit pendant la déconnexion ; la cadence précise de crédit n'a pas été identifiée.",
+      "contract": "Intégrer la production par segments entre événements, avec horloge serveur et limites de stockage ; choisir un schéma d'arrondi de profil, non prétendu historique.",
+      "us": [
+        "US-ECO-003"
+      ],
+      "unknowns": [
+        "U03",
+        "U04"
+      ],
+      "source_documents": [
+        "docs/game-design/02-MONDE-VILLES-ECONOMIE.md",
+        "docs/specifications/DOMAINE-ET-TEMPS.md"
+      ],
+      "fixture_ids": [
+        "FX-ECON-002",
+        "FX-ECON-003"
+      ],
+      "parameter_keys": [
+        "production_cadence",
+        "rounding_policy"
+      ]
+    },
+    {
+      "id": "RM-ECO-003",
+      "domain": "economie",
+      "title": "Changement de rendement en cours de période",
+      "evidence": "PROP",
+      "state": "proposed_contract",
+      "statement": "Mines, bonus et bâtiments peuvent faire varier un débit de production.",
+      "contract": "Couper l'intervalle à chaque événement effectif ; ne pas rétroagir la nouvelle production sur le passé.",
+      "us": [
+        "US-ECO-002",
+        "US-ECO-003"
+      ],
+      "unknowns": [
+        "U03",
+        "U04"
+      ],
+      "source_documents": [
+        "docs/specifications/DOMAINE-ET-TEMPS.md"
+      ],
+      "fixture_ids": [
+        "FX-ECON-003"
+      ],
+      "parameter_keys": [
+        "production_segment_boundaries"
+      ]
+    },
+    {
+      "id": "RM-ECO-004",
+      "domain": "economie",
+      "title": "Plafond de stockage",
+      "evidence": "DOC",
+      "state": "historically_incomplete",
+      "statement": "Silos et entrepôts modifient les capacités ; l'or relève de règles distinctes.",
+      "contract": "Plafonner selon le type de crédit et les capacités versionnées ; documenter le devenir de l'excédent (production, récompense, retour).",
+      "us": [
+        "US-ECO-004",
+        "US-ECO-010"
+      ],
+      "unknowns": [
+        "U04",
+        "U30"
+      ],
+      "source_documents": [
+        "docs/game-design/02-MONDE-VILLES-ECONOMIE.md"
+      ],
+      "fixture_ids": [
+        "FX-ECON-004"
+      ],
+      "parameter_keys": [
+        "storage_caps",
+        "overflow_policy"
+      ]
+    },
+    {
+      "id": "RM-ECO-005",
+      "domain": "economie",
+      "title": "Dépense atomique",
+      "evidence": "PROP",
+      "state": "proposed_contract",
+      "statement": "Une action ne peut dépenser plus de ressources disponibles que celles réellement libres.",
+      "contract": "Contrôler tous les montants et débiter l'ensemble ou aucun ; une commande refusée ne débite rien.",
+      "us": [
+        "US-ECO-005",
+        "US-CIT-004"
+      ],
+      "unknowns": [
+        "U14"
+      ],
+      "source_documents": [
+        "docs/specifications/DOMAINE-ET-TEMPS.md"
+      ],
+      "fixture_ids": [
+        "FX-BUILD-002"
+      ],
+      "parameter_keys": [
+        "spend_atomicity"
+      ]
+    },
+    {
+      "id": "RM-ECO-006",
+      "domain": "economie",
+      "title": "Disponibilité et réservations",
+      "evidence": "PROP",
+      "state": "proposed_contract",
+      "statement": "Les commandes simultanées ne doivent pas consommer deux fois une même ressource.",
+      "contract": "available = owned - reserved selon les conteneurs concernés ; soldes jamais négatifs ; définir la politique de réservation par commande.",
+      "us": [
+        "US-ECO-006"
+      ],
+      "unknowns": [
+        "U28",
+        "U30"
+      ],
+      "source_documents": [
+        "docs/specifications/DOMAINE-ET-TEMPS.md"
+      ],
+      "fixture_ids": [
+        "FX-BUILD-002"
+      ],
+      "parameter_keys": [
+        "reservation_policy"
+      ]
+    },
+    {
+      "id": "RM-ECO-007",
+      "domain": "economie",
+      "title": "Rendement administratif non cumulatif",
+      "evidence": "OBS-CODE",
+      "state": "candidate_versioned",
+      "statement": "Pour l'Académie, le catalogue donne 2 000, 4 000, 7 000, 13 000 or/jour selon le niveau du bâtiment administratif.",
+      "contract": "Une seule étape administrative s'applique à la fois ; ne pas additionner 2 000 + 4 000 après amélioration de la mairie.",
+      "us": [
+        "US-CIT-008",
+        "US-ECO-002"
+      ],
+      "unknowns": [
+        "U02",
+        "U03"
+      ],
+      "source_documents": [
+        "docs/game-design/02-MONDE-VILLES-ECONOMIE.md",
+        "data/reference/batiments.json"
+      ],
+      "fixture_ids": [
+        "FX-ECON-005"
+      ],
+      "parameter_keys": [
+        "administration_yield"
+      ]
+    },
+    {
+      "id": "RM-ECO-008",
+      "domain": "economie",
+      "title": "Barème de mine comme référence candidate",
+      "evidence": "DOC",
+      "state": "candidate_versioned",
+      "statement": "Guide 2013 : base par niveau de 2 000 or, 2 communes ou 1 rare / jour ; extension +5 %, combinatoire exacte inconnue.",
+      "contract": "Conserver ces barèmes comme données candidates par saison ; ne pas créditer un montant journalier à chaque connexion.",
+      "us": [
+        "US-REG-005",
+        "US-REG-006",
+        "US-ECO-002"
+      ],
+      "unknowns": [
+        "U03",
+        "U04",
+        "U17"
+      ],
+      "source_documents": [
+        "docs/game-design/02-MONDE-VILLES-ECONOMIE.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [
+        "mine_yields",
+        "mine_bonus_order"
+      ]
+    },
+    {
+      "id": "RM-ECO-009",
+      "domain": "economie",
+      "title": "Extension de mine et production",
+      "evidence": "DOC",
+      "state": "candidate_versioned",
+      "statement": "Le guide décrit l'interruption de production pendant une extension, mais non pendant une amélioration de niveau.",
+      "contract": "Versionner l'effet de chantier et traiter chaque arrêt/reprise comme une frontière d'intégration.",
+      "us": [
+        "US-REG-005",
+        "US-REG-006"
+      ],
+      "unknowns": [
+        "U03",
+        "U17"
+      ],
+      "source_documents": [
+        "docs/game-design/02-MONDE-VILLES-ECONOMIE.md"
+      ],
+      "fixture_ids": [
+        "FX-ECON-003"
+      ],
+      "parameter_keys": [
+        "mine_upgrade_pauses"
+      ]
+    },
+    {
+      "id": "RM-ECO-010",
+      "domain": "economie",
+      "title": "Entretien militaire et insolvabilité",
+      "evidence": "INCONNU",
+      "state": "blocked_by_evidence",
+      "statement": "Il existe plusieurs barèmes historiques d'entretien ; dette, désertion et conséquences exactes de l'insolvabilité ne sont pas résolues.",
+      "contract": "Ne pas faire disparaître des unités en cas de stock nul sans décision ; désactiver la pénalité dans un profil de test explicite si nécessaire.",
+      "us": [
+        "US-ECO-007",
+        "US-ECO-008",
+        "US-ECO-009"
+      ],
+      "unknowns": [
+        "U07",
+        "U08"
+      ],
+      "source_documents": [
+        "docs/game-design/02-MONDE-VILLES-ECONOMIE.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [
+        "maintenance_profile",
+        "insolvency_policy"
+      ]
+    },
+    {
+      "id": "RM-ECO-011",
+      "domain": "economie",
+      "title": "Traçabilité du solde",
+      "evidence": "PROP",
+      "state": "proposed_contract",
+      "statement": "Une ressource en stock peut évoluer pour plusieurs raisons indépendantes.",
+      "contract": "Journaliser production, coût, remboursement, butin et transfert avec event_id ; exposer un bilan compréhensible et non falsifiable par le navigateur.",
+      "us": [
+        "US-ECO-012",
+        "US-ECO-001"
+      ],
+      "unknowns": [
+        "U30"
+      ],
+      "source_documents": [
+        "docs/specifications/DOMAINE-ET-TEMPS.md"
+      ],
+      "fixture_ids": [
+        "FX-ECON-001"
+      ],
+      "parameter_keys": [
+        "ledger_categories"
+      ]
+    },
+    {
+      "id": "RM-CIT-001",
+      "domain": "construction",
+      "title": "Catalogue par faction et saison",
+      "evidence": "OBS-CODE",
+      "state": "candidate_versioned",
+      "statement": "Les bâtiments portent coût, durée, niveau de cité et prérequis ; les entrées et coefficients sont différents selon les factions.",
+      "contract": "Lire la définition depuis une version de catalogue, jamais depuis les métadonnées affichées par le client.",
+      "us": [
+        "US-CIT-002",
+        "US-CIT-003"
+      ],
+      "unknowns": [
+        "U02"
+      ],
+      "source_documents": [
+        "data/reference/batiments.json",
+        "docs/specifications/PROFIL-PVP-CLASSIQUE.md"
+      ],
+      "fixture_ids": [
+        "FX-BUILD-001"
+      ],
+      "parameter_keys": [
+        "catalogue_id"
+      ]
+    },
+    {
+      "id": "RM-CIT-002",
+      "domain": "construction",
+      "title": "Préconditions de bâtiment",
+      "evidence": "OBS-CODE",
+      "state": "candidate_versioned",
+      "statement": "La Mairie Académie (#2) demande un Conseil (#1), une cité de niveau 3 et coûte 6 000 G, 8 w, 10 o ; 576 minutes.",
+      "contract": "Valider prérequis, niveau, droits et prix sur l'état courant avant d'accepter ; une fixture peut avoir une cité niveau 3 sans en faire le départ historique.",
+      "us": [
+        "US-CIT-003",
+        "US-CIT-004"
+      ],
+      "unknowns": [
+        "U02",
+        "U05"
+      ],
+      "source_documents": [
+        "data/reference/batiments.json"
+      ],
+      "fixture_ids": [
+        "FX-BUILD-001"
+      ],
+      "parameter_keys": [
+        "building_prerequisites"
+      ]
+    },
+    {
+      "id": "RM-CIT-003",
+      "domain": "construction",
+      "title": "Ouverture d'un chantier",
+      "evidence": "PROP",
+      "state": "proposed_contract",
+      "statement": "Une construction possède un début, une fin et un état ; le débit doit être unique.",
+      "contract": "Dans une transaction, vérifier coût, acteur, priorité et créneau ; enregistrer order_id, building_definition_id, due_at, resource_ledger_ids.",
+      "us": [
+        "US-CIT-004",
+        "US-CIT-005"
+      ],
+      "unknowns": [
+        "U05"
+      ],
+      "source_documents": [
+        "docs/specifications/DOMAINE-ET-TEMPS.md",
+        "data/reference/batiments.json"
+      ],
+      "fixture_ids": [
+        "FX-BUILD-001",
+        "FX-BUILD-002"
+      ],
+      "parameter_keys": [
+        "construction_queue_capacity",
+        "builder_hero_required"
+      ]
+    },
+    {
+      "id": "RM-CIT-004",
+      "domain": "construction",
+      "title": "Files de construction",
+      "evidence": "INCONNU",
+      "state": "blocked_by_evidence",
+      "statement": "Le nombre de chantiers simultanés et la nécessité d'un héros immobilisé ne sont pas certifiés.",
+      "contract": "Tout profil exécutable doit expliciter les limites ; utiliser une valeur PROP distincte de la référence historique.",
+      "us": [
+        "US-CIT-004",
+        "US-CIT-005"
+      ],
+      "unknowns": [
+        "U05"
+      ],
+      "source_documents": [
+        "docs/game-design/02-MONDE-VILLES-ECONOMIE.md",
+        "docs/specifications/DOMAINE-ET-TEMPS.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [
+        "city_build_slots",
+        "builder_exclusivity"
+      ]
+    },
+    {
+      "id": "RM-CIT-005",
+      "domain": "construction",
+      "title": "Fin et effet de chantier",
+      "evidence": "PROP",
+      "state": "proposed_contract",
+      "statement": "Le catalogue et les captures indiquent que les constructions débloquent de nouveaux effets.",
+      "contract": "À due_at, changer BuildingInstance et bonus une fois ; actualiser tous les dépendants et journaliser Completion ; aucune activation prématurée.",
+      "us": [
+        "US-CIT-006"
+      ],
+      "unknowns": [
+        "U05",
+        "U19"
+      ],
+      "source_documents": [
+        "docs/specifications/DOMAINE-ET-TEMPS.md",
+        "data/reference/batiments.json"
+      ],
+      "fixture_ids": [
+        "FX-BUILD-003"
+      ],
+      "parameter_keys": [
+        "completion_under_siege"
+      ]
+    },
+    {
+      "id": "RM-CIT-006",
+      "domain": "construction",
+      "title": "Chaîne administrative exclusive",
+      "evidence": "OBS-CODE",
+      "state": "candidate_versioned",
+      "statement": "Conseil, Mairie, Hôtel de ville, Capitole constituent une chaîne d'amélioration du revenu.",
+      "contract": "Remplacer l'étape de bâtiment actif sans additionner ses valeurs d'or/jour et sans compter les niveaux antérieurs en double.",
+      "us": [
+        "US-CIT-007",
+        "US-CIT-008"
+      ],
+      "unknowns": [
+        "U02"
+      ],
+      "source_documents": [
+        "data/reference/batiments.json"
+      ],
+      "fixture_ids": [
+        "FX-ECON-005"
+      ],
+      "parameter_keys": [
+        "building_chain_exclusivity"
+      ]
+    },
+    {
+      "id": "RM-CIT-007",
+      "domain": "construction",
+      "title": "Annulation et remboursement",
+      "evidence": "INCONNU",
+      "state": "blocked_by_evidence",
+      "statement": "Les conditions d'annulation, le remboursement et les interdictions en siège ne sont pas certifiés.",
+      "contract": "Ne pas annoncer 'annuler' tant qu'une politique de profil et des critères d'acceptation ne sont pas fixés.",
+      "us": [
+        "US-CIT-005",
+        "US-CIT-004"
+      ],
+      "unknowns": [
+        "U05",
+        "U19"
+      ],
+      "source_documents": [
+        "docs/game-design/02-MONDE-VILLES-ECONOMIE.md",
+        "docs/specifications/DOMAINE-ET-TEMPS.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [
+        "cancellation_refund_policy"
+      ]
+    },
+    {
+      "id": "RM-CIT-008",
+      "domain": "construction",
+      "title": "Construction sous siège",
+      "evidence": "DOC",
+      "state": "historically_incomplete",
+      "statement": "Le guide décrit l'interdiction de nouvelles constructions sous blocus, avec achèvement possible de celles déjà engagées.",
+      "contract": "Distinguer StartConstruction et ConstructionCompleted ; préciser la définition de 'siège installé' et les opérations simultanées.",
+      "us": [
+        "US-CIT-004",
+        "US-CIT-006"
+      ],
+      "unknowns": [
+        "U19",
+        "U14"
+      ],
+      "source_documents": [
+        "docs/game-design/02-MONDE-VILLES-ECONOMIE.md",
+        "docs/specifications/DOMAINE-ET-TEMPS.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [
+        "siege_construction_policy"
+      ]
+    },
+    {
+      "id": "RM-HER-001",
+      "domain": "heros",
+      "title": "Identité et progression du héros",
+      "evidence": "OBS-CODE",
+      "state": "candidate_versioned",
+      "statement": "Le héros porte archetype, XP, niveau, carrières, talents, équipement et localisation ; l'archétype référence des courbes et non des points bruts.",
+      "contract": "N'utiliser aucune caractéristique fixe en remplaçant un indice de courbe par sa valeur.",
+      "us": [
+        "US-HER-001",
+        "US-HER-002"
+      ],
+      "unknowns": [
+        "U25"
+      ],
+      "source_documents": [
+        "docs/game-design/03-HEROS-ARMEES-MAGIE.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [
+        "hero_archetype",
+        "hero_level"
+      ]
+    },
+    {
+      "id": "RM-HER-002",
+      "domain": "heros",
+      "title": "Disponibilité exclusive",
+      "evidence": "PROP",
+      "state": "proposed_contract",
+      "statement": "Un héros peut commander une armée ou exécuter des actions de développement.",
+      "contract": "Une même instance ne peut avoir deux activités exclusives simultanées ; réserver et libérer atomiquement.",
+      "us": [
+        "US-HER-003",
+        "US-ARM-009"
+      ],
+      "unknowns": [
+        "U05",
+        "U09"
+      ],
+      "source_documents": [
+        "docs/game-design/03-HEROS-ARMEES-MAGIE.md",
+        "docs/specifications/DOMAINE-ET-TEMPS.md"
+      ],
+      "fixture_ids": [
+        "FX-HERO-001"
+      ],
+      "parameter_keys": [
+        "exclusive_hero_states"
+      ]
+    },
+    {
+      "id": "RM-HER-003",
+      "domain": "heros",
+      "title": "Recrutement de héros et offres",
+      "evidence": "OBS-IMAGE",
+      "state": "historically_incomplete",
+      "statement": "La taverne affiche des offres, coûts et délais, mais pas une courbe universelle de prix.",
+      "contract": "Versionner le nombre d'offres, leur roulement, les tarifs et la durée ; ne pas reprendre l'observation 46 000 or comme un invariant.",
+      "us": [
+        "US-HER-003"
+      ],
+      "unknowns": [
+        "U24"
+      ],
+      "source_documents": [
+        "docs/game-design/03-HEROS-ARMEES-MAGIE.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [
+        "hero_hire_offers",
+        "hero_hire_price"
+      ]
+    },
+    {
+      "id": "RM-HER-004",
+      "domain": "heros",
+      "title": "Héros initial non présumé",
+      "evidence": "INCONNU",
+      "state": "blocked_by_evidence",
+      "statement": "La dotation en héros initial et ses caractéristiques ne sont pas qualifiées pour une saison cible.",
+      "contract": "Lire une entrée starter_pack explicite ; ne pas assigner d'archétype par défaut 'historique'.",
+      "us": [
+        "US-ACC-004",
+        "US-HER-001"
+      ],
+      "unknowns": [
+        "U24",
+        "U25"
+      ],
+      "source_documents": [
+        "docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md",
+        "docs/game-design/03-HEROS-ARMEES-MAGIE.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [
+        "starter_hero"
+      ]
+    },
+    {
+      "id": "RM-HER-005",
+      "domain": "heros",
+      "title": "Préparation des carrières et talents",
+      "evidence": "OBS-CODE",
+      "state": "candidate_versioned",
+      "statement": "Le configurateur Jactari expose trois carrières, leur ouverture à un point et un tableau de coûts cumulés [0,1,3,6].",
+      "contract": "Traiter les points comme un budget et les carrières comme des emplacements exclusifs ; limiter au sous-ensemble de saison autorisé.",
+      "us": [
+        "US-HER-009",
+        "US-HER-011"
+      ],
+      "unknowns": [
+        "U25"
+      ],
+      "source_documents": [
+        "docs/game-design/03-HEROS-ARMEES-MAGIE.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [
+        "career_limit",
+        "talent_costs"
+      ]
+    },
+    {
+      "id": "RM-HER-006",
+      "domain": "heros",
+      "title": "Inventaire de héros distinct",
+      "evidence": "OBS-IMAGE",
+      "state": "reference_observed",
+      "statement": "Les captures distinguent les objets portés, le sac du héros et les artéfacts stockés dans la cité.",
+      "contract": "Stocker une localisation exclusive par artéfact ; aucun transfert implicite lors de déplacement d'un héros.",
+      "us": [
+        "US-HER-012",
+        "US-ART-003"
+      ],
+      "unknowns": [
+        "U27"
+      ],
+      "source_documents": [
+        "docs/game-design/03-HEROS-ARMEES-MAGIE.md",
+        "docs/specifications/DOMAINE-ET-TEMPS.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [
+        "artifact_location"
+      ]
+    },
+    {
+      "id": "RM-ARM-001",
+      "domain": "armees",
+      "title": "Composition des sept pelotons",
+      "evidence": "OBS-CODE",
+      "state": "candidate_versioned",
+      "statement": "Le calculateur utilise sept emplacements ordinaires par armée engagée.",
+      "contract": "Valider une liste ordonnée d'au plus sept pelotons ordinaires ; refuser quantité nulle, négative ou unité absente ; ne pas limiter de même manière la garnison.",
+      "us": [
+        "US-ARM-008",
+        "US-ARM-009"
+      ],
+      "unknowns": [
+        "U18"
+      ],
+      "source_documents": [
+        "docs/game-design/03-HEROS-ARMEES-MAGIE.md"
+      ],
+      "fixture_ids": [
+        "FX-ARM-001"
+      ],
+      "parameter_keys": [
+        "combat_stack_limit"
+      ]
+    },
+    {
+      "id": "RM-ARM-002",
+      "domain": "armees",
+      "title": "Lignées et factions",
+      "evidence": "OBS-CODE",
+      "state": "candidate_versioned",
+      "statement": "Chaque faction du socle possède des tiers T1–T7 et des variantes améliorées.",
+      "contract": "Interdire le recrutement d'une lignée non autorisée par la faction/cité et le bâtiment.",
+      "us": [
+        "US-ARM-002",
+        "US-ARM-005"
+      ],
+      "unknowns": [
+        "U02",
+        "U06"
+      ],
+      "source_documents": [
+        "data/reference/creatures.json",
+        "docs/game-design/03-HEROS-ARMEES-MAGIE.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [
+        "allowed_unit_tiers"
+      ]
+    },
+    {
+      "id": "RM-ARM-003",
+      "domain": "armees",
+      "title": "Production de recrues ≠ achat d'unités",
+      "evidence": "OBS-CODE",
+      "state": "historically_incomplete",
+      "statement": "La table donne une production nominale de recrues par tier (15,10,7,5,3,2,1) avant bonus, mais le débit exact reste inconnu.",
+      "contract": "Représenter RecruitPool indépendamment des troupes achetées ; ne pas produire directement une armée sans achat.",
+      "us": [
+        "US-ARM-003",
+        "US-ARM-004",
+        "US-ARM-005"
+      ],
+      "unknowns": [
+        "U06",
+        "U03"
+      ],
+      "source_documents": [
+        "data/reference/creatures.json",
+        "docs/game-design/03-HEROS-ARMEES-MAGIE.md"
+      ],
+      "fixture_ids": [
+        "FX-ARM-002"
+      ],
+      "parameter_keys": [
+        "recruit_pool_cadence"
+      ]
+    },
+    {
+      "id": "RM-ARM-004",
+      "domain": "armees",
+      "title": "Prix de recrutement des unités",
+      "evidence": "OBS-CODE",
+      "state": "candidate_versioned",
+      "statement": "Exemple Académie : Gremlin T1 coûte 189 or l'unité ; puissance unitaire 71.",
+      "contract": "Pour q unités, vérifier q entier, disponibilité et coût candidat q × coût unitaire ; appliquer seulement après contrat de recrutement validé.",
+      "us": [
+        "US-ARM-005"
+      ],
+      "unknowns": [
+        "U06"
+      ],
+      "source_documents": [
+        "data/reference/creatures.json"
+      ],
+      "fixture_ids": [
+        "FX-ARM-002"
+      ],
+      "parameter_keys": [
+        "unit_costs"
+      ]
+    },
+    {
+      "id": "RM-ARM-005",
+      "domain": "armees",
+      "title": "Puissance brute",
+      "evidence": "OBS-CODE",
+      "state": "reference_observed",
+      "statement": "La puissance de base d'un peloton est effectif × puissance unitaire et celle de l'armée leur somme.",
+      "contract": "Séparer puissance brute et modificateurs héroïques/magiques, afin de préserver les comparaisons de seuil.",
+      "us": [
+        "US-ARM-009",
+        "US-COM-001"
+      ],
+      "unknowns": [
+        "U11"
+      ],
+      "source_documents": [
+        "data/reference/creatures.json",
+        "docs/game-design/03-HEROS-ARMEES-MAGIE.md"
+      ],
+      "fixture_ids": [
+        "FX-ARM-002"
+      ],
+      "parameter_keys": [
+        "raw_power"
+      ]
+    },
+    {
+      "id": "RM-ARM-006",
+      "domain": "armees",
+      "title": "Affectation et engagement uniques",
+      "evidence": "PROP",
+      "state": "proposed_contract",
+      "statement": "Une unité achetée ne peut figurer dans deux armées et être perdue deux fois.",
+      "contract": "Effectuer les transferts d'effectifs atomiquement ; saisir un snapshot immuable au lancement et lors de la résolution.",
+      "us": [
+        "US-ARM-005",
+        "US-ARM-009",
+        "US-COM-002"
+      ],
+      "unknowns": [
+        "U14"
+      ],
+      "source_documents": [
+        "docs/specifications/DOMAINE-ET-TEMPS.md",
+        "docs/game-design/03-HEROS-ARMEES-MAGIE.md"
+      ],
+      "fixture_ids": [
+        "FX-HERO-001"
+      ],
+      "parameter_keys": [
+        "stack_ownership"
+      ]
+    },
+    {
+      "id": "RM-ARM-007",
+      "domain": "armees",
+      "title": "Améliorations d'unités",
+      "evidence": "OBS-CODE",
+      "state": "historically_incomplete",
+      "statement": "Les tables distinguent unités normales/améliorées et coûts d'amélioration, parfois avec changement d'arme et de puissance.",
+      "contract": "Enregistrer lignée et variante ; conserver les effectifs et ne pas appliquer un multiplicateur universel.",
+      "us": [
+        "US-ARM-006",
+        "US-ARM-007"
+      ],
+      "unknowns": [
+        "U06"
+      ],
+      "source_documents": [
+        "data/reference/creatures.json",
+        "docs/game-design/03-HEROS-ARMEES-MAGIE.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [
+        "upgrade_cadence"
+      ]
+    },
+    {
+      "id": "RM-ARM-008",
+      "domain": "armees",
+      "title": "Recrutement récurrent",
+      "evidence": "INCONNU",
+      "state": "blocked_by_evidence",
+      "statement": "Le calendrier de renouvellement des recrues et la mutualisation des stocks entre améliorations ne sont pas connus.",
+      "contract": "Ne pas intégrer de génération horaire de recrues avant définition d'un profil ; les fixtures peuvent injecter un stock.",
+      "us": [
+        "US-ARM-003",
+        "US-ARM-004"
+      ],
+      "unknowns": [
+        "U06"
+      ],
+      "source_documents": [
+        "docs/game-design/03-HEROS-ARMEES-MAGIE.md"
+      ],
+      "fixture_ids": [
+        "FX-ARM-002"
+      ],
+      "parameter_keys": [
+        "recruit_pool_sharing"
+      ]
+    },
+    {
+      "id": "RM-COM-001",
+      "domain": "combat",
+      "title": "Départ PvE admissible",
+      "evidence": "DOC",
+      "state": "historically_incomplete",
+      "statement": "Les cases de région peuvent être attaquées par héros et armée avec une résolution automatique.",
+      "contract": "Contrôler occupant actif, héros libre, pelotons disponibles et droits du joueur ; créer un ordre, pas un résultat immédiat non horodaté.",
+      "us": [
+        "US-COM-002",
+        "US-REG-003"
+      ],
+      "unknowns": [
+        "U09",
+        "U13",
+        "U17"
+      ],
+      "source_documents": [
+        "docs/game-design/04-COMBAT.md",
+        "docs/game-design/03-HEROS-ARMEES-MAGIE.md"
+      ],
+      "fixture_ids": [
+        "FX-PVE-001"
+      ],
+      "parameter_keys": [
+        "local_movement_policy"
+      ]
+    },
+    {
+      "id": "RM-COM-002",
+      "domain": "combat",
+      "title": "Contre-armes cycliques",
+      "evidence": "OBS-CODE",
+      "state": "candidate_versioned",
+      "statement": "Infanterie I contre C, tireur R contre I, cavalerie C contre R ; avantage brut de +50 % dans le calculateur.",
+      "contract": "Ne pas pénaliser automatiquement l'autre camp de -50 % ; garder les bonus cumulés selon l'ordre de résolution.",
+      "us": [
+        "US-COM-004"
+      ],
+      "unknowns": [
+        "U11"
+      ],
+      "source_documents": [
+        "docs/game-design/04-COMBAT.md",
+        "data/reference/general.json"
+      ],
+      "fixture_ids": [
+        "FX-PVE-002"
+      ],
+      "parameter_keys": [
+        "counter_multiplier"
+      ]
+    },
+    {
+      "id": "RM-COM-003",
+      "domain": "combat",
+      "title": "Phases de résolution",
+      "evidence": "OBS-CODE",
+      "state": "candidate_versioned",
+      "statement": "Le simulateur sépare admission, tirs préalables, sorts, duels de pelotons, pertes définitives, XP et rapport.",
+      "contract": "Conserver l'ordre explicite des phases du calculateur ; ne pas convertir les invocations en recrues durables.",
+      "us": [
+        "US-COM-001",
+        "US-COM-008",
+        "US-COM-014",
+        "US-COM-017"
+      ],
+      "unknowns": [
+        "U11",
+        "U13",
+        "U42"
+      ],
+      "source_documents": [
+        "docs/game-design/04-COMBAT.md"
+      ],
+      "fixture_ids": [
+        "FX-PVE-002"
+      ],
+      "parameter_keys": [
+        "battle_phase_order"
+      ]
+    },
+    {
+      "id": "RM-COM-004",
+      "domain": "combat",
+      "title": "Résultat et libération conditionnelle",
+      "evidence": "PROP",
+      "state": "proposed_contract",
+      "statement": "La défaite du joueur ne doit pas libérer une case contre ses occupants.",
+      "contract": "Ne passer encounter_state à cleared qu'après résultat de victoire, selon règle de résultat versionnée ; défaite laisse l'occupation intacte.",
+      "us": [
+        "US-REG-003",
+        "US-COM-017"
+      ],
+      "unknowns": [
+        "U11",
+        "U13"
+      ],
+      "source_documents": [
+        "docs/game-design/04-COMBAT.md",
+        "docs/specifications/DOMAINE-ET-TEMPS.md"
+      ],
+      "fixture_ids": [
+        "FX-PVE-001"
+      ],
+      "parameter_keys": [
+        "encounter_clearing_policy"
+      ]
+    },
+    {
+      "id": "RM-COM-005",
+      "domain": "combat",
+      "title": "Pertes, morts définitives et XP",
+      "evidence": "OBS-CODE",
+      "state": "historically_incomplete",
+      "statement": "Le calculateur distingue unités dispersées et morts définitives ; ses branches PNJ et effets temporaires présentent des anomalies connues.",
+      "contract": "Tester contre cas de référence synthétiques ; ne pas baptiser 'serveur Ubisoft' le résultat d'un calculateur tiers.",
+      "us": [
+        "US-COM-013",
+        "US-COM-014",
+        "US-COM-016"
+      ],
+      "unknowns": [
+        "U11",
+        "U13",
+        "U42"
+      ],
+      "source_documents": [
+        "docs/game-design/04-COMBAT.md",
+        "data/combat-reference-cases.json"
+      ],
+      "fixture_ids": [
+        "FX-PVE-002"
+      ],
+      "parameter_keys": [
+        "loss_profile"
+      ]
+    },
+    {
+      "id": "RM-COM-006",
+      "domain": "combat",
+      "title": "Rapport de bataille reproductible",
+      "evidence": "PROP",
+      "state": "proposed_contract",
+      "statement": "Les joueurs doivent comprendre leur résultat en consultant un rapport persisté.",
+      "contract": "Sauvegarder snapshots, règles, étapes, pertes et horodatages dans un rapport immuable avec droits de lecture.",
+      "us": [
+        "US-COM-017",
+        "US-RAP-001"
+      ],
+      "unknowns": [
+        "U41"
+      ],
+      "source_documents": [
+        "docs/game-design/04-COMBAT.md",
+        "docs/specifications/DOMAINE-ET-TEMPS.md"
+      ],
+      "fixture_ids": [
+        "FX-PVE-001"
+      ],
+      "parameter_keys": [
+        "report_visibility"
+      ]
+    },
+    {
+      "id": "RM-COM-007",
+      "domain": "combat",
+      "title": "Aucun combat tactique au clic",
+      "evidence": "DOC",
+      "state": "reference_observed",
+      "statement": "Le modèle historique est un combat automatisé préparé en amont, pas une bataille manuelle à tours commandés.",
+      "contract": "Le joueur prépare ordre/composition/sorts ; l'issue est déterminée par le moteur et le profil au moment prévu.",
+      "us": [
+        "US-COM-001",
+        "US-COM-002"
+      ],
+      "unknowns": [],
+      "source_documents": [
+        "docs/game-design/04-COMBAT.md",
+        "docs/specifications/PROFIL-PVP-CLASSIQUE.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": []
+    },
+    {
+      "id": "RM-TIM-001",
+      "domain": "temps",
+      "title": "Horloge serveur et fuseau",
+      "evidence": "PROP",
+      "state": "proposed_contract",
+      "statement": "Les constructions, mines et missions restent actives quand le navigateur est fermé.",
+      "contract": "Horodatages métier UTC, fuseau de trêve distinct, comparaison par instants ; le client ne décide pas d'un achèvement.",
+      "us": [
+        "US-ECO-003",
+        "US-CIT-005",
+        "US-COM-002"
+      ],
+      "unknowns": [
+        "U03",
+        "U10"
+      ],
+      "source_documents": [
+        "docs/specifications/DOMAINE-ET-TEMPS.md"
+      ],
+      "fixture_ids": [
+        "FX-BUILD-003"
+      ],
+      "parameter_keys": [
+        "server_time",
+        "truce_timezone"
+      ]
+    },
+    {
+      "id": "RM-TIM-002",
+      "domain": "temps",
+      "title": "Idempotence des commandes",
+      "evidence": "PROP",
+      "state": "proposed_contract",
+      "statement": "Un même ordre transmis deux fois ou repris après panne ne doit produire qu'un effet.",
+      "contract": "Conserver idempotency_key par acteur/monde et renvoyer le même résultat ; traiter échéance/événements une seule fois.",
+      "us": [
+        "US-CIT-004",
+        "US-ARM-005",
+        "US-ECO-003"
+      ],
+      "unknowns": [
+        "U14"
+      ],
+      "source_documents": [
+        "docs/specifications/DOMAINE-ET-TEMPS.md"
+      ],
+      "fixture_ids": [
+        "FX-BUILD-002",
+        "FX-ECON-002"
+      ],
+      "parameter_keys": [
+        "idempotency_policy"
+      ]
+    },
+    {
+      "id": "RM-TIM-003",
+      "domain": "temps",
+      "title": "Simultanéité et ordre déterministe",
+      "evidence": "INCONNU",
+      "state": "blocked_by_evidence",
+      "statement": "Le résultat historique d'une attaque et d'un renfort ou d'une capture et d'une fin de chantier au même instant n'est pas connu.",
+      "contract": "Publier une priorité d'événements PROP par profil test ; ne jamais dépendre d'un ordre d'arrivée réseau aléatoire.",
+      "us": [
+        "US-CIT-006",
+        "US-COM-002"
+      ],
+      "unknowns": [
+        "U14"
+      ],
+      "source_documents": [
+        "docs/specifications/DOMAINE-ET-TEMPS.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [
+        "event_priority_matrix"
+      ]
+    },
+    {
+      "id": "RM-TIM-004",
+      "domain": "temps",
+      "title": "Reprise après arrêt serveur",
+      "evidence": "PROP",
+      "state": "proposed_contract",
+      "statement": "Le monde doit être repris dans le même état logique après incident.",
+      "contract": "Rejouer les échéances en attente par ordre total stable, sans doubler récompenses ni recrues ; enregistrer last_processed_at.",
+      "us": [
+        "US-ECO-003",
+        "US-CIT-006"
+      ],
+      "unknowns": [
+        "U14",
+        "U03"
+      ],
+      "source_documents": [
+        "docs/specifications/DOMAINE-ET-TEMPS.md"
+      ],
+      "fixture_ids": [
+        "FX-ECON-002",
+        "FX-BUILD-003"
+      ],
+      "parameter_keys": [
+        "resume_policy"
+      ]
+    }
+  ]
+}
