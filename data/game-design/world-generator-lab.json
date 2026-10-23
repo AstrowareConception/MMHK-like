@@ -1,54 +1,78 @@
 {
-  "version": "world-generator-lab-v0.3-territorial-friction",
+  "version": "world-generator-lab-v0.4-70pct-reference",
   "status": "EXPERIMENTAL_NOT_HISTORICAL",
   "worldPresets": [
     {
       "name": "micro",
       "maxPlayers": 20,
-      "side": 80,
-      "areaPerPlayerAtCap": 320
+      "side": 48,
+      "areaPerPlayerAtCap": 320,
+      "referencePlayers": 14,
+      "referenceRegionsPerPlayer": 165,
+      "atMaximumRegionsPerPlayer": 115
     },
     {
       "name": "micro_plus",
       "maxPlayers": 50,
-      "side": 128,
-      "areaPerPlayerAtCap": 328
+      "side": 80,
+      "areaPerPlayerAtCap": 328,
+      "referencePlayers": 35,
+      "referenceRegionsPerPlayer": 183,
+      "atMaximumRegionsPerPlayer": 128
     },
     {
       "name": "small_community",
       "maxPlayers": 100,
-      "side": 176,
-      "areaPerPlayerAtCap": 310
+      "side": 112,
+      "areaPerPlayerAtCap": 310,
+      "referencePlayers": 70,
+      "referenceRegionsPerPlayer": 179,
+      "atMaximumRegionsPerPlayer": 125
     },
     {
       "name": "very_small",
       "maxPlayers": 199,
-      "side": 248,
-      "areaPerPlayerAtCap": 309
+      "side": 152,
+      "areaPerPlayerAtCap": 309,
+      "referencePlayers": 140,
+      "referenceRegionsPerPlayer": 165,
+      "atMaximumRegionsPerPlayer": 116
     },
     {
       "name": "small",
       "maxPlayers": 499,
-      "side": 392,
-      "areaPerPlayerAtCap": 308
+      "side": 240,
+      "areaPerPlayerAtCap": 308,
+      "referencePlayers": 350,
+      "referenceRegionsPerPlayer": 165,
+      "atMaximumRegionsPerPlayer": 115
     },
     {
       "name": "medium",
       "maxPlayers": 1000,
-      "side": 552,
-      "areaPerPlayerAtCap": 305
+      "side": 344,
+      "areaPerPlayerAtCap": 305,
+      "referencePlayers": 700,
+      "referenceRegionsPerPlayer": 169,
+      "atMaximumRegionsPerPlayer": 118
     },
     {
       "name": "large",
       "maxPlayers": 2000,
-      "side": 784,
-      "areaPerPlayerAtCap": 307
+      "side": 488,
+      "areaPerPlayerAtCap": 307,
+      "referencePlayers": 1400,
+      "referenceRegionsPerPlayer": 170,
+      "atMaximumRegionsPerPlayer": 119
     },
     {
       "name": "very_large",
       "maxPlayers": 3000,
-      "side": 952,
-      "areaPerPlayerAtCap": 302
+      "side": 600,
+      "areaPerPlayerAtCap": 302,
+      "referencePlayers": 2100,
+      "referenceRegionsPerPlayer": 171,
+      "atMaximumRegionsPerPlayer": 120
     }
   ],
   "regions": {
@@ -121,7 +145,7 @@
     "maxInfluenceRadiusCellsPerCity": 6,
     "influenceGeometry": "euclidean_disk_hypothesis_pending_original_rule_verification",
     "diskCellsAtRadius6": 113,
-    "designTargetRegionsPerPlayerApprox": 300,
+    "designTargetRegionsPerPlayerApprox": 170,
     "overlapExpected": true,
     "territoryIsNotGuaranteedExclusivePerPlayer": true,
     "initialSpawnPressure": "space for territorial growth, validate via multiplayer simulation",
@@ -131,10 +155,11 @@
     "expectedCityCountPerPlayer": "variable from 1 to 10, not everyone reaches the cap",
     "conflictObjective": "enable natural alliance border friction as players colonize without forcing immediate starter overlap",
     "simulationVariantsRegionsPerPlayer": [
-      200,
-      300,
-      400,
-      500
+      140,
+      160,
+      170,
+      180,
+      200
     ],
     "simulation_findings": {
       "report": "docs/game-design/12-SIMULATION-INFLUENCE-COLONISATION.md",
@@ -166,6 +191,17 @@
       "max_radius": 6,
       "most_cities_not_at_max": true,
       "actual_troop_thresholds_unknown": true
-    }
+    },
+    "designDensityReference": "at_70_percent_of_maximum_player_capacity"
+  },
+  "populationCalibration": {
+    "referenceOccupancy": 0.7,
+    "softOverbookingStartsAbove": 0.7,
+    "hardCapacityInterpretation": "maximum registrations not ideal active population",
+    "referenceDensityRegionsPerActivePlayer": 170,
+    "referenceDensityStatus": "experimental_range_160_to_180",
+    "belowReference": "preserve engagement through spawn clustering or configurable active sectors, without changing world geometry mid-campaign",
+    "aboveReference": "allow rising congestion and territorial friction, but never guarantee elimination",
+    "doNotInferActivePlayersFromRegistered": "measure active participants separately"
   }
 }
