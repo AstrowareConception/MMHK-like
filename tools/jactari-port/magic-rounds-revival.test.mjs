@@ -52,3 +52,17 @@ test('invalid spell resurrection signature rejected',()=>{
  assert.throws(()=>fight(100,50,{attackerSpells:{1:{type:2,target:8,unit:1,power:10}}}),/Unsupported/);
  assert.throws(()=>fight(100,50,{attackerSpells:{1:{type:2,target:7,unit:2,power:10}}}),/Unsupported/);
 });
+
+test('persistent army excludes temporary resurrection and recovers dispersed troops',()=>{
+ const r=simulateDualMagicBattleReport({attackers:army(stack(100)),defenders:army(stack(50)),
+  attackerSpells:{1:spell('tmp',50)},lossPolicy:{lossFactor:.25}});
+ assert.equal(r.encounter.attacker[0].remaining,75);
+ assert.equal(r.persistentArmies.attacker[0].count,94);
+ assert.equal(r.persistentArmies.defender[0].count,38);
+});
+test('persistent survivors come from initial garrison minus permanent dead',()=>{
+ const r=simulateDualMagicBattleReport({attackers:army(stack(100)),defenders:army(stack(50)),
+  lossPolicy:{lossFactor:.25}});
+ assert.equal(r.persistentArmies.attacker[0].count,88);
+ assert.equal(r.persistentArmies.attacker[0].weapon,'I');
+});
