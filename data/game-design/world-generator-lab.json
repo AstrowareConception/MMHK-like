@@ -1,0 +1,108 @@
+{
+  "version": "world-generator-lab-v0.1",
+  "status": "EXPERIMENTAL_NOT_HISTORICAL",
+  "worldPresets": [
+    {
+      "name": "micro",
+      "maxPlayers": 20,
+      "side": 16
+    },
+    {
+      "name": "micro_plus",
+      "maxPlayers": 50,
+      "side": 24
+    },
+    {
+      "name": "small_community",
+      "maxPlayers": 100,
+      "side": 32
+    },
+    {
+      "name": "very_small",
+      "maxPlayers": 199,
+      "side": 44
+    },
+    {
+      "name": "small",
+      "maxPlayers": 499,
+      "side": 72
+    },
+    {
+      "name": "medium",
+      "maxPlayers": 1000,
+      "side": 104
+    },
+    {
+      "name": "large",
+      "maxPlayers": 2000,
+      "side": 152
+    },
+    {
+      "name": "very_large",
+      "maxPlayers": 3000,
+      "side": 192
+    }
+  ],
+  "regions": {
+    "gridSize": 5,
+    "mineCount": 4,
+    "pairProbability": 0.18,
+    "typeWeights": {
+      "G": 1.6,
+      "w": 1.5,
+      "o": 1.5,
+      "c": 1,
+      "g": 1,
+      "s": 1,
+      "m": 1
+    },
+    "minePlacement": "two inner-ring and two outer-ring; prototype only",
+    "starterMines": {
+      "HAVEN": [
+        "G",
+        "w",
+        "o",
+        "c"
+      ]
+    }
+  },
+  "sites": {
+    "spacingCells": 15,
+    "jitterCells": 2,
+    "types": [
+      "sphinx",
+      "dolmen",
+      "obelisk"
+    ],
+    "allTypesShareGrid": true,
+    "topology": "torus",
+    "countPolicy": "one site per lattice anchor; balanced types"
+  },
+  "integrity": {
+    "seedStable": true,
+    "maxRepeatedType": 2,
+    "maxRepeatedPairs": 1,
+    "rareResourcesEquiprobable": true,
+    "sitePositionsUnique": true,
+    "minimumSpacingAfterJitterNotEnforced": "spacing is near-regular anchors with ±2 jitter; physical minimum varies"
+  },
+  "provenance": {
+    "user_decisions": [
+      "Q11",
+      "Q12",
+      "Q13",
+      "Q14",
+      "Q15",
+      "Q18",
+      "C02"
+    ],
+    "proposed_parameters": [
+      "pairProbability",
+      "typeWeights",
+      "spacingCells",
+      "minePlacement",
+      "worldPresets.side"
+    ],
+    "historical_extraction": "not found"
+  }
+}
