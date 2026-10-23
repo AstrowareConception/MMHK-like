@@ -1,0 +1,289 @@
+P0 — Questions nécessaires pour créer notre première partie
+
+A. Philosophie du jeu et fidélité historique
+Q01. Quelle période de MMHK souhaites-tu prendre comme référence principale ? La saison 1, la saison 2, la saison 3 classique, ou simplement la version classique dont tu gardes le meilleur souvenir ? Cela déterminera quelles tables de coûts, de temps et de progression nous devons privilégier.
+--> la saison 2 était parfaite, et on pourrait systématiquement partir avec un capital de points d'hérité qui serait le même pour tous. Achacun de l'utiliser comme il veut
+
+Q02. Lorsqu'une règle originale reste introuvable, quelle méthode préfères-tu ? Bloquer son implémentation jusqu'à retrouver une preuve, adopter provisoirement la solution historiquement la plus plausible, ou proposer une nouvelle règle équilibrée et révisable ?
+--> adopter provisoirement la solution historiquement la plus plausible
+
+Q03. Lorsqu'une mécanique historique paraît frustrante ou déséquilibrée, faut-il la préserver ? Souhaites-tu une fidélité presque absolue, ou accepterais-tu quelques corrections ciblées à condition de les documenter ?
+--> quelques corrections ciblées à condition de les documenter
+
+Q04. Pour le premier prototype jouable, souhaites-tu commencer avec une seule faction ? Je propose le Havre pour la proximité avec le jeu original. L'Académie est une alternative intéressante, car plusieurs données chiffrées sont déjà bien documentées.
+--> commencer avec une seule faction, le havre
+
+Q05. Jusqu'où doit aller le contenu militaire du premier prototype ? Une première boucle avec T1–T3 sans magie, les sept tiers immédiatement, ou l'ensemble des unités, améliorations, héros et sorts avant les premiers essais ?
+--> Une première boucle avec T1–T3 sans magie
+
+Q06. Souhaites-tu conserver intégralement les durées originales ? Par exemple, une construction de 9 h 36 resterait-elle aussi longue, ou devons-nous prévoir un mode de test accéléré distinct des mondes classiques ?
+--> mode de test accéléré sur la base d'un multiplicateur 
+
+
+
+B. Géographie et génération du monde
+Références : U09, U16, U17, U47 — génération, déplacement et implantation.
+
+Q07. Quelle taille devrait faire un monde ? Doit-elle être identique à MMHK, fixe pour chaque campagne ou adaptable au nombre de joueurs ?
+--> je veux plusieurs presets type "Grande (jusqu'à 2000 joueurs)", "Petite (moins de 500 joueurs)" , "Très petite (moins de 200 joueurs)", "Moyenne … Très grande … " avec des dimensions qui correspondent. Les serveur MMHK originaux étaient calibrés pour 3000 joueurs à la base je crois (ou bien 1000 je ne sais plus). Idéalement j'aimerais quand meme pouvoir faire tourner des serveur en nombre réduits genre 20, 50 ou 100 joueurs avec des maps adaptées
+
+Q08. Combien de joueurs un monde devrait-il pouvoir accueillir ? Souhaites-tu viser une population historique comparable à MMHK ou dimensionner les premiers mondes pour des communautés plus petites ?
+--> voir réponse précédente
+
+Q09. La carte du monde doit-elle se refermer sur elle-même ? Le calculateur historique suggère une géométrie torique : sortir par le bord droit permettrait de réapparaître à gauche, et de même pour le haut et le bas. Souhaites-tu reproduire cela ?
+--> oui même procédé sinon ça créé un gameplay trop asymétrique
+
+Q10. Quelles régions doivent être interdites à la colonisation ? Montagnes, océans, terrains spéciaux, zones d'événements, voisinage de certaines structures ou uniquement cases déjà occupées ?
+--> par défaut uniquement les cases non occupées (reliques/villes), mais j'aimerais un systéme de cases spéciales type montagnes, mers etc ... a voir car ça va necessairement joueur ensuite sur les déplacement, donc à voir. Il y a aussi la notion de zone d'influence. On ne peut pas coloniser n'importe où, il faut que ce soit dans la zone d'influence du joueur et de son alliance. De mémoire MMHK permettait de coloniser a une ou deux cases de distance de la zone d'influence mais c'était limlité. Et interdiction de coloniser dans la zone d'influence de quelqu'un d'autre
+
+Q11. Faut-il garantir une répartition équitable des régions de départ ? Par exemple, éviter qu'un joueur commence dans une zone très pauvre en ressources ou complètement encerclée par des obstacles.
+--> niveau ressource la ville de départ sera toujours Or/Bois/Pierre/(ressource rare principale de la faction, cristal pour le havre). Quant à la position sur la map, peu importe
+
+Q12. Quelle distribution des quatre mines souhaites-tu retenir ? Devons-nous favoriser fortement la combinaison de ton souvenir — or, bois, minerai, une ressource rare — tout en autorisant des exceptions ?
+--> pour la ville de départ, la répartition est imposée, ensuite je te laisse réfléchir à la façon de répartir toutes les combinaisons qui existent
+
+Q13. Jusqu'où autorisons-nous les doublons de ressources ? Deux mines de bois, deux mines d'or, trois mines identiques, voire quatre identiques ? Les configurations extrêmes doivent-elles être impossibles ou simplement très rares ?
+--> maxi 2 ressources identiques, et pas possible d'avoir 2 doubles", aucune ressource obligatoire et donc 3 ou 4 ressources différentes par slot
+
+Q14. Les quatre ressources rares doivent-elles avoir la même probabilité d'apparition ? Ou leur répartition devrait-elle dépendre de la faction, du terrain ou de la position géographique ?
+--> même probabilité
+
+Q15. La position des mines dans une région doit-elle être totalement aléatoire ? Ou faut-il garantir certains espacements par rapport à la cité et entre mines, pour faciliter les constructions régionales ?
+--> je n'ai pas de préférence, je te laisse décider
+
+Q16. Quelle difficulté doivent avoir les créatures neutres qui occupent les cases de départ ? Une difficulté uniforme, progressive selon la distance au centre, ou variable en fonction de la valeur de la mine et de la récompense ?
+--> progressive suivant la distance. Plus facile à proximité du centre, plus difficile en périphérie
+
+Q17. Les créatures neutres doivent-elles réapparaître après leur défaite ? Et si oui, sur quelles cases, à quelle fréquence et sous quelles conditions ?
+--> dans le jeu de base elles ne reapparaissaient pas (du moins pas avant l'arrivée de la boutique). J'aimerais qu'on ajoute une règle qui fasse repoper les créatures automatiquement sur une casse si par exemple cette case n'a pas été utilisée par le joueur au bout de X jours. Si le joueur utilise la case, pas d emonstres. Si le joueurs accepte de ne pas exploiter la case, il peut réaffronter des monstres (xp, artefacts etc)
+
+Q18. Comment distribuer les sites spéciaux à l'échelle du monde ? Sphinx, obélisques, ruines, dolmens, bâtiments neutres et autres sites doivent-ils être uniformément dispersés, regroupés dans certaines zones ou soumis à des distances minimales ?
+--> il faut définir des règles. Je veux une répartition aléatoires des sites spéciaux par rapport à leur type mais avec des contraintes géographiques. Par exemple deux sphinx peuvent être voisins, mais avec un minimum de 15 cases d'écart. Deux sites doivent toujours avoir un minimum de X cases qui les sépare, tout autour d'eux sur la map. C'est donc la taille de la map qui définit la quantité de sites. µJe pense qu'on peut ensuite répartir équitablement les types de sites (autant de sphinx que de dolmens et obélisques à l'échelle du monde, mais distribués aléatoirement)
+
+C. Arrivée des joueurs, codes amis et protection
+Références : U20, U47 et parcours d'inscription retrouvé dans le JavaScript historique.
+
+Q19. Comment répartir les joueurs arrivant sans code ami ? Complètement au hasard, à proximité d'autres débutants ou selon un système qui équilibre progressivement la population sur la carte ?
+--> système qui équilibre progressivement la population sur la carte 
+
+Q20. À quelle distance d'un joueur existant un nouveau joueur utilisant son code ami devrait-il apparaître ? Une distance fixe, une distance maximale, ou simplement la région disponible la plus proche dans une zone définie ?
+--> une distance maximale. Les villes gagnent en zone d'influence donc faut pas que les villes soient collées, mais pas trop loin non plus. Disons entre 4 et 10 cases environ (à ajuster si besoin)
+
+Q21. Que faire lorsqu'il n'y a plus de région disponible près de l'ami ? Refuser l'inscription proche, proposer une implantation aléatoire ou élargir progressivement le rayon de recherche ?
+--> élargir progressivement le rayon de recherche jusqu'à trouver une case éligible
+
+Q22. Comment doivent fonctionner les codes amis ? Un code permanent et réutilisable, un code temporaire, un code unique par invitation ou un code limité à un monde et à une campagne ?
+--> chaque joueur possède 3 codes amis fournis à son inscription. Ca favorise la dispersion et évite une trop forte concentration
+
+Q23. La protection débutant de sept jours doit-elle protéger uniquement la première cité ? C'est ton souvenir principal. Faut-il aussi empêcher les pillages de sa région, les sièges, l'espionnage et les attaques contre ses autres cités ?
+--> oui 7 jours, mais pendant la protection débutant il était aussi impossible de coloniser une seconde ville. Quand un joueur n'a qu'une ville, on ne peut pas lui prendre par un siège. En revanche, une fois la protection débutant finie, elle peut être pillée
+
+Q24. Un joueur doit-il pouvoir renoncer volontairement à sa protection débutant ? Par exemple, si un débutant lance lui-même une attaque hostile, perd-il sa protection immédiatement, ou reste-t-elle active ?
+--> ne peut pas être annulée, c'est la même règle pour tous
+
+Q25. À quel instant vérifie-t-on la protection ? Lors de l'envoi de l'armée, à son arrivée, ou aux deux moments ? Cette différence devient importante si une armée part avant l'expiration et arrive après.
+--> sur la carte, une ville protégée par la protection débutant apparait différemment. Ensuite, on vérifie à l'envoi des troupes, on refuse un envoi si la destination ou la source sont sous protection
+
+Q26. Un joueur rejoignant tardivement une campagne bénéficie-t-il de la même protection ? Doit-il obtenir sept jours pleins, même si la Guerre des Larmes a déjà commencé ?
+--> oui, cette protection est là pour le protéger et lui permettre de se développer. En revanche il peut recevoir des convois de marchandise de ses alliés
+
+D. Dotation initiale et premières minutes de jeu
+Références : U01, U02, U16, U24, US-ACC-003/004/005.
+
+Q27. Quelles ressources le nouveau joueur possède-t-il à son arrivée ? Souhaites-tu retrouver exactement la dotation historique ou définir une dotation provisoire qui permette de lancer les premières constructions ?
+--> les dotations historiques marchaient bien, mais si on retrouve pas c'est pas génant on adapte
+
+Q28. Quels bâtiments sont déjà construits dans la première cité ? Uniquement le Conseil du village et les bâtiments indispensables, ou d'autres constructions de départ ?
+--> uniquement le strict minimum. Hormis le conseil du village, tout est à construire soi même
+
+Q29. Le joueur commence-t-il avec un héros ? Un héros prédéfini, un héros choisi, une offre gratuite de taverne ou aucun héros avant son premier recrutement ?
+--> le joueur commence avec un héros sur lequel il peut éventuellement affecter des compétence d'hérédité (saison 2). Ensuite c'est à la taverne que les héros se recrutent. Dans la taverne le joueur peut choisir entre deux héros avec des archétypes différents. Si aucun ne lui convient, il peut reset les héros une fois tous les 12 heures. Chaque héros a un coût en or croissant (jusqu'à 15 héros en tout). Ensuite chaque héros recruté doit arriver en ville. Le délai est de plus en plus long en fonction du nombre de héros recrutés. Le premier arrive 15 minutes plus tard, le 15ème met 3 jours je crois.
+
+Q30. Dispose-t-il déjà de troupes ? Si oui, lesquelles, en quelle quantité et sous quelle forme : armée constituée, garnison ou recrues disponibles ?
+--> oui il a quelques unités. Uniquement des T1, T2 et T3 distribués de sorte à avoir une puissance globale de X environ (puissance assez faible dans tous les cas, juste bon pour commencer)
+
+Q31. Souhaites-tu un tutoriel qui guide les premières actions ? Une suite de quêtes obligatoires, des conseils facultatifs ou une liberté complète d'exploration avec aide contextuelle ?
+--> oui le jeu disposait d'un tuto sous forme de quête qui obligeait le joueur à faire les premières actions indispensables pour bien débuter la partie. Ces quêtes apportées xp et ressources et un joueur expérimenté pouvait maximiser ce tuto pour prendre un meilleur départ que les autres
+
+E. Production économique et ressources
+Références : U03, U04, U07, U08, U30.
+
+Q32. Comment les ressources sont-elles créditées ? En continu, à chaque heure, à une échéance quotidienne commune ou par une autre cadence ? Nous avons retrouvé des rendements journaliers, pas encore la fréquence historique exacte de crédit.
+--> les productions sont indiquées en fréquence journalière (exemple, or : 50 000 par jour) mais c'est crédité par intervalles réguliers (toutes les 15 minutes par exemple, à ajuster)
+
+Q33. Comment doit-on gérer les fractions de ressources ? Conserver une précision invisible jusqu'à accumulation d'une unité, arrondir à chaque période, ou arrondir séparément la production de chaque mine ?
+--> Conserver une précision invisible jusqu'à accumulation d'une unité, seule une unité pleinement produite peut être acquise et utilisée
+
+Q34. Dans quel ordre appliquer les bonus économiques ? Les bonus des bâtiments, mines, héros, recherches et monuments sont-ils additifs, multiplicatifs ou soumis à une priorité précise ?
+--> de mémoire dans le jeu de base c'est cumulatif. Tous les bonus s'ajoutaient, formaient un bonus total et ce bonus est ensuite appliqué à la production de base
+
+Q35. Les ressources doivent-elles rester propres à chaque cité ? Faut-il toujours transporter les ressources entre deux villes, ou certains stocks sont-ils accessibles à l'ensemble du royaume ?
+--> stocks propres à chaque ville, les entrepots permettent d'augmenter les capacités de stockage. Si un stock est plein, la ville ne produit plus. La capacité d'or dépend du niveau de la ville (hotel de ville). Les caravanes servent à acheminer des ressources entre les villes. Les caravanes ne peuvent pas être attaquées/pillées quand elle se déplacent. Les caravanes ont une capacité qui se développe au marché de chaque ville
+
+Q36. Comment fixer les capacités de stockage ? Devons-nous reprendre les silos, entrepôts et plafonds historiques, avec une gestion distincte pour l'or ?
+voir réponse ci dessus. 
+
+Q37. Que deviennent les ressources produites lorsque le stock est plein ? Sont-elles définitivement perdues, suspendues jusqu'à libération de capacité ou conservées dans une réserve inaccessible ?
+--> elles sont perdues, si un stock est plein la ville ne produit plus de cette ressource.
+
+Q38. Les récompenses de quêtes, de combats et de commerce doivent-elles subir les mêmes plafonds ? Ou faut-il des exceptions, telles qu'un coffre ou une récompense différée ?
+--> les récompenses de quête apparaissent dans des messages et peuvent être "encaissées" quand le joueur le souhaite. Tant que le joueur n'encaisse pas une récompense, elle reste disponible dans ses messages.
+
+Q39. Une mine commence-t-elle automatiquement à produire après sa libération ? Ou le joueur doit-il effectuer une action supplémentaire pour la mettre en exploitation ?
+--> dès qu'une mine est libérée elle produit immédiatement. Mais sa production augmente si le joueur aménage les cases adjacentes à la mine avec les bons bâtiments de région. Je me demande aussi s'il ne faudrait pas ajouter des améliorations directement dans la mine. Genre payer un cout d'amélioration ("creuser la mine"), immobiliser un héros un certain temps, et suspendre la production pendant ce temps, ensuite la mine produit plus. On pourrait faire ça sur 5 niveaux.
+
+
+Q40. Souhaites-tu retenir provisoirement les rendements et coûts miniers de 2013 ? Ou préfères-tu attendre une corroboration plus ancienne avant de choisir notre référence numérique ?
+--> les coûts de la S2 étaient bons on peut partir là dessus comme base et ajuster/adapter/ajouter quand on a besoin
+
+Q41. Quel barème d'entretien des armées faut-il utiliser ? Nous avons plusieurs références historiques qui divergent. Faut-il prendre celle du calculateur de 2013 en attendant de retrouver le profil exact ?
+--> je crois que ce calcul a changé au fil du temps, on doit se baser sur le calcul de S1 ou S2. De mémoire c'était une sorte d'augmentation exponentielle. Peu d'armée coutaient rien en entretien (or), et dès qu'on atteint certaines puissances d'armée stationnées ça commencer à douiller et à couter plus d'or que ce que la ville pouvait produire. Je veux que ça reste comme ça dans l'esprit, une très grosse armée stationnée sur une seule ville, ça devient quasi impossible en terme de logistique
+
+Q42. À quelle cité doit être imputé l'entretien ? À la ville d'origine des unités, à la cité dans laquelle elles sont stationnées, au royaume ou selon une règle liée au héros ?
+--> c'est la ville qui contient l'armée qui paye l'entretien. L'entretien est payé chaque heure.
+
+Q43. Que se passe-t-il lorsque le joueur ne peut plus payer l'entretien ? Dette, blocage du recrutement, pénalité, pertes de troupes, désertion après délai ou autre comportement ?
+--> attrition. Chaque heure qui passe où le joueur ne peut pas payer l'entretien de son armée c'est 10% des troupes (10% de chaque troupe) qui meurent immédiatement. Comme l'armée diminue, l'entretien diminue aussi, jusqu'à descendre mécaniquement jusqu'au seuil où le joueur pourra payer.
+  
+F. Bâtiments et constructions
+Références : U02, U05, U19, US-CIT-001 à US-CIT-015.
+
+Q44. Combien de constructions peut-on lancer simultanément dans une même cité ? Une seule, plusieurs chantiers selon le nombre de héros disponibles, ou une file d'attente de constructions successives ?
+--> on ne peut lancer qu'un seul bâtiment à la fois dans la vue ville. Ca ne monopolise aucun héros. Pas de file d'attente. En revanche dans la vue région, possibilité de construire plusieurs bâtiments en parallèle car chaque bâtiment monopolise un héros durant toute la construction (+ temps de déplacements)
+
+Q45. Un héros est-il nécessaire pour chaque construction ? Tous les bâtiments, seulement certaines constructions, ou uniquement pour obtenir des bonus de vitesse et de coût ?
+--> voir réponse précédente
+
+Q46. Que devient un héros affecté à un chantier ? Est-il totalement immobilisé, disponible pour certaines actions ou simplement utilisé au moment où la construction est lancée ?
+--> complètement bloqué, il ne pourra pas non plus défendre la ville si celle-ci est attaquée
+
+
+Q47. À quel moment les ressources d'une construction sont-elles dépensées ? Au lancement, à l'achèvement, ou réservées dès le lancement puis définitivement consommées ensuite ?
+--> dépensées au lancement, annulation impossible. 
+
+Q48. Peut-on annuler une construction ? Si oui, quel remboursement appliquer et dans quelles conditions l'annulation devient-elle impossible ?
+--> pas d'annulation, le joueur doit bien réfléchir
+
+
+Q49. Comment fonctionnent les accélérations de construction ? Doit-on reproduire les bonus des carrières et les arbitrages historiques entre construction rapide, normale et économique ?
+--> oui c'était une bonne idée. De mémoire on pouvait volontairement choisir de payer +40% du coût de base pour un gain de temps de 20% ou alors payer 20% de moins et accepter un temps de construction de +40%. Ces ajustements ne sont possibles que pour les bâtiments de la ville et parce qu'on ne peut en faire qu'un à la fois.
+
+Q50. Comment calcule-t-on précisément le niveau d'une cité ? Quels bâtiments comptent, les améliorations remplacent-elles les niveaux précédents et comment traite-t-on les constructions particulières comme les silos ?
+--> de mémoire chaque batiment ou amélioration ajoute un niveau de cité
+
+
+Q51. Lorsqu'un bâtiment est amélioré, ses effets remplacent-ils totalement les précédents ? C'est notamment important pour la production d'or et les bâtiments de recrutement.
+--> oui il faut alors prendre en compte les nouveaux effets de l'amélioration immédiatement
+
+Q52. Que deviennent les constructions pendant un siège ? Les chantiers en cours continuent-ils, peut-on les accélérer ou les annuler, et les nouvelles constructions sont-elles interdites ?
+--> elles continuent, on ne peut ni annuler ni accélérer. Interdiction de lancer une nouvelle construction.
+
+
+Q53. Que se passe-t-il si un bâtiment est détruit alors que d'autres dépendent de lui ? Les bâtiments dépendants deviennent-ils inactifs, restent-ils fonctionnels ou sont-ils également détruits ?
+--> ces bâtiments deviennent inactifs
+
+G. Héros, recrutement et armées
+Références : U06, U24–U27, U18.
+
+Q54. Combien de héros doit proposer la taverne ? Deux offres simultanées, comme dans certaines captures, ou un nombre dépendant de la progression de la cité ?
+--> j'ai répondu plus haut. Deux à la fois, renouvelable gratuitement une fois toutes les 12h.
+
+
+Q55. Comment évoluent le prix et le délai de recrutement des héros ? Souhaites-tu reproduire les offres historiques et leur renouvellement, avec coût croissant ou délai de disponibilité ?
+--> oui on conserve les coûts historiques et augmentation des délais
+
+Q56. Combien de héros un joueur peut-il posséder ? Le plafond doit-il dépendre des villes, des bâtiments, du rang personnel ou d'autres paramètres ?
+--> 15 maxi pour la partie entière. avec l'augmentation des couts et des délais, c'est au joueur de gérer ses recrutements. Pas de contraintes autres
+
+
+Q57. Souhaites-tu conserver la progression historique des héros jusqu'au niveau 40 ? Y compris les courbes de caractéristiques par archétype et les contraintes associées ?
+--> oui on reste sur les valeurs historiques, ça marchait bien
+
+Q58. Conservons-nous les trois emplacements de carrière et le système de talents retrouvé dans Jactari ? Faut-il autoriser toutes les carrières immédiatement ou les débloquer progressivement ?
+--> on garde le système de carrières. J'aime bien l'idée de les débloquer au fur et à mesure. Ca veut dire qu'il y a un intérêt à faire monter tous les héros et pas se focaliser sur un seul
+
+Q59. Comment doit fonctionner une réorientation de carrière ? Coût, délai, perte de points, réinitialisation des talents et éventuelles restrictions pendant une mission.
+--> je n'ai pas souvenir de comment c'était gérer, je te laisse voir et décider en te basant sur les valeurs historiques.
+
+Q60. Les bonus passifs d'un héros s'appliquent-ils lorsqu'il est absent ? Par exemple, un héros spécialisé dans l'économie continue-t-il à améliorer les revenus de sa cité pendant une expédition militaire ?
+--> non pour que les bonus passifs s'appliquent le héros doit être dans la ville et ni en déplacement sur la carte du monde, ni en déplacement sur une case de la région.
+
+Q61. Comment les artéfacts doivent-ils circuler entre les héros, leur sac et les cités ? Transferts immédiats dans la même ville, transport entre villes, restrictions de niveau et objets liés à leur propriétaire ?
+--> le héros possède un inventaire de X cases (prendre valeur historique), et chaque héros peut équiper plusieurs artefacts, en fonction de l'emplacement de l'artefact (cou, bras, jambe, dos, tête, torse etc …)
+
+Q62. Comment acquiert-on les artéfacts ? Butin de combats, quêtes, ruines, commerce, événements, récompenses d'hérédité ? Quelles catégories d'objets faut-il autoriser dès le début ?
+--> butin de combat dans les combats de région (garantir X cases avec des artefacts dans chaque ville, par exemple 5). Certaines quêtes peuvent aussi offrir un artefact. Un artefact peut etre transmis d'un héros à un autre. La ville possède son propre inventaire, pour échanger un artefact d'un héros à l'autre on dépose l'artefact du héros dans la ville, puis on déplace depuis l'inventaire de la ville vers le héros. Si une ville est prise avec des artefacts dedans, c'ets un butin de guerre pour l'assiégeant. Il peut aussi y avoir des artefacts comme récompense d'hérédité.
+
+Q63. Comment gère-t-on l'utilisation des sorts ? Conservation de la programmation préalable aux combats, nombre de sorts préparables, cercles accessibles et délais de recharge historiques ?
+Il faut d'abord débloququer les sorts dans la ville (guilde des mages). Chaque niveau de la guilde (1 à 5) débloque un sort de ce niveau. Une guilde ne peut proposer qu'un sort par niveau/cercle alors que chaque faction dispose de plusieurs sorts par cercle. Il faut donc plusieurs guildes dans plusieurs villes pour débloquer tous les sorts. Le héros peut mémoriser 2 ou 3 sorts (prendre valeur historique). Un sort qui sera automatiquement lancé au tour 1 du combat, un sort pour le tour 2 et je crois que c'est tout. A voir s'il y avait aussi un tour 3 ? Plus ? Le héros doit etre dans la ville pour qu'on puisse changer les sorts qu'il connait. 
+
+
+
+Q64. À quelle cadence apparaissent les nouvelles recrues dans les bâtiments ? Les valeurs nominales T1–T7 de 15, 10, 7, 5, 3, 2 et 1 sont retrouvées, mais leur fréquence effective doit encore être qualifiée.
+--> je pense qu'on mettre à jour les valeurs une fois par heure, et comme pour les ressources seules les unités pleinement produites apparaissent en stock
+
+Q65. Les bâtiments améliorés partagent-ils leurs réserves de recrues avec les bâtiments précédents ? Ou chaque variante possède-t-elle son propre stock de recrutement ?
+--> c'est partagé. Si j'ai 12 recrues disponible en T5, je peux recruter 12 T5+, ou alors 8 T5+ et 4 T5 ou 12 T5 de base mais pas plus de 12.
+
+Q66. L'achat d'unités disponibles est-il instantané ou nécessite-t-il un délai ? Le héros doit-il être présent dans la cité et une file de recrutement existe-t-elle ?
+--> achat immédiat. La troupe se positionne dans l'inventaire/garnison de la ville. Les stacks d'unités peuvent être affectées à un héros se trouvant dans la ville (on peut réorganiser les stacks)
+
+Q67. Comment se déroule l'amélioration d'une unité ? Conversion immédiate, délai, coût supplémentaire, bâtiment spécialisé et possibilité de transformer seulement une partie d'un peloton ?
+--> la conversion porte sur une stack d'unité basique. La conversion coute une quantité de ressource par unité à convertir. On paye pour la stack entière ou pas du tout. Conversion immédiate ensuite
+
+Q68. Conservons-nous sept pelotons ordinaires par armée de combat ? Quelle limite appliquer aux garnisons, aux armées en déplacement, aux renforts et aux unités temporaires invoquées ?
+-->  7 oui, on garde les valeurs historiques
+
+H. Combat PvE et résolution militaire
+Références : U09, U11–U14, U42 et calculateur communautaire.
+
+Q69. Souhaites-tu utiliser le moteur de calcul Jactari comme référence principale ? Et lorsqu'une anomalie est identifiée dans son code, faut-il chercher à reproduire le comportement réel du serveur Ubisoft plutôt que son erreur ?
+--> jactari était très précis de mémoire on peut se baser la dessus. Sinon j'ai téléchargé l'intégralité des ressources liées aux différences versions du jeu provenant de cdn, on peut aussi voir si ça matche. Mais je pense que jactari est une source idéale.
+
+Q70. Comment vérifier l'ordre exact des opérations d'un combat ? Admission, tirs préalables, sorts, duels, résurrections, dispersion, morts définitives et expérience : acceptons-nous l'ordre retrouvé dans le calculateur tant qu'il n'est pas contredit ?
+--> oui on se base sur le calculateur jactari il était parfaitement fidèle
+
+Q71. Dans quelles conditions une armée doit-elle fuir avant un combat ? Souhaites-tu conserver les seuils d'admission PvE et PvP du calculateur, après validation de leurs différences ?
+--> on conserve les seuils et valeurs historique (voir encore jactari pour ça)
+
+Q72. Comment gérer les égalités et destructions mutuelles ? Peut-il y avoir un véritable match nul ou un camp est-il toujours déclaré vainqueur selon une règle précise ?
+--> voir ce que dit jactari. Je crois que ça peut finir en match nul.
+
+Q73. Comment déterminer les pertes permanentes ? Faut-il reproduire strictement les proportions de dispersion et de morts, y compris leurs modificateurs de talents et d'artéfacts ?
+--> voir jactari. De mémoire c'était 20 ou 30% des pertes qui sont définitives. Pourquoi pas avoir un talent ou un artefact qui impacte ce pourcentage.
+
+Q74. Comment traiter les créatures neutres, les invocations et les résurrections ? Ont-elles les mêmes règles de pertes que les troupes permanentes et que deviennent les unités temporaires après la bataille ?
+--> que dit jactari là dessus ? pour toutes les règles de combat on se réfère à la référence jactari.
+
+Q75. Que devient un héros vaincu ? Blessure, indisponibilité, retour à la cité, capture, emprisonnement ou disparition selon le contexte du combat ?
+--> retour à la cité puis indisponibilité pour blessure pour une durée qui dépend de son niveau (plus le niveau est élevé plus l'arret maladie est long)
+
+Q76. Quelle part de hasard souhaites-tu conserver dans les combats ? Une résolution entièrement déterministe à composition identique ou des tirages aléatoires contrôlés par le serveur ?
+--> 100% déterministe comme avant, voir jactari. On pouvait planifier les combats à l'unité près
+
+Q77. Souhaites-tu proposer un simulateur de combat au joueur ? Une estimation sommaire des risques, une simulation détaillée ou aucune prédiction afin de préserver la dimension stratégique ?
+--> je veux proposer un simulateur exactement comme l'avait fait jactari. Toute l'optimisation du jeu venait de là
+
+Q78. Comment attribuer précisément l'expérience et les récompenses d'une victoire PvE ? Sur la puissance vaincue, les pertes définitives, la difficulté, l'Honneur ou plusieurs facteurs ?
+--> je crois que c'était un ratio entre puissance engagée et puissance vaincue multipliée par la puissance vaincue. Genre : plus je tue de troupe plus je gagne d'XP, et si en plus mon combat était optimisé, j'ai un multiplicateur qui me fait gagner encore plus. N'oublie pas qu'il y avait aussi les bonus de roue et l'augmentation de la puissance des armées qui dépendait des compétences du héros. Ca jouait beaucoup dans l'optimisation.
+
+Q79. Quel niveau de détail doivent présenter les rapports de bataille ? Tous les tours, les sorts, les pertes et leurs calculs ? Et quelles informations doivent rester cachées à l'adversaire ?
+--> oui, toutes ces infos sont visibles a priori. Tu peux te baser sur les rapports de jactari comme référence. On peut afficher la même chose.
+
+I. Temps et cohérence des ordres
+Référence principale : U14.
+
+Q80. Quelle durée doit avoir une expédition locale entre la cité et une case régionale ? Est-elle instantanée, dépendante de la distance, ou soumise à un temps d'aller et de retour ?
+--> temps d'aller retour qui dépend de la distance
+
+Q81. Comment départager deux événements arrivant à la même seconde ? Par exemple, un renfort et une attaque, la fin d'une construction et la capture d'une cité, ou la destruction d'un monument au moment exact d'une victoire.
+--> non déterministe. ne action passera avant l'autre, peu importe laquelle
+
+Q82. Que doit-il se passer lors d'une interruption du serveur ? Le monde reprend-il en recalculant tout le temps écoulé, ou les horloges sont-elles suspendues pour tous les joueurs ?
+--> le serveur reprend avec le temps écoulé. D'ailleurs je ne sais pas si tu as noté, mais il y avait la trêve nocturne ! aucun déplacement sur la carte du monde (attaque, convois, déplacement de héros - la troupe s'arrete sur la carte et fait une halte) entre 23h et 6h du matin ! du coup ça dicte comment gérer l'interruption, il faut tenir compte du temps qui a passé sinon ça peut tout fausser.
+
+Q83. Peut-on rappeler ou annuler une mission déjà partie ? Si oui, dans quelles conditions et avec quel délai de retour ?
+--> tant que la destination n'a pas été atteinte (phase aller) on peut annuler. Le temps de retour sera le meme que le temps écoulé dans la phase aller avant le retour. Dans le jeu d'origine quand on traversait des cases sur la carte du monde qui sont dans la zone d'influence de l'alliance du joueur, aucune halte ne se produisait. Si le joueur devait traverser l'équivalent de X cases/points (== distance précise à retrouver) alors le héros faisait une halte de 2h à cet endroit et sa halte pouvait être attaquée par un joueur à portée !
+
+Q84. Un joueur peut-il programmer plusieurs actions à l'avance ? Une file de constructions, plusieurs recrutements, des convois répétés ou des missions conditionnelles, ou devons-nous limiter l'automatisation à celle du jeu original ?
+--> pas de programmation ! comme dans le jeu d'origine il me semble
