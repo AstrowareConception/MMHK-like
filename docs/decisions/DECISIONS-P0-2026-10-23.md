@@ -180,6 +180,8 @@ Les décisions ci-dessous sont les **seules questions de clarification proposée
 
 Le porteur de projet délègue expressément : **répartition non initiale des mines (Q12)**, **positionnement des mines (Q15)**, **réorientation des carrières (Q59)**, et la consultation de **Jactari pour les cas d'égalité et les particularités PNJ/invocations (Q72/Q74)**. Les expressions « valeurs historiques » utilisées ailleurs désignent aussi des investigations, pas un feu vert pour choisir des chiffres non étayés.
 
+Une première [proposition de distribution et de placement des mines](../game-design/09-GENERATEUR-P0-PROPOSITIONS.md) est maintenant documentée : **82 % de quatre types distincts, 18 % de trois types**, pondérations expérimentales respectant l'équiprobabilité entre rares et deux mines proches/deux éloignées. **Ces chiffres ne sont ni historiques ni présentés comme déjà validés par le porteur de projet.**
+
 **Pistes de simulation recommandées (PROP, pas des décisions ajoutées)** : générateur stable par graine, échantillonnage des quatre mines avec contraintes « trois ou quatre types » et quatre rares équiprobables, analyse de distribution et de biais de spawn ; simulateur d'attrition et de croissance économique dans différents presets de monde ; comparaison des opérations de combat à la version Jactari épinglée ; tests de passage à l'heure d'hiver pour les haltes et la trêve.
 
 ## Traduction dans le dépôt
