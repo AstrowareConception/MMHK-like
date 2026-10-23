@@ -2,6 +2,8 @@
 
 **23 octobre 2026 — simulations synthétiques exécutées.** Cette étude répond aux deux contraintes ajoutées par l'utilisateur : un rayon d'influence de six cases exige une garnison importante (donc reste exceptionnel), et le coût d'une cité croît avec la distance au-delà de l'influence propre/alliée. Le jeu original S2 n'a pas livré les formules complètes ; les chiffres ci-dessous sont **issus d'un modèle de laboratoire**, pas de serveurs Ubisoft.
 
+**Nouvelle décision à appliquer aux futurs tests :** la densité cible se mesure à **70 % des places maximales du monde** ; au-delà, c'est un surbooking voulu. Le [calibrage détaillé](13-CALIBRAGE-70-POURCENT.md) met cette règle à jour. Les essais de cette page comparent des densités effectives, sans hypothèse d'occupation administrative de 70 %.
+
 ## Hypothèses explicites
 
 - **100 joueurs**, répartis en dix alliances de dix membres, positions initiales réparties de façon relativement équilibrée sur une **carte torique carrée**.
