@@ -418,17 +418,18 @@
           "w": 8,
           "o": 10
         },
-        "idempotency_key": "build-2-once"
+        "first_attempt_key": "insufficient-test-1",
+        "accepted_order_key": "build-2-once"
       },
       "when": [
-        "attemptConstructionWithInsufficientWood",
-        "then_retrySameOperationAfterRestoringWood",
-        "sendDuplicateRequest"
+        "attemptConstructionWithInsufficientWood using first_attempt_key",
+        "restoreWoodAndSubmitNewOperation using accepted_order_key",
+        "resendAcceptedOrder using accepted_order_key"
       ],
       "then": [
-        "first attempt rejected, no partial debit",
-        "successful first accepted operation debits once",
-        "duplicate operation returns same accepted order and does not debit again"
+        "insufficient attempt rejected without partial debit",
+        "successful new operation debits once after wood is available",
+        "replay of accepted order returns same order and does not debit again"
       ],
       "expected": {
         "after_failed_attempt": {
@@ -437,7 +438,8 @@
           "o": 12
         }
       },
-      "numeric_status": "initial_balances_synthetic"
+      "numeric_status": "initial_balances_synthetic",
+      "notes": "Une clé d'idempotence identifie la même intention : après un refus et changement de stock, utiliser une NOUVELLE clé pour retenter. Ne pas faire muter un ancien résultat avec une clé réutilisée."
     },
     {
       "id": "FX-BUILD-003",
