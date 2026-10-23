@@ -17,7 +17,7 @@ test('no revival of a completely destroyed stack',()=>{
  assert.equal(resolvePostDuelRevival({remaining:0,losses:100,roundStart:100,mode:'tmp',percent:100}).revived,0);
 });
 test('the -1 no-loss marker cannot create troops',()=>{
- assert.equal(resolvePostDuelRevival({remaining:100,losses:0,roundStart:100,mode:'tmp',percent:100}).revived,0);
+ assert.equal(resolvePostDuelRevival({remaining:100,losses:-1,roundStart:100,mode:'tmp',percent:100}).revived,0);
 });
 test('invalid spell modes are rejected',()=>{
  assert.throws(()=>resolvePostDuelRevival({remaining:10,losses:3,roundStart:10,mode:'unknown',percent:50}),RangeError);
