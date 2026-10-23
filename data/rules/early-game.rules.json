@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "early-game-rules/0.2-p0-user-decisions",
+  "version": "early-game-rules/0.3-c01-c09",
   "as_of": "2026-10-23",
   "status": "DRAFT_user_project_decisions_integrated_historical_values_still_to_qualify",
   "scope": "early-game classic_pvp",
@@ -2200,7 +2200,9 @@
         ],
         "policy_version": "s2-p0-draft-2026-10-23",
         "historical_evidence_unchanged": true
-      }
+      },
+      "project_contract_override": "Initial heritage budget is 1000 points for every new world; no inter-world persistence or progression; values and purchases remain design hypotheses.",
+      "clarification_ref": "docs/decisions/P0-CLARIFICATIONS-C01-C09-2026-10-23.md"
     },
     {
       "id": "RM-WRD-010",
@@ -2263,7 +2265,9 @@
         ],
         "policy_version": "s2-p0-draft-2026-10-23",
         "historical_evidence_unchanged": true
-      }
+      },
+      "project_contract_override": "Each player gets three friend codes, each single-use and consumed only after a successful new-player spawn.",
+      "clarification_ref": "docs/decisions/P0-CLARIFICATIONS-C01-C09-2026-10-23.md"
     },
     {
       "id": "RM-WRD-012",
@@ -2296,7 +2300,9 @@
         ],
         "policy_version": "s2-p0-draft-2026-10-23",
         "historical_evidence_unchanged": true
-      }
+      },
+      "project_contract_override": "Protected city blocks hostile PvP military orders, while regional PvE, friendly travel and allied incoming caravans remain permitted.",
+      "clarification_ref": "docs/decisions/P0-CLARIFICATIONS-C01-C09-2026-10-23.md"
     },
     {
       "id": "RM-WRD-013",
@@ -2395,7 +2401,9 @@
         ],
         "policy_version": "s2-p0-draft-2026-10-23",
         "historical_evidence_unchanged": true
-      }
+      },
+      "project_contract_override": "NPCs can respawn on a plot unused for seven days; successful repeated combat may award XP and artifact loot.",
+      "clarification_ref": "docs/decisions/P0-CLARIFICATIONS-C01-C09-2026-10-23.md"
     },
     {
       "id": "RM-REG-011",
@@ -2424,7 +2432,9 @@
         ],
         "policy_version": "s2-p0-draft-2026-10-23",
         "historical_evidence_unchanged": true
-      }
+      },
+      "project_contract_override": "All site types share a near-regular toroidal spatial lattice, with displacement up to two world cells from grid anchors; spacing tuned per world preset.",
+      "clarification_ref": "docs/decisions/P0-CLARIFICATIONS-C01-C09-2026-10-23.md"
     },
     {
       "id": "RM-ECO-012",
@@ -2549,7 +2559,9 @@
         ],
         "policy_version": "s2-p0-draft-2026-10-23",
         "historical_evidence_unchanged": true
-      }
+      },
+      "project_contract_override": "After clearing, mines produce automatically and use the historical mine improvement path of up to ten levels. No additional five-level drilling system.",
+      "clarification_ref": "docs/decisions/P0-CLARIFICATIONS-C01-C09-2026-10-23.md"
     },
     {
       "id": "RM-ECO-016",
@@ -2582,7 +2594,9 @@
         ],
         "policy_version": "s2-p0-draft-2026-10-23",
         "historical_evidence_unchanged": true
-      }
+      },
+      "project_contract_override": "If hourly upkeep is unaffordable, all available gold in the garrison city is consumed and ceil(10% of each nonempty stack) soldiers die.",
+      "clarification_ref": "docs/decisions/P0-CLARIFICATIONS-C01-C09-2026-10-23.md"
     },
     {
       "id": "RM-CIT-009",
@@ -3001,7 +3015,9 @@
         ],
         "policy_version": "s2-p0-draft-2026-10-23",
         "historical_evidence_unchanged": true
-      }
+      },
+      "project_contract_override": "World truce from 23:00 to 06:00 uses one configurable IANA time zone per world, respecting its civil-time rules.",
+      "clarification_ref": "docs/decisions/P0-CLARIFICATIONS-C01-C09-2026-10-23.md"
     },
     {
       "id": "RM-TIM-006",
@@ -3091,7 +3107,9 @@
         ],
         "policy_version": "s2-p0-draft-2026-10-23",
         "historical_evidence_unchanged": true
-      }
+      },
+      "project_contract_override": "General action queues are forbidden, but scheduled repeating caravans are explicitly allowed and each departure revalidates resources and permissions.",
+      "clarification_ref": "docs/decisions/P0-CLARIFICATIONS-C01-C09-2026-10-23.md"
     },
     {
       "id": "RM-WRD-014",
