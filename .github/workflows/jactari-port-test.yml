@@ -3,10 +3,12 @@ on:
   push:
     paths:
       - 'tools/jactari-port/**'
+      - 'data/Jactari/src/scripts/combat.min.js'
       - '.github/workflows/jactari-port-test.yml'
   pull_request:
     paths:
       - 'tools/jactari-port/**'
+      - 'data/Jactari/src/scripts/combat.min.js'
       - '.github/workflows/jactari-port-test.yml'
   workflow_dispatch:
 permissions:
