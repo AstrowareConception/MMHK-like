@@ -85,3 +85,20 @@ node --test tools/jactari-port/*.test.mjs
 **31 tests validés localement** sur quatre suites : 8 duels, 7 bonus, 8 rencontres multi-pelotons et 8 tests de salves. Les résultats doivent encore être comparés **différentiellement** contre une exécution du Jactari original ; la correspondance des seules branches arithmétiques ne prouve pas une fidélité historique totale.
 
 Le sous-ensemble est réutilisable dans les futures opérations PvE, PvP et simulateur, **mais ne doit pas encore être utilisé comme arbitre de combat officiel d'un serveur multijoueur**. Son code est une adaptation de la source GPLv3+ de Jactari ; conserver les mentions de licence.
+
+
+## Orchestrateur intégré et test différentiel (23 octobre 2026)
+
+`battle.mjs` expose `simulateSupportedBattle` : snapshots immuables, **salves préalables simultanées** (`ranged.mjs`) puis **mêlée ordonnée** de sept pelotons (`encounter.mjs`). Six scénarios supplémentaires couvrent les tirs décisifs, la destruction mutuelle, les deux phases consécutives, l'immutabilité des entrées et les rejets de fonctionnalités inconnues.
+
+**37 tests locaux passants** (31 précédents + 6 tests de l'orchestrateur). L'outil `differential.test.mjs` ajoute **350 duels déterministes** exécutés en parallèle logique contre `simulation_combat(tour)` originale, chargée dans un contexte isolé `node:vm`. Il compare les deux camps, leurs pertes, leurs survivants, égalités et faux-nuls. **Ce nouveau test différentiel est enregistré dans GitHub, mais son résultat CI n'est pas encore vérifié.** Les 350 comparaisons ne sont donc pas à inclure dans le total de tests effectivement passants tant qu'il n'a pas été exécuté.
+
+Commande de validation complète :
+
+```bash
+node --test tools/jactari-port/*.test.mjs
+```
+
+**Périmètre et honnêteté d'intégration :** les salves et la mêlée sont désormais composées, mais ni la magie, ni les résurrections, ni la fuite S2, ni le calcul final des morts permanentes ne sont portés. Le moteur **refuse** ces phases au lieu de fabriquer un combat complet. Dans Jactari, les règles d'ordre des tirs et les modificateurs dépendent de davantage de conditions que cet orchestrateur volontairement limité. Il faut donc le qualifier de **sous-ensemble expérimental du moteur Jactari**, non d'une implémentation historiquement équivalente.
+
+**Suite prioritaire :** exécuter et corriger si nécessaire les 350 vérifications différentielles, constituer des fixtures complètes issues du client d'origine, puis isoler les sorts, les pertes permanentes et la gestion exacte des combats au-delà des simples duels.
