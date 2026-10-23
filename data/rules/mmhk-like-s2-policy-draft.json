@@ -1,0 +1,499 @@
+{
+  "schema_version": 1,
+  "version": "s2-p0-draft-2026-10-23",
+  "product": "MMHK-like",
+  "status": "decisions_recorded_not_fully_parameterized_not_yet_executable",
+  "decision_registry": "data/decisions/p0-2026-10-23.json",
+  "historical_fidelity": {
+    "target_season": 2,
+    "unknown_rule_strategy": "historically_most_plausible_documented",
+    "balance_corrections": "targeted_and_traced",
+    "baseline_source": "S1/S2 priority; Jactari 2013 as candidate oracle only",
+    "question_refs": [
+      "Q01",
+      "Q02",
+      "Q03",
+      "Q40",
+      "Q69"
+    ]
+  },
+  "prototype": {
+    "faction": "HAVEN",
+    "tiers": [
+      1,
+      2,
+      3
+    ],
+    "magic_enabled": false,
+    "clock_multiplier": {
+      "normal": 1,
+      "test_value": null
+    },
+    "question_refs": [
+      "Q04",
+      "Q05",
+      "Q06"
+    ]
+  },
+  "initial_legacy": {
+    "equal_points_for_all_new_players": true,
+    "points_amount": null,
+    "allocation": "free_by_player",
+    "applicable_to_initial_hero": true,
+    "question_refs": [
+      "Q01",
+      "Q29"
+    ]
+  },
+  "world": {
+    "topology": "torus",
+    "size_presets": {
+      "very_small": {
+        "target_players_examples": [
+          20,
+          50,
+          100
+        ],
+        "dimensions": null
+      },
+      "small": {
+        "max_players_exclusive": 200,
+        "dimensions": null
+      },
+      "medium": {
+        "max_players_exclusive": 500,
+        "dimensions": null
+      },
+      "large": {
+        "max_players_inclusive": 2000,
+        "dimensions": null
+      },
+      "very_large": {
+        "max_players": null,
+        "dimensions": null
+      }
+    },
+    "player_spawn": "balanced_progressive",
+    "colonization": {
+      "requires_empty_region": true,
+      "own_or_alliance_influence": true,
+      "foreign_influence_forbidden": true,
+      "exceptional_distance_outside_influence": null,
+      "special_terrain_policy": "deferred"
+    },
+    "friend_codes": {
+      "issued_per_world_player": 3,
+      "usage_limit_per_code": null,
+      "expiry": null,
+      "near_distance_preferred": {
+        "min": 4,
+        "max": 10,
+        "adjustable": true
+      },
+      "fallback": "expand_search_radius",
+      "source_and_target_world": "same",
+      "collision_prevention": true
+    },
+    "protection": {
+      "duration_days": 7,
+      "early_cancellation": false,
+      "second_city_during_protection": false,
+      "active_for_late_joiners": true,
+      "unlimited_immunity_of_last_city_to_conquest": true,
+      "after_end_last_city_can_be_pillaged": true,
+      "source_or_destination_check": "on_dispatch",
+      "protected_city_map_indicator": true,
+      "allied_material_convoys_incoming_allowed": true,
+      "scope_of_other_hostile_actions": "clarify"
+    },
+    "start_city": {
+      "city_buildings": [
+        "VILLAGE_HALL"
+      ],
+      "extra_city_buildings": [],
+      "hero_count": 1,
+      "starter_resources": null,
+      "starter_units": {
+        "allowed_tiers": [
+          1,
+          2,
+          3
+        ],
+        "total_power_target": null
+      }
+    },
+    "starter_mines": {
+      "gold": 1,
+      "wood": 1,
+      "ore": 1,
+      "faction_primary_rare": "HAVEN: crystal; other factions pending evidence",
+      "count": 4
+    },
+    "question_refs": [
+      "Q07",
+      "Q08",
+      "Q09",
+      "Q10",
+      "Q11",
+      "Q19",
+      "Q20",
+      "Q21",
+      "Q22",
+      "Q23",
+      "Q24",
+      "Q25",
+      "Q26",
+      "Q27",
+      "Q28",
+      "Q29",
+      "Q30"
+    ]
+  },
+  "region": {
+    "ordinary_grid": [
+      5,
+      5
+    ],
+    "center": [
+      2,
+      2
+    ],
+    "mine_count": 4,
+    "regular_region_mines": {
+      "types_unique_count": [
+        3,
+        4
+      ],
+      "max_occurrences_per_resource": 2,
+      "max_distinct_pairs": 1,
+      "mandatory_gold": false,
+      "mandatory_wood": false,
+      "mandatory_ore": false,
+      "rare_weight_equal": true,
+      "complete_sampling_algorithm": null
+    },
+    "mine_position_algorithm": null,
+    "pve_difficulty_by_distance": "increases_from_city_center",
+    "pnj_respawn": {
+      "enabled_on_unused_cleared_plots": true,
+      "idle_days": null,
+      "blocked_if_plot_used": true,
+      "repeated_xp_enabled": true,
+      "repeated_artifact_rewards_enabled": true,
+      "repeat_farm_balance_policy": null
+    },
+    "world_special_sites": {
+      "random": true,
+      "balanced_counts_by_site_type": true,
+      "seeded_generator_proposed": true,
+      "min_distance_same_type_example": 15,
+      "min_distance_any_type": null,
+      "ambiguous_spacing_description": true,
+      "density_based_on_map_size": true
+    },
+    "question_refs": [
+      "Q11",
+      "Q12",
+      "Q13",
+      "Q14",
+      "Q15",
+      "Q16",
+      "Q17",
+      "Q18"
+    ]
+  },
+  "economy": {
+    "resource_account": "per_city",
+    "production": {
+      "display_period": "per_day",
+      "credit_schedule": "periodic",
+      "interval_minutes_target": 15,
+      "interval_status": "proposed_not_fixed",
+      "fractional_accumulator": true,
+      "spendable_only_integer_units": true,
+      "bonus_combination": "sum_percentages_then_apply_to_base",
+      "overflow_on_production": "discard"
+    },
+    "storage": {
+      "per_city": true,
+      "buildings": "silo_and_regional_warehouses",
+      "gold_capacity_derived_from": "administration_level",
+      "on_full_production_ceases": true
+    },
+    "quest_reward_claim": {
+      "inbox_stored_until_claimed": true,
+      "user_initiated": true,
+      "other_reward_types_policy": null
+    },
+    "caravans": {
+      "intercity_transport": true,
+      "interceptable": false,
+      "capacity_develops_with_market": true
+    },
+    "mines": {
+      "start_producing_after_clearance": true,
+      "adjacent_regional_building_bonuses": true,
+      "reference": "S2 costs and yields when available",
+      "additional_drilling_option": {
+        "status": "proposal_not_accepted",
+        "levels": 5,
+        "hero_blocked": true,
+        "production_paused": true,
+        "relationship_to_existing_mine_levels": null
+      }
+    },
+    "maintenance": {
+      "reference": "S1/S2 wanted",
+      "cost_shape": "zero_below_threshold_then_steep_nonlinear",
+      "cost_formula": null,
+      "charged_to": "city_hosting_army",
+      "charge_every_minutes": 60,
+      "unpaid_consequence": "hourly_10_percent_attrition_each_stack",
+      "attrition_rate_percent": 10,
+      "rounding": null,
+      "partial_payment_policy": null,
+      "army_in_transit_policy": null
+    },
+    "question_refs": [
+      "Q32",
+      "Q33",
+      "Q34",
+      "Q35",
+      "Q36",
+      "Q37",
+      "Q38",
+      "Q39",
+      "Q40",
+      "Q41",
+      "Q42",
+      "Q43"
+    ]
+  },
+  "constructions": {
+    "city": {
+      "parallel_slots": 1,
+      "queued_orders": false,
+      "hero_required": false,
+      "spend_at": "start",
+      "cancellation_allowed": false,
+      "fast_mode": {
+        "cost_factor": 1.4,
+        "duration_factor": 0.8
+      },
+      "economy_mode": {
+        "cost_factor": 0.8,
+        "duration_factor": 1.4
+      },
+      "regular_mode": {
+        "cost_factor": 1,
+        "duration_factor": 1
+      },
+      "modifier_rounding": null,
+      "city_level_increment_per_construct_or_upgrade": 1,
+      "city_level_exceptions": null
+    },
+    "region": {
+      "concurrent_buildings_allowed": true,
+      "hero_required_per_building": 1,
+      "hero_blocked_including_defense": true,
+      "movement_to_site_required": true,
+      "city_fast_economy_modes_available": false,
+      "cancellation_allowed": false,
+      "spend_at": "start"
+    },
+    "upgrades": {
+      "previous_effects_replaced_at_completion": true,
+      "dependents_without_prerequisite": "inactive_not_deleted"
+    },
+    "siege": {
+      "ongoing_buildings_complete": true,
+      "new_buildings_blocked": true,
+      "cannot_cancel_or_accelerate": true
+    },
+    "question_refs": [
+      "Q44",
+      "Q45",
+      "Q46",
+      "Q47",
+      "Q48",
+      "Q49",
+      "Q50",
+      "Q51",
+      "Q52",
+      "Q53"
+    ]
+  },
+  "heroes": {
+    "tavern": {
+      "available_offers": 2,
+      "refresh_free": true,
+      "refresh_cooldown_hours": 12,
+      "recruitment_price": "historical_and_increasing",
+      "arrival_delay": "historical_increasing",
+      "first_arrival_minutes_recollection": 15,
+      "last_arrival_days_recollection": 3,
+      "full_cost_curve": null,
+      "full_delay_curve": null
+    },
+    "max_owned_per_player_world": 15,
+    "level_max": 40,
+    "career_slots": 3,
+    "career_unlock": "progressive",
+    "respecialization": "historical_rules_to_research",
+    "passive_bonus_scope": "in_city_and_not_moving_world_or_region",
+    "inventory": {
+      "hero_backpack_slots": null,
+      "equipment_slots": "historical_per_artifact_slot",
+      "city_artifact_store": true,
+      "transfer_between_heroes": "via_city_storage",
+      "on_city_capture": "captor_takes_city_artifacts"
+    },
+    "artifact_sources": [
+      "regional_combat_loot",
+      "quest_reward",
+      "inheritance"
+    ],
+    "artifact_reward_plots_per_city": null,
+    "magic": {
+      "city_guild_circles": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "one_spell_per_circle_per_guild": true,
+      "full_coverage_requires_multiple_guilds": true,
+      "hero_memorized_spells_count": null,
+      "preprogrammed_per_battle_turn": true,
+      "learn_or_change_in_city": true
+    },
+    "question_refs": [
+      "Q29",
+      "Q54",
+      "Q55",
+      "Q56",
+      "Q57",
+      "Q58",
+      "Q59",
+      "Q60",
+      "Q61",
+      "Q62",
+      "Q63"
+    ]
+  },
+  "recruitment": {
+    "credit_interval_minutes": 60,
+    "accumulate_fractions_until_whole": true,
+    "pool_shared_between_basic_and_upgraded_by_tier": true,
+    "purchase_instant": true,
+    "purchased_units_location": "city_garrison",
+    "transfer_to_hero_requires_hero_in_city": true,
+    "upgrade": {
+      "whole_stack_only": true,
+      "instant": true,
+      "cost_per_unit_times_stack_count": true,
+      "partial_stack_upgrade": false
+    },
+    "army_stack_limit": 7,
+    "question_refs": [
+      "Q64",
+      "Q65",
+      "Q66",
+      "Q67",
+      "Q68"
+    ]
+  },
+  "combat": {
+    "source_of_truth_proposed": "Jactari community calculator",
+    "source_status": "community_oracle_high_confidence_from_user_not_server_certification",
+    "phase_order": "Jactari",
+    "admission_and_flee_thresholds": "Jactari",
+    "deterministic": true,
+    "simulator_provided_to_players": true,
+    "casualties": "Jactari",
+    "random_tiebreak": "Jactari_to_inspect",
+    "pnj_and_invocations": "Jactari",
+    "hero_wounded": {
+      "returns_to_city": true,
+      "duration_increases_with_level": true,
+      "formula": null
+    },
+    "xp_formula": "Jactari_to_inspect_with_wheel_and_hero_effects",
+    "reports": "full_detail_like_Jactari",
+    "visibility_policy": null,
+    "question_refs": [
+      "Q69",
+      "Q70",
+      "Q71",
+      "Q72",
+      "Q73",
+      "Q74",
+      "Q75",
+      "Q76",
+      "Q77",
+      "Q78",
+      "Q79"
+    ]
+  },
+  "timing": {
+    "regional_missions": {
+      "roundtrip_duration_by_distance": true,
+      "formula": null
+    },
+    "events_same_timestamp": {
+      "business_priority": "none_fixed",
+      "execution_order": "arbitrary_commit_order",
+      "persist_applied_order_for_replay": true
+    },
+    "server_recovery": "catch_up_elapsed_time",
+    "world_map_truce": {
+      "start_local": "23:00",
+      "end_local": "06:00",
+      "timezone": null,
+      "pauses": [
+        "hero_world_travel",
+        "attacks_world_travel",
+        "caravans_world_travel"
+      ],
+      "regional_action_effect": null
+    },
+    "outbound_recall": {
+      "allowed_only_before_arrival": true,
+      "return_duration_equals_elapsed_outbound": true,
+      "halt_allowed_to_be_attacked": true,
+      "halt_duration_hours": 2,
+      "halt_after_move_points": null,
+      "halt_not_required_in_own_alliance_influence": true
+    },
+    "programming": {
+      "future_order_queues": false,
+      "exception_for_historical_repeated_caravan_to_clarify": true
+    },
+    "question_refs": [
+      "Q06",
+      "Q80",
+      "Q81",
+      "Q82",
+      "Q83",
+      "Q84"
+    ]
+  },
+  "pending_clarifications": [
+    "inheritance_starting_points_quantity_and_spend_scope",
+    "special_site_spacing_15_same_type_vs_all",
+    "friend_codes_single_use_and_expiry",
+    "idle_pnj_respawn_interval_and_reward_farming_policy",
+    "new_drilling_vs_existing_mine_levels",
+    "hourly_attrition_rounding_and_partial_payment",
+    "protection_hostile_military_orders_vs_local_pve_and_friendly_missions",
+    "world_truce_timezone",
+    "repeated_caravan_programming_exception"
+  ],
+  "validation": {
+    "historical_numeric_catalogue_ready": false,
+    "PAR_01_ready": false,
+    "all_decisions_consigned": true,
+    "requires_rule_versioning": true
+  }
+}
