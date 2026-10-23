@@ -145,3 +145,18 @@ console.log(result.permanent.attacker.totals);
 Sept tests `report.test.mjs` sont ajoutés, couvrant la conversion, l'addition des salves, la résurrection, l'immuabilité et les rejets. **Le workflow CI doit encore confirmer leur passage.**
 
 Limite critique : les **sorts généraux, résurrections pendant le combat, fuite, blessures et sièges** ne sont pas intégrés au rapport. Les fonctions `losses.mjs` et `magic-revival.mjs` sont disponibles séparément ; appliquer arbitrairement des effets en cours de combat fausserait la simulation complète. Les scénarios non supportés sont refusés. Cette API **n'est pas un arbitre de combat S2 certifié**.
+
+
+## Extraction partielle de lancement_sorts — effets magiques (23/10/2026)
+
+Nouveau module pur **`magic-effects.mjs`**, extrait de branches identifiées de `lancement_sorts(tour)` dans `data/Jactari/src/scripts/combat.min.js` :
+
+- `resolveSingleTargetDamageSpell` : **type=0, cible=4, unité=1/3/7** ; dégâts par combattant, pourcentage de la puissance totale ou dégâts fixes ; plafonnement de puissance et `Math.floor` des unités éliminées.
+- `resolveHeroDefenseDebuff` : **type=3, cible=6, unité=5/6** ; réduction brute ou proportionnelle de la défense modifiée du héros cible.
+- `resolveAttackStackBuff` : **type=4, cible=5, unité=0/1/2/3** ; renfort de peloton à partir de la puissance effective du sort, avec arrondi inférieur.
+
+**11 tests supplémentaires** : `magic-effects.test.mjs`, couvrant calcul des dégâts, plafonnement, arrondis, bonus et cas invalides.
+
+Les entrées sont des **puissances de sort déjà calculées** : `puissance_effective_sort` (résistances, affinés, héros, artéfacts), la sélection de cible, l'ordre des sorts attaquant/défenseur, les effets de masse, la magie curative et le calendrier des tours ne sont pas encore portés. **Ces fonctions ne sont pas automatiquement appelées par `battle.mjs`**, qui refuse encore la magie ; cette séparation évite de simuler une bataille incomplète comme si elle était fidèle.
+
+Exécuter `node --test tools/jactari-port/*.test.mjs` dans une copie locale du dépôt. Le succès CI des nouveaux tests et des tests différentiels historiques n'a **pas été établi** durant cette intervention.
