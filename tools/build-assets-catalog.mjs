@@ -5,7 +5,8 @@
  *
  * Usage : node tools/build-assets-catalog.mjs
  */
-import { readFileSync, writeFileSync } from 'node:fs';
+import { readFileSync, writeFileSync, existsSync } from 'node:fs';
+import { createHash } from 'node:crypto';
 import { resolve, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -93,6 +94,20 @@ for (const item of entries.values()) {
     item.sha256 = local.sha256;
   }
   item.versions.sort();
+  // Intègre automatiquement les nouveaux GIF/JPG/PNG extraits par
+  // recover-wayback-assets.py, sans altérer le manifeste figé de 2026-10-23.
+  if (!item.in_repo && item.logical_path.startsWith('img/')) {
+    for (const version of item.versions) {
+      const relative = 'data/assets-recovered/ubisoft-archive/' + version + '/' + item.logical_path;
+      const absolute = resolve(root, relative);
+      if (!existsSync(absolute)) continue;
+      item.in_repo = true;
+      item.availability = 'in_repo';
+      item.repo_path = relative;
+      item.sha256 = createHash('sha256').update(readFileSync(absolute)).digest('hex');
+      break;
+    }
+  }
 }
 for (const e of expected) {
   const id = 'cdn:' + e.relative_path;
