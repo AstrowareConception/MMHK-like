@@ -8,6 +8,8 @@ Les [84 décisions P0](../decisions/DECISIONS-P0-2026-10-23.md) précisent déso
 
 La priorité proposée est de livrer une **boucle locale persistante avec le Havre**, puis de la faire fonctionner entre plusieurs joueurs. **Le Havre et une première boucle T1–T3 sans magie sont désormais confirmés** (Q04–Q05). Le découpage des livraisons reste une proposition. Les autres factions et la Guerre des Larmes restent dans l'objectif final.
 
+**Lot B — modèles expérimentaux :** le [laboratoire de builds d'hérédité et de génération du monde](../game-design/10-LABS-HEREDITE-MONDE.md) a été publié, suite à l'acceptation des [neuf clarifications](../decisions/P0-CLARIFICATIONS-C01-C09-2026-10-23.md). Il fournit deux modèles paramétrables, un générateur torique et des tests versionnés ; **aucun de ces tests ne démontre encore un jeu serveur opérationnel**, et les coûts d'hérédité proposés ne sont pas les coûts Ubisoft certifiés.
+
 ## 1. Transformer le premier lot en travail prêt à réaliser
 
 Les 300 fiches constituent le périmètre fonctionnel, pas un ordre de développement. Commencer par les pivots suivants, puis leurs dépendances ; une fiche partiellement réalisée ne devient pas « terminée » si certains de ses critères restent hors du prototype.
