@@ -1,0 +1,119 @@
+{
+  "date": "2026-10-23",
+  "kind": "executed_synthetic_not_s2",
+  "runs": 162,
+  "parameter_file": "data/game-design/relic-wars-lab.json",
+  "input_axes": {
+    "occupancy": [
+      0.4,
+      0.7,
+      1
+    ],
+    "density_at_reference": [
+      120,
+      170,
+      220
+    ],
+    "upkeep_multipliers": [
+      1,
+      3
+    ],
+    "reinforcement": [
+      "economic",
+      "mixed",
+      "military"
+    ],
+    "seeds": [
+      11,
+      23,
+      47
+    ],
+    "simulated_days": 16
+  },
+  "mean_results": [
+    {
+      "density": 120,
+      "occupancy": 40,
+      "site_control_percent": 12.2,
+      "direct_alliance_switches": 0,
+      "upkeep_saved": 1135.9,
+      "gold_bonus": 498.7
+    },
+    {
+      "density": 170,
+      "occupancy": 40,
+      "site_control_percent": 9,
+      "direct_alliance_switches": 0,
+      "upkeep_saved": 821.9,
+      "gold_bonus": 257
+    },
+    {
+      "density": 220,
+      "occupancy": 40,
+      "site_control_percent": 4,
+      "direct_alliance_switches": 0,
+      "upkeep_saved": 515.9,
+      "gold_bonus": 529.3
+    },
+    {
+      "density": 120,
+      "occupancy": 70,
+      "site_control_percent": 18.3,
+      "direct_alliance_switches": 0.83,
+      "upkeep_saved": 2843.9,
+      "gold_bonus": 1427.5
+    },
+    {
+      "density": 170,
+      "occupancy": 70,
+      "site_control_percent": 13.2,
+      "direct_alliance_switches": 0.11,
+      "upkeep_saved": 2157.1,
+      "gold_bonus": 1135.9
+    },
+    {
+      "density": 220,
+      "occupancy": 70,
+      "site_control_percent": 12.1,
+      "direct_alliance_switches": 0,
+      "upkeep_saved": 2983.3,
+      "gold_bonus": 1977.7
+    },
+    {
+      "density": 120,
+      "occupancy": 100,
+      "site_control_percent": 28.2,
+      "direct_alliance_switches": 0.56,
+      "upkeep_saved": 5526.6,
+      "gold_bonus": 2468.8
+    },
+    {
+      "density": 170,
+      "occupancy": 100,
+      "site_control_percent": 18.6,
+      "direct_alliance_switches": 0.83,
+      "upkeep_saved": 4452.3,
+      "gold_bonus": 3105.7
+    },
+    {
+      "density": 220,
+      "occupancy": 100,
+      "site_control_percent": 14.6,
+      "direct_alliance_switches": 0.72,
+      "upkeep_saved": 5589,
+      "gold_bonus": 3001.1
+    }
+  ],
+  "interpretation": "With random scattered sites and cities, most sites remain uncontrolled and direct rival ownership switches are rare. The model does not measure strategic contention properly without targeted frontier strategies and colonies.",
+  "caveats": [
+    "only one city per player",
+    "base upkeep synthetic and capped -80% reduction when many Sphinx",
+    "military snapshots daily with zero-padded four-day window",
+    "gold normalization not historical S2",
+    "no real front-line colonization, PvP siege, or city capture",
+    "site counts depend on map preset and near-grid spacing",
+    "no military troop movements, each city reinforcement abstracts new units",
+    "owner changes include changes from neutral not just rival switches"
+  ],
+  "source_files": "Downloadable Python files and complete raw JSON in conversation; GitHub holds summary."
+}
