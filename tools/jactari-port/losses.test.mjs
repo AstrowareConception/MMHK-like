@@ -38,7 +38,7 @@ test('NPC defender with attrition uses battlefield losses',()=>{
  assert.equal(r.reports[0].permanent,2);
 });
 test('source skill modifier sums correctly',()=>{
- assert.equal(casualtyModifier({ownHero:{bonus_logisticien:10},enemyHero:{bonus_massacreur:15},side:'defender',tearsLossBonus:5}),.10);
+ assert.ok(Math.abs(casualtyModifier({ownHero:{bonus_logisticien:10},enemyHero:{bonus_massacreur:15},side:'defender',tearsLossBonus:5})-.10)<1e-12);
 });
 test('reject non-seven slot input',()=>assert.throws(()=>final([s(10,10,2)]),RangeError));
 test('do not modify source slots',()=>{
