@@ -1,0 +1,70 @@
+{
+  "date": "2026-10-24",
+  "version": "jactari-v5.7-midbattle-revival",
+  "model": "GPL-derived Jactari subset; not a complete historically verified S2 engine",
+  "source_reference": "data/Jactari/src/scripts/combat.min.js",
+  "port_files": [
+    "tools/jactari-port/magic-rounds.mjs",
+    "tools/jactari-port/magic-revival.mjs",
+    "tools/jactari-port/magic-report.mjs"
+  ],
+  "changes": [
+    "Type 2 spell target 8, unit 2: temporary post-duel resurrection, distinct raisedDuringBattle/temporaryRevived tally",
+    "Type 2 spell target 9, unit 2: definitive post-duel resurrection, subtracting recorded round losses",
+    "Attacker and defender each may schedule one revival per turn using historical side order",
+    "Return persistentArmies derived from original garrison minus permanent casualties, never from magic battlefield remaining",
+    "Fail closed when permanent casualties exceed initial troop count"
+  ],
+  "tests": {
+    "local_pass": 72,
+    "local_fail": 0,
+    "new_integration_assertions": 12,
+    "source_branch_numeric_comparisons": 350,
+    "local_reference_basis": "transcribed numeric excerpt of original Jactari; GitHub differential test executes excerpt directly extracted from source file",
+    "full_github_ci_verified": false
+  },
+  "demonstration": {
+    "input": {
+      "attacker": {
+        "count": 100,
+        "unitPower": 10
+      },
+      "defender": {
+        "count": 50,
+        "unitPower": 10
+      },
+      "one_spell": {
+        "type": 2,
+        "unit": 2,
+        "power_percent": 50
+      },
+      "loss_factor": 0.25
+    },
+    "temporary": {
+      "revived": 25,
+      "battlefield_remaining_attacker": 75,
+      "temporary_units": 25,
+      "attacker_permanent_dead": 6,
+      "attacker_persistent_count": 94,
+      "defender_persistent_count": 38
+    },
+    "definitive": {
+      "revived": 25,
+      "battlefield_remaining_attacker": 75,
+      "temporary_units": 0,
+      "attacker_permanent_dead": 6,
+      "attacker_persistent_count": 94,
+      "defender_persistent_count": 38
+    },
+    "note": "Both routes happen to have same final permanent death count under this illustrative fixture; accounting is different."
+  },
+  "exclusions": [
+    "mana and spell availability",
+    "full magic schools and summons",
+    "historical cleanup of temporary resurrection at last combat round",
+    "complete reports differential against Jactari",
+    "PvP travel, fortifications, hero injuries",
+    "actual Ubisoft S2 lossFactor"
+  ],
+  "download_archive": "MMHK_Jactari_resurrection_v57_2026-10-24.zip"
+}
