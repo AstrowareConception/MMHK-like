@@ -66,3 +66,14 @@ test('persistent survivors come from initial garrison minus permanent dead',()=>
  assert.equal(r.persistentArmies.attacker[0].count,88);
  assert.equal(r.persistentArmies.attacker[0].weapon,'I');
 });
+
+test('both sides can schedule a revival and resolve each effect after melee',()=>{
+ const r=fight(100,50,{attackerSpells:{1:spell('def',50)},defenderSpells:{1:spell('tmp',50)}});
+ assert.deepEqual(r.events.map(x=>x.phase),['spell','spell','duel','revival','revival']);
+ assert.equal(r.events[3].revived,25);
+ assert.equal(r.events[4].revived,0);
+});
+test('persistent army projection refuses impossible dead-unit counts',()=>{
+ assert.throws(()=>simulateDualMagicBattleReport({attackers:army(stack(100)),defenders:army(stack(50)),
+  lossPolicy:{lossFactor:3}}),/Final losses outside original troop count/);
+});
