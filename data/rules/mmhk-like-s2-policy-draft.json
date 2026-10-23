@@ -49,6 +49,7 @@
     "topology": "torus",
     "size_presets": {
       "very_small": {
+        "max_players_exclusive": 200,
         "target_players_examples": [
           20,
           50,
@@ -57,11 +58,11 @@
         "dimensions": null
       },
       "small": {
-        "max_players_exclusive": 200,
+        "max_players_exclusive": 500,
         "dimensions": null
       },
       "medium": {
-        "max_players_exclusive": 500,
+        "max_players": null,
         "dimensions": null
       },
       "large": {
@@ -147,7 +148,8 @@
       "Q28",
       "Q29",
       "Q30"
-    ]
+    ],
+    "size_preset_note": "User named very small <200, small <500, large <=2000; medium and very large size/capacity to be designed. Examples of 20/50/100-player worlds remain permitted within very small."
   },
   "region": {
     "ordinary_grid": [
