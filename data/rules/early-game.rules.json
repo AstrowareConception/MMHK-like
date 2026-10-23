@@ -32,9 +32,9 @@
     "combatCases": "data/combat-reference-cases.json"
   },
   "counts": {
-    "rules": 89,
+    "rules": 90,
     "domains": {
-      "monde": 13,
+      "monde": 14,
       "region": 11,
       "economie": 16,
       "construction": 12,
@@ -51,7 +51,7 @@
       "unconfirmed_recollection": 2,
       "blocked_by_evidence": 7,
       "reference_observed": 4,
-      "confirmed_direction_with_parameters_open": 24,
+      "confirmed_direction_with_parameters_open": 25,
       "confirmed_project_rule": 5
     }
   },
@@ -3088,6 +3088,40 @@
         "source": "data/decisions/p0-2026-10-23.json",
         "question_refs": [
           "Q84"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-WRD-014",
+      "domain": "monde",
+      "title": "Colonisation soumise à l'influence et à une case libre",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "Le joueur ne peut coloniser que des régions inoccupées et admissibles de sa zone d'influence ou de celle de son alliance, sans colonisation dans l'influence d'un tiers.",
+      "contract": "Refuser toute implantation sur une ville ou un site spécial occupé et sous influence adverse ; limiter une éventuelle extension à une/deux cases au-delà de sa frontière selon le barème restant à rechercher. Les types de terrains bloquants restent une variante à étudier.",
+      "us": [
+        "US-MON-006",
+        "US-MON-007"
+      ],
+      "unknowns": [
+        "U15",
+        "U16"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [
+        "colonization_influence_scope",
+        "colonization_extension_radius",
+        "special_terrain_policy"
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q10"
         ],
         "policy_version": "s2-p0-draft-2026-10-23",
         "historical_evidence_unchanged": true
