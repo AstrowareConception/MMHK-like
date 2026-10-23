@@ -2,6 +2,8 @@
 
 **24 octobre 2026.** Cette tranche poursuit le portage de `simulation_rencontre` et `lancement_sorts` (sources communautaires Jactari, GPL-3.0-or-later), en isolant deux particularités de leur logique d'origine.
 
+**Validation différentielle complémentaire (exécutée directement sur les sources réelles du dépôt) :** 350 confrontations de pelotons + 350 calculs de relèvement après duel + **1 000 projections de nettoyage de résurrection temporaire** (500 victoires de chaque camp), soit **1 700 comparaisons, zéro divergence**. Cela valide les branches arithmétiques isolées, non la bataille entière. Le test de non-régression correspondant est [terminal-cleanup-differential.test.mjs](../../tools/jactari-port/terminal-cleanup-differential.test.mjs) et les résultats sont [archivés en JSON](../../data/analysis/jactari-v58-differential-2026-10-24.json). Le statut d'exécution GitHub Actions est toujours inconnu.
+
 ## 1. Clôture du dernier tour avec résurrection temporaire
 
 Le Jactari historique distingue `rez='tmp'` et `rez='def'`. Dans la branche d'affichage final du **dernier peloton vainqueur**, il retire `rez_*_nombre` des `nombre_restant` lorsque la dernière résurrection du vainqueur est **temporaire** et concerne bien le peloton actif.
