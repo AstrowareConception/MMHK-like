@@ -1,0 +1,14 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {planSummoning} from './summoning.mjs';
+const catalog=[{faction:1,weapon:'I',unitPower:20},{faction:1,weapon:'I',unitPower:15},{faction:2,weapon:'R',unitPower:50},{faction:1,weapon:'R',unitPower:25}];
+const opposing=[{count:20,unitPower:100},null,null,null,null,null,null];
+const run=(overrides={})=>planSummoning({target:0,unit:0,power:205,casterFaction:1,unitCatalog:catalog,opposingSevenSlots:opposing,...overrides});
+test('summon absolute power and first catalog matching unit',()=>{const r=run();assert.equal(r.creatureIndex,0);assert.equal(r.unitCount,10);assert.equal(r.specialIndex,1);});
+test('percentage summon uses original opposing army power',()=>{const r=run({unit:4,power:15});assert.equal(r.enemyInitialPower,2000);assert.equal(r.summonedPower,300);assert.equal(r.unitCount,15);});
+test('special summon slots 1 then 0, not the regular seven',()=>assert.equal(run({specialSlots:[null,{count:1}]}).specialIndex,0));
+test('unit selection respects faction and weapon',()=>{const r=run({target:1,power:120});assert.equal(r.creatureIndex,3);assert.equal(r.unitCount,4);});
+test('unavailable unit is an explicit no-summon outcome',()=>assert.equal(run({casterFaction:99}).available,false));
+test('unsupported summon unit fails closed',()=>assert.throws(()=>run({unit:9}),RangeError));
+test('returned catalog entry is copied',()=>{const r=run();r.creature.unitPower=1;assert.equal(catalog[0].unitPower,20);});
+test('invalid opposing stack fails closed',()=>assert.throws(()=>run({opposingSevenSlots:[{count:-1,unitPower:100},null,null,null,null,null,null]}),RangeError));
