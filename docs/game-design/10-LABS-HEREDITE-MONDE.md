@@ -27,6 +27,8 @@ node tools/mmhk-heritage-lab.mjs --build '{"resource_yield":5,"attack":5}'
 
 Ce build expérimental coûterait **900 points**, en laissant **100 points inutilisés**. Le calcul du coût n'implique pas que ce soit un build optimal ou une combinaison disponible dans le jeu original.
 
+**Rectificatif de calibrage :** les tailles du tableau initial ne sont plus les presets actifs. Le jeu est désormais calibré pour **70 % des joueurs inscrits au maximum**, selon [le dimensionnement 70 %](13-CALIBRAGE-70-POURCENT.md). Les anciens chiffres restent conservés comme historique expérimental.
+
 ## 2. Générateur du monde : torus et presets
 
 Le [générateur](../../tools/mmhk-world-lab.mjs) prend une graine et un preset de population. Le [fichier de paramètres](../../data/game-design/world-generator-lab.json) propose des dimensions de test :
