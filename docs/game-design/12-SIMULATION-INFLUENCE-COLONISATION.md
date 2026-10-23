@@ -6,11 +6,11 @@
 
 - **100 joueurs**, répartis en dix alliances de dix membres, positions initiales réparties de façon relativement équilibrée sur une **carte torique carrée**.
 - **Six phases de développement** (sans calendrier réel fixé). À la phase finale, les joueurs ont en moyenne **environ trois villes**, au lieu de supposer systématiquement dix.
-- Les rayons d'influence des cités dépendent de l'âge et d'un niveau de garnison simplifié ; **1 à 3 est courant, 4 à 5 plus rare, 6 exceptionnel**. C'est un proxy du coût de stationnement des troupes, **pas** une simulation de leur coût d'entretien en or.
+- Les rayons d'influence des cités dépendent de l'âge et d'un niveau de garnison simplifié ; **1 à 3 est courant, 4 à 5 plus rare ; le maximum théorique 6 n'est pas atteint pendant cet horizon limité à six phases**. C'est un proxy du coût de stationnement des troupes, **pas** une simulation de leur coût d'entretien en or.
 - Le candidat de colonisation est évalué par rapport aux rayons des villes de la même alliance et des autres alliances. Une case dans l'influence adverse est rejetée ; les sites occupés ne sont pas accessibles.
 - **Barème d'expansion fictif** pour isoler le mécanisme : prix de base croissant avec le rang de ville, puis multiplicateur dépendant de la distance `d` hors influence : `1 + 0,37d + 0,08d²`. Il est volontairement marqué **PROP**, sans correspondance historique S2.
 - Trois comportements de joueur : **compact** (privilégie la proximité et le coût), **mixte**, **frontière** (cherche davantage de portée territoriale).
-- Trois graines testées par combinaison ; **36 expériences complètes pour les densités 200–500**, complétées par **21 séries de simulations plus denses (100–240)**, chacune répétée sur trois graines. Ces tailles restent trop faibles pour fournir des intervalles de confiance robustes, mais illustrent fortement la sensibilité au dimensionnement.
+- Trois graines testées par combinaison ; **36 exécutions pour les densités 200–500**, complétées par **21 configurations plus denses (100–240)** répétées sur trois graines (soit **99 exécutions au total**, avec recouvrement des scénarios à 200 régions/joueur). Ces tailles restent trop faibles pour fournir des intervalles de confiance robustes, mais illustrent fortement la sensibilité au dimensionnement.
 
 **Indicateur principal :** nombre de *paires d'alliances distinctes* dont les influences de villes touchent ou se superposent en fin de simulation (rayons plus une marge d'une case). Ce n'est **pas** le nombre de joueurs en guerre ou de villes assiégées.
 
@@ -68,5 +68,7 @@ Pour rendre la simulation crédible, il faut incorporer les règles suivantes au
 **Résultat établi uniquement dans notre modèle :** l'espacement initial et les garnisons modestes freinent nettement la rencontre des influences rivales ; la distribution compacte des villes aggrave le phénomène. L'ordre de grandeur 300–500 régions/joueur ne convient pas à une friction assez précoce **dans ces scénarios**. Il faut choisir la taille finale en fonction d'une **courbe de progression simulée**, pas d'une capacité maximale théorique.
 
 La pénalité de colonisation hors influence a été modélisée, mais son effet quantitatif reste **non démontré** dans le premier tirage. Le profil final conserve donc les dimensions à titre expérimental, en attendant un simulateur davantage couplé à l'économie.
+
+Le script Python effectivement exécuté (avec dépendances NumPy et SciPy) et les résultats bruts sont également fournis comme fichiers de travail dans cette conversation. Leur archivage ultérieur dans GitHub est distinct du rapport synthétique déjà commité.
 
 Données : [résultats structurés](../../data/analysis/territorial-friction-synthetic-2026-10-23.json). Aucune règle historique Ubisoft n'a été inventée.
