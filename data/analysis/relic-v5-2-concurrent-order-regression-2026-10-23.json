@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-23",
+  "experiment": "V5.2 simultaneous-order regression",
+  "status": "executed_python_lab_not_jactari_and_not_ubisoft_S2",
+  "archive": "sandbox:/mnt/data/MMHK_V5_2_simultaneous_orders_2026-10-23.zip",
+  "checks": {
+    "core_assertions": 12,
+    "regression_runs": 30,
+    "paired_order_invariance_tests": 15,
+    "paired_mismatches": 0,
+    "synthetic_sample_model_hours": 24,
+    "simulated_days_in_demo": 10,
+    "demo_hourly_ledger_records": 480,
+    "demo_direct_relic_owner_flips": 0
+  },
+  "scenario_axes": {
+    "seeds": [
+      11,
+      23,
+      47,
+      71,
+      89
+    ],
+    "hourly_upkeep_coefficients": [
+      0.15,
+      2,
+      10
+    ],
+    "order_delivery_variants": [
+      "A_then_B",
+      "B_then_A"
+    ]
+  },
+  "tested_features": [
+    "shared-snapshot order validation",
+    "source-troop reservations",
+    "deterministic synthetic attack resolution",
+    "simultaneous casualties",
+    "city-owned local gold accounts",
+    "24 hourly upkeep installments per day",
+    "10% attrition rounded up per nonempty stack",
+    "rolling four daily snapshots of garrison troop power",
+    "historic 2013 radius thresholds",
+    "toroidal influence and site contest",
+    "deterministic repeat under reversed request order"
+  ],
+  "limitations": [
+    "The combat formula is an intentionally invented deterministic toy and NOT the Jactari automatic combat algorithm",
+    "Attack travel, siege, hero status, recruitment queues and spells are absent",
+    "Reinforcements happen in toy immediate commit without modeled travel",
+    "Relic owner capture or recapture did not occur in the demonstration",
+    "City-level bonus is a synthetic 6500 power per level; its true historical relationship is not validated",
+    "Sphinx/Treasury bonus valuation and net ROI are not yet tested in this engine",
+    "No population 70% scenario in V5.2: unit tests only",
+    "Python scripts are included in linked conversation ZIP; not published as repository source"
+  ],
+  "result": "V5.2 successfully establishes a reproducible correctness baseline rather than a balanced tactical war."
+}
