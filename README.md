@@ -2,7 +2,7 @@
 
 **Objectif : reconstruire le fonctionnement de Might & Magic Heroes Kingdoms avant de développer son successeur jouable par navigateur.** Le présent dépôt contient un référentiel de gameplay, des spécifications fonctionnelles, des données historiques extraites et un plan de validation. Il ne contient pas encore de jeu exécutable.
 
-Version documentaire **0.5 — 23 octobre 2026**. Recherche réalisée à partir des neuf liens fournis, de leurs archives accessibles, de guides communautaires, du code public de MMHK-Plus/Jactari et désormais de fichiers du client Ubisoft archivés. Les mécanismes retrouvés sont distingués des hypothèses et des propositions de reconstruction. **Ce dossier n’est pas une copie certifiée du serveur Ubisoft : plusieurs règles ont changé selon les saisons et certaines informations manquent.**
+Version documentaire **0.6 — 23 octobre 2026**. Recherche réalisée à partir des neuf liens fournis, de leurs archives accessibles, de guides communautaires, du code public de MMHK-Plus/Jactari et désormais de fichiers du client Ubisoft archivés. Les mécanismes retrouvés sont distingués des hypothèses et des propositions de reconstruction. **Ce dossier n’est pas une copie certifiée du serveur Ubisoft : plusieurs règles ont changé selon les saisons et certaines informations manquent.**
 
 La révision 0.2 intègre **57 captures (53 distinctes)** et les **153 fichiers Jactari, dont 96 images**, fournis dans le dépôt. Elle confirme le périmètre **PvP classique avec Guerre des Larmes**, détaille les interfaces et relie les objets aux planches graphiques.
 
@@ -12,13 +12,16 @@ La révision 0.4 ajoute **[29 images retrouvées sur Internet](data/assets-recov
 
 La révision 0.5 analyse la [génération du monde, les sites spéciaux, le code ami et la protection débutant](docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md). Elle ajoute un [outil reproductible de récupération du CDN](tools/recover-wayback-cdn.py) avec reprise et journal de provenance. **Le précédent lot de milliers de téléchargements n'est pas présent dans ce dépôt** ; l'index historique constitue une liste d'archives potentielles, et non un pack local vérifié.
 
+La révision documentaire 0.6 consigne les **84 réponses P0** du porteur de projet : **référence S2, Havre T1–T3, 7 jours de protection, cartes toriques, économie locale et combats Jactari déterministes**. Le référentiel comporte désormais **90 règles métier** ; les décisions de projet sont séparées des preuves historiques encore incomplètes. Voir le [registre de décisions](docs/decisions/DECISIONS-P0-2026-10-23.md).
+
 ## Lire le dossier
 
 | Besoin | Document |
 | --- | --- |
 | Comprendre les règles de génération et d'arrivée des joueurs | [Mines, sites, code ami et protection débutant](docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md) |
 | Relancer la récupération historique | [Outil Wayback](tools/recover-wayback-cdn.py) et [méthode](docs/research/RECHERCHE-ASSETS-2026-10-23.md#7-reprise-de-la-collecte-wayback-après-interruption) |
-| **Règles métier early game et affinage des US** | **[Référentiel de 60 RM et 18 fixtures](docs/rules/README.md)**, [contrats métier](docs/rules/CONTRATS-EARLY-GAME.md), [affinage des US](docs/rules/AFFINAGE-US-L1.md) |
+| **Décisions confirmées Q01–Q84** | **[Synthèse des choix P0](docs/decisions/DECISIONS-P0-2026-10-23.md)**, [profil de référence S2](data/rules/mmhk-like-s2-policy-draft.json), [matrice questions/règles/US](data/decisions/p0-traceability.json) |
+| **Règles métier early game et affinage des US** | **[Référentiel de 90 RM et 18 fixtures](docs/rules/README.md)**, [contrats métier](docs/rules/CONTRATS-EARLY-GAME.md), [affinage des US](docs/rules/AFFINAGE-US-L1.md) |
 | Savoir quoi réaliser maintenant | [Prochaines étapes et premier lot de stories](docs/specifications/PROCHAINES-ETAPES.md) |
 | **Suivre chaque image retrouvée/manquante** | **[Catalogue des 1 425 références](docs/research/CATALOGUE-RESSOURCES-GRAPHIQUES.md)**, [CSV](data/analysis/assets-catalog.csv), [JSON](data/analysis/assets-catalog.json) et [outil de collecte ciblée](tools/recover-wayback-assets.py) |
 | Accéder aux nouveaux assets retrouvés | [Fichiers récupérés](data/assets-recovered/README.md), [recherche et limites](docs/research/RECHERCHE-ASSETS-2026-10-23.md) |
