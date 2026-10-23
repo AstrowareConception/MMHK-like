@@ -21,6 +21,7 @@ La révision documentaire 0.6 consigne les **84 réponses P0** du porteur de pro
 | Comprendre les règles de génération et d'arrivée des joueurs | [Mines, sites, code ami et protection débutant](docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md) |
 | Relancer la récupération historique | [Outil Wayback](tools/recover-wayback-cdn.py) et [méthode](docs/research/RECHERCHE-ASSETS-2026-10-23.md#7-reprise-de-la-collecte-wayback-après-interruption) |
 | **Algorithme de génération proposé (Q12/Q15)** | [Quatre mines, pondérations et positions expérimentales](docs/game-design/09-GENERATEUR-P0-PROPOSITIONS.md) |
+| **Laboratoires d'équilibrage S2** | [Hérédité 1 000 points et carte torique](docs/game-design/10-LABS-HEREDITE-MONDE.md), [générateur Node.js](tools/mmhk-world-lab.mjs), [modèle de builds](data/game-design/heritage-balance-lab.json), [tests](tools/test-mmhk-design-labs.mjs) |
 | **Décisions confirmées Q01–Q84** | **[Synthèse des choix P0](docs/decisions/DECISIONS-P0-2026-10-23.md)**, [profil de référence S2](data/rules/mmhk-like-s2-policy-draft.json), [matrice questions/règles/US](data/decisions/p0-traceability.json) |
 | **Règles métier early game et affinage des US** | **[Référentiel de 90 RM et 18 fixtures](docs/rules/README.md)**, [contrats métier](docs/rules/CONTRATS-EARLY-GAME.md), [affinage des US](docs/rules/AFFINAGE-US-L1.md) |
 | Savoir quoi réaliser maintenant | [Prochaines étapes et premier lot de stories](docs/specifications/PROCHAINES-ETAPES.md) |
