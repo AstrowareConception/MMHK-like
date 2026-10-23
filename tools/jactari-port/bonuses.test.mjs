@@ -1,0 +1,12 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {calculateBonuses} from './bonuses.mjs';
+import {resolveStackDuel} from './core.mjs';
+const b=(a,d,rest={})=>calculateBonuses({attackerWeapon:a,defenderWeapon:d,weaponAdvantageFactor:.5,...rest});
+test('weapon triangle I>C R>I C>R',()=>{for(const [a,d] of [['I','C'],['R','I'],['C','R']])assert.equal(b(a,d).attackWeapon,.5)});
+test('weapon disadvantage',()=>assert.equal(b('C','I').defendWeapon,.5));
+test('same-weapon neutral',()=>assert.equal(b('I','I').attackWeapon,0));
+test('hero tactics and direct unit power',()=>{const x=b('I','C',{attackerHero:{attaque_modifiee:20,bonus_harangueur:3,bonus_tacticien:5,bonus_commandant_infanterie:10}});assert.equal(x.attackStackHero,.25);assert.equal(x.attackUnitsHero,3)});
+test('sapper offsets city defence without going negative',()=>assert.equal(b('I','R',{attackerHero:{bonus_sapeur:40},fortification:{place:1,city:20}}).defendFortification,0));
+test('modifiers passed to pure duel',()=>{const x=b('I','C');const r=resolveStackDuel({attacker:{count:100,unitPower:10},defender:{count:100,unitPower:10},modifiers:x});assert.equal(r.totalPower.attacker,1500)});
+test('invalid weapon refused',()=>assert.throws(()=>b('X','I'),RangeError));
