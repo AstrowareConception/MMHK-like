@@ -1,0 +1,15 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {resolveSingleTargetDamageSpell,resolveHeroDefenseDebuff,resolveAttackStackBuff} from './magic-effects.mjs';
+const target={count:40,unitPower:25};
+test('damage per unit: floor to whole troops',()=>{const r=resolveSingleTargetDamageSpell({target,unit:1,power:8});assert.equal(r.damage,320);assert.equal(r.casualties,12);assert.equal(r.remaining,28);});
+test('damage percent of target stack power',()=>{const r=resolveSingleTargetDamageSpell({target,unit:3,power:25});assert.equal(r.casualties,10);});
+test('fixed damage independent of count',()=>{const r=resolveSingleTargetDamageSpell({target,unit:7,power:130});assert.equal(r.casualties,5);});
+test('damage clamped to available troops',()=>{const r=resolveSingleTargetDamageSpell({target,unit:7,power:5000});assert.equal(r.casualties,40);});
+test('fractional damage cannot create fractional casualties',()=>{const r=resolveSingleTargetDamageSpell({target,unit:7,power:24.99});assert.equal(r.casualties,0);});
+test('invalid spell effect rejected',()=>assert.throws(()=>resolveSingleTargetDamageSpell({target,unit:9,power:20}),RangeError));
+test('flat defense debuff capped to available defense',()=>{const r=resolveHeroDefenseDebuff({defense:20,power:30,unit:5});assert.equal(r.remainingDefense,0);});
+test('percentage debuff retains source arithmetic',()=>{const r=resolveHeroDefenseDebuff({defense:20,power:25,unit:6});assert.equal(r.remainingDefense,15);});
+test('flat buff based on units and power',()=>{const r=resolveAttackStackBuff({target,unit:1,power:5});assert.equal(r.bonusCount,8);});
+test('percentage buff based on stack strength',()=>{const r=resolveAttackStackBuff({target,unit:3,power:20});assert.equal(r.bonusCount,8);});
+test('the original input is preserved',()=>{resolveAttackStackBuff({target,unit:3,power:20});assert.equal(target.count,40);});
