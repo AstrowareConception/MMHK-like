@@ -2,6 +2,8 @@
 
 **23 octobre 2026 · Statut : modèle expérimental exécuté, non certifié Ubisoft S2.**
 
+**Contrôle supplémentaire V5.1 :** une seconde exécution des **35 mêmes scénarios**, avec alternance de l'ordre des alliances selon les jours et graines, a conservé **10 transferts directs de relique** et **23 scénarios où au moins un site est contrôlé**. Ce résultat est un test de sensibilité à l'ordre d'itération, **pas** une démonstration d'équité : l'attribution de ressources ou la réservation des actions reste séquentielle. Le pack remis dans cette conversation inclut **les deux codes Python et leurs sorties JSON complètes**.
+
 ## Objectif et protocole
 
 La V4 ne produisait presque jamais de transferts directs de reliques. La V5 modélise un **duel territorial intentionnel** entre deux alliances de deux joueurs, disposant initialement chacune de deux villes, à proximité d'un Sphinx, d'une Trésorerie et d'un Dolmen. Les 35 scénarios exécutés combinent :
