@@ -24,7 +24,7 @@ city_influence_power(c,D) = military_average(c,D) + domination_from_completed_bu
 influence_radius(c,D) = step(city_influence_power(c,D), thresholds[1..6])
 ```
 
-La fenêtre de démarrage doit définir la présence de jours avant l'inscription : **nous proposons des snapshots zéro pour les jours manquants** afin qu'un joueur fraîchement arrivé ne bénéficie pas instantanément de six jours de garnison. Le laboratoire actuel fait la moyenne des échantillons disponibles ; ce contrat définit donc une **amélioration à introduire avant usage serveur**. Les bonus de domination et leur temporalité exacte restent à qualifier.
+La fenêtre de démarrage doit définir la présence de jours avant l'inscription : **nous proposons des snapshots zéro pour les jours manquants** afin qu'un joueur fraîchement arrivé ne bénéficie pas instantanément de six jours de garnison. Le laboratoire compte les jours manquants comme zéro dans le dénominateur ; le passage ultérieur à un snapshot quotidien horodaté de garnison reste nécessaire. Les bonus de domination et leur temporalité exacte restent à qualifier.
 
 ### Barème d'essai — ABSOLUMENT PAS des seuils Ubisoft certifiés
 
@@ -80,6 +80,20 @@ Résultat du **prototype expérimental** :
 Pour une unique journée avec 500 000 unités précédée de cinq jours sans troupes, la **moyenne vaut 83 333**, donc le rayon d'influence n'atteint pas 6. Cela illustre l'effet de lissage : déplacer une armée pendant une seule journée ne suffit pas à projeter instantanément l'influence maximale.
 
 Ce résultat vérifie le prototype, mais **ne qualifie pas le bon barème historique**.
+
+## Simulation de sensibilité : moyenne sur quatre ou six jours
+
+Un second essai compare deux fenêtres avec les **mêmes seuils synthétiques**, pour une garnison de 500 000 installée du jour 6 au jour 11 puis retirée :
+
+| Événement | Moyenne 4 jours | Moyenne 6 jours |
+| --- | --- | --- |
+| Jour 6, arrivée de 500 000 | Rayon 4 | Rayon 4 |
+| Jour 9 | **Rayon 6** | Rayon 5 |
+| Jour 11 | Rayon 6 | **Rayon 6** |
+| Jour 15, garnison retirée depuis quatre jours | Rayon 1 | Rayon 5 |
+| Jour 17 | Rayon 1 | Rayon 1 |
+
+Cette expérience illustre la **stabilité et l'inertie accrues** d'une fenêtre de six jours : deux jours supplémentaires sont nécessaires pour atteindre le maximum, et la décroissance du territoire est retardée lorsque l'armée quitte la ville. Les chiffres ne certifient pas le fonctionnement du serveur S2.
 
 ## Conséquence pour la V3 économique
 
