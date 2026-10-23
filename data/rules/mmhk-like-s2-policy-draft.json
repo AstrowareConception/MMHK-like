@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "s2-influence-daily-rolling-v1",
+  "version": "s2-relic-influence-v2",
   "product": "MMHK-like",
   "status": "decisions_recorded_not_fully_parameterized_not_yet_executable",
   "decision_registry": "data/decisions/p0-2026-10-23.json",
@@ -263,22 +263,45 @@
         500
       ],
       "influence_model": {
-        "reference_window_days": 6,
+        "reference_window_days": 4,
         "alternative_historical_2009_window_days": 4,
         "refresh": "once_per_world_day",
         "refresh_timezone": "configured_world_timezone",
         "baseline_radius": 1,
         "max_radius": 6,
         "geometry": "discrete_euclidean_disk_on_torus",
-        "candidate_max_military_power_threshold": 500000,
-        "thresholds_status": "all numeric values including 500000 unverified S2; use test values only",
+        "candidate_max_military_power_threshold": 1000000,
+        "thresholds_status": "documented 2013 but need S2 confirmation",
         "building_domination_additive": true,
         "contest_resolution": "per_cell_distance_attenuated_power_across_rival_alliances",
         "allied_aggregation": "sum in experimental lab, exact historical behavior to verify",
         "ownership_vs_influence_separate": true,
         "prototype": "tools/influence_simulation_lab.py",
         "specification": "docs/game-design/16-INFLUENCE-LISSEE-ET-CONTESTEE.md",
-        "replaces_previous_model": "instantaneous_garrison_radius"
+        "replaces_previous_model": "instantaneous_garrison_radius",
+        "alternative_unconfirmed_memory_window_days": 6,
+        "reference_window_status": "user_selects_4_days and corroborated by 2009 and 2013 guides",
+        "thresholds_reference": "data/reference/world-influence-and-sites-2009-2013.json",
+        "influence_strength_components": [
+          "4_day_moving_average_stationed_military_power",
+          "completed_building_domination"
+        ],
+        "recalc_order": "daily snapshots then compute radius/control and bonus ownership; detailed simultaneous event ordering open"
+      },
+      "world_sites": {
+        "types": [
+          "sphinx",
+          "dwarven_treasury",
+          "knowledge_dolmen"
+        ],
+        "bonuses_reference": "data/reference/world-influence-and-sites-2009-2013.json",
+        "capture_mechanism": "automatic_control_through_influence_not_siege",
+        "beneficiary": "entire_controlling_alliance",
+        "cumulative": true,
+        "contestation_key_gameplay": "midgame_influence_wars_around_sites",
+        "endgame_shift": "tear_and_grail_monuments",
+        "claim_timing": "daily_influence_recalculation_candidate",
+        "historic_s2_variants": "research_pending"
       }
     },
     "population_calibration": {
