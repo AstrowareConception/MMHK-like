@@ -238,3 +238,32 @@ Ce portage est un **sous-ensemble déclaré** : il ne simule toujours pas le man
 De plus, **aucun test différentiel de ces nouveaux effets contre le Jactari original exécuté n'a encore été obtenu**. La conformité du calcul dans ces branches reste à confirmer grâce à un banc exécutant la référence communautaire.
 
 Sources à rapprocher : `lancement_sorts`, `simulation_rencontre` et `puissance_effective_sort` dans `data/Jactari/src/scripts/combat.min.js`. Le code adapté conserve la provenance et la licence **GPL-3.0-or-later**.
+
+
+## V5.7 — Résurrection pendant les tours, comparaison originale et armées persistantes (24/10/2026)
+
+Le portage avance sur les branches **`sort.type = 2`, `sort.unite = 2`** de `lancement_sorts` :
+- **`sort.cible = 8`** : relever temporairement des troupes (`rez = 'tmp'`) en fonction des pertes du duel et du pourcentage de puissance de sort.
+- **`sort.cible = 9`** : relever définitivement des troupes (`rez = 'def'`) en fonction des survivants et décrémenter les pertes enregistrées du peloton.
+
+La déclaration du sort intervient avant le duel ; **l'application du relèvement suit le duel**, avec plafond sur l'effectif au début du tour. Le support est symétrique attaquant/défenseur. La fonction `resolvePostDuelRevival()`, déjà présente dans `magic-revival.mjs`, est raccordée à `simulateDualMagicEncounter()`.
+
+### Comptabilité des morts et restitution de l'armée
+
+`magic-report.mjs` propage désormais `raisedDuringBattle` au calcul final `finalizePermanentLosses()`. Le rapport `persistentArmies` projette **effectifs originaux − pertes définitives** : il ne réintroduit pas dans le jeu des troupes temporaires générées au cours de la bataille. Un résultat impossible (plus de morts permanentes que de troupes initiales) provoque une erreur explicite au lieu d'un effectif négatif.
+
+**Point ouvert** : le client Jactari contient un traitement particulier du retrait des résurrections temporaires du dernier peloton gagnant. Cette restitution par armée persistante est une **barrière d'intégrité du serveur**, pas une démonstration d'équivalence avec toutes les branches de clôture Jactari ; à vérifier par rapports complets. Les informations de `encounter.attacker/defender.remaining` sont des **effectifs pendant la bataille**, et non les effectifs à sauvegarder.
+
+### Validation
+
+Le banc local a exécuté **72 tests réussis**, dont **12 nouveaux scénarios** d'intégration (résurrection des deux camps, plafond, corps dispersé, intégrité des pertes et effectifs persistants) et un test comparant **350 combinaisons numériques** de modes et de taux à la transcription de la branche arithmétique originale. Le fichier `magic-revival-differential.test.mjs` présent dans le dépôt extrait directement cette même branche du **fichier historique original** sous `data/Jactari/src/scripts/combat.min.js`, puis l'exécute dans un contexte isolé `node:vm`. Sa propre exécution CI sur le dépôt distant reste **à vérifier**.
+
+Les 72 tests sont issus d'un banc local reconstruit à partir de la dernière archive de code, des nouveaux modules et de l'extrait numérique ; la parité globale de l'ensemble du dépôt et les autres suites différentielles n'est **pas** établie.
+
+```bash
+node --test tools/jactari-port/*.test.mjs
+```
+
+### Limites inchangées
+
+Mana, disponibilité des sorts, tous les types magiques, restauration des invocations, effets de fin de combat et blessures de héros restent hors périmètre. Le coefficient `lossPolicy.lossFactor` n'est toujours **pas une valeur S2 vérifiée**. Ce code adapté de Jactari est identifié **GPL-3.0-or-later** ; ne pas le fusionner sans revue de licences dans un moteur propriétaire.
