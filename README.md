@@ -2,7 +2,7 @@
 
 **Objectif : reconstruire le fonctionnement de Might & Magic Heroes Kingdoms avant de développer son successeur jouable par navigateur.** Le présent dépôt contient un référentiel de gameplay, des spécifications fonctionnelles, des données historiques extraites et un plan de validation. Il ne contient pas encore de jeu exécutable.
 
-Version documentaire **0.4 — 23 octobre 2026**. Recherche réalisée à partir des neuf liens fournis, de leurs archives accessibles, de guides communautaires, du code public de MMHK-Plus/Jactari et désormais de fichiers du client Ubisoft archivés. Les mécanismes retrouvés sont distingués des hypothèses et des propositions de reconstruction. **Ce dossier n’est pas une copie certifiée du serveur Ubisoft : plusieurs règles ont changé selon les saisons et certaines informations manquent.**
+Version documentaire **0.5 — 23 octobre 2026**. Recherche réalisée à partir des neuf liens fournis, de leurs archives accessibles, de guides communautaires, du code public de MMHK-Plus/Jactari et désormais de fichiers du client Ubisoft archivés. Les mécanismes retrouvés sont distingués des hypothèses et des propositions de reconstruction. **Ce dossier n’est pas une copie certifiée du serveur Ubisoft : plusieurs règles ont changé selon les saisons et certaines informations manquent.**
 
 La révision 0.2 intègre **57 captures (53 distinctes)** et les **153 fichiers Jactari, dont 96 images**, fournis dans le dépôt. Elle confirme le périmètre **PvP classique avec Guerre des Larmes**, détaille les interfaces et relie les objets aux planches graphiques.
 
@@ -10,10 +10,14 @@ La révision 0.3 ajoute un **[backlog de 300 user stories](docs/backlog/README.m
 
 La révision 0.4 ajoute **[29 images retrouvées sur Internet](data/assets-recovered/README.md)** : cinq scènes de ville assemblées, des fonds de monde/région, quatre planches de miniatures de bâtiments, une taverne individuelle et des éléments d'interface. Trois fichiers du client historique ont permis d'extraire **215 configurations de placement**. Les fonds de ville vides et la majorité des bâtiments individuels restent manquants. Le [rapport de recherche](docs/research/RECHERCHE-ASSETS-2026-10-23.md) distingue fichiers récupérés et pistes d'archives ; les [prochaines étapes](docs/specifications/PROCHAINES-ETAPES.md) préparent une première boucle jouable et ses stories.
 
+La révision 0.5 analyse la [génération du monde, les sites spéciaux, le code ami et la protection débutant](docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md). Elle ajoute un [outil reproductible de récupération du CDN](tools/recover-wayback-cdn.py) avec reprise et journal de provenance. **Le précédent lot de milliers de téléchargements n'est pas présent dans ce dépôt** ; l'index historique constitue une liste d'archives potentielles, et non un pack local vérifié.
+
 ## Lire le dossier
 
 | Besoin | Document |
 | --- | --- |
+| Comprendre les règles de génération et d'arrivée des joueurs | [Mines, sites, code ami et protection débutant](docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md) |
+| Relancer la récupération historique | [Outil Wayback](tools/recover-wayback-cdn.py) et [méthode](docs/research/RECHERCHE-ASSETS-2026-10-23.md#7-reprise-de-la-collecte-wayback-après-interruption) |
 | Savoir quoi réaliser maintenant | [Prochaines étapes et premier lot de stories](docs/specifications/PROCHAINES-ETAPES.md) |
 | Accéder aux nouveaux assets retrouvés | [Fichiers récupérés](data/assets-recovered/README.md), [recherche et limites](docs/research/RECHERCHE-ASSETS-2026-10-23.md) |
 | Piloter le développement par les besoins joueur | [Backlog de 300 user stories](docs/backlog/README.md), [index complet](docs/backlog/INDEX-STORIES.md) |
@@ -89,3 +93,15 @@ node tools/validate-backlog.mjs
 ```
 
 Ce contrôle vérifie la structure des 300 fiches, leurs 1 500 critères, les dépendances, les références et les liens. Il ne lance pas le jeu. Le [rapport du backlog](docs/backlog/VALIDATION.md) distingue ces vérifications documentaires des futurs tests de gameplay. Le [JSON](data/backlog/user-stories.json) permet l’import dans un outil de suivi sans ressaisie.
+
+## Reprendre la collecte CDN (archive personnelle)
+
+Depuis la racine du dépôt, avec Python 3.9+ et une connexion Internet fonctionnelle :
+
+```bash
+python3 tools/recover-wayback-cdn.py --dry-run --limit 20
+python3 tools/recover-wayback-cdn.py --limit 100
+python3 tools/recover-wayback-cdn.py --limit 0
+```
+
+Le script est séquentiel et reprend les fichiers vérifiés grâce à un registre local. Les résultats sont volontairement **ignorés par Git** et ne constituent pas des ressources sous licence libre. Voir [la méthode et les limites](docs/research/RECHERCHE-ASSETS-2026-10-23.md#7-reprise-de-la-collecte-wayback-après-interruption). Les URLs indexées ne garantissent pas une archive téléchargeable ; les fichiers déjà présents dans `data/assets-recovered` sont conservés séparément.
