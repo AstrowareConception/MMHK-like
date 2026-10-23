@@ -1,8 +1,35 @@
 # Contrôles du référentiel Early Game — 23 octobre 2026
 
-**Résultat : audit croisé documentaire réussi, aucun test du moteur effectué.** Le dépôt n'héberge pas encore un serveur de jeu exécutable.
+**Résultat : audits documentaires initiaux et post-P0 réussis, aucun test de moteur effectué.** Le dépôt n'héberge pas encore un serveur de jeu exécutable.
 
-## Audit croisé réalisé pendant la livraison
+## Validation des réponses P0 et du référentiel révisé
+
+**23 octobre 2026 — audit croisé post-réponses, réalisé sur les fichiers GitHub par l'outil de consultation :**
+
+| Indicateur | Valeur |
+| --- | ---: |
+| Réponses P0 conservées et catégorisées | **84 / 84** |
+| Réponses associées à au moins une règle métier | **84 / 84** |
+| Règles métier versionnées après ajout des décisions | **90** (dont 30 nouvelles depuis le lot A initial) |
+| US distinctes liées aux règles RM | **74** |
+| Fixtures héritées du premier lot A | **18** |
+| Nouveaux exemples d'acceptation centrés sur les décisions P0 | **15** |
+| Vérifications de cohérence réalisées | **1 810** |
+| Échecs détectés dans ces vérifications | **0** |
+| Tests du moteur de jeu réellement exécutés | **0** |
+
+Les contrôles ont couvert les IDs Q/RM, la couverture de toutes les questions, le rattachement aux US existantes et aux incertitudes Uxx, la présence des sources, les liens de traçabilité bilatéraux, le suivi des exemples d'acceptation et plusieurs contraintes structurantes du profil S2 (sept jours, torus, trois codes amis, quatre mines, attrition, chantiers, recrutements, trêve). Ces contrôles ne valident **ni le serveur Ubisoft, ni la fidélité des coûts S2, ni un jeu opérationnel**.
+
+Outils ajoutés :
+```bash
+node tools/validate-p0-decisions.mjs
+node tools/validate-early-game-rules.mjs
+```
+
+Les scripts sont versionnés, mais n'ont **pas été exécutés depuis un clone local dans cette session** : l'accès GitHub du conteneur n'était pas disponible. L'audit annoncé ci-dessus a été effectué sur les données récupérées via le connecteur GitHub. Les cas de [p0-acceptance-examples.json](../../data/decisions/p0-acceptance-examples.json) restent des spécifications et non une suite de tests intégrés au moteur.
+
+## Audit croisé réalisé pendant la livraison initial (60 RM)
+
 
 Le catalogue et les fichiers publiés sur GitHub ont été relus et comparés par des contrôles structurés.
 
