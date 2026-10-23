@@ -279,7 +279,7 @@
     },
     {
       "id": "FX-ECON-004",
-      "kind": "proposed_fixture_not_historical_overflow_rule",
+      "kind": "project_rule_with_synthetic_amounts",
       "rules": [
         "RM-ECO-004"
       ],
@@ -299,13 +299,13 @@
       ],
       "then": [
         "balance capped at 20",
-        "excess 5 is not credited under this synthetic policy"
+        "excess 5 units of production lost under MMHK-like Q37 policy"
       ],
       "expected": {
         "balance": 20,
         "discarded": 5
       },
-      "numeric_status": "production_overflow_policy_pending_U30"
+      "numeric_status": "production_excess_discard_is_user_decision_Q37;cap20_is_synthetic_fixture"
     },
     {
       "id": "FX-ECON-005",
@@ -591,9 +591,9 @@
       ],
       "then": [
         "in loss branch plot remains occupied and mine nonproductive",
-        "in independent victory branch plot becomes cleared and a production-eligible mine"
+        "in independent victory branch plot becomes cleared and its mine produces immediately from liberation"
       ],
-      "numeric_status": "battle_winners_are_injected;server_battle_formula_not_assumed"
+      "numeric_status": "battle_winners_injected;automatic_mine_activation_user_decision_Q39"
     },
     {
       "id": "FX-PVE-002",
@@ -659,9 +659,10 @@
       ],
       "then": [
         "occupied mine cannot produce",
-        "cleared mine can be activated according to configured mine_activation rule"
+        "after an admissible victorious liberation it begins producing immediately, subject to the configured resource cadence"
       ],
-      "numeric_status": "activation_mode_unknown"
+      "numeric_status": "mine_activation_is_user_decided;production_rate_numeric_pending",
+      "notes": "La Q39 du 23/10/2026 impose un démarrage immédiat de production après libération ; la cadence de crédit visible reste paramétrée."
     }
   ]
 }
