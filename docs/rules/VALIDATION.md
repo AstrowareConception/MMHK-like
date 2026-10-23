@@ -14,6 +14,7 @@
 | US distinctes liées aux règles RM | **74** |
 | Fixtures héritées du premier lot A | **18** |
 | Nouveaux exemples d'acceptation centrés sur les décisions P0 | **15** |
+| Générateur expérimental Q12/Q15 | **1 proposition, non simulée** |
 | Vérifications de cohérence réalisées | **1 810** |
 | Échecs détectés dans ces vérifications | **0** |
 | Tests du moteur de jeu réellement exécutés | **0** |
