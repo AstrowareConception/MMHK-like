@@ -2,9 +2,11 @@
 
 Proposition du 23 octobre 2026. Le périmètre confirmé reste le **PvP classique avec Guerre des Larmes**. Le dépôt contient une base documentaire et un backlog ; aucun jalon jouable n'est encore accepté.
 
-**État lot A (23/10/2026) :** le [référentiel de règles métier](../rules/README.md) est créé avec 60 RM, 18 fixtures, [contrats détaillés](../rules/CONTRATS-EARLY-GAME.md), [décisions ouvertes](../rules/DECISIONS-ET-INCERTITUDES.md), [scénarios Gherkin](../rules/RECETTE-GHERKIN.md), [matrice des US](../rules/TRACEABILITE-US.md) et [proposition d'affinage](../rules/AFFINAGE-US-L1.md). Les données sont spécifiées, **pas implémentées ni encore approuvées** ; les inconnues bloquantes restent documentées.
+**État lot A (23/10/2026) :** le [référentiel de règles métier](../rules/README.md) est créé avec 90 RM, 18 fixtures, [contrats détaillés](../rules/CONTRATS-EARLY-GAME.md), [décisions ouvertes](../rules/DECISIONS-ET-INCERTITUDES.md), [scénarios Gherkin](../rules/RECETTE-GHERKIN.md), [matrice des US](../rules/TRACEABILITE-US.md) et [proposition d'affinage](../rules/AFFINAGE-US-L1.md). Les données sont spécifiées, **pas implémentées ni encore approuvées** ; les inconnues bloquantes restent documentées.
 
-La priorité proposée est de livrer une **boucle locale persistante avec le Havre**, puis de la faire fonctionner entre plusieurs joueurs. Le choix du Havre et le découpage ci-dessous sont des propositions de réalisation, pas des décisions déjà prises par l'utilisateur. Les autres factions et la Guerre des Larmes restent dans l'objectif final.
+Les [84 décisions P0](../decisions/DECISIONS-P0-2026-10-23.md) précisent désormais les règles du successeur ; la saison **2** est la référence souhaitée, les valeurs de catalogue non vérifiées restent candidates et le [profil S2](../../data/rules/mmhk-like-s2-policy-draft.json) conserve explicitement ses paramètres ouverts.
+
+La priorité proposée est de livrer une **boucle locale persistante avec le Havre**, puis de la faire fonctionner entre plusieurs joueurs. **Le Havre et une première boucle T1–T3 sans magie sont désormais confirmés** (Q04–Q05). Le découpage des livraisons reste une proposition. Les autres factions et la Guerre des Larmes restent dans l'objectif final.
 
 ## 1. Transformer le premier lot en travail prêt à réaliser
 
@@ -53,7 +55,7 @@ La démonstration attendue est une séquence continue :
 6. Libérer puis exploiter une mine ; constater le changement de production.
 7. Fermer le navigateur, avancer le temps de test et revenir : stocks, actions achevées, armée et rapports restent cohérents.
 
-Première sous-tranche possible : un héros, des unités T1–T3 et un combat sans magie pour valider le parcours. L'extension T1–T7, les améliorations et les sorts suit avant de revendiquer la couverture militaire complète. Cette réduction provisoire ne clôture pas les stories couvrant davantage de cas.
+Première sous-tranche décidée : un héros, des unités T1–T3 et un combat sans magie pour valider le parcours. L'extension T1–T7, les améliorations et les sorts suit avant de revendiquer la couverture militaire complète. Cette réduction provisoire ne clôture pas les stories couvrant davantage de cas.
 
 Le serveur conserve l'état de référence et tranche les actions ; le navigateur présente l'état et anime les vues. Séparer règles, catalogues, sauvegarde et présentation permet de remplacer un décor sans changer les calculs. Le code historique récupéré sert à analyser les comportements observables ; il n'est pas branché comme client de production.
 
