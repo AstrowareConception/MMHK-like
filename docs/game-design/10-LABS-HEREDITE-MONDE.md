@@ -73,6 +73,16 @@ node tools/mmhk-world-lab.mjs --preset 2000 --seed test --json
 
 Les résultats comprennent : une région Havre de référence, des coordonnées de sites spéciaux, le nombre de régions synthétiques invalides, le nombre de doublons et les fréquences des sept types miniers. Les distributions changent avec les paramètres et la graine, mais un même jeu de paramètres conserve les mêmes résultats.
 
+## Échantillon statistique initial — 10 000 régions
+
+Un tirage JavaScript **indépendant**, reproduisant la logique de sélection des types à partir des pondérations proposées, a été effectué avec une graine stable. Il ne constitue **pas** une exécution du script Node.js livré :
+
+- **10 000 régions** ; **0 composition invalide** ; **1 817 régions (18,17 %) avec une paire**, pour une cible de 18 %.
+- Fréquences d'occurrence des rares parmi 40 000 mines : cristal **4 958**, gemmes **4 960**, soufre **4 990**, mercure **4 951**. Les poids symétriques se traduisent ici par des fréquences très proches.
+- Les autres occurrences sont : or **6 938**, bois **6 563**, minerai **6 640**.
+
+Le résultat brut est [archivé en JSON](../../data/analysis/world-lab-sample-10000-2026-10-23.json). Il **ne mesure ni la viabilité d'une implantation, ni le quadrillage des sites, ni les performances du serveur**, qui feront l'objet des prochaines expériences.
+
 ## 3. Tests et limites
 
 Le [script de test](../../tools/test-mmhk-design-labs.mjs) vérifie les invariants de génération, le déterminisme, les bords raccordés de la carte, l'unicité des sites, la répartition équilibrée des types et l'impossibilité de dépenser 1 350 points sur un budget de 1 000.
