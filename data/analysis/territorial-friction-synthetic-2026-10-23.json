@@ -1,0 +1,123 @@
+{
+  "date": "2026-10-23",
+  "status": "simulation_executed_synthetic_model_not_historical",
+  "engine": "Local Python numpy/scipy sandbox; reproducible policy assumptions documented in docs/game-design/12-SIMULATION-INFLUENCE-COLONISATION.md",
+  "player_count": 100,
+  "alliance_count": 10,
+  "periods": 6,
+  "three_seeds": [
+    11,
+    23,
+    47
+  ],
+  "strategy_variants": [
+    "compact",
+    "mixed",
+    "frontier"
+  ],
+  "tested_regions_per_player": [
+    100,
+    120,
+    140,
+    160,
+    180,
+    200,
+    240,
+    300,
+    400,
+    500
+  ],
+  "world_topology": "torus",
+  "cities_end_mean_approximately": 3,
+  "city_influence_model": "most radii 1-3, 4-5 infrequent, 6 exceptional; explicit military opportunity-cost represented by city quality/age proxy; not genuine upkeep troop allocation",
+  "outside_influence_cost_hypothesis": "base=1+0.42*(cities_owned-1)^1.35; cost=base*(1+0.37*d+0.08*d*d), d=distance beyond nearest allied city influence; parameters provisional",
+  "note": "No definitive saturation forecasts; allowed expansion selects cheapest admissible cells and biased towards allied influence. The initial player spawn spreads positions evenly, strongly reducing early rival contacts.",
+  "results": [
+    {
+      "density": 100,
+      "avg_enemy_alliance_contacts_final": {
+        "compact": 33.33,
+        "mixed": 34.33,
+        "frontier": 34.33
+      }
+    },
+    {
+      "density": 120,
+      "avg_enemy_alliance_contacts_final": {
+        "compact": 24,
+        "mixed": 26,
+        "frontier": 25.67
+      }
+    },
+    {
+      "density": 140,
+      "avg_enemy_alliance_contacts_final": {
+        "compact": 18.33,
+        "mixed": 20.33,
+        "frontier": 20
+      }
+    },
+    {
+      "density": 160,
+      "avg_enemy_alliance_contacts_final": {
+        "compact": 12.33,
+        "mixed": 13.33,
+        "frontier": 15.67
+      }
+    },
+    {
+      "density": 180,
+      "avg_enemy_alliance_contacts_final": {
+        "compact": 7,
+        "mixed": 8.33,
+        "frontier": 9.33
+      }
+    },
+    {
+      "density": 200,
+      "avg_enemy_alliance_contacts_final": {
+        "compact": 4,
+        "mixed": 5.33,
+        "frontier": 5.33
+      }
+    },
+    {
+      "density": 240,
+      "avg_enemy_alliance_contacts_final": {
+        "compact": 0.67,
+        "mixed": 1.67,
+        "frontier": 2.33
+      }
+    },
+    {
+      "density": 300,
+      "avg_enemy_alliance_contacts_final": {
+        "compact": 0,
+        "mixed": 0,
+        "frontier": 1
+      }
+    },
+    {
+      "density": 400,
+      "avg_enemy_alliance_contacts_final": {
+        "compact": 0,
+        "mixed": 0,
+        "frontier": 0
+      }
+    },
+    {
+      "density": 500,
+      "avg_enemy_alliance_contacts_final": {
+        "compact": 0,
+        "mixed": 0,
+        "frontier": 0
+      }
+    }
+  ],
+  "readout": "At three cities per player and modest influence radius, 300-500 cells/player fails to create meaningful alliance borders in this model. 120-180 cells/player brings first measurable rival contacts, but 10-city viability and long-run balance remain untested.",
+  "cautions": [
+    "Model lacks troop power, S2 upkeep formula, real influence growth/decay, siege and capture, total 10-city late game, dynamic territorial ownership and alliance-focused placement.",
+    "Distance cost sensitivity run with/without penalty yielded same results in sampled settings because simulated budgets/candidate placement were not constraining; therefore no estimated causal effect of the cost curve.",
+    "Late-game friction forecast cannot be inferred from these runs."
+  ]
+}
