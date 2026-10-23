@@ -15,6 +15,7 @@ Le périmètre est le **PvP classique, avec Guerre des Larmes en cible**. Le pre
 | [Contrats et invariants](CONTRATS-EARLY-GAME.md) | Description métier du déroulé, transitions, formules candidates, droits, refus et temps |
 | [Décisions ouvertes](DECISIONS-ET-INCERTITUDES.md) | Ce qui bloque la fidélité, options de prototype possibles, choix réellement attendus |
 | [Scénarios de recette](RECETTE-GHERKIN.md) | Parcours détaillés couvrant le nominal, les refus, les frontières, l'idempotence et la reconnexion |
+| [Proposition d'affinage des US pivots](AFFINAGE-US-L1.md) | Scénarios d'acceptation, décisions et pistes de découpage ; ne modifie pas les 300 US source |
 | [Traçabilité vers les US](TRACEABILITE-US.md) | Matrice règles ↔ backlog existant ; pistes de découpage et de révision |
 | [Profil de laboratoire](../../data/rules/early-game.profile-lab.json) | Paramètres explicitement fictifs pour des tests ; aucun profil historique certifié |
 | [Vérificateur](../../tools/validate-early-game-rules.mjs) | Contrôle de structure, liens US, inconnues, prix de référence, durée, exemples et doublons |
