@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<tt xml:lang="en" xmlns="http://www.w3.org/2006/04/ttaf1" xmlns:tts="http://www.w3.org/2006/04/ttaf1#styling">
+<head>
+<styling>
+<style id="1" tts:textAlign="center" tts:color="#FFFFFF" tts:backgroundColor="transparent" tts:fontSize="24"/>
+</styling>
+	</head>
+	<body>
+	<div xml:lang="de">
+		<p begin="00:00:00.12" dur="00:00:04.13" style="1">Die Welt befindet sich im Krieg, am Rand der völligen Zerstörung!</p>
+		<p begin="00:00:05.01" dur="00:00:04.23" style="1">Dies ist die Stunde der Macht, die Stunde der Magie.</p>
+		<p begin="00:00:10.00" dur="00:00:04.17" style="1">Dies ist die Stunde der Helden, die Welt vor dem Chaos zu retten.</p>
+		<p begin="00:00:14.17" dur="00:00:03.19" style="1">Eure Ahnen waren stark und unerschrocken …</p>
+		<p begin="00:00:18.12" dur="00:00:03.16" style="1">Wir kamen mit einem Versprechen zu ihnen und sie beantworteten Ashas Ruf.</p>
+		<p begin="00:00:22.04" dur="00:00:03.05" style="1">Die Ordnung in unserer verwüsteten Welt wieder herzustellen …</p>
+		<p begin="00:00:25.09" dur="00:00:02.14" style="1">Erweckt die Drachengötter!</p>
+		<p begin="00:00:27.23" dur="00:00:02.17" style="1">So lautete ihre Aufgabe … und sie ist nun an Euch gefallen.</p>
+		<p begin="00:00:30.16" dur="00:00:05.04" style="1">Ihre Siege ermöglichten die Rückkehr Syllanas, der Göttin der Erde.</p>
+		<p begin="00:00:35.20" dur="00:00:05.04" style="1">… und mit ihr … der Elfen.</p>
+		<p begin="00:00:41.00" dur="00:00:05.08" style="1">Der Kampf ging über Jahrzehnte und der Mutige wurde belohnt.</p>
+		<p begin="00:00:46.08" dur="00:00:05.04" style="1">Ylath, der Drachengott der Luft, erschien … und brachte die Zwergenfestung zum Vorschein …</p>
+		<p begin="00:00:51.12" dur="00:00:04.14" style="1">… sowie die Erinnerung an ihre vergessenen Legenden.</p>
+		<p begin="00:00:56.03" dur="00:00:05.01" style="1">Die Zwerge sind gespalten und Eure Mission besteht darin, sie unter einem Banner zu vereinigen.</p>
+		<p begin="00:01:01.04" dur="00:00:08.00" style="1">Arkath, der Drachengott des Feuers und Patron der Zwerge, schläft noch … und wartet darauf, von ihnen ins Leben zurückgerufen zu werden.</p>
+		<p begin="00:01:09.05" dur="00:00:07.03" style="1">Aber eine andere Rasse ist ebenfalls aus den Tiefen entkommen … ein erbitterter Feind, der im Schatten lauert …</p>
+		<p begin="00:01:16.09" dur="00:00:04.20" style="1">… und auf den richtigen Moment wartet, sich einen Ruf zu machen.</p>
+	</div>
+	</body>
+</tt>

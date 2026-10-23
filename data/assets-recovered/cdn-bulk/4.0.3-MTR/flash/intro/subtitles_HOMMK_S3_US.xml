@@ -1,0 +1,29 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<tt xml:lang="en" xmlns="http://www.w3.org/2006/04/ttaf1" xmlns:tts="http://www.w3.org/2006/04/ttaf1#styling">
+<head>
+<styling>
+<style id="1" tts:textAlign="center" tts:color="#FFFFFF" tts:backgroundColor="transparent" tts:fontSize="24"/>
+</styling>
+	</head>
+	<body>
+	<div xml:lang="en">
+		<p begin="00:00:00.12" dur="00:00:04.13" style="1">The world is at war and on the brink of utter destruction.</p>
+		<p begin="00:00:05.01" dur="00:00:04.23" style="1">It is an hour for Might and an hour for Magic.</p>
+		<p begin="00:00:10.00" dur="00:00:04.17" style="1">It is a time for Heroes to save the world from Chaos.</p>
+		<p begin="00:00:14.17" dur="00:00:03.19" style="1">Your ancestors were strong and fearless…</p>
+		<p begin="00:00:18.12" dur="00:00:03.16" style="1">We came to them with a promise, and they answered Asha’s calling.</p>
+		<p begin="00:00:22.04" dur="00:00:03.05" style="1">To restore Order to our ravaged world…</p>
+		<p begin="00:00:25.09" dur="00:00:02.14" style="1">Awaken the Dragon Gods!!!</p>
+		<p begin="00:00:27.23" dur="00:00:02.17" style="1">This was their quest… and it has fallen to you.</p>
+		<p begin="00:00:30.16" dur="00:00:05.04" style="1">Their triumphs brought the return of Sylanna… the goddess of Earth.</p>
+		<p begin="00:00:35.20" dur="00:00:05.04" style="1">…and with Her… the Elves.</p>
+		<p begin="00:00:41.00" dur="00:00:05.08" style="1">The fight continued for decades and courage was rewarded.</p>
+		<p begin="00:00:46.08" dur="00:00:05.04" style="1"> Ylath, the Dragon God of Air appeared… unearthing the Fortresses of the Dwarves…</p>
+		<p begin="00:00:51.12" dur="00:00:04.14" style="1">…and the memory of their forgotten lore.</p>
+		<p begin="00:00:56.03" dur="00:00:05.01" style="1">The Dwarves are divided, and your mission is to unite them under one banner.</p>
+		<p begin="00:01:01.04" dur="00:00:08.00" style="1">Arkath, the Dragon God of Fire, and patron to the Dwarves still sleeps… waiting for them to call him back into existence.</p>
+		<p begin="00:01:09.05" dur="00:00:07.03" style="1">But another race has also escaped from the undergrounds… a bitter enemy who stalks in the shadows…</p>
+		<p begin="00:01:16.09" dur="00:00:04.20" style="1">…waiting for the right moment to make themselves known.</p>
+	</div>
+	</body>
+</tt>

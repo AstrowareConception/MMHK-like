@@ -1,0 +1,26 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<tt xml:lang="en" xmlns="http://www.w3.org/2006/04/ttaf1" xmlns:tts="http://www.w3.org/2006/04/ttaf1#styling">
+ <head>
+<styling>
+<style id="1" tts:textAlign="center" tts:color="#FFFFFF" tts:backgroundColor="transparent" tts:fontSize="24"/>
+</styling>
+  </head>
+  <body>
+   <div xml:lang="en">
+    <p begin="00:00:04.20" dur="00:00:03.80" style="1">Ashan is a world exhausted by war.</p>
+    <p begin="00:00:14.00" dur="00:00:06.00" style="1">Centuries of conflict have reduced the peoples of Ashan... to four unruly nations.</p>
+    <p begin="00:00:22.00" dur="00:00:05.00" style="1">The Demons, children of Urgash, the dragon of Chaos.</p>
+    <p begin="00:00:28.60" dur="00:00:05.20" style="1">The Knights, clinging to old beliefs in the ruins of their empire.</p>
+    <p begin="00:00:34.70" dur="00:00:05.00" style="1">The Wizards, wielders of magic and seekers of knowledge.</p>
+    <p begin="00:00:41.25" dur="00:00:05.10" style="1">The Necromancers, offering deathless peace amidst the chaos.</p>
+    <p begin="00:00:48.50" dur="00:00:02.80" style="1">I stand before you offering hope for a better future...</p>
+    <p begin="00:00:53.20" dur="00:00:03.50" style="1">and praying that together we can bring it about.</p>
+    <p begin="00:00:58.00" dur="00:00:03.50" style="1">In the wilderness you will found a city</p>
+    <p begin="00:01:02.00" dur="00:00:03.50" style="1">build it up with troops and tradesmen,... </p>
+    <p begin="00:01:13.00" dur="00:00:04.40" style="1">and lead forth its armies to unite the lands.</p>
+    <p begin="00:01:19.30" dur="00:00:05.00" style="1">You will find both allies and enemies along the way.</p>
+    <p begin="00:01:25.00" dur="00:00:08.00" style="1">Challenging enemies across the world... as your unstoppable armies unify the realms,...</p>
+    <p begin="00:01:39.00" dur="00:00:04.00" style="1">...under your banners balance will be restored!</p>
+  </div>
+  </body>
+</tt>

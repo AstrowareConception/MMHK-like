@@ -1,0 +1,63 @@
+/*Perzonnalize Hero Button*/
+._heroFrameButton .personnalizeHeroButtonText{
+	font-size:11px;
+}
+/*Split Units*/
+#UnitStackSplit{
+	width:90px;
+}
+.settleRankingHeader .settleRankingText{
+	margin-left:20px;
+	font-size:9px;
+}
+/*Logo Russe*/
+p#gameVersionBlock{
+	bottom:0px;
+}
+.merchantPackBillingArtefactTeasingBg .merchantPackBillingArtefactText, .merchantPackBillingRessourcesTeasingBg .merchantPackBillingRessourcesText{
+	font-size: 20px;
+}
+.viewAllianceFrameModelStatsInformationZone .tearsTitleBg{
+	width:300px;
+}
+/*Market Place*/
+.marketPlaceFrameCaravanDestinationZone .marketPlaceFrameCaravanRessourceZone2{
+	width:41px;
+}
+.marketPlaceFrameCaravanDestinationZone .marketPlaceFrameCaravanCurrentMaxAmount{
+	font-size:10px;
+}
+.marketPlaceFrameTableCol03, .marketPlaceAuctionCategoryFilterLabel{
+	font-size:11px;
+}
+.marketPlaceFrameNewOfferForm .marketPlaceNewOfferRequestInfo div{
+	font-size: 10px;
+	text-align:center;
+}
+.marketPlaceFrameNewOfferForm .marketPlaceNewOfferRequestInfo {
+	margin-left:-3px;
+	margin-right:15px;
+}
+/*Battle Reports*/
+.heroClassName .heroClassOtherBonuses{
+	font-size:14px;
+}
+.heroClassName .size10{
+	font-size:9px;
+}
+.battleRoundList .battleRoundSpellText{
+	font-size:11px;
+	height:47px;
+	margin-top:5px;
+	overflow:hidden;
+}
+
+.pitchTradeBackground .billingFrameSubscribeButton{
+	left:155px;
+}
+.accountBillingPitchSubscribeButton{
+	left:15px;
+}
+.accountBillingUnsubPackStatus{
+	padding-left:20px;
+}

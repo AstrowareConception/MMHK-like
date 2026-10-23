@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<tt xml:lang="en" xmlns="http://www.w3.org/2006/04/ttaf1" xmlns:tts="http://www.w3.org/2006/04/ttaf1#styling">
+ <head>
+<styling>
+<style id="1" tts:textAlign="center" tts:color="#FFFFFF" tts:backgroundColor="transparent" tts:fontSize="24"/>
+</styling>
+  </head>
+  <body>
+ <div xml:lang="fr">
+    <p begin="00:00:04.20" dur="00:00:03.80" style="1">Ashan est un monde dévasté par la guerre.</p>
+    <p begin="00:00:14.00" dur="00:00:03.00" style="1">Autrefois uni, son peuple s'est déchiré au fil de conflits séculaires</p>
+    <p begin="00:00:17.00" dur="00:00:03.00" style="1">... et il est aujourd'hui divisé en quatre nations ennemies.</p>
+    <p begin="00:00:22.00" dur="00:00:05.00" style="1">Les Démons, enfants d'Urgash, le dieu-dragon de Chaos.</p>
+    <p begin="00:00:28.60" dur="00:00:05.20" style="1">Les Chevaliers d'un empire en ruines s'accrochent encore à de vieilles croyances.</p>
+    <p begin="00:00:34.70" dur="00:00:05.00" style="1">Les Mages maitrisent les arcanes de la magie. Avides de savoir, ils recherchent toujours plus de pouvoir.</p>
+    <p begin="00:00:41.25" dur="00:00:05.10" style="1">Les Nécromanciens proposent une paix au-delà de la mort face au Chaos.</p>
+    <p begin="00:00:48.50" dur="00:00:02.80" style="1">Pour ma part, je viens vous offrir un avenir d'espoir et de progrès</p>
+    <p begin="00:00:53.20" dur="00:00:03.50" style="1">... et je prie les Dieux pour qu'ensemble, nous fassions triompher la loi et la justice.</p>
+    <p begin="00:00:58.00" dur="00:00:03.50" style="1">Sur ces terres vierges et hostiles, vous construirez une ville,</p>
+    <p begin="00:01:02.00" dur="00:00:03.50" style="1">...faites la prospérer, développez ses arts, ses savoir-faire, et sa puissance militaire.</p>
+    <p begin="00:01:13.00" dur="00:00:04.40" style="1">Et prenez la tête de vos armées pour réunifier ces territoires déchirés.</p>
+    <p begin="00:01:19.30" dur="00:00:05.00" style="1">Durant votre périple, vous rencontrerez alliés et ennemis.</p>
+    <p begin="00:01:25.00" dur="00:00:05.00" style="1">Défiez ceux qui se lèveront contre vous,</p>
+    <p begin="00:01:30.00" dur="00:00:03.00" style="1">... bientôt, vos armées voleront de victoire en victoire...</p>
+    <p begin="00:01:39.00" dur="00:00:04.00" style="1">... et ainsi, c'est sous votre banniére qu'Ashan retrouvera son unité et son équilibre !</p>
+  </div>
+  </body>
+</tt>

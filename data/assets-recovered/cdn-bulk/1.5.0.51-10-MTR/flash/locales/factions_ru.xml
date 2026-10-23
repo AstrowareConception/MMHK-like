@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factions shortlang="ru" lang="ru_RU">
+	<faction tagName="academy" name="АКАДЕМИЯ ВОЛШЕБСТВА">
+		<description><![CDATA[Академия Волшебства была основана чародеями, которые постигают тайное искусство магии в окружении своих покорных творений и механических прислужников. Они ценят знание превыше всего и стремятся подчинить себе изначальные силы природы.<p><b>В основе их могущества лежат магия Света и чары Призыва.</b></p>]]></description>
+		<creature image="portal/ng_portal/factions/academy/01.png" fullImage="portal/ng_portal/factions/academylarge/01.jpg" name="ГРЕМЛИН"/>
+		<creature image="portal/ng_portal/factions/academy/02.png" fullImage="portal/ng_portal/factions/academylarge/02.jpg" name="СТАРШИЙ ГРЕМЛИН"/>
+		<creature image="portal/ng_portal/factions/academy/03.png" fullImage="portal/ng_portal/factions/academylarge/03.jpg" name="КАМЕННАЯ ГОРГУЛЬЯ"/>
+		<creature image="portal/ng_portal/factions/academy/04.png" fullImage="portal/ng_portal/factions/academylarge/04.jpg" name="ОБСИД. ГОРГУЛЬЯ"/>
+		<creature image="portal/ng_portal/factions/academy/05.png" fullImage="portal/ng_portal/factions/academylarge/05.jpg" name="ЖЕЛЕЗНЫЙ ГОЛЕМ"/>
+		<creature image="portal/ng_portal/factions/academy/06.png" fullImage="portal/ng_portal/factions/academylarge/06.jpg" name="СТАЛЬНОЙ ГОЛЕМ"/>
+		<creature image="portal/ng_portal/factions/academy/07.png" fullImage="portal/ng_portal/factions/academylarge/07.jpg" name="МАГ"/>
+		<creature image="portal/ng_portal/factions/academy/08.png" fullImage="portal/ng_portal/factions/academylarge/08.jpg" name="АРХИМАГ"/>
+		<creature image="portal/ng_portal/factions/academy/09.png" fullImage="portal/ng_portal/factions/academylarge/09.jpg" name="ДЖИНН"/>
+		<creature image="portal/ng_portal/factions/academy/10.png" fullImage="portal/ng_portal/factions/academylarge/10.jpg" name="СУЛТАН ДЖИННОВ"/>
+		<creature image="portal/ng_portal/factions/academy/11.png" fullImage="portal/ng_portal/factions/academylarge/11.jpg" name="ПРИНЦЕССА РАКШАС"/>
+		<creature image="portal/ng_portal/factions/academy/12.png" fullImage="portal/ng_portal/factions/academylarge/12.jpg" name="РАДЖА РАКШАС"/>
+		<creature image="portal/ng_portal/factions/academy/13.png" fullImage="portal/ng_portal/factions/academylarge/13.jpg" name="КОЛОСС"/>
+		<creature image="portal/ng_portal/factions/academy/14.png" fullImage="portal/ng_portal/factions/academylarge/14.jpg" name="ТИТАН"/>
+	</faction>
+	<faction tagName="haven" name="ОРДЕН ПОРЯДКА">
+		<description><![CDATA[Орден Порядка представляет собой священную империю рыцарей, монахов и  "ангельских" существ, готовых с оружием в руках сражаться за свое отечество. <p><b>Орден Порядка обладает сильными войсками, однако его чародеи способны постичь только малую толику магии Света и Тьмы.</b></p>]]></description>
+		<creature image="portal/ng_portal/factions/haven/01.png" fullImage="portal/ng_portal/factions/havenlarge/01.jpg" name="КРЕСТЬЯНИН"/>
+		<creature image="portal/ng_portal/factions/haven/02.png" fullImage="portal/ng_portal/factions/havenlarge/02.jpg" name="ОПОЛЧЕНЕЦ"/>
+		<creature image="portal/ng_portal/factions/haven/03.png" fullImage="portal/ng_portal/factions/havenlarge/03.jpg" name="ЛУЧНИК"/>
+		<creature image="portal/ng_portal/factions/haven/04.png" fullImage="portal/ng_portal/factions/havenlarge/04.jpg" name="АРБАЛЕТЧИК"/>
+		<creature image="portal/ng_portal/factions/haven/05.png" fullImage="portal/ng_portal/factions/havenlarge/05.jpg" name="МЕЧНИК"/>
+		<creature image="portal/ng_portal/factions/haven/06.png" fullImage="portal/ng_portal/factions/havenlarge/06.jpg" name="ЛАТНИК"/>
+		<creature image="portal/ng_portal/factions/haven/07.png" fullImage="portal/ng_portal/factions/havenlarge/07.jpg" name="ГРИФОН"/>
+		<creature image="portal/ng_portal/factions/haven/08.png" fullImage="portal/ng_portal/factions/havenlarge/08.jpg" name="КОРОЛЕВСКИЙ ГРИФОН"/>
+		<creature image="portal/ng_portal/factions/haven/09.png" fullImage="portal/ng_portal/factions/havenlarge/09.jpg" name="МОНАХ"/>
+		<creature image="portal/ng_portal/factions/haven/10.png" fullImage="portal/ng_portal/factions/havenlarge/10.jpg" name="ИНКВИЗИТОР"/>
+		<creature image="portal/ng_portal/factions/haven/11.png" fullImage="portal/ng_portal/factions/havenlarge/11.jpg" name="РЫЦАРЬ"/>
+		<creature image="portal/ng_portal/factions/haven/12.png" fullImage="portal/ng_portal/factions/havenlarge/12.jpg" name="ПАЛАДИН"/>
+		<creature image="portal/ng_portal/factions/haven/13.png" fullImage="portal/ng_portal/factions/havenlarge/13.jpg" name="АНГЕЛ"/>
+		<creature image="portal/ng_portal/factions/haven/14.png" fullImage="portal/ng_portal/factions/havenlarge/14.jpg" name="АРХАНГЕЛ"/>
+	</faction>
+	<faction tagName="necropolis" name="НЕКРОПОЛЬ">
+		<description><![CDATA[Когда-то некроманты были частью Академии Волшебства, но отделились от нее и основали собственное королевство, когда начали почитать дракона Асху как аспект смерти. <p><b>На первый взгляд их армии могут показаться слабыми, но войска Некрополя никогда не отправляются в бой без поддержки заклинаний Тьмы и Призыва.</b></p>]]></description>
+		<creature image="portal/ng_portal/factions/necropolis/01.png" fullImage="portal/ng_portal/factions/necropolislarge/01.jpg" name="КОСТЯНОЙ ВОИН"/>
+		<creature image="portal/ng_portal/factions/necropolis/02.png" fullImage="portal/ng_portal/factions/necropolislarge/02.jpg" name="КОСТЯНОЙ ЛУЧНИК"/>
+		<creature image="portal/ng_portal/factions/necropolis/03.png" fullImage="portal/ng_portal/factions/necropolislarge/03.jpg" name="ЗОМБИ"/>
+		<creature image="portal/ng_portal/factions/necropolis/04.png" fullImage="portal/ng_portal/factions/necropolislarge/04.jpg" name="ЧУМНОЙ ЗОМБИ"/>
+		<creature image="portal/ng_portal/factions/necropolis/05.png" fullImage="portal/ng_portal/factions/necropolislarge/05.jpg" name="ПРИВИДЕНИЕ"/>
+		<creature image="portal/ng_portal/factions/necropolis/06.png" fullImage="portal/ng_portal/factions/necropolislarge/06.jpg" name="ПРИЗРАК "/>
+		<creature image="portal/ng_portal/factions/necropolis/07.png" fullImage="portal/ng_portal/factions/necropolislarge/07.jpg" name="ВАМПИР"/>
+		<creature image="portal/ng_portal/factions/necropolis/08.png" fullImage="portal/ng_portal/factions/necropolislarge/08.jpg" name="ВЫСШИЙ ВАМПИР"/>
+		<creature image="portal/ng_portal/factions/necropolis/09.png" fullImage="portal/ng_portal/factions/necropolislarge/09.jpg" name="ЛИЧ"/>
+		<creature image="portal/ng_portal/factions/necropolis/10.png" fullImage="portal/ng_portal/factions/necropolislarge/10.jpg" name="АРХИЛИЧ"/>
+		<creature image="portal/ng_portal/factions/necropolis/11.png" fullImage="portal/ng_portal/factions/necropolislarge/11.jpg" name="УМЕРТВИЕ"/>
+		<creature image="portal/ng_portal/factions/necropolis/12.png" fullImage="portal/ng_portal/factions/necropolislarge/12.jpg" name="ВЕСТНИК СМЕРТИ"/>
+		<creature image="portal/ng_portal/factions/necropolis/13.png" fullImage="portal/ng_portal/factions/necropolislarge/13.jpg" name="КОСТЯНОЙ ДРАКОН"/>
+		<creature image="portal/ng_portal/factions/necropolis/14.png" fullImage="portal/ng_portal/factions/necropolislarge/14.jpg" name="ПРИЗРАЧНЫЙ ДРАКОН"/>
+	</faction>
+	<faction tagName="inferno" name="ИНФЕРНО">
+		<description><![CDATA[Демоны - это живое воплощение Хаоса. Каждый из них верит, что единственная ценность в подлунном мире - это индивидуальная свобода, свобода от всего. Демоны убивают лишь потому, что могут, и им не нужна другая причина. <p><b>Их могучие армии опустошают земли Асхана, порой не без помощи заклинаний из школы Тьмы и школы Разрушения.</b></p>]]></description>
+		<creature image="portal/ng_portal/factions/inferno/01.png" fullImage="portal/ng_portal/factions/infernolarge/01.jpg" name="БЕС"/>
+		<creature image="portal/ng_portal/factions/inferno/02.png" fullImage="portal/ng_portal/factions/infernolarge/02.jpg" name="ЧЕРТ"/>
+		<creature image="portal/ng_portal/factions/inferno/03.png" fullImage="portal/ng_portal/factions/infernolarge/03.jpg" name="ДЕМОН"/>
+		<creature image="portal/ng_portal/factions/inferno/04.png" fullImage="portal/ng_portal/factions/infernolarge/04.jpg" name="ОГНЕННЫЙ ДЕМОН"/>
+		<creature image="portal/ng_portal/factions/inferno/05.png" fullImage="portal/ng_portal/factions/infernolarge/05.jpg" name="АДСКАЯ ГОНЧАЯ"/>
+		<creature image="portal/ng_portal/factions/inferno/06.png" fullImage="portal/ng_portal/factions/infernolarge/06.jpg" name="ЦЕРБЕР"/>
+		<creature image="portal/ng_portal/factions/inferno/07.png" fullImage="portal/ng_portal/factions/infernolarge/07.jpg" name="СУККУБ"/>
+		<creature image="portal/ng_portal/factions/inferno/08.png" fullImage="portal/ng_portal/factions/infernolarge/08.jpg" name="ДЕМОНЕССА"/>
+		<creature image="portal/ng_portal/factions/inferno/09.png" fullImage="portal/ng_portal/factions/infernolarge/09.jpg" name="АДСКИЙ ЖЕРЕБЕЦ"/>
+		<creature image="portal/ng_portal/factions/inferno/10.png" fullImage="portal/ng_portal/factions/infernolarge/10.jpg" name="КОШМАР"/>
+		<creature image="portal/ng_portal/factions/inferno/11.png" fullImage="portal/ng_portal/factions/infernolarge/11.jpg" name="ПЕЩЕРНЫЙ ДЕМОН"/>
+		<creature image="portal/ng_portal/factions/inferno/12.png" fullImage="portal/ng_portal/factions/infernolarge/12.jpg" name="ПЕЩЕРНЫЙ ВЛАДЫКА"/>
+		<creature image="portal/ng_portal/factions/inferno/13.png" fullImage="portal/ng_portal/factions/infernolarge/13.jpg" name="ДЬЯВОЛ"/>
+		<creature image="portal/ng_portal/factions/inferno/14.png" fullImage="portal/ng_portal/factions/infernolarge/14.jpg" name="АРХИДЬЯВОЛ"/>
+	</faction>
+	<intro>
+		<title><![CDATA[]]></title>
+		<text><![CDATA[<p>Действие игры Меч и Магия: Герои. Королевства происходит в эпоху Хаоса, сразу после цикла событий Темного Мессии. </p><p>Ургаш освободился из своей темницы, и демоны захватили власть над Асханом. Шесть стихийных драконов, потомков Асхи, бесследно исчезли.</p><p>Ведомые пророческими видениями игроки Меча и Магии: Героев. Королевств и их союзники должны действовать вместе и заключать союзы, чтобы отыскать слезы Асхи и спасти мир Асхана от полного уничтожения.</p>]]></text>
+	</intro>
+</factions>

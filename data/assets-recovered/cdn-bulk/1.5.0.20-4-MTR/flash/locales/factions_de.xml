@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<factions shortlang="de" lang="de_DE">
+	<faction tagName="academy" name="AKADEMIE">
+		<description><![CDATA[<p>Das Volk der Akademie besteht aus menschlichen Zauberern, ihnen dienenden Seelen, sowie belebten Konstrukten. Voller Stolz streben sie nach Erkenntnis und wollen sich die Gesetze der Natur Untertan machen.</p><p>Ihre Macht beruht vornehmlich auf Licht- und Beschwörungsmagie.</p>]]></description>
+		<creature image="portal/ng_portal/factions/academy/01.png" fullImage="portal/ng_portal/factions/academylarge/01.jpg" name="GREMLIN"/>
+		<creature image="portal/ng_portal/factions/academy/02.png" fullImage="portal/ng_portal/factions/academylarge/02.jpg" name="GREMLINMEISTER"/>
+		<creature image="portal/ng_portal/factions/academy/03.png" fullImage="portal/ng_portal/factions/academylarge/03.jpg" name="STEINGARGOYLE"/>
+		<creature image="portal/ng_portal/factions/academy/04.png" fullImage="portal/ng_portal/factions/academylarge/04.jpg" name="OBSIDIANGARGOYLE"/>
+		<creature image="portal/ng_portal/factions/academy/05.png" fullImage="portal/ng_portal/factions/academylarge/05.jpg" name="EISENGOLEM"/>
+		<creature image="portal/ng_portal/factions/academy/06.png" fullImage="portal/ng_portal/factions/academylarge/06.jpg" name="STAHLGOLEM"/>
+		<creature image="portal/ng_portal/factions/academy/07.png" fullImage="portal/ng_portal/factions/academylarge/07.jpg" name="MAGIER"/>
+		<creature image="portal/ng_portal/factions/academy/08.png" fullImage="portal/ng_portal/factions/academylarge/08.jpg" name="ERZMAGIER"/>
+		<creature image="portal/ng_portal/factions/academy/09.png" fullImage="portal/ng_portal/factions/academylarge/09.jpg" name="DSCHINN"/>
+		<creature image="portal/ng_portal/factions/academy/10.png" fullImage="portal/ng_portal/factions/academylarge/10.jpg" name="DSCHINNSULTAN"/>
+		<creature image="portal/ng_portal/factions/academy/11.png" fullImage="portal/ng_portal/factions/academylarge/11.jpg" name="RAKSHASA-RANI"/>
+		<creature image="portal/ng_portal/factions/academy/12.png" fullImage="portal/ng_portal/factions/academylarge/12.jpg" name="RAKSHASA-RADSCHA"/>
+		<creature image="portal/ng_portal/factions/academy/13.png" fullImage="portal/ng_portal/factions/academylarge/13.jpg" name="KOLOSS"/>
+		<creature image="portal/ng_portal/factions/academy/14.png" fullImage="portal/ng_portal/factions/academylarge/14.jpg" name="TITAN"/>
+	</faction>
+	<faction tagName="haven" name="ZUFLUCHT">
+		<description><![CDATA[<p>Die Zuflucht ist ein von mittelalterlichen Rittern, Mönchen und Engelsheerscharen verteidigtes Heiliges Imperium mit feudalen Strukturen.</p><p>Ihre Armeen sind äußerst mächtig, haben jedoch nur beschränkten Zugriff auf Dunkel- und Lichtmagie.</p>]]></description>
+		<creature image="portal/ng_portal/factions/haven/01.png" fullImage="portal/ng_portal/factions/havenlarge/01.jpg" name="BAUER"/>
+		<creature image="portal/ng_portal/factions/haven/02.png" fullImage="portal/ng_portal/factions/havenlarge/02.jpg" name="MILIZ"/>
+		<creature image="portal/ng_portal/factions/haven/03.png" fullImage="portal/ng_portal/factions/havenlarge/03.jpg" name="BOGENSCHÜTZE"/>
+		<creature image="portal/ng_portal/factions/haven/04.png" fullImage="portal/ng_portal/factions/havenlarge/04.jpg" name="SCHARFSCHÜTZE"/>
+		<creature image="portal/ng_portal/factions/haven/05.png" fullImage="portal/ng_portal/factions/havenlarge/05.jpg" name="FUSSSOLDAT"/>
+		<creature image="portal/ng_portal/factions/haven/06.png" fullImage="portal/ng_portal/factions/havenlarge/06.jpg" name="JUNKER"/>
+		<creature image="portal/ng_portal/factions/haven/07.png" fullImage="portal/ng_portal/factions/havenlarge/07.jpg" name="GREIF"/>
+		<creature image="portal/ng_portal/factions/haven/08.png" fullImage="portal/ng_portal/factions/havenlarge/08.jpg" name="KÖNIGSGREIFE"/>
+		<creature image="portal/ng_portal/factions/haven/09.png" fullImage="portal/ng_portal/factions/havenlarge/09.jpg" name="PRIESTER"/>
+		<creature image="portal/ng_portal/factions/haven/10.png" fullImage="portal/ng_portal/factions/havenlarge/10.jpg" name="INQUISITOR"/>
+		<creature image="portal/ng_portal/factions/haven/11.png" fullImage="portal/ng_portal/factions/havenlarge/11.jpg" name="REITER"/>
+		<creature image="portal/ng_portal/factions/haven/12.png" fullImage="portal/ng_portal/factions/havenlarge/12.jpg" name="PALADIN"/>
+		<creature image="portal/ng_portal/factions/haven/13.png" fullImage="portal/ng_portal/factions/havenlarge/13.jpg" name="ENGEL"/>
+		<creature image="portal/ng_portal/factions/haven/14.png" fullImage="portal/ng_portal/factions/havenlarge/14.jpg" name="ERZENGEL"/>
+	</faction>
+	<faction tagName="necropolis" name="NEKROPOLIS">
+		<description><![CDATA[<p>Zu Anfang waren die Nekromanten eine Splittergruppe der Zauberer, die einen anderen Weg der Erkenntnis einschlugen, bevor sie zu einer mächtigen Nation heranwuchsen. Sie verehren den dem Tode zugewandten Aspekt von Asha.</p><p>Ihre Armeen mögen schwach erscheinen, sind jedoch von Beschwörungs- und Dunkelmagie umgeben.</p>]]></description>
+		<creature image="portal/ng_portal/factions/necropolis/01.png" fullImage="portal/ng_portal/factions/necropolislarge/01.jpg" name="SKELETT"/>
+		<creature image="portal/ng_portal/factions/necropolis/02.png" fullImage="portal/ng_portal/factions/necropolislarge/02.jpg" name="SKELETTSCHÜTZE"/>
+		<creature image="portal/ng_portal/factions/necropolis/03.png" fullImage="portal/ng_portal/factions/necropolislarge/03.jpg" name="ZOMBIE"/>
+		<creature image="portal/ng_portal/factions/necropolis/04.png" fullImage="portal/ng_portal/factions/necropolislarge/04.jpg" name="PESTZOMBIE"/>
+		<creature image="portal/ng_portal/factions/necropolis/05.png" fullImage="portal/ng_portal/factions/necropolislarge/05.jpg" name="GESPENST"/>
+		<creature image="portal/ng_portal/factions/necropolis/06.png" fullImage="portal/ng_portal/factions/necropolislarge/06.jpg" name="SCHRECKGESPENST"/>
+		<creature image="portal/ng_portal/factions/necropolis/07.png" fullImage="portal/ng_portal/factions/necropolislarge/07.jpg" name="VAMPIR"/>
+		<creature image="portal/ng_portal/factions/necropolis/08.png" fullImage="portal/ng_portal/factions/necropolislarge/08.jpg" name="VAMPIRFÜRST"/>
+		<creature image="portal/ng_portal/factions/necropolis/09.png" fullImage="portal/ng_portal/factions/necropolislarge/09.jpg" name="LICH"/>
+		<creature image="portal/ng_portal/factions/necropolis/10.png" fullImage="portal/ng_portal/factions/necropolislarge/10.jpg" name="TODESLICH"/>
+		<creature image="portal/ng_portal/factions/necropolis/11.png" fullImage="portal/ng_portal/factions/necropolislarge/11.jpg" name="GEIST"/>
+		<creature image="portal/ng_portal/factions/necropolis/12.png" fullImage="portal/ng_portal/factions/necropolislarge/12.jpg" name="TOTENGEIST"/>
+		<creature image="portal/ng_portal/factions/necropolis/13.png" fullImage="portal/ng_portal/factions/necropolislarge/13.jpg" name="KNOCHENDRACHE"/>
+		<creature image="portal/ng_portal/factions/necropolis/14.png" fullImage="portal/ng_portal/factions/necropolislarge/14.jpg" name="PHANTOMDRACHE"/>
+	</faction>
+	<faction tagName="inferno" name="INFERNO">
+		<description><![CDATA[<p>Die Dämonen sind die Inkarnation des Chaos. Ihrer Überzeugung zufolge gibt es nur einen einzigen moralischen Wert und das ist die individuelle Freiheit. Sie töten, einfach weil sie es können – oder aus Vergnügen.</p><p>Ihre Armeen verwüsten Länder, wobei sie sich gelegentlich der Dunkelmagie und Destruktivzaubern bedienen.</p>]]></description>
+		<creature image="portal/ng_portal/factions/inferno/01.png" fullImage="portal/ng_portal/factions/infernolarge/01.jpg" name="QUÄLGEIST"/>
+		<creature image="portal/ng_portal/factions/inferno/02.png" fullImage="portal/ng_portal/factions/infernolarge/02.jpg" name="UNHOLD"/>
+		<creature image="portal/ng_portal/factions/inferno/03.png" fullImage="portal/ng_portal/factions/infernolarge/03.jpg" name="GEHÖRNTER DÄMON"/>
+		<creature image="portal/ng_portal/factions/inferno/04.png" fullImage="portal/ng_portal/factions/infernolarge/04.jpg" name="GEHÖRNTER AUFSEHER"/>
+		<creature image="portal/ng_portal/factions/inferno/05.png" fullImage="portal/ng_portal/factions/infernolarge/05.jpg" name="HÖLLENHUND"/>
+		<creature image="portal/ng_portal/factions/inferno/06.png" fullImage="portal/ng_portal/factions/infernolarge/06.jpg" name="ZERBERUS"/>
+		<creature image="portal/ng_portal/factions/inferno/07.png" fullImage="portal/ng_portal/factions/infernolarge/07.jpg" name="SUKKUBUS"/>
+		<creature image="portal/ng_portal/factions/inferno/08.png" fullImage="portal/ng_portal/factions/infernolarge/08.jpg" name="SUKKUBUSHERRIN"/>
+		<creature image="portal/ng_portal/factions/inferno/09.png" fullImage="portal/ng_portal/factions/infernolarge/09.jpg" name="HÖLLENROSS"/>
+		<creature image="portal/ng_portal/factions/inferno/10.png" fullImage="portal/ng_portal/factions/infernolarge/10.jpg" name="NACHTMAHR"/>
+		<creature image="portal/ng_portal/factions/inferno/11.png" fullImage="portal/ng_portal/factions/infernolarge/11.jpg" name="FOLTERKNECHT"/>
+		<creature image="portal/ng_portal/factions/inferno/12.png" fullImage="portal/ng_portal/factions/infernolarge/12.jpg" name="FOLTERMEISTER"/>
+		<creature image="portal/ng_portal/factions/inferno/13.png" fullImage="portal/ng_portal/factions/infernolarge/13.jpg" name="TEUFEL"/>
+		<creature image="portal/ng_portal/factions/inferno/14.png" fullImage="portal/ng_portal/factions/infernolarge/14.jpg" name="ERZTEUFEL"/>
+	</faction>
+	<intro>
+		<title><![CDATA[Entdeckt die 4 Fraktionen]]></title>
+		<text><![CDATA[<p>Might and Magic: Heroes Kingdoms spielt zu Zeiten des Chaos, kurz nach dem Dark-Messiah-Zyklus.</p><p>Urgash wurde aus seinem Kerker befreit und die Dämonen herrschen über Ashan. Die 6 Elementardrachen, Söhne und Töchter von Asha, sind verschwunden.</p><p>Die Spieler von M&M Heroes Kingdoms, geleitet von einer Prophezeiung, müssen sich verbünden, um Ashas Tränen zurückzugewinnen. Vermögt Ihr es, die Welt vor der ewigen Finsternis zu bewahren?</p>]]></text>
+	</intro>
+</factions>

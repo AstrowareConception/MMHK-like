@@ -1,0 +1,32 @@
+/*Register World*/
+#factionSliderList .size20{
+	font-size:13px;
+}
+#factionSelectorACADEMY{
+	margin-top:-2px;
+}
+.playerSetupFactionStrenghWeaknesses .size18{
+	font-size:16px;
+}
+.trainingButtonText{
+	margin-top:40px;
+}
+#playerSetupReferralKeyFeedback.playerSetupReferralKeyFeedback
+{
+	width:290px;
+	font-size:11px;
+}
+.teaserPageBtn{
+	padding:15px 10px;
+	height:45px;
+}
+.teaserPageBtn b{
+	height:26px;
+}
+#registerForm_formContainer_termsOfUseCodeContainer_formContainer.accmanRegisterCheckboxTermOfUse{
+	height:35px;
+}
+#registerForm_formContainer_termsOfUseCodeContainer.accmanTermFormBlocHeight{
+	height:55px;
+	line-height:11px;
+}
