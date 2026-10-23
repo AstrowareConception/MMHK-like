@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "early-game-rules/0.3-c01-c09",
+  "version": "early-game-rules/0.4-relix",
   "as_of": "2026-10-23",
   "status": "DRAFT_user_project_decisions_integrated_historical_values_still_to_qualify",
   "scope": "early-game classic_pvp",
@@ -32,10 +32,10 @@
     "combatCases": "data/combat-reference-cases.json"
   },
   "counts": {
-    "rules": 90,
+    "rules": 93,
     "domains": {
-      "monde": 14,
-      "region": 11,
+      "monde": 16,
+      "region": 12,
       "economie": 16,
       "construction": 12,
       "heros": 10,
@@ -46,7 +46,7 @@
     "states": {
       "confirmed_scope": 1,
       "proposed_contract": 17,
-      "candidate_versioned": 16,
+      "candidate_versioned": 19,
       "historically_incomplete": 13,
       "unconfirmed_recollection": 2,
       "blocked_by_evidence": 7,
@@ -3143,6 +3143,103 @@
         ],
         "policy_version": "s2-p0-draft-2026-10-23",
         "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-WRD-015",
+      "domain": "monde",
+      "title": "Influence lissée sur quatre journées",
+      "evidence": "DOC",
+      "state": "candidate_versioned",
+      "statement": "Les résultats de domination sont recalculés une fois par jour ; le projet retient une moyenne de puissance militaire stationnée sur quatre jours, complétée par la domination des bâtiments.",
+      "contract": "Conserver snapshots militaires horodatés et recalculer à l'échéance quotidienne, sans attribuer immédiatement une influence maximale aux arrivées récentes.",
+      "us": [
+        "US-MON-007"
+      ],
+      "unknowns": [
+        "U15"
+      ],
+      "source_documents": [
+        "docs/game-design/17-RELIQUES-ET-GUERRES-D-INFLUENCE.md",
+        "data/reference/world-influence-and-sites-2009-2013.json"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [
+        "influence_window_days",
+        "city_building_domination",
+        "territorial_decay_formula",
+        "site_control_bonus_stacking"
+      ],
+      "project_decisions": {
+        "source": "docs/game-design/17-RELIQUES-ET-GUERRES-D-INFLUENCE.md",
+        "question_refs": [],
+        "policy_version": "s2-relic-influence-v2",
+        "historical_evidence_unchanged": false
+      }
+    },
+    {
+      "id": "RM-WRD-016",
+      "domain": "monde",
+      "title": "Influence par paliers et contestation de cases",
+      "evidence": "DOC",
+      "state": "candidate_versioned",
+      "statement": "Une FAQ 2013 donne les seuils 0, 30k, 100k, 250k, 500k, 1M pour les rayons un à six ; l'intensité locale décroît avec la distance.",
+      "contract": "Appliquer un disque torique, comparer les forces rivales case par case, séparer propriété d'une cité et contrôle territorial, et versionner la fonction de décroissance encore inconnue.",
+      "us": [
+        "US-MON-007"
+      ],
+      "unknowns": [
+        "U15"
+      ],
+      "source_documents": [
+        "docs/game-design/17-RELIQUES-ET-GUERRES-D-INFLUENCE.md",
+        "data/reference/world-influence-and-sites-2009-2013.json"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [
+        "influence_window_days",
+        "city_building_domination",
+        "territorial_decay_formula",
+        "site_control_bonus_stacking"
+      ],
+      "project_decisions": {
+        "source": "docs/game-design/17-RELIQUES-ET-GUERRES-D-INFLUENCE.md",
+        "question_refs": [],
+        "policy_version": "s2-relic-influence-v2",
+        "historical_evidence_unchanged": false
+      }
+    },
+    {
+      "id": "RM-REL-001",
+      "domain": "region",
+      "title": "Bonus des bâtiments mondiaux contrôlés",
+      "evidence": "DOC",
+      "state": "candidate_versioned",
+      "statement": "Tutoriel 2009 : Sphinx entretien -7%, Trésorerie des Nains or +5%, Dolmen du savoir XP +10%, bonus cumulés pour l'alliance contrôlante.",
+      "contract": "Recalculer le contrôleur des sites depuis la carte d'influence et appliquer leurs effets à tous les membres admissibles, en enregistrant les changements ; séparer ces sites des obélisques de Guerre des Larmes.",
+      "us": [
+        "US-REL-001"
+      ],
+      "unknowns": [
+        "U15",
+        "U17"
+      ],
+      "source_documents": [
+        "docs/game-design/17-RELIQUES-ET-GUERRES-D-INFLUENCE.md",
+        "data/reference/world-influence-and-sites-2009-2013.json"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [
+        "influence_window_days",
+        "city_building_domination",
+        "territorial_decay_formula",
+        "site_control_bonus_stacking"
+      ],
+      "project_decisions": {
+        "source": "docs/game-design/17-RELIQUES-ET-GUERRES-D-INFLUENCE.md",
+        "question_refs": [],
+        "policy_version": "s2-relic-influence-v2",
+        "historical_evidence_unchanged": false
       }
     }
   ],
