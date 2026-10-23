@@ -16,7 +16,7 @@ export function simulateDualMagicBattleReport({attackers,defenders,attackerSpell
   const enemy=side==='attacker'?context.defenderHero:context.attackerHero;
   const modifier=casualtyModifier({ownHero:own,enemyHero:enemy,side,tearsLossBonus:opt.tearsLossBonus??0});
   const slots=original.map((s,i)=>s?{...s,roundLosses:state[i].roundLosses,
-   magicLosses:state[i].magicLosses,bonusLost:state[i].bonusLost,raisedDuringBattle:0}:null);
+   magicLosses:state[i].magicLosses,bonusLost:state[i].bonusLost,raisedDuringBattle:state[i].raisedDuringBattle??0}:null);
   permanent[side]=finalizePermanentLosses({slots,side,battleOutcome:winner,
    lossFactor:lossPolicy.lossFactor,modifier:modifier+(opt.modifier??0),
    playerControlled:opt.playerControlled??true,hasHero:opt.hasHero??true,
