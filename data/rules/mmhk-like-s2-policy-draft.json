@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "s2-p0-draft-2026-10-23",
+  "version": "s2-c01-c09-v1",
   "product": "MMHK-like",
   "status": "decisions_recorded_not_fully_parameterized_not_yet_executable",
   "decision_registry": "data/decisions/p0-2026-10-23.json",
@@ -37,13 +37,16 @@
   },
   "initial_legacy": {
     "equal_points_for_all_new_players": true,
-    "points_amount": null,
-    "allocation": "free_by_player",
+    "points_amount": 1000,
+    "allocation": "starting_build",
     "applicable_to_initial_hero": true,
     "question_refs": [
       "Q01",
       "Q29"
-    ]
+    ],
+    "earned_between_worlds": false,
+    "carries_over_between_worlds": false,
+    "costs_status": "proposed_balance_pending"
   },
   "world": {
     "topology": "torus",
@@ -84,7 +87,7 @@
     },
     "friend_codes": {
       "issued_per_world_player": 3,
-      "usage_limit_per_code": null,
+      "usage_limit_per_code": 1,
       "expiry": null,
       "near_distance_preferred": {
         "min": 4,
@@ -93,7 +96,8 @@
       },
       "fallback": "expand_search_radius",
       "source_and_target_world": "same",
-      "collision_prevention": true
+      "collision_prevention": true,
+      "consume_on": "successful_join"
     },
     "protection": {
       "duration_days": 7,
@@ -105,7 +109,9 @@
       "source_or_destination_check": "on_dispatch",
       "protected_city_map_indicator": true,
       "allied_material_convoys_incoming_allowed": true,
-      "scope_of_other_hostile_actions": "clarify"
+      "scope_of_other_hostile_actions": "clarify",
+      "regional_pve_allowed": true,
+      "friendly_missions_allowed": true
     },
     "start_city": {
       "city_buildings": [
@@ -199,7 +205,7 @@
     "pve_difficulty_by_distance": "increases_from_city_center",
     "pnj_respawn": {
       "enabled_on_unused_cleared_plots": true,
-      "idle_days": null,
+      "idle_days": 7,
       "blocked_if_plot_used": true,
       "repeated_xp_enabled": true,
       "repeated_artifact_rewards_enabled": true,
@@ -211,8 +217,12 @@
       "seeded_generator_proposed": true,
       "min_distance_same_type_example": 15,
       "min_distance_any_type": null,
-      "ambiguous_spacing_description": true,
-      "density_based_on_map_size": true
+      "ambiguous_spacing_description": false,
+      "density_based_on_map_size": true,
+      "distribution": "near_regular_toroidal_lattice",
+      "jitter_max_cells": 2,
+      "all_types": true,
+      "spacing_cells": null
     },
     "question_refs": [
       "Q11",
@@ -258,13 +268,8 @@
       "start_producing_after_clearance": true,
       "adjacent_regional_building_bonuses": true,
       "reference": "S2 costs and yields when available",
-      "additional_drilling_option": {
-        "status": "proposal_not_accepted",
-        "levels": 5,
-        "hero_blocked": true,
-        "production_paused": true,
-        "relationship_to_existing_mine_levels": null
-      }
+      "additional_drilling_option": null,
+      "upgrade_max_level": 10
     },
     "maintenance": {
       "reference": "S1/S2 wanted",
@@ -274,8 +279,8 @@
       "charge_every_minutes": 60,
       "unpaid_consequence": "hourly_10_percent_attrition_each_stack",
       "attrition_rate_percent": 10,
-      "rounding": null,
-      "partial_payment_policy": null,
+      "rounding": "ceil_per_stack",
+      "partial_payment_policy": "consume_all_available_gold_then_attrition",
       "army_in_transit_policy": null
     },
     "question_refs": [
@@ -474,7 +479,7 @@
     "world_map_truce": {
       "start_local": "23:00",
       "end_local": "06:00",
-      "timezone": null,
+      "timezone": "configurable_IANA_per_world",
       "pauses": [
         "hero_world_travel",
         "attacks_world_travel",
@@ -491,8 +496,8 @@
       "halt_not_required_in_own_alliance_influence": true
     },
     "programming": {
-      "future_order_queues": false,
-      "exception_for_historical_repeated_caravan_to_clarify": true
+      "generic_queues": false,
+      "repeated_caravans": true
     },
     "question_refs": [
       "Q06",
@@ -519,5 +524,6 @@
     "PAR_01_ready": false,
     "all_decisions_consigned": true,
     "requires_rule_versioning": true
-  }
+  },
+  "clarifications": "docs/decisions/P0-CLARIFICATIONS-C01-C09-2026-10-23.md"
 }
