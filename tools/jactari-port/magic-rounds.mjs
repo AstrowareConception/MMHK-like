@@ -5,10 +5,11 @@
 import {resolveStackDuel,validateArmySlots} from './core.mjs';
 import {calculateBonuses} from './bonuses.mjs';
 import {resolveSingleTargetDamageSpell,resolveAttackStackBuff,resolveHeroDefenseDebuff} from './magic-effects.mjs';
+import {resolvePostDuelRevival} from './magic-revival.mjs';
 const weapons=new Set(['I','R','C']);
 const clone=x=>x?{...x}:null;
 const active=a=>a.findIndex(s=>s&&s.remaining>0&&!s.dispersed);
-const prepare=a=>a.map(s=>s?{...s,remaining:s.count,roundLosses:0,magicLosses:0,bonusTroops:0,bonusLost:0,dispersed:false}:null);
+const prepare=a=>a.map(s=>s?{...s,remaining:s.count,roundLosses:0,magicLosses:0,bonusTroops:0,bonusLost:0,raisedDuringBattle:0,temporaryRevived:0,dispersed:false}:null);
 function checkArmy(a){validateArmySlots(a);a.forEach(s=>{if(s&&!weapons.has(s.weapon))throw new RangeError('Unsupported stack weapon')});}
 function verify(book){
  if(book===null||Array.isArray(book)||typeof book!=='object')throw new TypeError('Invalid spell schedule');
@@ -17,7 +18,8 @@ function verify(book){
   if(!s||!Number.isInteger(s.type)||!Number.isInteger(s.target)||!Number.isInteger(s.unit))throw new RangeError('Invalid spell signature');
   const allowed=(s.type===0&&((s.target===4&&[1,3,7].includes(s.unit))||(s.target===3&&[1,3].includes(s.unit))))
    ||(s.type===4&&[5,6].includes(s.target)&&[0,1,2,3].includes(s.unit))
-   ||(s.type===3&&[5,6].includes(s.target)&&[5,6].includes(s.unit));
+   ||(s.type===3&&[5,6].includes(s.target)&&[5,6].includes(s.unit))
+   ||(s.type===2&&[8,9].includes(s.target)&&s.unit===2);
   if(!allowed)throw new Error('Unsupported Jactari spell effect '+s.type+':'+s.target+':'+s.unit);
   if(s.type===0&&s.target===3){
    if(!s.powerByWeapon||typeof s.powerByWeapon!=='object')throw new RangeError('Area spell requires powerByWeapon');
@@ -28,6 +30,10 @@ function verify(book){
 function cast(side,s,turn,index,a,d,heroes,events){
  const own=side==='attacker'?a:d,enemy=side==='attacker'?d:a,opposite=side==='attacker'?'defender':'attacker';
  const ownIndex=index[side],enemyIndex=index[opposite];
+ if(s.type===2){
+  events.push({turn,phase:'spell',side,spellType:2,spellTarget:s.target,spellUnit:2,power:s.power,phaseTiming:'after-duel'});
+  return {mode:s.target===8?'tmp':'def',percent:s.power,slot:ownIndex};
+ }
  if(s.type===0){
   if(s.target===4){
    const target=enemy[enemyIndex];
@@ -82,9 +88,11 @@ export function simulateDualMagicEncounter({attackers,defenders,attackerSpells={
     rounds:events.filter(e=>e.phase==='duel').length,events,attacker:a,defender:d,heroes,
     completeness:'two casters, targeted and area spells; no full Jactari phases'};
   }
-  // Jactari processes attacker spell, then defender spell, both before the melee duel.
-  if(Object.hasOwn(attackerSpells,turn))cast('attacker',attackerSpells[turn],turn,index,a,d,heroes,events);
-  if(Object.hasOwn(defenderSpells,turn))cast('defender',defenderSpells[turn],turn,index,a,d,heroes,events);
+  // Jactari declares resurrection before the duel and resolves it after the duel.
+  const startOfRound={attacker:a[index.attacker].remaining,defender:d[index.defender].remaining};
+  const pendingRevival={};
+  if(Object.hasOwn(attackerSpells,turn))pendingRevival.attacker=cast('attacker',attackerSpells[turn],turn,index,a,d,heroes,events);
+  if(Object.hasOwn(defenderSpells,turn))pendingRevival.defender=cast('defender',defenderSpells[turn],turn,index,a,d,heroes,events);
   const ai=active(a),di=active(d);
   if(ai<0||di<0)continue;
   const x=a[ai],y=d[di];
@@ -100,6 +108,20 @@ export function simulateDualMagicEncounter({attackers,defenders,attackerSpells={
   x.dispersed ||=duel.dispersed.attacker||x.remaining<=0;
   y.dispersed ||=duel.dispersed.defender||y.remaining<=0;
   events.push({turn,phase:'duel',attackerSlot:ai+1,defenderSlot:di+1,modifiers,duel});
+  for(const side of ['attacker','defender']){
+   const plan=pendingRevival[side];
+   if(!plan)continue;
+   const slot=side==='attacker'?ai:di;
+   if(plan.slot!==slot)throw new Error('Revival target changed during turn: historical interaction unsupported');
+   const state=side==='attacker'?a[ai]:d[di];
+   const effect=resolvePostDuelRevival({remaining:state.remaining,losses:duel.losses[side],
+    roundStart:startOfRound[side],mode:plan.mode,percent:plan.percent});
+   state.remaining=effect.remaining;
+   if(plan.mode==='def')state.roundLosses+=effect.recordedLossAdjustment;
+   else{state.raisedDuringBattle+=effect.revived;state.temporaryRevived+=effect.revived;}
+   events.push({turn,phase:'revival',side,slot:slot+1,mode:plan.mode,revived:effect.revived,
+    remaining:effect.remaining,recordedLossAdjustment:effect.recordedLossAdjustment});
+  }
  }
  throw new Error('Round limit exceeded');
 }
