@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "s2-population70-lab-v1",
+  "version": "s2-influence-daily-rolling-v1",
   "product": "MMHK-like",
   "status": "decisions_recorded_not_fully_parameterized_not_yet_executable",
   "decision_registry": "data/decisions/p0-2026-10-23.json",
@@ -261,7 +261,25 @@
         300,
         400,
         500
-      ]
+      ],
+      "influence_model": {
+        "reference_window_days": 6,
+        "alternative_historical_2009_window_days": 4,
+        "refresh": "once_per_world_day",
+        "refresh_timezone": "configured_world_timezone",
+        "baseline_radius": 1,
+        "max_radius": 6,
+        "geometry": "discrete_euclidean_disk_on_torus",
+        "candidate_max_military_power_threshold": 500000,
+        "thresholds_status": "all numeric values including 500000 unverified S2; use test values only",
+        "building_domination_additive": true,
+        "contest_resolution": "per_cell_distance_attenuated_power_across_rival_alliances",
+        "allied_aggregation": "sum in experimental lab, exact historical behavior to verify",
+        "ownership_vs_influence_separate": true,
+        "prototype": "tools/influence_simulation_lab.py",
+        "specification": "docs/game-design/16-INFLUENCE-LISSEE-ET-CONTESTEE.md",
+        "replaces_previous_model": "instantaneous_garrison_radius"
+      }
     },
     "population_calibration": {
       "referenceOccupancy": 0.7,
