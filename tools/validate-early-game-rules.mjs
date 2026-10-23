@@ -34,6 +34,8 @@ function unique(arr) { return new Set(arr).size === arr.length; }
 function sameJSON(a,b) { return JSON.stringify(a) === JSON.stringify(b); }
 const ids = arr => arr.map(x => x.id);
 const ruleIds = new Set(ids(RULES.rules));
+// Les 60 règles initiales et les nouvelles règles de projet partagent le
+// même catalogue. L'état historique n'est jamais inféré d'une réponse P0.
 const fixtureIds = new Set(ids(FIXTURES.fixtures));
 
 const docs = readdirSync(path('docs/backlog/categories'))
@@ -142,6 +144,6 @@ if (errors.length) {
   errors.forEach(msg => console.error(' - ' + msg));
   process.exitCode = 1;
 } else {
-  console.log('OK : ' + assertions + ' contrôles structurels, sources, US, Uxx, 60 RM, 18 FX et valeurs 2013.');
+  console.log('OK : ' + assertions + ' contrôles structurels, sources, US, Uxx, ' + RULES.rules.length + ' RM, ' + FIXTURES.fixtures.length + ' FX et valeurs 2013.');
   console.log('IMPORTANT : aucun moteur de jeu ni scénario Gherkin n’a été exécuté.');
 }
