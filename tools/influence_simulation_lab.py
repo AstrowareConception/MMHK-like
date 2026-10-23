@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from math import hypot
 from collections import Counter
 
-THRESHOLDS=(0,10000,30000,75000,150000,500000)  # valeurs PROPOSEES
+THRESHOLDS=(0,30000,100000,250000,500000,1000000)  # 2013 FAQ, per S2 qualification  # valeurs PROPOSEES
 
 @dataclass(frozen=True)
 class City:
@@ -16,12 +16,12 @@ class City:
     samples:tuple[int,...]
     building_domination:int=0
 
-def military_mean(samples, days=6):
+def military_mean(samples, days=4):
     assert days in (4,6) and samples and all(v>=0 for v in samples)
     last=samples[-days:]
     return sum(last)/days  # missing pre-entry days count as zero
 
-def city_power(city,days=6):
+def city_power(city,days=4):
     return military_mean(city.samples,days)+city.building_domination
 
 def radius(power,thresholds=THRESHOLDS):
@@ -32,13 +32,13 @@ def toric_distance(a,b,width,height):
     dy=min(abs(a[1]-b[1]),height-abs(a[1]-b[1]))
     return hypot(dx,dy)
 
-def city_score(city,cell,width,height,days=6,falloff_exponent=2):
+def city_score(city,cell,width,height,days=4,falloff_exponent=2):
     power=city_power(city,days)
     distance=toric_distance((city.x,city.y),cell,width,height)
     if distance>radius(power): return 0.
     return max(1,power)/(1+distance)**falloff_exponent
 
-def cell_owner(cell,cities,width,height,days=6,allied_aggregation='sum',tie_epsilon=1e-8):
+def cell_owner(cell,cities,width,height,days=4,allied_aggregation='sum',tie_epsilon=1e-8):
     scores={}
     for city in cities:
         s=city_score(city,cell,width,height,days)
@@ -51,10 +51,15 @@ def cell_owner(cell,cities,width,height,days=6,allied_aggregation='sum',tie_epsi
     return ranking[0][0]
 
 def smoke_test():
-    a=City('A','alliance-a',10,10,(500000,)*6)
-    b=City('B','alliance-b',20,10,(500000,)*6)
+    assert radius(0)==1
+    assert radius(29999)==1
+    assert radius(30000)==2
+    assert radius(500000)==5
+    assert radius(1000000)==6
+    a=City('A','alliance-a',10,10,(1000000,)*6)
+    b=City('B','alliance-b',20,10,(1000000,)*6)
     assert radius(city_power(a))==6
-    assert radius(military_mean((0,0,0,0,0,500000)))<6
+    assert radius(military_mean((0,0,0,0,0,1000000),4))<6
     assert toric_distance((0,0),(39,0),40,30)==1
     assert cell_owner((15,10),(a,b),40,30)=='contested'
     values=Counter(cell_owner((x,y),(a,b),40,30) for y in range(30) for x in range(40))
