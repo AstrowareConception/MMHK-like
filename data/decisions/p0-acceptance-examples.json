@@ -1,0 +1,461 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-23",
+  "type": "business-acceptance-specification_only",
+  "scope": "P0 user decisions",
+  "count": 15,
+  "warning": "These are DECLARATIVE expected behaviors. No engine executed. Unspecified parameters stay pending, and synthetic amounts are not Ubisoft historical values.",
+  "examples": [
+    {
+      "id": "P0-FX-001",
+      "title": "Équité du capital initial d'hérédité",
+      "questions": [
+        "Q01",
+        "Q29"
+      ],
+      "rules": [
+        "RM-WRD-009"
+      ],
+      "given": {
+        "player_a": "new",
+        "player_b": "new",
+        "same_world": true,
+        "capital_points": "P (à décider)"
+      },
+      "when": [
+        "two_new_players_spawn"
+      ],
+      "then": [
+        "each receives same P",
+        "each can allocate points independently",
+        "no inherited bonus is assumed to affect other players"
+      ],
+      "status": "parameter_P_pending"
+    },
+    {
+      "id": "P0-FX-002",
+      "title": "Composition des mines d'une région ordinaire",
+      "questions": [
+        "Q11",
+        "Q13",
+        "Q14"
+      ],
+      "rules": [
+        "RM-REG-009"
+      ],
+      "given": {
+        "mine_count": 4,
+        "starter_haven": [
+          "G",
+          "w",
+          "o",
+          "c"
+        ],
+        "allowed_examples": [
+          [
+            "w",
+            "w",
+            "G",
+            "c"
+          ],
+          [
+            "G",
+            "w",
+            "o",
+            "c"
+          ]
+        ],
+        "rejected_examples": [
+          [
+            "w",
+            "w",
+            "G",
+            "G"
+          ],
+          [
+            "w",
+            "w",
+            "w",
+            "c"
+          ]
+        ]
+      },
+      "when": [
+        "validate_region_mines"
+      ],
+      "then": [
+        "starter HAVEN has all four required resources",
+        "single pair allowed in nonstarter region",
+        "two pairs and a triple rejected",
+        "rare marginal weights equal in generator"
+      ],
+      "status": "project_decided"
+    },
+    {
+      "id": "P0-FX-003",
+      "title": "Trois codes amis par inscription",
+      "questions": [
+        "Q20",
+        "Q21",
+        "Q22"
+      ],
+      "rules": [
+        "RM-WRD-011"
+      ],
+      "given": {
+        "starter_friend_codes": 3,
+        "desired_distance_min": 4,
+        "desired_distance_max": 10
+      },
+      "when": [
+        "create_new_world_player",
+        "request_friend_spawn"
+      ],
+      "then": [
+        "three opaque codes issued",
+        "distance preference evaluated on torus",
+        "if no candidate in range, expand until valid location",
+        "code reuse policy remains undecided"
+      ],
+      "status": "code_usage_policy_pending"
+    },
+    {
+      "id": "P0-FX-004",
+      "title": "Immunité de la première et dernière cité",
+      "questions": [
+        "Q23",
+        "Q24",
+        "Q25",
+        "Q26"
+      ],
+      "rules": [
+        "RM-WRD-012"
+      ],
+      "given": {
+        "protected_for_days": 7,
+        "last_city": true,
+        "colonies_owned": 1
+      },
+      "when": [
+        "attempt_second_colony_before_day7",
+        "attack_from_or_to_protected_city",
+        "attempt_last_city_capture_after_day7",
+        "send_allied_resource_convoy_to_protected_city"
+      ],
+      "then": [
+        "second colony refused before expiry",
+        "prohibited military order refused at dispatch",
+        "last city cannot be conquered even after initial protection ends",
+        "last city may be pillaged after initial protection",
+        "incoming allied resources permitted"
+      ],
+      "status": "hostile_action_scope_open"
+    },
+    {
+      "id": "P0-FX-005",
+      "title": "Production fractionnaire périodique",
+      "questions": [
+        "Q32",
+        "Q33",
+        "Q34"
+      ],
+      "rules": [
+        "RM-ECO-012"
+      ],
+      "given": {
+        "TEST_only_rate_per_day": 24,
+        "TEST_only_credit_interval_minutes": 15,
+        "starting_stock": 0,
+        "bonus_percentages": [
+          10,
+          20
+        ]
+      },
+      "when": [
+        "tick_one_interval",
+        "tick_four_intervals",
+        "settle_with_bonus"
+      ],
+      "then": [
+        "one tick without bonus accumulates 0.25 resource internally, not spendable",
+        "four ticks without bonus create one spendable resource",
+        "30 percent total additive bonus applied to base, not 1.1*1.2"
+      ],
+      "status": "interval_15min_proposal_not_locked"
+    },
+    {
+      "id": "P0-FX-006",
+      "title": "Entretien horaire et pertes de pelotons",
+      "questions": [
+        "Q41",
+        "Q42",
+        "Q43"
+      ],
+      "rules": [
+        "RM-ECO-016"
+      ],
+      "given": {
+        "city": "garrison-city",
+        "can_pay_maintenance": false,
+        "stack_sizes": [
+          100,
+          20
+        ],
+        "hourly_attrition_percent": 10
+      },
+      "when": [
+        "hourly_maintenance_due"
+      ],
+      "then": [
+        "garrison-city is responsible for the maintenance",
+        "10 members of first stack and 2 of second die in this exact-divisible fixture",
+        "remaining stacks are [90,18]",
+        "next hourly maintenance recalculated from reduced army power"
+      ],
+      "status": "rounding_and_partial_payment_pending"
+    },
+    {
+      "id": "P0-FX-007",
+      "title": "Construction urbaine/régionale concurrente",
+      "questions": [
+        "Q44",
+        "Q45",
+        "Q46"
+      ],
+      "rules": [
+        "RM-CIT-009"
+      ],
+      "given": {
+        "urban_construction_running": true,
+        "region_free_heroes": [
+          "H1",
+          "H2"
+        ]
+      },
+      "when": [
+        "start_second_urban_building",
+        "start_two_distinct_region_buildings"
+      ],
+      "then": [
+        "second urban building refused (no queue)",
+        "both region constructions allowed if sufficient resources",
+        "H1 and H2 remain unavailable, including city defense, during travel and construction"
+      ],
+      "status": "project_decided"
+    },
+    {
+      "id": "P0-FX-008",
+      "title": "Vitesses et annulation de construction",
+      "questions": [
+        "Q47",
+        "Q48",
+        "Q49"
+      ],
+      "rules": [
+        "RM-CIT-010"
+      ],
+      "given": {
+        "TEST_only_base_gold_cost": 1000,
+        "TEST_only_base_duration_minutes": 100
+      },
+      "when": [
+        "choose_normal",
+        "choose_fast",
+        "choose_economical",
+        "attempt_cancel_any_started_build"
+      ],
+      "then": [
+        "normal 1000 gold/100 min",
+        "fast 1400 gold/80 min",
+        "economical 800 gold/140 min",
+        "cost charged on start",
+        "cancellation refused and no refund"
+      ],
+      "status": "numeric_rounding_other_values_pending"
+    },
+    {
+      "id": "P0-FX-009",
+      "title": "Réserves partagées entre variantes",
+      "questions": [
+        "Q64",
+        "Q65",
+        "Q66"
+      ],
+      "rules": [
+        "RM-ARM-009",
+        "RM-ARM-010"
+      ],
+      "given": {
+        "tier": 5,
+        "shared_available_recruits": 12
+      },
+      "when": [
+        "buy_8_upgraded_and_4_base",
+        "try_buy_8_upgraded_and_5_base"
+      ],
+      "then": [
+        "12 total units bought in first case, shared pool becomes empty",
+        "13 combined units rejected atomically in second case if starting from a fresh identical state",
+        "unit purchase instant into city garrison"
+      ],
+      "status": "project_decided"
+    },
+    {
+      "id": "P0-FX-010",
+      "title": "Conversion immédiate d'un peloton entier",
+      "questions": [
+        "Q67",
+        "Q68"
+      ],
+      "rules": [
+        "RM-ARM-010"
+      ],
+      "given": {
+        "stack_size": 10,
+        "TEST_only_upgrade_cost_per_unit": 5,
+        "stack_limit": 7
+      },
+      "when": [
+        "upgrade_whole_stack",
+        "try_upgrade_only_5_of_10_in_independent_fixture"
+      ],
+      "then": [
+        "whole stack requires 50 units of test currency and converts all 10 immediately",
+        "partial conversion is refused with no debit"
+      ],
+      "status": "project_decided"
+    },
+    {
+      "id": "P0-FX-011",
+      "title": "Recompense de quête différée",
+      "questions": [
+        "Q31",
+        "Q38"
+      ],
+      "rules": [
+        "RM-ECO-014"
+      ],
+      "given": {
+        "quest_completed": true,
+        "reward_claimed": false
+      },
+      "when": [
+        "close_reward_message",
+        "reconnect",
+        "claim_reward",
+        "retry_claim"
+      ],
+      "then": [
+        "reward remains available until claim",
+        "exactly one payout on first claim",
+        "duplicate claim does not duplicate stocks or XP"
+      ],
+      "status": "other_reward_sources_not_decided"
+    },
+    {
+      "id": "P0-FX-012",
+      "title": "Trêve de nuit et reprise après panne",
+      "questions": [
+        "Q82"
+      ],
+      "rules": [
+        "RM-TIM-005"
+      ],
+      "given": {
+        "world_local_truce_start": "23:00",
+        "world_local_truce_end": "06:00",
+        "timezone": "pending per world"
+      },
+      "when": [
+        "attempt_to_advance_world_map_move_at_23:30",
+        "settle_offline_time_and_arrive_at_06:00"
+      ],
+      "then": [
+        "world movement pauses during truce",
+        "elapsed civil time respected across offline recovery",
+        "movement resumes after truce",
+        "economic production is not silently stopped by movement truce"
+      ],
+      "status": "timezone_and_dst_spec_pending"
+    },
+    {
+      "id": "P0-FX-013",
+      "title": "Même timestamp sans priorité métier prédéfinie",
+      "questions": [
+        "Q81"
+      ],
+      "rules": [
+        "RM-TIM-007"
+      ],
+      "given": {
+        "same_timestamp_events": [
+          "reinforcement",
+          "attack"
+        ],
+        "business_priority": "none"
+      },
+      "when": [
+        "concurrent_valid_events_commit",
+        "replay_same_logged_commits"
+      ],
+      "then": [
+        "either operation may commit first",
+        "only applied results are persisted",
+        "replay uses persisted applied order rather than a new random order"
+      ],
+      "status": "project_decided_technical_serialization"
+    },
+    {
+      "id": "P0-FX-014",
+      "title": "Retour d'une mission rappelée",
+      "questions": [
+        "Q80",
+        "Q83"
+      ],
+      "rules": [
+        "RM-TIM-006"
+      ],
+      "given": {
+        "outbound_elapsed_minutes": 90,
+        "destination_not_reached": true
+      },
+      "when": [
+        "recall_before_arrival"
+      ],
+      "then": [
+        "mission enters return leg",
+        "return uses 90 minutes in the no-additional-halt controlled fixture",
+        "two-hour attackable halts remain modeled on non-allied routes"
+      ],
+      "status": "movement_points_threshold_unknown"
+    },
+    {
+      "id": "P0-FX-015",
+      "title": "Mine productive apres victoire et respawn de PNJ",
+      "questions": [
+        "Q17",
+        "Q39"
+      ],
+      "rules": [
+        "RM-REG-010",
+        "RM-ECO-015"
+      ],
+      "given": {
+        "plot": "mine_a",
+        "cleared": true,
+        "active_mining": true
+      },
+      "when": [
+        "advance_idle_respawn_clock",
+        "disable_exploitation_and_wait_X_days_in_independent_fixture"
+      ],
+      "then": [
+        "actively exploited plot never respawns PNJ",
+        "mine already produces since clearance",
+        "if unused for X days then respawn is permitted as configured",
+        "repeated reward policy still needs balancing"
+      ],
+      "status": "idle_X_days_pending"
+    }
+  ]
+}
