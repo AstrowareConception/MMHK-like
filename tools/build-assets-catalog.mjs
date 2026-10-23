@@ -6,9 +6,10 @@
  * Usage : node tools/build-assets-catalog.mjs
  */
 import { readFileSync, writeFileSync } from 'node:fs';
-import { resolve } from 'node:path';
+import { resolve, dirname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 
-const root = resolve(import.meta.dirname, '..');
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const read = path => JSON.parse(readFileSync(resolve(root, path), 'utf8'));
 const cdx = read('data/analysis/wayback-mmhk-cdx-2026-10-23.json');
 const expected = read('data/analysis/expected-city-files.json').files;
@@ -20,21 +21,21 @@ const acidcave = read('data/analysis/acidcave-referenced-images.json');
 const logical = input => {
   const clean = input.replaceAll('\\', '/');
   const i = clean.indexOf('/img/');
-  return i < 0 ? null : 'img/' + clean.slice(i + 5).replace(/\\/{2,}/g, '/');
+  return i < 0 ? null : 'img/' + clean.slice(i + 5).replace(/\/{2,}/g, '/');
 };
 const basename = s => s.split('/').at(-1);
 const category = key => {
-  if (/^img\\/city\\/[A-Z]+\\/base\\.jpg$/.test(key)) return 'ville/fond_vierge';
-  if (/^img\\/city\\/[A-Z]+\\//.test(key)) return 'ville/calque_batiment';
-  if (/^img\\/cityBuildingList\\/.*_building\\.gif$/i.test(key)) return 'ville/planche_miniatures';
+  if (/^img\/city\/[A-Z]+\/base\.jpg$/.test(key)) return 'ville/fond_vierge';
+  if (/^img\/city\/[A-Z]+\//.test(key)) return 'ville/calque_batiment';
+  if (/^img\/cityBuildingList\/.*_building\.gif$/i.test(key)) return 'ville/planche_miniatures';
   if (key.startsWith('img/cityBuildingList/')) return 'ville/arbre_construction';
-  if (/^img\\/backgroundGame\\//.test(key)) return 'habillage/fond_faction';
-  if (/^img\\/hero\\//.test(key)) return 'heros/interface';
-  if (/^img\\/worldMap\\//.test(key)) return 'monde';
-  if (/^img\\/(region|zone)\\//.test(key)) return 'region';
-  if (/^img\\/firstConnection\\/creaturesSlideShow\\//.test(key)) return 'unites/illustration';
-  if (/^img\\/(portal|firstConnection|news|strategyguide)\\//.test(key)) return 'portail/presentation';
-  if (/^img\\/(frame|contentSlider|gameFooter|sideBar)\\//.test(key)) return 'interface';
+  if (/^img\/backgroundGame\//.test(key)) return 'habillage/fond_faction';
+  if (/^img\/hero\//.test(key)) return 'heros/interface';
+  if (/^img\/worldMap\//.test(key)) return 'monde';
+  if (/^img\/(region|zone)\//.test(key)) return 'region';
+  if (/^img\/firstConnection\/creaturesSlideShow\//.test(key)) return 'unites/illustration';
+  if (/^img\/(portal|firstConnection|news|strategyguide)\//.test(key)) return 'portail/presentation';
+  if (/^img\/(frame|contentSlider|gameFooter|sideBar)\//.test(key)) return 'interface';
   return 'autre';
 };
 const priority = (cat, key) =>
@@ -43,7 +44,7 @@ const priority = (cat, key) =>
   cat.startsWith('portail/') ? 4 : 3;
 
 const byLocal = new Map();
-for (const a of recovered) if (/\\.(gif|png|jpe?g|webp)$/i.test(a.path || '')) {
+for (const a of recovered) if (/\.(gif|png|jpe?g|webp)$/i.test(a.path || '')) {
   const key = logical(a.path);
   if (key) byLocal.set(key, a);
 }
@@ -74,7 +75,7 @@ for (const [index, record] of cdx.entries()) {
   }
   item.cdx_url_count++;
   if (!item.cdx_digests.includes(digest)) item.cdx_digests.push(digest);
-  const match = original.match(/\\/(\\d+\\.\\d+\\.\\d+(?:\\.\\d+)?(?:-\\d+)?-MTR)\\//);
+  const match = original.match(/\/(\d+\.\d+\.\d+(?:\.\d+)?(?:-\d+)?-MTR)\//);
   if (match && !item.versions.includes(match[1])) item.versions.push(match[1]);
   if (timestamp < item.archive_timestamp || original.includes('/4.1.13-MTR/')) {
     item.archive_timestamp = timestamp;
@@ -135,7 +136,7 @@ for (const a of recovered) {
 }
 for (const a of jactari) {
   const key = 'jactari:' + basename(a.path);
-  const cat = /^Hero_[A-Z]+_2\\.jpg$/.test(basename(a.path)) ? 'heros/planche_portraits' :
+  const cat = /^Hero_[A-Z]+_2\.jpg$/.test(basename(a.path)) ? 'heros/planche_portraits' :
     /^BattleUnitStack_/.test(basename(a.path)) ? 'unites/portraits_bataille' :
     /^UnitStack_/.test(basename(a.path)) ? 'unites/sprites' : 'jactari/autre';
   insert({
@@ -177,7 +178,7 @@ const haveAcid = new Set(recovered.filter(x => x.path?.includes('/acidcave/')).m
 for (const [id, pageSet] of acidRefs) {
   const src = id.slice('acidcave:'.length);
   if (haveAcid.has(basename(src))) continue;
-  const cat = /^sphinx\\/unit_/.test(src) ? 'unites/illustration_communautaire' :
+  const cat = /^sphinx\/unit_/.test(src) ? 'unites/illustration_communautaire' :
     /^sphinx\\/mini\\//.test(src) ? 'ville/miniature_communautaire' :
     'reference/guide_acidcave';
   insert({
@@ -224,14 +225,14 @@ const asset = {
   },
   images: records
 };
-writeFileSync(resolve(root, 'data/analysis/assets-catalog.json'), JSON.stringify(asset,null,2)+'\\n');
+writeFileSync(resolve(root, 'data/analysis/assets-catalog.json'), JSON.stringify(asset,null,2)+'\n');
 const cols=['id','category','priority','logical_path','availability','in_repo','expected_city',
   'provenance','repo_path','sha256','original_url','archive_url','cdx_url_count','cdx_digest_count',
   'versions','notes'];
 const csvVal = s => {
-  const v = String(s ?? '').replaceAll('\\r',' ').replaceAll('\\n',' ');
-  return /[;"\\n]/.test(v) ? '"'+v.replaceAll('"','""')+'"' : v;
+  const v = String(s ?? '').replaceAll('\r',' ').replaceAll('\n',' ');
+  return /[;"\n]/.test(v) ? '"'+v.replaceAll('"','""')+'"' : v;
 };
-const csv = [cols.join(';'),...records.map(a=>cols.map(k=>csvVal(Array.isArray(a[k]) ? a[k].join('|') : a[k])).join(';'))].join('\\n')+'\\n';
+const csv = [cols.join(';'),...records.map(a=>cols.map(k=>csvVal(Array.isArray(a[k]) ? a[k].join('|') : a[k])).join(';'))].join('\n')+'\n';
 writeFileSync(resolve(root,'data/analysis/assets-catalog.csv'),csv);
 console.log(JSON.stringify(asset.counts,null,2));
