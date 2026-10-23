@@ -1,5 +1,7 @@
 # Génération régionale : proposition de conception suite aux réponses P0
 
+**Rectificatif C02 (23/10/2026) :** le placement des sites spéciaux ne doit plus être interprété comme une distance minimale aléatoire entre types : **tous les types de reliques suivent une même trame quasi régulière**, avec décalage maximal de deux cases. La conception active figure dans [le laboratoire](10-LABS-HEREDITE-MONDE.md).
+
 **Statut : proposition de game design déléguée Q12/Q15, à valider par simulation ; elle ne reproduit pas un algorithme Ubisoft identifié.**
 
 Références : [réponses Q07–Q22](../decisions/DECISIONS-P0-2026-10-23.md), [RM-REG-001…011](../../data/rules/early-game.rules.json) et [profil S2 de projet](../../data/rules/mmhk-like-s2-policy-draft.json).
