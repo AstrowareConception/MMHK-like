@@ -1,0 +1,159 @@
+{
+  "schema_version": 1,
+  "profile_id": "classic_pvp_early_game_lab_v0.1",
+  "profile_state": "NON_EXECUTABLE_DECISIONS_PENDING",
+  "as_of": "2026-10-23",
+  "purpose": "Support de conception et de test ; ni configuration approuvée ni reconstitution certifiée d'une saison Ubisoft.",
+  "confirmed_scope": {
+    "mode": "classic_pvp",
+    "victory_model": "tear_monuments_classic_target",
+    "excluded_modes": [
+      "arkath_coop",
+      "s4_tournament"
+    ]
+  },
+  "catalogues": {
+    "source": "Jactari reference commit e8d862d82741986759b88012421aed8e8175e26e",
+    "reference_version": "v.4.1.3-MTR",
+    "profile_qualification": "candidate_not_approved_for_target_season",
+    "faction_ids": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "resource_keys": [
+      "G",
+      "w",
+      "o",
+      "m",
+      "c",
+      "s",
+      "g"
+    ]
+  },
+  "world": {
+    "time_storage": "UTC",
+    "membership_constraint": "UNIQUE(account_id, world_id) — PROP",
+    "world_capacity": null,
+    "starter_pack": null,
+    "spawn": {
+      "modes": [
+        "random",
+        "near"
+      ],
+      "friend_key_scope": "same_world",
+      "near_radius": null,
+      "near_fallback": null,
+      "candidates_filter": null
+    },
+    "newbie_protection": {
+      "example_duration_days": 7,
+      "duration_status": "user_recollection_conflicts_with_14_or_15_day_sources",
+      "scope": null,
+      "early_exit_policy": null,
+      "end_interval": null
+    }
+  },
+  "region": {
+    "reference_grid": [
+      5,
+      5
+    ],
+    "city_cell_test_convention": [
+      2,
+      2
+    ],
+    "reference_mines_per_region": 4,
+    "resource_duplicates_allowed": "prototype_design_based_on_user_recollection",
+    "weights": null,
+    "spawn_balance_constraints": null,
+    "seed_algorithm": null,
+    "special_site_density": null,
+    "initial_pve_garrisons": null
+  },
+  "economy": {
+    "credit_cadence": null,
+    "rounding_policy": null,
+    "calculation": "segmented by events — PROP",
+    "storage_policy": null,
+    "overflow_policy": null,
+    "maintenance_version": null,
+    "insolvency_policy": null,
+    "example_rates_only_in": "data/rules/early-game.fixtures.json"
+  },
+  "construction": {
+    "catalogue_duration_unit": "minutes",
+    "parallel_slots": null,
+    "required_hero_policy": null,
+    "refund_and_cancellation": null,
+    "under_siege_policy": null
+  },
+  "heroes": {
+    "starter_hero": null,
+    "archetype_catalogue": "data/reference/heros.json",
+    "offers_and_prices": null,
+    "exclusive_activity_invariant": "PROP"
+  },
+  "recruitment": {
+    "recruit_pool_cadence": null,
+    "base_tier_production_nominal": [
+      15,
+      10,
+      7,
+      5,
+      3,
+      2,
+      1
+    ],
+    "pool_sharing": null,
+    "order_duration": null,
+    "stack_limit_reference": 7
+  },
+  "combat": {
+    "model": "automatic_before/after mission — documented",
+    "reference_oracle": "data/combat-reference-cases.json",
+    "oracle_level": "community_synthetic_not_server",
+    "region_travel_and_return_delay": null,
+    "casualties_profile": null,
+    "report_snapshot": "PROP"
+  },
+  "concurrency": {
+    "idempotency_required": true,
+    "same_instant_ordering": null,
+    "timeout_and_retry_policy": null,
+    "service_restart_strategy": "PROP deterministic catch-up, details pending"
+  },
+  "release_gates": {
+    "can_expose_as_historical_ruleset": false,
+    "can_create_unattended_world": false,
+    "can_execute_PAR_01": false,
+    "blocking_uncertainties": [
+      "U01",
+      "U02",
+      "U03",
+      "U04",
+      "U05",
+      "U06",
+      "U07",
+      "U08",
+      "U09",
+      "U11",
+      "U13",
+      "U14",
+      "U17",
+      "U20",
+      "U24",
+      "U30",
+      "U42"
+    ]
+  },
+  "notes": [
+    "Null signifie décision ouverte : ce n'est ni zéro ni valeur par défaut implicite.",
+    "Durée de protection de 7 jours = souvenir de projet, non preuve universelle historique.",
+    "Les 25 cases et 4 mines caractérisent une région ordinaire ; les cas spéciaux demeurent à qualifier.",
+    "L'utilisation du catalogue de 2013 dans une saison classique antérieure n'est pas attestée.",
+    "Les règles d'intégrité et le traitement UTC sont des propositions d'architecture fonctionnelle, non des reconstructions du serveur Ubisoft."
+  ]
+}
