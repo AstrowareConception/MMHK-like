@@ -267,3 +267,17 @@ node --test tools/jactari-port/*.test.mjs
 ### Limites inchangées
 
 Mana, disponibilité des sorts, tous les types magiques, restauration des invocations, effets de fin de combat et blessures de héros restent hors périmètre. Le coefficient `lossPolicy.lossFactor` n'est toujours **pas une valeur S2 vérifiée**. Ce code adapté de Jactari est identifié **GPL-3.0-or-later** ; ne pas le fusionner sans revue de licences dans un moteur propriétaire.
+
+
+## V5.8 — Fin du combat et invocations hors formation (24/10/2026)
+
+Deux primitives issues du client Jactari d'origine complètent le portage :
+
+- [terminal-cleanup.mjs](terminal-cleanup.mjs) : `projectTerminalTemporaryRevival()` distingue la résurrection temporaire du **dernier peloton gagnant** de l'effectif affiché en fin de combat. `magic-rounds.mjs` expose maintenant `terminalDisplay` et `terminalCleanup`, sans modifier ni les pelotons au cours du combat ni `persistentArmies`. Les résurrections programmées lorsqu'il n'y a plus de duel sont explicitement rejetées.
+- [summoning.mjs](summoning.mjs) : `planSummoning()` reproduit la sélection du premier type d'unité correspondant à la **faction** et à l'**arme** (indices cible 0=I, 1=R, 2=C confirmés dans `donnees.sorts.min.js`), ainsi que les puissances d'invocation absolues (`unite=0`) ou relatives (`unite=4`). Il préserve les positions **spéciales 1 puis 0**, situées hors des **sept positions permanentes 2–8**. Le module prépare l'invocation mais ne l'insère pas encore dans le combat.
+
+La validation réelle effectuée comprend **87/87 tests Node non différentiels** sur le banc local (issu de V5.7 et des nouveaux modules). La comparaison **directe aux fonctions historiques** a couvert **350 duels, 350 calculs de résurrection et 1 000 nettoyages de fin de bataille, avec zéro divergence** sur ces sous-fonctions. Le [test historique de clôture](terminal-cleanup-differential.test.mjs) est committé pour rejouer les 1 000 cas contre `data/Jactari/src/scripts/combat.min.js`.
+
+**À ne pas confondre :** cette vérification des sous-routines n'est **pas** une parité globale des batailles Jactari. La branche de terminalisation demeure une projection du rapport, pas un changement du registre persistant des armées. Les invocations ne sont pas intégrées aux tours, les prérequis de mana et la majorité des sorts restent partiels. **Le succès de la CI GitHub n'est pas confirmé**. Les modules adaptés sont sous **GPL-3.0-or-later**, comme leur source.
+
+Voir [rapport V5.8](../../docs/game-design/25-JACTARI-V58-CLOTURE-INVOCATIONS.md) et [résultats structurés](../../data/analysis/jactari-v58-differential-2026-10-24.json).
