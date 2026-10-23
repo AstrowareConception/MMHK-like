@@ -26,6 +26,7 @@ La révision 0.5 analyse la [génération du monde, les sites spéciaux, le code
 | Organiser les versions et les phases de campagne | [Story map](docs/backlog/STORY-MAP.md) |
 | Affiner, estimer et accepter une fonctionnalité | [3 C, INVEST et Definition of Done](docs/backlog/METHODE-ET-QUALITE.md) |
 | Vérifier la couverture fonctionnelle | [Exigences vers stories](docs/backlog/COUVERTURE.md), [parcours intégrés](docs/backlog/RECETTE-PARCOURS.md) |
+| Concevoir le premier royaume jouable | [Expérience early game](docs/game-design/08-EXPERIENCE-EARLY-GAME.md), [règles métier](docs/rules/README.md), [validation du lot A](docs/rules/VALIDATION.md) |
 | Comprendre le jeu dans son ensemble | [Game design : vision, boucles et interfaces](docs/game-design/01-VISION-ET-BOUCLES.md) |
 | Lire l’analyse image par image | [Analyse des 57 captures](docs/research/ANALYSE-CAPTURES.md) |
 | Identifier les assets utilisables et manquants | [Audit Jactari et 1 317 correspondances de sprites](docs/research/AUDIT-JACTARI-ASSETS.md) |
