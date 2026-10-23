@@ -174,3 +174,16 @@ Deux nouveaux modules **sans DOM ni jQuery** complètent l'extraction de `puissa
 Un lanceur de bataille complet nécessite encore de calculer les modificateurs via les données originales, de vérifier les contraintes de mana et de compétence, de résoudre tous les types de sorts, puis de brancher le déclenchement des sorts aux rounds de `encounter.mjs` et les résurrections aux rapports. À ce stade, les nouveaux modules fournissent des **primitives** ; `simulateSupportedBattle` continue de refuser `context.spells`.
 
 Source : `data/Jactari/src/scripts/combat.min.js` (GPLv3+). Les paramètres `spell.power/factors/school/unit/circle/type` sont une normalisation explicite de `puissance/facteur/ecole/unite/cercle/type` dans les données historiques.
+
+
+## Exécution partielle des sorts dans les tours — `magic-encounter.mjs`
+
+Le nouvel orchestrateur `simulateAttackerMagicEncounter()` permet enfin à un **sort offensif de l'attaquant** de modifier le peloton actif **avant le duel du même tour**. Deux sous-ensembles du Jactari historique sont pris en charge : `type=0/cible=4/unité=1,3,7` pour des dégâts magiques ciblés, et `type=4/cible=5/unité=0,1,2,3` pour un renfort de puissance/effectif du peloton attaquant. Les valeurs de puissance sont **déjà résolues** par l'appelant ; le calculateur des résistances et du héros `spell-power.mjs` est une autre brique à raccorder.
+
+Le module enregistre un **journal ordonné** : événement de sort, puis événement de duel si des combattants subsistent ; il garde les pertes magiques dans `magicLosses` séparément de `roundLosses`, et les renforts `bonusTroops` de `bonusLost`. Il refuse à l'avance tout effet non pris en charge et échoue explicitement pour un sort programmé sur un tour qui ne peut pas être atteint.
+
+**Tests :** huit cas locaux exécutés, huit réussis, pour dégâts avant duel, destruction sans duel, bonus d'unités, deuxième tour, effet inconnu, tour inatteignable, immutabilité et déterminisme. Tests versionnés dans `magic-encounter.test.mjs`.
+
+**Limite impérative :** ce moteur **n'exécute pas les sorts du défenseur**, les zones, les résurrections durant le combat, les coûts de mana, les conditions d'accès aux sorts, ni l'application complète des sorts qui changent les caractéristiques d'un héros. Il ne remplace **pas** `battle.mjs` ni `report.mjs` et ne prétend pas produire un bilan définitif conforme à toutes les variantes S2. Les sorts restent pré-paramétrés et non résolus à partir de l'inventaire et des compétences.
+
+Utilisation : `node --test tools/jactari-port/magic-encounter.test.mjs` (Node 22+). Code dérivé identifié GPL-3.0-or-later.
