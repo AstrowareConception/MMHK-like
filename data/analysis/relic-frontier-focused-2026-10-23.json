@@ -1,0 +1,43 @@
+{
+  "date": "2026-10-23",
+  "kind": "synthetic_targeted_frontier",
+  "script_local": "MMHK_relic_frontier_experiment.py",
+  "window_days": 4,
+  "site": "sphinx",
+  "alliance_count": 2,
+  "days": 24,
+  "city_distances_to_site": 3,
+  "synthetic_collective_upkeep_per_day": 500,
+  "sphinx_nominal_saving_percent": 7,
+  "experiments": [
+    {
+      "case": "balanced",
+      "changes": 3,
+      "held_days": 19,
+      "saving": 665,
+      "history": "----AAAAAAAAABBBBBBBBBB-"
+    },
+    {
+      "case": "defender_B_stronger",
+      "changes": 2,
+      "held_days": 24,
+      "saving": 840,
+      "history": "BBBBBAAAAAAAABBBBBBBBBBB"
+    },
+    {
+      "case": "defender_A_stronger",
+      "changes": 2,
+      "held_days": 24,
+      "saving": 840,
+      "history": "AAAAAAAAAAAAAABBBBBBBBAA"
+    },
+    {
+      "case": "same_troops_no_bonus",
+      "changes": 3,
+      "held_days": 19,
+      "saving": 0,
+      "history": "----AAAAAAAAABBBBBBBBBB-"
+    }
+  ],
+  "disclaimer": "Not historical; score power/(1+d)^2, cities artificially reinforced; saved upkeep excludes troop purchase/maintenance incremental cost, so not net ROI"
+}
