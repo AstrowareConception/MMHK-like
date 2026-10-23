@@ -1,0 +1,13 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {simulateMeleeOnlyEncounter} from './encounter.mjs';
+const slot=(count,weapon='I',unitPower=10)=>({count,weapon,unitPower});
+const army=(...s)=>Array.from({length:7},(_,i)=>s[i]??null);
+test('one-stack attacker win',()=>{const r=simulateMeleeOnlyEncounter({attackers:army(slot(100)),defenders:army(slot(50))});assert.equal(r.status,'attacker');assert.equal(r.events.length,1);});
+test('two defending ordered stacks require two rounds',()=>{const r=simulateMeleeOnlyEncounter({attackers:army(slot(100)),defenders:army(slot(20),slot(20))});assert.equal(r.status,'attacker');assert.deepEqual(r.events.map(e=>e.defenderSlot),[1,2]);});
+test('seven stacks ordered by slot',()=>{const defenders=army(...Array.from({length:7},()=>slot(1)));const r=simulateMeleeOnlyEncounter({attackers:army(slot(100)),defenders});assert.deepEqual(r.events.map(e=>e.defenderSlot),[1,2,3,4,5,6,7]);});
+test('equal stacks mutually disperse',()=>{const r=simulateMeleeOnlyEncounter({attackers:army(slot(10)),defenders:army(slot(10))});assert.equal(r.status,'mutual-dispersion');});
+test('no magic phases falsely simulated',()=>assert.throws(()=>simulateMeleeOnlyEncounter({attackers:army(slot(10)),defenders:army(slot(10)),context:{magic:true}}),/Unsupported phase/));
+test('unsupported weapons rejected',()=>assert.throws(()=>simulateMeleeOnlyEncounter({attackers:army(slot(10,'Z')),defenders:army(slot(10))}),RangeError));
+test('caller inputs not modified',()=>{const x=army(slot(100)),y=army(slot(10));simulateMeleeOnlyEncounter({attackers:x,defenders:y});assert.equal(x[0].count,100);assert.equal(y[0].count,10);});
+test('hero bonuses change duel without side effects',()=>{const r=simulateMeleeOnlyEncounter({attackers:army(slot(10)),defenders:army(slot(10)),context:{attackerHero:{attaque_modifiee:100}}});assert.equal(r.status,'attacker');});
