@@ -1,0 +1,93 @@
+{
+  "name": "V5.6 two-caster attack and defensive buff then final casualty report",
+  "origin": "executed Node 22.16.0 local test harness",
+  "game_design_status": "synthetic_illustration_not_original_MMHK_S2",
+  "army": {
+    "attacker": [
+      {
+        "count": 100,
+        "weapon": "I",
+        "unitPower": 10,
+        "goldCost": 5
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ],
+    "defender": [
+      {
+        "count": 80,
+        "weapon": "I",
+        "unitPower": 10,
+        "goldCost": 5
+      },
+      null,
+      null,
+      null,
+      null,
+      null,
+      null
+    ]
+  },
+  "casting": {
+    "attacker": {
+      "turn": 1,
+      "type": 0,
+      "target": 4,
+      "unit": 7,
+      "power": 100
+    },
+    "defender": {
+      "turn": 1,
+      "type": 4,
+      "target": 6,
+      "unit": 3,
+      "power": 25
+    }
+  },
+  "lossPolicy": {
+    "lossFactor": 0.25,
+    "source": "DEMONSTRATION_NON_HISTORIQUE"
+  },
+  "observed": {
+    "winner": "attacker",
+    "events": [
+      {
+        "phase": "spell",
+        "side": "attacker",
+        "casualties": 10
+      },
+      {
+        "phase": "spell",
+        "side": "defender",
+        "bonusTroops": 17
+      },
+      {
+        "phase": "duel"
+      }
+    ],
+    "permanent": {
+      "attacker": {
+        "dead": 21,
+        "goldLost": 105
+      },
+      "defender": {
+        "dead": 20,
+        "goldLost": 100
+      }
+    }
+  },
+  "verification": {
+    "total_local_tests_passed": 59,
+    "new_tests": 20,
+    "github_actions_confirmed": false,
+    "differential_vs_original_jactari_for_new_phases": false
+  },
+  "modules": [
+    "tools/jactari-port/magic-rounds.mjs",
+    "tools/jactari-port/magic-report.mjs"
+  ]
+}
