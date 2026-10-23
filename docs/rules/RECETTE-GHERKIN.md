@@ -1,6 +1,6 @@
 # Spécifications de recette Gherkin — Early game
 
-**18 scénarios, 0 exécution moteur.** Les cas décrivent des comportements à implémenter et à tester. Les prix et caractéristiques de 2013 ne certifient pas la saison cible ; les valeurs fictives ne sont pas attribuées à Ubisoft. Une fixture marquée décision ouverte ne devient exécutable qu'après choix d'un profil explicite.
+**18 scénarios initiaux (et [15 exemples additionnels P0](../../data/decisions/p0-acceptance-examples.json)), 0 exécution moteur.** Les cas décrivent des comportements à implémenter et à tester. Les prix et caractéristiques de 2013 ne certifient pas la saison cible ; les valeurs fictives ne sont pas attribuées à Ubisoft. Une fixture marquée décision ouverte ne devient exécutable qu'après choix d'un profil explicite.
 
 Source de données : [18 fixtures JSON](../../data/rules/early-game.fixtures.json). Voir [contrats](CONTRATS-EARLY-GAME.md), [règles RM](../../data/rules/early-game.rules.json) et [décisions ouvertes](DECISIONS-ET-INCERTITUDES.md).
 
@@ -102,7 +102,7 @@ Fonctionnalité: Développer un royaume persistant sans incohérence
   Scénario: Mine libérée seulement après victoire
     Étant donné une mine occupée par des créatures neutres
     Quand une fixture de combat se termine par une défaite puis une fixture indépendante par une victoire
-    Alors la mine reste occupée en défaite, devient éligible à la production en victoire
+    Alors la mine reste occupée en défaite, puis produit immédiatement dès sa libération par victoire, selon les crédits périodiques du monde (Q39)
 
   @FX-PVE-002 @community_simulator_oracle_not_ubisoft_server
   Scénario: Oracle communautaire I contre C
@@ -114,7 +114,7 @@ Fonctionnalité: Développer un royaume persistant sans incohérence
   Scénario: Mine occupée non productive
     Étant donné une mine de bois avec PNJ encore présents
     Quand je demande sa production avant libération puis après victoire
-    Alors elle ne produit pas avant libération ; sa méthode d'activation après victoire reste à qualifier
+    Alors elle ne produit pas avant libération ; elle commence immédiatement sa production après la victoire admissible (Q39)
 ~~~
 
 ## Définition de validation
