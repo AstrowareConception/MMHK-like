@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "version": "s2-c01-c09-v1",
+  "version": "s2-c01-c09-territorial-v1",
   "product": "MMHK-like",
   "status": "decisions_recorded_not_fully_parameterized_not_yet_executable",
   "decision_registry": "data/decisions/p0-2026-10-23.json",
@@ -59,23 +59,38 @@
           50,
           100
         ],
-        "dimensions": null
+        "dimensions": [
+          320,
+          320
+        ]
       },
       "small": {
         "max_players_exclusive": 500,
-        "dimensions": null
+        "dimensions": [
+          512,
+          512
+        ]
       },
       "medium": {
         "max_players": null,
-        "dimensions": null
+        "dimensions": [
+          720,
+          720
+        ]
       },
       "large": {
         "max_players_inclusive": 2000,
-        "dimensions": null
+        "dimensions": [
+          1024,
+          1024
+        ]
       },
       "very_large": {
         "max_players": null,
-        "dimensions": null
+        "dimensions": [
+          1248,
+          1248
+        ]
       }
     },
     "player_spawn": "balanced_progressive",
@@ -156,7 +171,67 @@
       "Q29",
       "Q30"
     ],
-    "size_preset_note": "User named very small <200, small <500, large <=2000; medium and very large size/capacity to be designed. Examples of 20/50/100-player worlds remain permitted within very small."
+    "size_preset_note": "User named very small <200, small <500, large <=2000; medium and very large size/capacity to be designed. Examples of 20/50/100-player worlds remain permitted within very small.",
+    "size_preset_variants": {
+      "micro": {
+        "max_players": 20,
+        "width": 104,
+        "height": 104,
+        "design_status": "proposed_to_validate_with_territorial_simulation"
+      },
+      "micro_plus": {
+        "max_players": 50,
+        "width": 160,
+        "height": 160,
+        "design_status": "proposed_to_validate_with_territorial_simulation"
+      },
+      "small_community": {
+        "max_players": 100,
+        "width": 224,
+        "height": 224,
+        "design_status": "proposed_to_validate_with_territorial_simulation"
+      },
+      "very_small": {
+        "max_players": 199,
+        "width": 320,
+        "height": 320,
+        "design_status": "proposed_to_validate_with_territorial_simulation"
+      },
+      "small": {
+        "max_players": 499,
+        "width": 512,
+        "height": 512,
+        "design_status": "proposed_to_validate_with_territorial_simulation"
+      },
+      "medium": {
+        "max_players": 1000,
+        "width": 720,
+        "height": 720,
+        "design_status": "proposed_to_validate_with_territorial_simulation"
+      },
+      "large": {
+        "max_players": 2000,
+        "width": 1024,
+        "height": 1024,
+        "design_status": "proposed_to_validate_with_territorial_simulation"
+      },
+      "very_large": {
+        "max_players": 3000,
+        "width": 1248,
+        "height": 1248,
+        "design_status": "proposed_to_validate_with_territorial_simulation"
+      }
+    },
+    "territorial_growth": {
+      "cities_per_player_max": 10,
+      "cap_basis": "user_latest_turn",
+      "influence_radius_max_cells": 6,
+      "influence_shape": "pending historical research; euclidean radius-six disk used for planning only",
+      "max_euclidean_disk_cells": 113,
+      "space_budget_target_world_regions_per_player": 500,
+      "owned_city_capacity_basis": "growth and increasing colonization cost; formula still to qualify",
+      "simulation_required": "alliance saturation and contested influence"
+    }
   },
   "region": {
     "ordinary_grid": [
