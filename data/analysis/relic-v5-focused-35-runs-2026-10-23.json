@@ -1,0 +1,87 @@
+{
+  "date": "2026-10-23",
+  "model": "V5 focused active rivalry multi-city (synthetic, not historical S2)",
+  "source_archive": "MMHK_V5_frontier_2026-10-23.zip",
+  "cases": 35,
+  "seeds": [
+    11,
+    23,
+    47,
+    71,
+    89
+  ],
+  "matchups": [
+    "objective vs defensive",
+    "objective vs objective",
+    "objective vs economy"
+  ],
+  "upkeep_multipliers": [
+    1,
+    4
+  ],
+  "control_scenario_days": 40,
+  "counterfactual": "five objective-vs-defensive cases with relic bonus effects disabled",
+  "rules": {
+    "rolling_influence_days": 4,
+    "influence_radii_from_dominance": [
+      0,
+      30000,
+      100000,
+      250000,
+      500000,
+      1000000
+    ],
+    "sites": [
+      "Sphinx",
+      "Treasury",
+      "Dolmen"
+    ],
+    "city_gold_local": true,
+    "upkeep_settlement": "24 modelled hourly debits per simulated day",
+    "attrition": "ceil(10% of stationed troop power on insolvent hour; power-as-units approximation, not per actual unit stack)",
+    "colonies": "max 4 per alliance in lab, cost grows by city number/distance; original 10 per player not reached",
+    "actions": [
+      "reinforce",
+      "found_frontier_colony",
+      "raid_opponent_garrison",
+      "defend",
+      "economize"
+    ],
+    "bonuses": "7% Sphinx maintenance / 5% Treasury gold; Dolmen combat XP not modelled"
+  },
+  "overall": {
+    "runs": 35,
+    "runs_with_direct_enemy_site_transfer": 5,
+    "direct_enemy_site_transfers": 10,
+    "runs_with_any_relic_control": 23,
+    "average_final_total_cities_both_alliances": 4.657
+  },
+  "by_upkeep": [
+    {
+      "multiplier": 1,
+      "runs": 15,
+      "direct_enemy_site_transfers": 10,
+      "runs_with_any_site_control": 15,
+      "cumulative_gross_sphinx_savings": 53192.14
+    },
+    {
+      "multiplier": 4,
+      "runs": 15,
+      "direct_enemy_site_transfers": 0,
+      "runs_with_any_site_control": 3,
+      "cumulative_gross_sphinx_savings": 8449.12
+    }
+  ],
+  "critical_caveats": [
+    "Only 2 allied cities per side initially, few added, not true 10-city/player late game.",
+    "All matches give first alliance first choice/actions; observed advantage is partly deterministic order bias.",
+    "No real Jactari combat; raids apply synthetic immediate casualties without siege or travel.",
+    "Early economic coefficients cause large attrition and must not be used for balance decisions.",
+    "Sphinx discounts tracked separately from unpaid debts (fix from initial implementation).",
+    "Seeds diversify initial gold/troops and raid efficiency, but strategies still highly constrained.",
+    "Cash is stored per city with simplified instant same-alliance internal redistribution, NOT true caravan transit.",
+    "Dolmen cannot be valued without XP-combat simulation; Treasury gold not separately isolated.",
+    "Unit stock is aggregated troop power and can lose fractions of imagined troop types; actual game attrition is ceil per stack.",
+    "Scenario dimensions 48x48 are targeted duel geometry and are not representative of occupancy-70 world presets."
+  ]
+}
