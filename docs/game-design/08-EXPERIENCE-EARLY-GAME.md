@@ -1,5 +1,7 @@
 # Game design — l'expérience du premier royaume
 
+**Mise à jour P0 :** les [84 réponses confirmées](../decisions/DECISIONS-P0-2026-10-23.md) précisent désormais les arbitrages. Le premier parcours utilise **Havre, T1–T3 et aucun sort** ; la saison 2 est la référence. La [proposition de générateur](09-GENERATEUR-P0-PROPOSITIONS.md) traite les choix délégués Q12/Q15. Toute ancienne orientation contraire de ce document est remplacée par ces décisions.
+
 **Statut : hypothèses de conception pour MMHK-like (PROP), non description certifiée du parcours original.** Ce chapitre complète les [boucles générales](01-VISION-ET-BOUCLES.md) par un parcours joueur cohérent avec le [référentiel métier](../rules/README.md). Aucun temps de session, taux de conversion, probabilité de mine ou « récompense tutorielle » ci-dessous n'est une valeur Ubisoft attestée.
 
 ## Promesse du premier cycle de jeu
