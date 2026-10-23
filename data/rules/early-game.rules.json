@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
-  "version": "early-game-rules/0.1-draft",
+  "version": "early-game-rules/0.2-p0-user-decisions",
   "as_of": "2026-10-23",
-  "status": "draft_not_approved_not_implemented",
+  "status": "DRAFT_user_project_decisions_integrated_historical_values_still_to_qualify",
   "scope": "early-game classic_pvp",
   "units": {
     "construction_duration": "minutes",
@@ -32,16 +32,16 @@
     "combatCases": "data/combat-reference-cases.json"
   },
   "counts": {
-    "rules": 60,
+    "rules": 89,
     "domains": {
-      "monde": 8,
-      "region": 8,
-      "economie": 11,
-      "construction": 8,
-      "heros": 6,
-      "armees": 8,
-      "combat": 7,
-      "temps": 4
+      "monde": 13,
+      "region": 11,
+      "economie": 16,
+      "construction": 12,
+      "heros": 10,
+      "armees": 10,
+      "combat": 9,
+      "temps": 8
     },
     "states": {
       "confirmed_scope": 1,
@@ -50,7 +50,9 @@
       "historically_incomplete": 13,
       "unconfirmed_recollection": 2,
       "blocked_by_evidence": 7,
-      "reference_observed": 4
+      "reference_observed": 4,
+      "confirmed_direction_with_parameters_open": 24,
+      "confirmed_project_rule": 5
     }
   },
   "rules": [
@@ -77,7 +79,20 @@
       "parameter_keys": [
         "ruleset_id",
         "catalogue_version"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q01",
+          "Q02",
+          "Q03",
+          "Q04",
+          "Q05",
+          "Q06"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-WRD-002",
@@ -104,7 +119,16 @@
       "parameter_keys": [
         "world_capacity",
         "world_player_unique"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q07",
+          "Q19"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-WRD-003",
@@ -129,7 +153,16 @@
       "fixture_ids": [],
       "parameter_keys": [
         "allowed_faction_ids"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q04",
+          "Q05"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-WRD-004",
@@ -157,7 +190,16 @@
       "parameter_keys": [
         "spawn_seed",
         "spawn_constraints"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q09",
+          "Q19"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-WRD-005",
@@ -183,7 +225,17 @@
         "friend_key_scope",
         "spawn_near_radius",
         "near_fallback"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q20",
+          "Q21",
+          "Q22"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-WRD-006",
@@ -211,7 +263,19 @@
         "newbie_days",
         "newbie_scope",
         "newbie_early_exit"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q23",
+          "Q24",
+          "Q25",
+          "Q26"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      },
+      "project_contract_override": "Protection de sept jours non révocable. Interdiction de fonder une deuxième cité pendant la période ; une dernière cité ne peut être conquise. Vérification des ordres militaires à l'envoi, convois de ressources alliés autorisés."
     },
     {
       "id": "RM-WRD-007",
@@ -239,7 +303,20 @@
       ],
       "parameter_keys": [
         "starter_pack"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q11",
+          "Q27",
+          "Q28",
+          "Q29",
+          "Q30"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      },
+      "project_contract_override": "La première cité possède le Conseil du village uniquement, un héros et une faible armée T1-T3, ainsi qu'une mine or, bois, minerai et ressource rare de faction."
     },
     {
       "id": "RM-WRD-008",
@@ -263,7 +340,15 @@
         "FX-START-001",
         "FX-ECON-002"
       ],
-      "parameter_keys": []
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q82"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-REG-001",
@@ -289,7 +374,16 @@
       "parameter_keys": [
         "region_size",
         "city_cell"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q11",
+          "Q15"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-REG-002",
@@ -314,7 +408,17 @@
       ],
       "parameter_keys": [
         "mine_count"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q11",
+          "Q12",
+          "Q13"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-REG-003",
@@ -338,7 +442,16 @@
       ],
       "parameter_keys": [
         "resource_codes"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q11",
+          "Q14"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-REG-004",
@@ -364,7 +477,18 @@
       "parameter_keys": [
         "resource_distribution",
         "duplicate_frequency"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q12",
+          "Q13",
+          "Q14"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      },
+      "project_contract_override": "La génération non initiale doit choisir quatre mines avec 3 ou 4 types de ressources, jamais plus d'une paire ; aucune ressource obligatoire. Les rares ont même probabilité."
     },
     {
       "id": "RM-REG-005",
@@ -391,7 +515,17 @@
       "parameter_keys": [
         "generator_version",
         "world_seed"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q12",
+          "Q15",
+          "Q18"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-REG-006",
@@ -418,7 +552,16 @@
       ],
       "parameter_keys": [
         "encounter_generation"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q16",
+          "Q17"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-REG-007",
@@ -445,7 +588,15 @@
       ],
       "parameter_keys": [
         "mine_activation"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q39"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-REG-008",
@@ -469,7 +620,15 @@
       "fixture_ids": [],
       "parameter_keys": [
         "special_site_generator"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q18"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-ECO-001",
@@ -495,7 +654,17 @@
       ],
       "parameter_keys": [
         "resource_container_types"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q35",
+          "Q36",
+          "Q37"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-ECO-002",
@@ -523,7 +692,18 @@
       "parameter_keys": [
         "production_cadence",
         "rounding_policy"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q32",
+          "Q33",
+          "Q37"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      },
+      "project_contract_override": "Rendement affiché par jour mais crédité à intervalles réguliers ; sous-unités accumulées et non dépensables ; intervalle indicatif 15 minutes non figé."
     },
     {
       "id": "RM-ECO-003",
@@ -549,7 +729,17 @@
       ],
       "parameter_keys": [
         "production_segment_boundaries"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q32",
+          "Q34",
+          "Q39"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-ECO-004",
@@ -576,7 +766,19 @@
       "parameter_keys": [
         "storage_caps",
         "overflow_policy"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q35",
+          "Q36",
+          "Q37",
+          "Q38"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      },
+      "project_contract_override": "Production excédant le plafond perdue, mais les récompenses de quête restent encaissables depuis leurs messages. Les types de gain ne doivent pas être mélangés."
     },
     {
       "id": "RM-ECO-005",
@@ -601,7 +803,15 @@
       ],
       "parameter_keys": [
         "spend_atomicity"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q47"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-ECO-006",
@@ -626,7 +836,16 @@
       ],
       "parameter_keys": [
         "reservation_policy"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q35",
+          "Q47"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-ECO-007",
@@ -653,7 +872,15 @@
       ],
       "parameter_keys": [
         "administration_yield"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q51"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-ECO-008",
@@ -680,7 +907,16 @@
       "parameter_keys": [
         "mine_yields",
         "mine_bonus_order"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q39",
+          "Q40"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-ECO-009",
@@ -706,7 +942,15 @@
       ],
       "parameter_keys": [
         "mine_upgrade_pauses"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q39"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-ECO-010",
@@ -732,7 +976,18 @@
       "parameter_keys": [
         "maintenance_profile",
         "insolvency_policy"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q41",
+          "Q42",
+          "Q43"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      },
+      "project_contract_override": "Entretien horaire payé par la ville où stationne l'armée ; si l'heure ne peut être payée, 10 % de chaque peloton meurt. Rounding/partial debit encore à définir, barème S1/S2 à retrouver."
     },
     {
       "id": "RM-ECO-011",
@@ -757,7 +1012,16 @@
       ],
       "parameter_keys": [
         "ledger_categories"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q32",
+          "Q38"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-CIT-001",
@@ -783,7 +1047,17 @@
       ],
       "parameter_keys": [
         "catalogue_id"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q01",
+          "Q02",
+          "Q40"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-CIT-002",
@@ -809,7 +1083,16 @@
       ],
       "parameter_keys": [
         "building_prerequisites"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q44",
+          "Q50"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-CIT-003",
@@ -837,7 +1120,17 @@
       "parameter_keys": [
         "construction_queue_capacity",
         "builder_hero_required"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q44",
+          "Q45",
+          "Q47"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-CIT-004",
@@ -862,7 +1155,18 @@
       "parameter_keys": [
         "city_build_slots",
         "builder_exclusivity"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q44",
+          "Q45",
+          "Q46"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      },
+      "project_contract_override": "Une seule construction urbaine à la fois et sans héros ; chaque construction régionale occupe un héros pendant trajet et travaux. Constructions régionales concurrentes permises selon héros disponibles."
     },
     {
       "id": "RM-CIT-005",
@@ -888,7 +1192,16 @@
       ],
       "parameter_keys": [
         "completion_under_siege"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q51",
+          "Q52"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-CIT-006",
@@ -913,7 +1226,16 @@
       ],
       "parameter_keys": [
         "building_chain_exclusivity"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q50",
+          "Q51"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-CIT-007",
@@ -938,7 +1260,17 @@
       "fixture_ids": [],
       "parameter_keys": [
         "cancellation_refund_policy"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q47",
+          "Q48"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      },
+      "project_contract_override": "Aucune annulation de chantier n'est possible ; coût intégral débité lors du lancement."
     },
     {
       "id": "RM-CIT-008",
@@ -963,7 +1295,16 @@
       "fixture_ids": [],
       "parameter_keys": [
         "siege_construction_policy"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q52",
+          "Q53"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-HER-001",
@@ -987,7 +1328,16 @@
       "parameter_keys": [
         "hero_archetype",
         "hero_level"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q57",
+          "Q58"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-HER-002",
@@ -1014,7 +1364,16 @@
       ],
       "parameter_keys": [
         "exclusive_hero_states"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q46",
+          "Q60"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-HER-003",
@@ -1037,7 +1396,19 @@
       "parameter_keys": [
         "hero_hire_offers",
         "hero_hire_price"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q29",
+          "Q54",
+          "Q55",
+          "Q56"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      },
+      "project_contract_override": "Deux offres en taverne, renouvellement gratuit toutes les 12 h, au plus 15 héros par joueur et par monde. Coût et délai d'arrivée croissent selon le nombre recruté."
     },
     {
       "id": "RM-HER-004",
@@ -1062,7 +1433,15 @@
       "fixture_ids": [],
       "parameter_keys": [
         "starter_hero"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q29"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-HER-005",
@@ -1086,7 +1465,16 @@
       "parameter_keys": [
         "career_limit",
         "talent_costs"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q58",
+          "Q59"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-HER-006",
@@ -1110,7 +1498,16 @@
       "fixture_ids": [],
       "parameter_keys": [
         "artifact_location"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q61",
+          "Q62"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-ARM-001",
@@ -1135,7 +1532,15 @@
       ],
       "parameter_keys": [
         "combat_stack_limit"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q68"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-ARM-002",
@@ -1160,7 +1565,17 @@
       "fixture_ids": [],
       "parameter_keys": [
         "allowed_unit_tiers"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q05",
+          "Q30",
+          "Q68"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-ARM-003",
@@ -1188,7 +1603,16 @@
       ],
       "parameter_keys": [
         "recruit_pool_cadence"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q64",
+          "Q65"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-ARM-004",
@@ -1212,7 +1636,15 @@
       ],
       "parameter_keys": [
         "unit_costs"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q66"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-ARM-005",
@@ -1238,7 +1670,15 @@
       ],
       "parameter_keys": [
         "raw_power"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q68"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-ARM-006",
@@ -1265,7 +1705,15 @@
       ],
       "parameter_keys": [
         "stack_ownership"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q66"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-ARM-007",
@@ -1289,7 +1737,15 @@
       "fixture_ids": [],
       "parameter_keys": [
         "upgrade_cadence"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q67"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-ARM-008",
@@ -1314,7 +1770,16 @@
       ],
       "parameter_keys": [
         "recruit_pool_sharing"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q64",
+          "Q65"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-COM-001",
@@ -1342,7 +1807,17 @@
       ],
       "parameter_keys": [
         "local_movement_policy"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q69",
+          "Q70",
+          "Q80"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-COM-002",
@@ -1367,7 +1842,17 @@
       ],
       "parameter_keys": [
         "counter_multiplier"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q69",
+          "Q70",
+          "Q71"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-COM-003",
@@ -1396,7 +1881,17 @@
       ],
       "parameter_keys": [
         "battle_phase_order"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q69",
+          "Q70",
+          "Q74"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-COM-004",
@@ -1423,7 +1918,16 @@
       ],
       "parameter_keys": [
         "encounter_clearing_policy"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q69",
+          "Q75"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-COM-005",
@@ -1452,7 +1956,18 @@
       ],
       "parameter_keys": [
         "loss_profile"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q69",
+          "Q73",
+          "Q74",
+          "Q78"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-COM-006",
@@ -1478,7 +1993,15 @@
       ],
       "parameter_keys": [
         "report_visibility"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q79"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-COM-007",
@@ -1498,7 +2021,16 @@
         "docs/specifications/PROFIL-PVP-CLASSIQUE.md"
       ],
       "fixture_ids": [],
-      "parameter_keys": []
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q76",
+          "Q77"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-TIM-001",
@@ -1526,7 +2058,16 @@
       "parameter_keys": [
         "server_time",
         "truce_timezone"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q06",
+          "Q82"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-TIM-002",
@@ -1553,7 +2094,16 @@
       ],
       "parameter_keys": [
         "idempotency_policy"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q81",
+          "Q82"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     },
     {
       "id": "RM-TIM-003",
@@ -1576,7 +2126,16 @@
       "fixture_ids": [],
       "parameter_keys": [
         "event_priority_matrix"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q81"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      },
+      "project_contract_override": "Aucune priorité métier prédéfinie lors d'événements à même timestamp ; l'ordre de validation atomique peut être arbitraire, mais une fois appliqué il doit être journalisé pour reprise idempotente."
     },
     {
       "id": "RM-TIM-004",
@@ -1603,7 +2162,941 @@
       ],
       "parameter_keys": [
         "resume_policy"
-      ]
+      ],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q82"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-WRD-009",
+      "domain": "monde",
+      "title": "Capital initial d'hérédité équitable",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "Chaque joueur reçoit un capital identique de points d'hérédité lors de son inscription dans un monde.",
+      "contract": "Permettre l'affectation libre des points au héros initial selon la grille de compétences autorisées ; le montant et le cumul inter-campagnes restent à fixer.",
+      "us": [
+        "US-ACC-003",
+        "US-HER-001"
+      ],
+      "unknowns": [
+        "U35"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q01",
+          "Q29"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-WRD-010",
+      "domain": "monde",
+      "title": "Carte torique et presets de population",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "Le monde est torique aux deux axes, avec plusieurs tailles adaptées aux groupes de 20–100 jusqu'aux grandes campagnes.",
+      "contract": "Paramétrer dimensions, capacité et densités des régions par preset ; utiliser la distance torique pour chaque calcul spatial.",
+      "us": [
+        "US-ACC-001",
+        "US-MON-001"
+      ],
+      "unknowns": [
+        "U09",
+        "U17"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q07",
+          "Q08",
+          "Q09"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-WRD-011",
+      "domain": "monde",
+      "title": "Population équilibrée et trois codes amis",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "L'implantation sans code évite la concentration progressive, tandis que chaque inscrit reçoit trois codes amis.",
+      "contract": "Le mode near vise environ 4–10 cases, élargit la recherche si besoin et vérifie monde/occupation ; usage unique des codes encore à arbitrer.",
+      "us": [
+        "US-ACC-003"
+      ],
+      "unknowns": [
+        "U47"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q19",
+          "Q20",
+          "Q21",
+          "Q22"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-WRD-012",
+      "domain": "monde",
+      "title": "Protection de sept jours et première expansion bloquée",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "La protection dure sept jours, ne peut être annulée et interdit de coloniser une seconde cité ; la dernière cité ne peut jamais être conquise.",
+      "contract": "Refuser côté serveur les départs d'ordres militaires interdits lorsque source ou cible est protégée ; autoriser les convois alliés entrants ; après sept jours la dernière cité redevient pillable.",
+      "us": [
+        "US-ACC-011",
+        "US-MON-007",
+        "US-PVP-004"
+      ],
+      "unknowns": [
+        "U20"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q23",
+          "Q24",
+          "Q25",
+          "Q26"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-WRD-013",
+      "domain": "monde",
+      "title": "Dotation minimale et tutoriel obligatoire",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "La cité de départ possède uniquement le Conseil du village, un héros et une petite force de T1–T3 ; tutoriel en quêtes obligatoires.",
+      "contract": "Les dotations quantitatives restent paramétrables ; les quêtes délivrent XP/ressources et admettent des parcours optimisés sans duplications.",
+      "us": [
+        "US-ACC-004",
+        "US-ACC-006",
+        "US-ACC-010"
+      ],
+      "unknowns": [
+        "U24",
+        "U38"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q27",
+          "Q28",
+          "Q29",
+          "Q30",
+          "Q31"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-REG-009",
+      "domain": "region",
+      "title": "Quatre mines équilibrées de type au plus doublé",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "Les quatre mines initiales sont G, w, o, rare principale de faction ; les autres régions ont 3 ou 4 types distincts, sans deux paires.",
+      "contract": "Le générateur rejette triple/double paire, n'impose aucun type hors région initiale, et donne aux quatre ressources rares une probabilité égale.",
+      "us": [
+        "US-REG-001",
+        "US-ACC-004"
+      ],
+      "unknowns": [
+        "U17"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q11",
+          "Q12",
+          "Q13",
+          "Q14",
+          "Q15"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-REG-010",
+      "domain": "region",
+      "title": "Croissance des PNJ selon éloignement et retour sur case inutilisée",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "Les PNJ sont plus puissants loin du centre ; une case libérée non exploitée peut être réoccupée après X jours.",
+      "contract": "Repop interdit sur une case utilisée ; XP et artéfacts des répétitions doivent être équilibrés et suivis par le moteur.",
+      "us": [
+        "US-REG-002",
+        "US-REG-003"
+      ],
+      "unknowns": [
+        "U17",
+        "U39"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q16",
+          "Q17"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-REG-011",
+      "domain": "region",
+      "title": "Espacement des sites spéciaux et équilibre des types",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "Les sites sont distribués aléatoirement, avec densité dépendant de la taille du monde et équilibre des types.",
+      "contract": "Appliquer distances minimales toriques entre sites ; déterminer la portée du seuil de 15 cases avant tout générateur définitif.",
+      "us": [
+        "US-REL-001",
+        "US-MON-001"
+      ],
+      "unknowns": [
+        "U17"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q18"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-ECO-012",
+      "domain": "economie",
+      "title": "Production périodique avec fractions conservées",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "Production exprimée en rendement journalier, créditée périodiquement ; sous-unités conservées invisiblement.",
+      "contract": "Additionner les pourcentages de bonus puis appliquer à la base ; autoriser uniquement les unités entières acquises à être dépensées.",
+      "us": [
+        "US-ECO-002",
+        "US-ECO-003"
+      ],
+      "unknowns": [
+        "U03",
+        "U04"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q32",
+          "Q33",
+          "Q34"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-ECO-013",
+      "domain": "economie",
+      "title": "Stocks locaux, surplus de production perdu et caravanes sûres",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "Les cités ont leurs stocks et capacités propres ; le surplus de production est perdu lorsque plein.",
+      "contract": "Transport entre cités uniquement par caravanes non interceptables dont la capacité dépend des marchés ; or plafonné par administration.",
+      "us": [
+        "US-ECO-004",
+        "US-ECH-012"
+      ],
+      "unknowns": [
+        "U28",
+        "U30"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q35",
+          "Q36",
+          "Q37"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-ECO-014",
+      "domain": "economie",
+      "title": "Récompenses de quêtes différées",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "Les récompenses de quêtes sont reçues comme messages et encaissées à l'initiative du joueur.",
+      "contract": "Conserver une récompense non réclamée, l'attribuer atomiquement au moment de l'encaissement, empêcher le double encaissement.",
+      "us": [
+        "US-ACC-010",
+        "US-ECO-010"
+      ],
+      "unknowns": [
+        "U30",
+        "U38"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q38"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-ECO-015",
+      "domain": "economie",
+      "title": "Mines automatiquement productives après libération",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "Une mine libérée commence immédiatement à produire et peut profiter des constructions régionales voisines.",
+      "contract": "Préparer l'extension facultative de creusement en 5 niveaux sans la confondre avec l'amélioration minière historique S2.",
+      "us": [
+        "US-REG-004",
+        "US-REG-005",
+        "US-REG-009"
+      ],
+      "unknowns": [
+        "U17"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q39",
+          "Q40"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-ECO-016",
+      "domain": "economie",
+      "title": "Entretien horaire et attrition des impayés",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "Le coût d'entretien de type S1/S2 devient fortement non linéaire avec la puissance stationnée ; il est dû par la cité hôte toutes les heures.",
+      "contract": "Si le paiement complet échoue, faire mourir 10 % de chaque peloton par heure ; recalcule ensuite la puissance et l'entretien. Arrondis, débit partiel et formule manquants.",
+      "us": [
+        "US-ECO-007",
+        "US-ECO-008",
+        "US-ECO-009"
+      ],
+      "unknowns": [
+        "U07",
+        "U08"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q41",
+          "Q42",
+          "Q43"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-CIT-009",
+      "domain": "construction",
+      "title": "Chantier urbain unique et chantiers régionaux mobilisateurs",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_project_rule",
+      "statement": "Un seul chantier de ville actif, sans héros ni file d'attente. Plusieurs chantiers régionaux possibles, chaque chantier occupant un héros pendant trajet et travaux.",
+      "contract": "Le héros d'un chantier régional reste indisponible même pour la défense ; le nombre de chantiers dépend des héros libres.",
+      "us": [
+        "US-CIT-004",
+        "US-REG-008",
+        "US-HER-003"
+      ],
+      "unknowns": [
+        "U05"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q44",
+          "Q45",
+          "Q46"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-CIT-010",
+      "domain": "construction",
+      "title": "Coût prélevé au départ, sans annulation et modes de vitesse urbains",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "Toute construction coûte ses ressources dès le lancement, sans annulation possible.",
+      "contract": "En ville seulement : normal ×1 ; rapide coût ×1,4 temps ×0,8 ; économique coût ×0,8 temps ×1,4. Arrondis à déterminer.",
+      "us": [
+        "US-CIT-004",
+        "US-CIT-005",
+        "US-CIT-007"
+      ],
+      "unknowns": [
+        "U05"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q47",
+          "Q48",
+          "Q49"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-CIT-011",
+      "domain": "construction",
+      "title": "Niveau de cité et remplacement des effets",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "Chaque bâtiment et chaque amélioration contribue au niveau de cité ; ses nouveaux effets remplacent les anciens dès l'achèvement.",
+      "contract": "Ne pas cumuler les étapes administratives ; déterminer les exceptions (silo etc.) dans le référentiel S2.",
+      "us": [
+        "US-CIT-006",
+        "US-CIT-008"
+      ],
+      "unknowns": [
+        "U02"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q50",
+          "Q51"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-CIT-012",
+      "domain": "construction",
+      "title": "Siège et effets des prérequis détruits",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_project_rule",
+      "statement": "Sous siège, les chantiers en cours continuent mais sont non annulables/non accélérables, et aucun nouveau ne commence ; un bâtiment dépendant d'un bâtiment détruit devient inactif.",
+      "contract": "Distinguer l'état physique du bâtiment de l'activation de ses effets pour permettre la réactivation après restauration du prérequis.",
+      "us": [
+        "US-CIT-006",
+        "US-SIE-007"
+      ],
+      "unknowns": [
+        "U19",
+        "U21"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q52",
+          "Q53"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-HER-007",
+      "domain": "heros",
+      "title": "Taverne et progression de héros S2",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "Le joueur dispose d'un héros initial ; deux choix à la taverne, renouvelables gratuitement toutes les douze heures ; plafond quinze héros et niveau maximal 40.",
+      "contract": "Coûts et délais de livraison augmentent avec les recrutements ; revoir S2 avant de geler la courbe (premier 15 min, quinzième ~3 j selon souvenir).",
+      "us": [
+        "US-HER-003",
+        "US-HER-002"
+      ],
+      "unknowns": [
+        "U24",
+        "U25"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q29",
+          "Q54",
+          "Q55",
+          "Q56",
+          "Q57"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-HER-008",
+      "domain": "heros",
+      "title": "Carrières progressives et bonus dépendant de la présence",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "Trois carrières progressivement débloquées ; le bonus passif du héros ne s'applique que s'il est dans la cité, sans déplacement local ou mondial.",
+      "contract": "Règle de réorientation à rechercher ; retirer le bonus à l'instant de sortie, le rétablir au retour effectif.",
+      "us": [
+        "US-HER-009",
+        "US-HER-011"
+      ],
+      "unknowns": [
+        "U25"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q58",
+          "Q59",
+          "Q60"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-HER-009",
+      "domain": "heros",
+      "title": "Inventaires, artéfacts et butin de siège",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "Les héros disposent d'emplacements de sac et d'équipement par partie du corps, les villes de leur propre réserve d'artéfacts.",
+      "contract": "Transfert entre héros par stockage en cité ; conquête emporte le dépôt d'artéfacts de la ville ; nombre de drops régionaux et capacité exacte à rechercher.",
+      "us": [
+        "US-ART-003",
+        "US-ART-005"
+      ],
+      "unknowns": [
+        "U27"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q61",
+          "Q62"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-HER-010",
+      "domain": "heros",
+      "title": "Guildes de magie et sorts préparés",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "La guilde propose un sort par cercle de 1 à 5 ; plusieurs cités/guildes étendent le répertoire possible.",
+      "contract": "Le héros configure dans sa cité ses sorts mémorisés et programme les tours de combat ; nombre de sorts et tours restant à confirmer (hors prototype T1–T3).",
+      "us": [
+        "US-MAG-004",
+        "US-MAG-005"
+      ],
+      "unknowns": [
+        "U26"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q63"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-ARM-009",
+      "domain": "armees",
+      "title": "Recrues horaires et stocks partagés par tier",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_project_rule",
+      "statement": "Les recrues de chaque tier sont créditées à l'heure, fractions conservées ; variante améliorée et version de base partagent le même pool.",
+      "contract": "Si 12 recrues T5 sont disponibles, le total T5 + T5+ recruté ne dépasse pas 12.",
+      "us": [
+        "US-ARM-003",
+        "US-ARM-004",
+        "US-ARM-005"
+      ],
+      "unknowns": [
+        "U06"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q64",
+          "Q65"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-ARM-010",
+      "domain": "armees",
+      "title": "Recrutement immédiat et amélioration d'une pile entière",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_project_rule",
+      "statement": "L'achat depuis un pool disponible est immédiat et place les unités en garnison ; seul un héros en ville peut les prendre.",
+      "contract": "Conversion T vers T+ immédiate et atomique sur une pile entière, coût par unité ; le joueur ne convertit pas partiellement la pile.",
+      "us": [
+        "US-ARM-005",
+        "US-ARM-006",
+        "US-ARM-007",
+        "US-ARM-009"
+      ],
+      "unknowns": [
+        "U06"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q66",
+          "Q67",
+          "Q68"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-COM-008",
+      "domain": "combat",
+      "title": "Combat déterministe et simulateur Jactari",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "Les combats du produit sont déterministes, suivent le modèle Jactari, et le joueur dispose d'un simulateur complet.",
+      "contract": "Conserver seuils, phases, traitements spéciaux et pertes du calculateur ; documenter toute correction découverte en confrontant aux sources historiques.",
+      "us": [
+        "US-COM-001",
+        "US-COM-004",
+        "US-COM-010",
+        "US-COM-018"
+      ],
+      "unknowns": [
+        "U11",
+        "U12",
+        "U13",
+        "U42"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q69",
+          "Q70",
+          "Q71",
+          "Q72",
+          "Q73",
+          "Q74",
+          "Q76",
+          "Q77"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-COM-009",
+      "domain": "combat",
+      "title": "Blessure et rapport détaillé",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "Un héros vaincu revient en cité et reste indisponible, pour une durée croissante avec son niveau ; les rapports sont aussi détaillés que Jactari.",
+      "contract": "Barème de blessure, XP, bonus de roue et visibility du rapport à qualifier historiquement avant codage fidèle.",
+      "us": [
+        "US-COM-016",
+        "US-COM-017",
+        "US-RAP-001"
+      ],
+      "unknowns": [
+        "U13",
+        "U41"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q75",
+          "Q78",
+          "Q79"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-TIM-005",
+      "domain": "temps",
+      "title": "Horloge de test et trêve nocturne",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "Les mondes de test peuvent accélérer les durées par multiplicateur ; le serveur rattrape le temps écoulé après incident. La trêve stoppe les déplacements mondiaux de 23 h à 6 h.",
+      "contract": "Définir fuseau du monde et gestion des haltes pendant la trêve ; respecter les échéances économiques indépendantes du navigateur.",
+      "us": [
+        "US-MOV-004",
+        "US-ECO-003",
+        "US-CIT-006"
+      ],
+      "unknowns": [
+        "U10",
+        "U14"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q06",
+          "Q82"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-TIM-006",
+      "domain": "temps",
+      "title": "Rappel pendant l'aller et halte attaquable",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "Une expédition régionale prend du temps selon la distance ; un ordre mondial peut être rappelé avant arrivée et revient en autant de temps qu'il a avancé.",
+      "contract": "Supprimer les haltes dans l'influence propre/alliée ; ailleurs déclencher une halte de 2 h après un seuil de mouvement à retrouver, attaquable.",
+      "us": [
+        "US-MOV-003",
+        "US-MOV-005",
+        "US-MOV-006"
+      ],
+      "unknowns": [
+        "U09",
+        "U10"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q80",
+          "Q83"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-TIM-007",
+      "domain": "temps",
+      "title": "Concurrence sans ordre métier prédéfini",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_project_rule",
+      "statement": "Deux événements de même timestamp peuvent être traités dans un ordre arbitraire.",
+      "contract": "Faire concourir des transactions atomiques ; journaliser l'ordre validé pour assurer reprise et non-duplication, sans imposer une priorité artificielle.",
+      "us": [
+        "US-COM-002",
+        "US-CIT-006"
+      ],
+      "unknowns": [
+        "U14"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q81"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
+    },
+    {
+      "id": "RM-TIM-008",
+      "domain": "temps",
+      "title": "Absence de programmation automatique",
+      "evidence": "DECISION-USER",
+      "state": "confirmed_direction_with_parameters_open",
+      "statement": "Le joueur ne peut pas enchaîner librement des ordres futurs, des files de constructions ou des missions conditionnelles.",
+      "contract": "Limiter les automatismes aux mécanismes confirmés ; les convois répétés d'autres versions doivent être arbitrés séparément.",
+      "us": [
+        "US-CIT-004",
+        "US-ECH-013"
+      ],
+      "unknowns": [
+        "U28"
+      ],
+      "source_documents": [
+        "docs/decisions/DECISIONS-P0-2026-10-23.md"
+      ],
+      "fixture_ids": [],
+      "parameter_keys": [],
+      "project_decisions": {
+        "source": "data/decisions/p0-2026-10-23.json",
+        "question_refs": [
+          "Q84"
+        ],
+        "policy_version": "s2-p0-draft-2026-10-23",
+        "historical_evidence_unchanged": true
+      }
     }
+  ],
+  "decision_registry": "data/decisions/p0-2026-10-23.json",
+  "notes": [
+    "Historical evidence fields on pre-existing 60 RM preserved; project_contract_override is a user's product choice, not a newly established Ubisoft fact.",
+    "New RM with evidence=DECISION-USER encode project requirements and may retain open parameters."
   ]
 }
