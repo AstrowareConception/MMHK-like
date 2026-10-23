@@ -38,3 +38,31 @@ Source : [calculateur original](../../data/Jactari/src/scripts/combat.min.js), a
 - Étape suivante : extraire `bonus_attaque_defense` avec toutes ses données puis l'orchestration `simulation_rencontre`, les formations, les tours et la séparation pertes/dispersion/morts permanentes.
 - Construire un **harness différentiel** pour comparer les calculs portés à l'exécution du vrai Jactari plutôt qu'à des valeurs attendues manuellement.
 - Les attaques non prises en charge doivent être **refusées explicitement**, jamais confiées à une approximation silencieuse.
+
+
+## Extraction complémentaire : modificateurs sans jQuery
+
+`bonuses.mjs` porte une partie importante de `bonus_attaque_defense` et expose `calculateBonuses({attackerWeapon, defenderWeapon, attackerHero, defenderHero, morale, special, weaponAdvantageFactor, fortification})`. La fonction renvoie les neuf coefficients directement acceptés par `resolveStackDuel` : bonus par unité, bonus par peloton, avantage I>C / R>I / C>R, moral, pièges et fortification.
+
+```js
+import { calculateBonuses } from './bonuses.mjs';
+import { resolveStackDuel } from './core.mjs';
+const modifiers = calculateBonuses({
+  attackerWeapon: 'I', defenderWeapon: 'C',
+  weaponAdvantageFactor: 0.5,
+  attackerHero: { attaque_modifiee: 20, bonus_tacticien: 5 },
+});
+const result = resolveStackDuel({
+  attacker: { count: 100, unitPower: 10 },
+  defender: { count: 100, unitPower: 10 },
+  modifiers,
+});
+```
+
+Exécuter **tous les tests du sous-système** : `node --test tools/jactari-port/*.test.mjs`.
+
+**État des validations :** 15 tests sur les deux modules ont été exécutés dans l'environnement local et réussis. Ces tests couvrent les branches du code isolé, pas encore des comparaisons automatiques différentielles avec le moteur navigateur original.
+
+**Écart source à documenter avant un portage strict :** la fonction originale vérifie deux fois `heros_a.bonus_legendary_legwarrior_b` tout en ajoutant `heros_d.bonus_legendary_legwarrior_b`, ce qui ressemble à une anomalie de variable et à un doublon. L'adaptateur ne comptabilise actuellement la compétence du défenseur **qu'une fois**. C'est une décision d'adaptation explicite, non une preuve d'équivalence sur ce cas. Les paramètres `moral` et `special` sont fournis déjà agrégés ; les routines historiques qui les génèrent ne sont pas encore portées.
+
+**Restent non portés :** déroulement multi-pelotons `simulation_rencontre`, conditions de retraite, magie, engins de siège, rapports complets, coûts des pertes, expérience, données de créatures et instanciation des bonus historiques `_facteur_bonus` à partir de la saison. Ne pas utiliser ce sous-ensemble seul pour annoncer le vainqueur d'une bataille MMHK complète.
