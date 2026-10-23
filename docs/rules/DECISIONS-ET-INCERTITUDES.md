@@ -1,12 +1,14 @@
 # Arbitrages métier — premier cycle de partie
 
-**État : propositions à examiner, non validées.** Ce registre ne remplace pas [les 47 incertitudes historiques](../research/INCERTITUDES.md) : il extrait celles qui gouvernent le premier parcours jouable et propose une méthode de clôture. Une décision sur **MMHK-like** ne supprime pas une inconnue sur **Ubisoft MMHK**.
+**Mise à jour post-questionnaire P0 (23/10/2026) :** les réponses [Q01–Q84](../decisions/DECISIONS-P0-2026-10-23.md) ont été consignées et intégrées au [profil S2](../../data/rules/mmhk-like-s2-policy-draft.json). **Les tableaux historiques qui suivent sont la photographie des questions avant les réponses** : par exemple, 7 jours de protection, chantier urbain unique, recrues horaires, attrition de 10 % et trêve 23 h–6 h sont désormais décidés pour MMHK-like. Leur identité avec Ubisoft S2 demeure à établir. Pour les interrogations encore réellement adressées au porteur de projet, consulter [les neuf clarifications](../decisions/DECISIONS-P0-2026-10-23.md#précisions-réellement-utiles-à-demander).
+
+**État du tableau initial : propositions rédigées AVANT les réponses P0.** Ce registre ne remplace pas [les 47 incertitudes historiques](../research/INCERTITUDES.md) : il extrait celles qui gouvernent le premier parcours jouable et propose une méthode de clôture. Une décision sur **MMHK-like** ne supprime pas une inconnue sur **Ubisoft MMHK**.
 
 ## Principes de décision
 
 **Trois choix légitimes pour chaque lacune :** (A) rechercher une source datée qui permette de qualifier une règle historique ; (B) retenir un **paramètre de laboratoire PROP**, explicitement non historique, pour exécuter des tests ; (C) différer la fonction lorsque son résultat serait trompeur ou irréversible. Un profil « classique » ne reçoit jamais des nombres fictifs sous prétexte de débloquer la recette.
 
-**Statuts possibles :** \`à qualifier historiquement\`, \`proposé pour laboratoire\`, \`choisi pour MMHK-like\`, \`validé par preuve\`. **Tous les points du tableau restent ouverts**, sauf le périmètre PvP classique déjà confirmé.
+**Statuts possibles :** \`à qualifier historiquement\`, \`proposé pour laboratoire\`, \`choisi pour MMHK-like\`, \`validé par preuve\`. **Les interrogations historiques peuvent rester ouvertes, même lorsque le produit a désormais une règle décidée dans le registre P0.**
 
 ## P0 : décisions nécessaires avant de déclarer PAR-01 jouable
 
