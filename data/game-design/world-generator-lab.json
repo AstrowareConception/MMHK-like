@@ -135,6 +135,37 @@
       300,
       400,
       500
-    ]
+    ],
+    "simulation_findings": {
+      "report": "docs/game-design/12-SIMULATION-INFLUENCE-COLONISATION.md",
+      "result": "data/analysis/territorial-friction-synthetic-2026-10-23.json",
+      "recommended_next_experiments_regions_per_player": [
+        120,
+        140,
+        160,
+        180,
+        200
+      ],
+      "provisional_interest_range": [
+        160,
+        180
+      ],
+      "current_presets_not_validated": true,
+      "upkeep_and_garrison_not_yet_economically_coupled": true,
+      "outside_influence_pricing_effect_not_verified": true
+    },
+    "colonization_distance_cost": {
+      "principle": "extra price scales with the distance beyond player or allied influence frontier",
+      "prototype_formula": "base*(1+0.37*d+0.08*d*d)",
+      "prototype_only": true,
+      "base_city_cost_formula": "1+0.42*(n_cities-1)^1.35",
+      "historical_cost_curve_unknown": true
+    },
+    "military_influence_cost": {
+      "influence_radius_requires_stationed_troops": true,
+      "max_radius": 6,
+      "most_cities_not_at_max": true,
+      "actual_troop_thresholds_unknown": true
+    }
   }
 }
