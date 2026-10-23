@@ -160,3 +160,17 @@ Nouveau module pur **`magic-effects.mjs`**, extrait de branches identifiées de 
 Les entrées sont des **puissances de sort déjà calculées** : `puissance_effective_sort` (résistances, affinés, héros, artéfacts), la sélection de cible, l'ordre des sorts attaquant/défenseur, les effets de masse, la magie curative et le calendrier des tours ne sont pas encore portés. **Ces fonctions ne sont pas automatiquement appelées par `battle.mjs`**, qui refuse encore la magie ; cette séparation évite de simuler une bataille incomplète comme si elle était fidèle.
 
 Exécuter `node --test tools/jactari-port/*.test.mjs` dans une copie locale du dépôt. Le succès CI des nouveaux tests et des tests différentiels historiques n'a **pas été établi** durant cette intervention.
+
+
+## Calcul de puissance et ordonnancement des sorts (itération suivante)
+
+Deux nouveaux modules **sans DOM ni jQuery** complètent l'extraction de `puissance_effective_sort` et `lancement_sorts` :
+
+- `spell-power.mjs` : `calculateEffectiveSpellPower()` applique le facteur d'arme, la magie du héros, ses bonus d'expertise, les bonus d'école et d'artéfacts, la maîtrise selon le cercle, la résistance magique et l'antimagie. Les valeurs historiques dépendant des tables héritage, équipements et écoles sont **injectées explicitement**, pas inventées. Le découpage des barres HTML de statistiques du client d'origine est volontairement exclu.
+- `spell-schedule.mjs` : `spellsForRound()` récupère les sorts programmés pour un tour donné, dans l'ordre attaquant puis défenseur du client Jactari ; `planSpellEffects()` vérifie les identifiants et refuse chaque type/cible/unité sans exécuteur enregistré.
+
+**17 nouveaux tests versionnés** : 10 pour la puissance effective, 7 pour l'ordonnancement et les rejets. Ils doivent être exécutés par le workflow Node ; leur résultat CI n'est **pas vérifié** dans cette conversation.
+
+Un lanceur de bataille complet nécessite encore de calculer les modificateurs via les données originales, de vérifier les contraintes de mana et de compétence, de résoudre tous les types de sorts, puis de brancher le déclenchement des sorts aux rounds de `encounter.mjs` et les résurrections aux rapports. À ce stade, les nouveaux modules fournissent des **primitives** ; `simulateSupportedBattle` continue de refuser `context.spells`.
+
+Source : `data/Jactari/src/scripts/combat.min.js` (GPLv3+). Les paramètres `spell.power/factors/school/unit/circle/type` sont une normalisation explicite de `puissance/facteur/ecole/unite/cercle/type` dans les données historiques.
