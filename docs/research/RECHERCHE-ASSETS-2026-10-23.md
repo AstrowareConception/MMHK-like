@@ -101,3 +101,21 @@ Les fichiers sont conservés sans retouche, avec URL, version quand elle est con
 ## Contrôles effectués
 
 Les 32 fichiers correspondent aux tailles et SHA-256 du manifeste ; les 29 images sont décodables aux dimensions déclarées. L'extracteur des 215 configurations reproduit le JSON à l'identique sans exécuter le client. Les 175 chemins attendus, les 74 zones communautaires et la fermeture des dépendances du premier lot (37 stories) ont été vérifiés. `python tools/validate.py` réussit 7 679 contrôles sans erreur ; le lanceur Node de `tools/validate-backlog.mjs` réussit 30 387 assertions et 4 395 liens contrôlés. Ces vérifications concernent les fichiers et la documentation, pas un moteur de jeu.
+
+## 7. Reprise de la collecte Wayback après interruption
+
+Le travail exploratoire mené ensuite dans un fil interrompu annonçait **2 759 fichiers historiques distincts, dont 1 129 images lisibles et huit versions de JavaScript**. Ces résultats décrivent **un lot d'une session de travail précédente**, qui n'a pas été commité et n'est pas actuellement accessible dans le dépôt ; ils ne doivent pas être confondus avec les **29 images et trois JS/CSS effectivement présents** dans `data/assets-recovered`.
+
+Pour éviter une nouvelle perte de méthode, le script versionné [`tools/recover-wayback-cdn.py`](../../tools/recover-wayback-cdn.py) exploite le [catalogue CDX archivé](../../data/analysis/wayback-mmhk-cdx-2026-10-23.json), sélectionne ses captures `timestamp + original URL` et tente une récupération à partir de Wayback. La reprise s'appuie sur un journal JSONL, l'empreinte SHA-256 locale et un contrôle élémentaire des signatures PNG/JPEG/GIF/SWF/FLV et des pages HTML d'erreur. Les versions et chemins du client sont conservés. Les erreurs, indisponibilités et conflits de chemins restent tracés ; aucune image ne doit être inventée en remplacement.
+
+Depuis la racine du dépôt :
+
+```bash
+python3 tools/recover-wayback-cdn.py --dry-run --limit 20
+python3 tools/recover-wayback-cdn.py --kinds images,code,xml --limit 100
+python3 tools/recover-wayback-cdn.py --limit 0
+```
+
+La récupération nécessite un accès Internet au service Wayback. **Elle n'a pas été réexécutée dans la présente session**, l'environnement d'analyse ne disposant pas de résolution réseau vers Internet Archive. Le nombre final de succès ne pourra être annoncé qu'en lisant le journal d'exécution, et non en le déduisant du CDX. Le dossier volumineux `data/assets-recovered/cdn-bulk` et le registre `data/analysis/wayback-recovery-ledger.jsonl` sont exclus des commits par `.gitignore` : les anciens binaires Ubisoft n'ont pas de licence graphique libre identifiée.
+
+Les nouvelles preuves fonctionnelles tirées directement des scripts Ubisoft, notamment `friendKey`, `spawn=near/random` et `isNewbie`, sont analysées dans [le dossier de génération du monde et de protection](GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md).
