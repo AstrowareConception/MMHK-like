@@ -5,7 +5,7 @@ from dataclasses import dataclass
 from math import hypot
 from collections import Counter
 
-THRESHOLDS=(0,10000,30000,75000,150000,300000,500000)  # valeurs PROPOSEES
+THRESHOLDS=(0,10000,30000,75000,150000,500000)  # valeurs PROPOSEES
 
 @dataclass(frozen=True)
 class City:
@@ -19,13 +19,13 @@ class City:
 def military_mean(samples, days=6):
     assert days in (4,6) and samples and all(v>=0 for v in samples)
     last=samples[-days:]
-    return sum(last)/len(last)
+    return sum(last)/days  # missing pre-entry days count as zero
 
 def city_power(city,days=6):
     return military_mean(city.samples,days)+city.building_domination
 
 def radius(power,thresholds=THRESHOLDS):
-    return max(1,min(6,sum(power>=t for t in thresholds[1:])))
+    return max(1,min(6,1+sum(power>=t for t in thresholds[1:])))
 
 def toric_distance(a,b,width,height):
     dx=min(abs(a[0]-b[0]),width-abs(a[0]-b[0]))
