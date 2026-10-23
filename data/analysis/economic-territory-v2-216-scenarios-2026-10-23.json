@@ -1,0 +1,210 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-23",
+  "status": "executed_synthetic_territorial_economy_monte_carlo",
+  "model": "local Python NumPy SciPy, 216 executed configurations; full runnable script available separately in conversation artifact",
+  "parameters": {
+    "densities_reference_70_percent": [
+      120,
+      170,
+      220
+    ],
+    "occupancy": [
+      20,
+      40,
+      55,
+      70,
+      85,
+      100
+    ],
+    "activity": [
+      55,
+      90
+    ],
+    "strategies": [
+      "compact",
+      "frontier"
+    ],
+    "seeds": [
+      11,
+      23
+    ],
+    "scenarios_per_economy": 72,
+    "simulated_phases": 8,
+    "max_players": 100,
+    "city_cap": 10,
+    "influence_power_thresholds_troops": [
+      0,
+      14,
+      40,
+      92,
+      175,
+      310,
+      530
+    ],
+    "radius_six_not_reached": true,
+    "colonization_cost": "11*1.6^(n_cities-1)*(1+.55*d+.14*d^2); d positive distance beyond allied influence",
+    "maintenance": "per-city superlinear power cost 0.11*(max(troops-35,0)/45)^2.3 normal/scarce; stress upkeep coefficient 1.1; attrition 10% ceil when player aggregate balance insufficient; gold pooled per player in THIS lab, unlike intended per-city MMHK ledger"
+  },
+  "economy_profiles": [
+    {
+      "id": "normal",
+      "income_per_city_per_phase": 8,
+      "upkeep_coefficient": 0.11,
+      "troops_per_gold": 4.761904761904762
+    },
+    {
+      "id": "scarce",
+      "income_per_city_per_phase": 3,
+      "upkeep_coefficient": 0.11,
+      "troops_per_gold": 11.11111111111111
+    },
+    {
+      "id": "stress",
+      "income_per_city_per_phase": 3,
+      "upkeep_coefficient": 1.1,
+      "troops_per_gold": 11.11111111111111
+    }
+  ],
+  "summary_at_70_percent": [
+    {
+      "density": 120,
+      "normal": {
+        "contacts": 14,
+        "alliance_fraction": 1,
+        "cities": 2.6,
+        "cost_rejections": 44.25,
+        "unpaid_phases": 0,
+        "attrition": 0
+      },
+      "scarce": {
+        "contacts": 14.5,
+        "alliance_fraction": 1,
+        "cities": 1.807,
+        "cost_rejections": 99.5,
+        "unpaid_phases": 0,
+        "attrition": 0
+      },
+      "stress": {
+        "contacts": 6.75,
+        "alliance_fraction": 0.821,
+        "cities": 1.578,
+        "cost_rejections": 115.5,
+        "unpaid_phases": 57,
+        "attrition": 816
+      }
+    },
+    {
+      "density": 170,
+      "normal": {
+        "contacts": 3.75,
+        "alliance_fraction": 0.571,
+        "cities": 2.678,
+        "cost_rejections": 51.75,
+        "unpaid_phases": 0,
+        "attrition": 0
+      },
+      "scarce": {
+        "contacts": 5.5,
+        "alliance_fraction": 0.821,
+        "cities": 1.858,
+        "cost_rejections": 107.75,
+        "unpaid_phases": 0,
+        "attrition": 0
+      },
+      "stress": {
+        "contacts": 2,
+        "alliance_fraction": 0.429,
+        "cities": 1.586,
+        "cost_rejections": 123.5,
+        "unpaid_phases": 57.5,
+        "attrition": 821.25
+      }
+    },
+    {
+      "density": 220,
+      "normal": {
+        "contacts": 3.5,
+        "alliance_fraction": 0.571,
+        "cities": 2.646,
+        "cost_rejections": 56.5,
+        "unpaid_phases": 0,
+        "attrition": 0
+      },
+      "scarce": {
+        "contacts": 3.5,
+        "alliance_fraction": 0.5,
+        "cities": 1.822,
+        "cost_rejections": 104.75,
+        "unpaid_phases": 0,
+        "attrition": 0
+      },
+      "stress": {
+        "contacts": 0.5,
+        "alliance_fraction": 0.143,
+        "cities": 1.582,
+        "cost_rejections": 128.25,
+        "unpaid_phases": 61.5,
+        "attrition": 875.25
+      }
+    }
+  ],
+  "summary_at_100_percent": [
+    {
+      "density": 120,
+      "normal": {
+        "contacts": 34.25,
+        "cities": 2.712
+      },
+      "scarce": {
+        "contacts": 33.75,
+        "cities": 1.852
+      },
+      "stress": {
+        "contacts": 22.25,
+        "cities": 1.608
+      }
+    },
+    {
+      "density": 170,
+      "normal": {
+        "contacts": 15.75,
+        "cities": 2.69
+      },
+      "scarce": {
+        "contacts": 17.75,
+        "cities": 1.822
+      },
+      "stress": {
+        "contacts": 8,
+        "cities": 1.562
+      }
+    },
+    {
+      "density": 220,
+      "normal": {
+        "contacts": 9.25,
+        "cities": 2.708
+      },
+      "scarce": {
+        "contacts": 10,
+        "cities": 1.915
+      },
+      "stress": {
+        "contacts": 4.75,
+        "cities": 1.615
+      }
+    }
+  ],
+  "limitations": [
+    "Only two random seeds per scenario; high variance, no confidence intervals.",
+    "Simulation activity is a fixed per-player participation bit, not a churn and return Markov process.",
+    "Revenue pooled at player level, although MMHK economy requires per-city isolated stocks and caravans.",
+    "Attrition occurs once per simulation phase, NOT at the real one-hour cadence; phases are abstract, not real days.",
+    "Adversarial influence blocks no settlements outright in this tested local candidate geometry (0 territory refusals); this important PvP interaction is uncalibrated.",
+    "Colonies usually are chosen inside own or allied influence; successful outside-influence cost multipliers average close to 1.0-1.1, so strong out-of-zone pricing is under-exercised.",
+    "No radius-six influence reached due to short 8-phase horizon and troop-cost assumptions; cannot determine required historical stationed army power.",
+    "Faction combat, caravan transfers, historical construction costs, influence evolution S2 and site obstructions not modeled.",
+    "Costs and troop thresholds are hypothetical, not Ubisoft S2 evidence."
+  ]
+}
