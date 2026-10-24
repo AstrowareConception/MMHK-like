@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-24",
+  "scope": "multi_round_no_magic_original_simulation_combat_inside_reconstructed_sequence",
+  "upstream_source": "data/Jactari/src/scripts/combat.min.js",
+  "original_function": "simulation_combat(tour)",
+  "test_files": [
+    "tools/jactari-port/legacy-sequence-oracle.mjs",
+    "tools/jactari-port/battle-differential.mjs",
+    "tools/jactari-port/full-round-differential.test.mjs"
+  ],
+  "named_scenarios": [
+    "single-attacker-victory",
+    "single-defender-victory",
+    "mutual-dispersion",
+    "ordered-defender-pelotons",
+    "ordered-attacker-pelotons",
+    "weapons-infantry-beats-cavalry",
+    "weapons-ranged-beats-infantry",
+    "weapons-cavalry-beats-ranged",
+    "hero-versus-fortifications",
+    "seven-on-seven"
+  ],
+  "deterministic_seed": 20261024,
+  "seeded_battles": 180,
+  "test_runner": {
+    "command": "node --test tools/jactari-port/*.test.mjs",
+    "node_major": 22,
+    "cases": 206,
+    "passed": 206,
+    "failed": 0,
+    "observation": "GitHub Actions",
+    "workflow_run_url": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40069106325",
+    "commit": "08a6efb23bc007b594026ac0937937fbfba1bb33"
+  },
+  "defects_fixed": [
+    {
+      "path": "tools/jactari-port/report.mjs",
+      "issue": "incorrect indexing of side-specific melee array; melee losses dropped",
+      "correction": "pre.killed[i] + (melee?.[i]?.roundLosses ?? 0)"
+    },
+    {
+      "path": "tools/jactari-port/terminal-cleanup-differential.test.mjs",
+      "issue": "return statement emitted outside function in VM test",
+      "correction": "execute historical snippet inside function scope"
+    }
+  ],
+  "excluded": [
+    "original simulation_rencontre full function",
+    "original lancement_sorts full function",
+    "historic full permanent-loss calculation",
+    "summons",
+    "area magic",
+    "hero wounds",
+    "retreat",
+    "siege",
+    "XP",
+    "authentic season 2 loss factor"
+  ],
+  "license": "GPL-3.0-or-later",
+  "production_ready": false
+}
