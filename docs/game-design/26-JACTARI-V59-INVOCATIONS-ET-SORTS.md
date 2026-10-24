@@ -48,9 +48,9 @@ Cette asymétrie entre le premier et le deuxième menu est conservée parce qu'e
 
 ## 4. Validation exécutée
 
-**106 tests Node.js non différentiels réussis** sur la copie locale de l'archive V5.8 enrichie avec les nouveaux modules, dont **19 nouveaux tests** (12 pour les invocations et la protection de faction, 7 pour les choix de sorts).
+**107 tests Node.js non différentiels réussis** sur la copie locale de l'archive V5.8 enrichie avec les nouveaux modules, dont **20 nouveaux tests** (13 pour les invocations et la protection de faction, 7 pour les choix de sorts).
 
-Tests représentatifs : placement d'une invocation en slot 1 puis 0 ; priorité de l'invocation au prochain duel ; invocation par le défenseur ; calcul relatif à l'armée ennemie ; refus d'un troisième slot occupé ; faction fournie uniquement par le héros ; immutabilité de l'entrée ; absence de créature magique dans les stocks sauvegardés ; cercle, école et tours de magie.
+Tests représentatifs : placement d'une invocation en slot 1 puis 0 ; priorité de l'invocation au prochain duel ; invocation par le défenseur ; calcul relatif à l'armée ennemie ; refus d'un troisième slot occupé ; faction fournie uniquement par le héros ; immutabilité de l'entrée ; absence de créature magique dans les stocks sauvegardés, y compris **lorsqu'elle est encore vivante à la fin du combat** ; cercle, école et tours de magie.
 
 Le résultat du modèle sur une fixture de démonstration synthétique :
 
@@ -67,7 +67,7 @@ Le résultat du modèle sur une fixture de démonstration synthétique :
 
 Le coefficient de pertes **25 %** est une valeur fictive injectée uniquement pour la démonstration, non un barème Ubisoft. Voir [résultats structurés](../../data/analysis/jactari-v59-summons-2026-10-24.json).
 
-**Limites de validation :** le ZIP local ne contient pas le gros fichier source du calculateur original ; les tests différentiels à la source Jactari sont donc exclus des 106 tests. Les **1 700 comparaisons directes** précédemment réussies portaient sur d'autres primitives, pas sur cette nouvelle orchestration des invocations. Le statut réel de GitHub Actions reste à vérifier.
+**Limites de validation :** le ZIP local ne contient pas le gros fichier source du calculateur original ; les tests différentiels à la source Jactari sont donc exclus des 107 tests. Les **1 700 comparaisons directes** précédemment réussies portaient sur d'autres primitives, pas sur cette nouvelle orchestration des invocations. Le statut réel de GitHub Actions reste à vérifier.
 
 ## Commandes et livrables
 
