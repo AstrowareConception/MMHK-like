@@ -17,7 +17,7 @@ function originalTerminal(side){
  const end=encounter.indexOf('var html=',start);
  if(end<=start)throw new Error('Original terminal cleanup end missing');
  const snippet=encounter.slice(start,end);
- return ctx=>vm.runInNewContext(`with(ctx){${snippet};return pelotons_${side==='attacker'?'attaquant':'defenseur'}[2].nombre_restant}`,{ctx},{timeout:1000});
+ return ctx=>vm.runInNewContext(`(function(){with(ctx){${snippet};return pelotons_${side==='attacker'?'attaquant':'defenseur'}[2].nombre_restant}})()`,{ctx},{timeout:1000});
 }
 for(const side of ['attacker','defender']){
  test('500 final cleanup comparisons against original Jactari, '+side,()=>{
