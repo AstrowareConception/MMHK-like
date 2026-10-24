@@ -1,0 +1,148 @@
+{
+  "schema_version": 1,
+  "status": "executed_local_node_22_synthetic_scenario_not_Jactari_full_oracle",
+  "date": "2026-10-24",
+  "source": "tools/jactari-port/unified-battle.mjs",
+  "inputs": {
+    "attacker": [
+      {
+        "count": 100,
+        "weapon": "I",
+        "unitPower": 10,
+        "goldCost": 5,
+        "rareCosts": {
+          "crystal": 2
+        }
+      }
+    ],
+    "defender": [
+      {
+        "count": 80,
+        "weapon": "I",
+        "unitPower": 10,
+        "goldCost": 5,
+        "rareCosts": {
+          "crystal": 2
+        }
+      }
+    ],
+    "unitCatalog": [
+      {
+        "faction": 1,
+        "weapon": "I",
+        "unitPower": 10
+      },
+      {
+        "faction": 2,
+        "weapon": "I",
+        "unitPower": 10
+      }
+    ],
+    "context": {
+      "attackerHero": {
+        "faction": 1,
+        "attaque_modifiee": 0
+      },
+      "defenderHero": {
+        "faction": 2,
+        "defense_modifiee": 0
+      }
+    },
+    "attackerSpells": {
+      "1": {
+        "type": 1,
+        "target": 0,
+        "unit": 0,
+        "power": 200
+      }
+    },
+    "defenderSpells": {
+      "1": {
+        "type": 0,
+        "target": 4,
+        "unit": 7,
+        "power": 50
+      }
+    },
+    "lossPolicy": {
+      "lossFactor": 0.25,
+      "source": "fixture-only-not-historical"
+    }
+  },
+  "observed": {
+    "winner": "attacker",
+    "duel_rounds": 2,
+    "events": [
+      {
+        "turn": 1,
+        "phase": "summon",
+        "side": "attacker",
+        "slot": 1
+      },
+      {
+        "turn": 1,
+        "phase": "spell",
+        "side": "defender",
+        "kind": "target-damage",
+        "targetSlot": 1
+      },
+      {
+        "turn": 1,
+        "phase": "duel",
+        "attackerSlot": 1,
+        "defenderSlot": 2
+      },
+      {
+        "turn": 2,
+        "phase": "duel",
+        "attackerSlot": 2,
+        "defenderSlot": 2
+      }
+    ],
+    "attacker_summoned": {
+      "initial": 20,
+      "remaining": 0,
+      "discarded": true
+    },
+    "permanent": {
+      "attacker": {
+        "dead": 16,
+        "goldLost": 80
+      },
+      "defender": {
+        "dead": 20,
+        "goldLost": 100
+      }
+    },
+    "persistent": {
+      "attacker": [
+        84,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ],
+      "defender": [
+        60,
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    }
+  },
+  "verification": {
+    "node_version": "22.16.0",
+    "local_test_cases": 128,
+    "local_pass": 128,
+    "local_fail": 0,
+    "seeded_runs_in_property_test": 180,
+    "differential_full_Jactari_battle": "NOT_YET_EXECUTED",
+    "github_actions_status": "unverified"
+  },
+  "archive": "MMHK_Jactari_V60_unified_battle_2026-10-24.zip"
+}
