@@ -329,3 +329,14 @@ Le nouveau [banc différentiel multi-tours](full-round-differential.test.mjs) in
 Les bonus utilisés sont issus du **même adaptateur partagé**, et la boucle est **reconstruite** : ceci ne prouve **pas** la fidélité du calculateur intégral `simulation_rencontre()`. La prochaine étape est son exécution et celle de `lancement_sorts()` via un adaptateur headless, puis le rapprochement des journaux de batailles mixtes, des morts définitives et des branches spéciales. Ne pas utiliser le moteur comme arbitre S2 de production.
 
 Voir le [rapport de V6.1](../../docs/game-design/28-JACTARI-V61-HISTORICAL-SEQUENCE-DIFFERENTIAL.md) et les [résultats structurés](../../data/analysis/jactari-v61-historical-sequence-differential-2026-10-24.json). Licence et attribution Jactari : **GPL-3.0-or-later**.
+
+
+## V6.2 — Exécution headless du véritable orchestrateur historique (24 octobre 2026)
+
+[`historical-encounter-harness.mjs`](historical-encounter-harness.mjs) exécute désormais **les fonctions originales** `simulation_rencontre()`, `lancement_sorts()` et `simulation_combat()` depuis la source communautaire versionnée, avec une façade jQuery de test et un catalogue/une politique de puissance de sorts **explicitement injectés**. Le [comparateur sémantique](historical-encounter-differential.mjs) contrôle la succession des tours, les salves de sorts, les duels, les neuf emplacements, les résurrections et les morts définitives lues dans le vrai compte rendu.
+
+Scénarios : **7 rencontres sans magie, 12 avec magie, 100 générées et 6 avec sorts au second tour**, soit **30 nouveaux tests Node.js** (dont un générateur de 100 combats). [CI GitHub Actions 236/236 réussis](https://github.com/AstrowareConception/MMHK-like/actions/runs/40070465252) — zéro échec. Le port conserve `battlefield` avant nettoyage de la résurrection temporaire et expose le résultat final via `terminalDisplay` : cette projection est la bonne donnée à comparer à l'affichage final Jactari.
+
+**Limite majeure :** les unités, la puissance effective magique, les bonus et le facteur de pertes sont injectés. PvE, fuite, blessure/capture, sièges et troisième invocation ne sont pas validés. Ce harness est **un oracle de test borné**, pas un service serveur ni une preuve de conformité exhaustive à MMHK S2. Code source original GPL-3.0-or-later ; ne pas exécuter de code historique externe non audité dans `node:vm`.
+
+[Rapport technique V6.2](../../docs/game-design/29-JACTARI-V62-FULL-ENCOUNTER-ORACLE.md) · [Résultats archivés](../../data/analysis/jactari-v62-full-encounter-differential-2026-10-24.json).
