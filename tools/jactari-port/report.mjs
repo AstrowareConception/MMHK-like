@@ -17,7 +17,7 @@ export function simulateBattleWithLossReport({attackers,defenders,attackerSalvos
       throw new TypeError('Invalid final-loss policy');
     const slots=original.map((s,i)=>{
       if(!s)return null;
-      return {...s,roundLosses:pre.killed[i]+(melee?.[side]?.[i]?.roundLosses??0),
+      return {...s,roundLosses:pre.killed[i]+(melee?.[i]?.roundLosses??0),
         magicLosses:0,bonusLost:s.bonusLost??0,raisedDuringBattle:0,
         goldCost:s.goldCost??0,rareCosts:s.rareCosts??{}};
     });
