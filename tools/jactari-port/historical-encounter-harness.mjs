@@ -226,11 +226,6 @@ export function runHistoricalEncounter({
   if(!status)throw new Error('Historical result outside supported full-battle scope');
   const rawRows=(dom['#pertes tbody']??[]).filter(row=>row.includes('<tr>'));
   const permanent={attacker:[],defender:[]};
-  const rowBySlot=Array.from({length:7},()=>null);
-  for(let i=0;i<7;i++) {
-    const row=rawRows[i]; // a slot with no units on either side has no row
-    if(row==null)continue;
-  }
   // Original result table omits fully empty positions. Retain the positions
   // from the original 7-slot input, rather than relying on the row array index.
   let k=0;
