@@ -295,3 +295,26 @@ Voir [rapport V5.8](../../docs/game-design/25-JACTARI-V58-CLOTURE-INVOCATIONS.md
 **Limitation principale** : ce chemin gère des **invocations seules** en mêlée, pas encore des invocations combinées à tous les autres types de sorts. Il refuse un troisième emplacement occupé plutôt que de reproduire un éventuel remplacement du slot 0 d'origine. La puissance magique reste pré-résolue. Les pertes permanentes reposent sur un `lossFactor` injecté et le moteur n'est **pas encore un arbitre S2 certifié**.
 
 Rapport : [Jactari V5.9](../../docs/game-design/26-JACTARI-V59-INVOCATIONS-ET-SORTS.md) · [Résumé des tests](../../data/analysis/jactari-v59-summons-2026-10-24.json). Modules adaptés identifiés **GPL-3.0-or-later**.
+
+
+## V6.0 — Orchestrateur unifié des mécanismes supportés (24 octobre 2026)
+
+**Nouvelle entrée recommandée pour les laboratoires :**
+[`unified-battle.mjs`](unified-battle.mjs), exportée dans [`index.mjs`](index.mjs).
+
+Une unique fonction `simulateUnifiedBattle()` relie :
+**salves initiales simultanées → neuf emplacements de combat (deux invocations + sept pelotons) → sorts préprogrammés de l'attaquant et du défenseur (dégâts ciblés/de zone, buffs, debuffs, invocations, résurrections post-duel) → duels → bilan final → armées persistantes.**
+
+Les sorts du défenseur peuvent toucher une invocation apparue au **même tour**. La faction d'invocation vient du héros, l'ordre de lancement est conservé, et le journal sépare chaque phase. Les invocations sont toujours retirées des effectifs sauvegardés. Le rapport exige une politique explicite `lossPolicy` : aucune perte saison 2 non démontrée n'est présumée.
+
+**Validation locale : 128 tests exécutés et réussis**, dont **21 tests** du nouvel orchestrateur (un test à **180 campagnes déterministes** et 20 vérifications fonctionnelles). La suite locale utilisée vient du ZIP V5.9 et n'inclut pas la grosse source Jactari originale : **les tests différentiels source complets, ni la CI GitHub distante, n'ont été vérifiés par ce chiffre**.
+
+Commande recommandée sur une copie complète du dépôt :
+```bash
+node --test tools/jactari-port/unified-battle.test.mjs
+node --test tools/jactari-port/*.test.mjs
+```
+
+**Ce module reste expérimental**, et ne remplace pas automatiquement les anciens adaptateurs séparés pour les cas qu'il refuse. Les cas de magie interrompant un duel, le troisième slot d'invocation, les héros vaincus, la fuite, les sièges, la disponibilité réelle des sorts et la **parité sur des batailles entières** restent à traiter. Les fichiers dérivés conservent la licence **GPL-3.0-or-later**.
+
+Voir [le rapport V6.0](../../docs/game-design/27-JACTARI-V60-UNIFIED-BATTLE.md) et [la fixture de combat mixte](../../data/analysis/jactari-v60-unified-battle-demo-2026-10-24.json).
