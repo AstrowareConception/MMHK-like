@@ -49,8 +49,13 @@ export function compareHistoricalEncounter(input) {
       const a=legacy.battlefield[side][i+2],b=modern.battlefield[side][i+2];
       check('battlefield.'+side+'['+i+'].present',Boolean(a),Boolean(b));
       if(a&&b){
+        // The original mutates nombre_restant on terminal temporary-revival
+        // cleanup; the port intentionally keeps an immutable battlefield
+        // snapshot and exposes the historical displayed count separately.
+        check('terminal.'+side+'['+i+'].remaining',a.remaining,
+          modern.terminalDisplay.displayed[side][i+2]);
         for(const [from,to] of [
-          ['remaining','remaining'],['roundLosses','roundLosses'],
+          ['roundLosses','roundLosses'],
           ['magicLosses','magicLosses'],['bonusLost','bonusLost'],
           ['raisedDuringBattle','raisedDuringBattle'],['bonusTroops','bonusTroops']
         ])check('battlefield.'+side+'['+i+'].'+from,a[from],b[to]);
