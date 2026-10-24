@@ -1,0 +1,91 @@
+{
+  "date": "2026-10-24",
+  "version": "jactari-v5.9-summoned-battle",
+  "status": "implemented_experimental_not_full_Jactari_S2",
+  "source_origin": [
+    "data/Jactari/src/scripts/combat.min.js#lancement_sorts",
+    "data/Jactari/src/scripts/combat.min.js#simulation_rencontre",
+    "data/Jactari/src/scripts/combat.min.js#controle_magie"
+  ],
+  "features": {
+    "combat_slots": {
+      "special": [
+        0,
+        1
+      ],
+      "regular": [
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8
+      ],
+      "first_summon_slot": 1,
+      "second_summon_slot": 0,
+      "selection_order": "0 to 8"
+    },
+    "summoning": {
+      "spell_type": 1,
+      "targets": {
+        "0": "I",
+        "1": "R",
+        "2": "C"
+      },
+      "supported_power_units": [
+        0,
+        4
+      ],
+      "caster_faction": "derived from server-controlled hero context, not request",
+      "enemy_power": "original seven-stack force, initial troop counts"
+    },
+    "cleanup": "special summoned units discarded after battle; permanent casualties and stocks limited to original seven slots",
+    "spell_selection": "faction schools, first list circles<=5, second Arcana circle, unique spells and turns 1..14; source Jactari UI only",
+    "mana": "No mana implementation found in inspected client code; unverified for MMHK S2, no invented cost"
+  },
+  "tests": {
+    "node_version": "22.16.0",
+    "local_non_differential_passed": 106,
+    "local_non_differential_failed": 0,
+    "new_cases": 19,
+    "breakdown": {
+      "summoned_battle": 12,
+      "spell_eligibility": 7
+    },
+    "github_actions_status": "not verified",
+    "differential_on_summoning": "not run; previous 1700 source comparisons cover other primitives"
+  },
+  "demonstration": {
+    "initial_attacker": 100,
+    "initial_defender": 50,
+    "summon": 20,
+    "slot": 1,
+    "duels": 2,
+    "permanent_attacker": 7,
+    "permanent_defender": 12,
+    "persistent_attacker": 93,
+    "persistent_defender": 38,
+    "loss_factor": 0.25,
+    "warning": "entire example synthetic, no S2 historical balance inferred"
+  },
+  "limitations": [
+    "Summons-only separate encounter; cannot mix with damage spells, resurrections and area effects in one battle yet",
+    "Third summon when both special slots occupied is rejected, not faithful overwrite/reuse behavior",
+    "No Jactari full fight source differential for summon orchestration",
+    "Hero archetype/arcana selection reflects community calculator UI, not proven game-server prerequisite",
+    "No observed mana behavior; absent from this client's combat code, not proof of MMHK S2 mechanics",
+    "Historical catalogue and authentic magic coefficients must be validated before arbitration",
+    "License inherited from Jactari source GPL-3.0-or-later"
+  ],
+  "code": [
+    "tools/jactari-port/summoned-battle.mjs",
+    "tools/jactari-port/spell-eligibility.mjs"
+  ],
+  "tests_path": [
+    "tools/jactari-port/summoned-battle.test.mjs",
+    "tools/jactari-port/spell-eligibility.test.mjs"
+  ],
+  "report": "docs/game-design/26-JACTARI-V59-INVOCATIONS-ET-SORTS.md",
+  "local_archive": "MMHK_Jactari_V59_invocations_2026-10-24.zip"
+}
