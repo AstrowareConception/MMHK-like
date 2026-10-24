@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-24",
+  "status": "verified_github_actions_original_Jactari_headless_bounded_fixture_parity",
+  "original_scripts": [
+    "simulation_rencontre",
+    "lancement_sorts",
+    "simulation_combat"
+  ],
+  "historic_source": "data/Jactari/src/scripts/combat.min.js",
+  "methodology": "original function bodies executed under node:vm with headless jQuery recorder; injected unit catalog, spell powers and bonus policy; native casualty-table parsed per regular slot",
+  "files": [
+    "tools/jactari-port/historical-encounter-harness.mjs",
+    "tools/jactari-port/historical-encounter-differential.mjs",
+    "tools/jactari-port/historical-encounter.test.mjs",
+    "tools/jactari-port/historical-magic-differential.test.mjs",
+    "tools/jactari-port/historical-full-seeded.test.mjs",
+    "tools/jactari-port/historical-multiturn-magic.test.mjs"
+  ],
+  "coverage": {
+    "named_melee_scenarios": 7,
+    "named_magic_scenarios": 12,
+    "seeded_original_full_battles": 100,
+    "second_turn_magic_scenarios": 6,
+    "new_node_test_cases": 30,
+    "baseline_v61_test_cases": 206,
+    "all_node_test_cases": 236,
+    "passed": 236,
+    "failed": 0
+  },
+  "ci": {
+    "run_url": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40070465252",
+    "commit_sha": "3eab22e64bb515469c4b8bfae6ca684cfcd5d6a9",
+    "observed": "success",
+    "command": "node --test tools/jactari-port/*.test.mjs"
+  },
+  "findings": [
+    {
+      "kind": "representation-only",
+      "description": "original mutates terminal temporarily revived winner count; port uses terminalDisplay projection, not post-duel battlefield mutation",
+      "code_changed": "comparator"
+    },
+    {
+      "kind": "harness-fix",
+      "description": "defender area spell power uses target attacker's weapon, not the defender caster's weapon",
+      "code_changed": "historical-encounter-harness.mjs"
+    }
+  ],
+  "excluded": [
+    "original mana and spell power policy",
+    "unmodified bonus_attaque_defense historic algorithm",
+    "historical unit catalog balances",
+    "PvP admission and hero wounds",
+    "PvE retreat",
+    "sieges and fortifications",
+    "third summon overwritten slot",
+    "XP formula parity",
+    "season 2 final loss factor"
+  ],
+  "loss_factor": {
+    "value": 0.25,
+    "source": "synthetic test-only NOT HISTORICAL"
+  },
+  "source_license": "GPL-3.0-or-later",
+  "production_ready": false
+}
