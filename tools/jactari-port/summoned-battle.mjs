@@ -20,7 +20,7 @@ function validateSchedule(book){
  for(const [t,spell] of Object.entries(book)){
   if(!Number.isSafeInteger(Number(t))||Number(t)<1)throw new RangeError('Invalid turn');
   if(!spell||spell.type!==1||![0,1,2].includes(spell.target)||![0,4].includes(spell.unit)||
-     !Number.isFinite(spell.power)||spell.power<0||!Number.isSafeInteger(spell.casterFaction))
+     !Number.isFinite(spell.power)||spell.power<0||Object.hasOwn(spell,'casterFaction'))
       throw new Error('Unsupported or invalid summon spell');
  }
 }
@@ -48,8 +48,10 @@ export function simulateSummonedMeleeEncounter({attackers,defenders,attackerSumm
   for(const side of ['attacker','defender']){
    const book=books[side];if(!own(book,turn))continue;
    const spell=book[turn],their=side==='attacker'?'defender':'attacker',slots=army[side];
+   const casterFaction=context[side==='attacker'?'attackerHero':'defenderHero']?.faction;
+   if(!Number.isSafeInteger(casterFaction))throw new Error('Missing authoritative hero faction');
    const plan=planSummoning({target:spell.target,unit:spell.unit,power:spell.power,
-    casterFaction:spell.casterFaction,unitCatalog,
+    casterFaction,unitCatalog,
     opposingSevenSlots:initial[their],specialSlots:slots.slice(0,2)});
    if(!plan.available||plan.unitCount<=0){events.push({turn,phase:'summon-no-effect',side,plan});continue;}
    if(slots[plan.specialIndex])throw new Error('Both special summon slots occupied: original overwrite not yet supported');
