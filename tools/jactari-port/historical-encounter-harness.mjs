@@ -166,10 +166,10 @@ export function runHistoricalEncounter({
   vm.runInContext(historicFunctions,ctx,{timeout:1000});
   // Hook only at function boundaries; keep native function bodies unchanged.
   const historicSpell=ctx.lancement_sorts;
-  ctx.puissance_effective_sort=(id,_camp,_hero,_attackWeapon,defendWeapon)=>{
+  ctx.puissance_effective_sort=(id,_camp,_hero,attackWeapon,defendWeapon)=>{
     const spell=prepared.spellsById[id];
     if(!spell)throw new Error('Unknown spell ID in historical resolver');
-    const power=spell.powerByWeapon?spell.powerByWeapon[defendWeapon]:spell.power;
+    const power=spell.powerByWeapon?spell.powerByWeapon[spell.side==='attacker'?defendWeapon:attackWeapon]:spell.power;
     if(!Number.isFinite(power)||power<0)throw new RangeError('Unresolved effective spell power');
     return {puissance:power,details:''};
   };
