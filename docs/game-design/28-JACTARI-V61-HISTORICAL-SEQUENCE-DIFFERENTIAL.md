@@ -54,3 +54,5 @@ Cette preuve atteste la réussite des scénarios exécutés. Elle ne prouve pas 
 Construire une façade **sans navigateur** autour de `simulation_rencontre()` et `lancement_sorts()` dans un environnement isolé, en commençant par quelques fixtures représentatives dont les entrées et sorties exactes proviennent du code historique. Comparer l'ordre de **tous les événements**, avant et après duel, et le bilan final. Commencer par les cas sans magie, puis invocation, dégâts, zone et résurrection ; ne corriger les branches manquantes qu'à partir de différences démontrées.
 
 **Interdiction maintenue :** ne pas employer `simulateUnifiedBattle()` comme arbitre PvP/S2 de production. Coefficients historiques, admission PvP/PvE, pertes, capacités de héros et règlement complet restent à valider. Sources originales et dérivées : **GPL-3.0-or-later**, conserver attributions et vérifier obligations avant intégration dans un serveur commercial.
+
+> **Actualisation V6.2 :** cette tranche est désormais réalisée et validée par la CI. Voir le [rapport V6.2](29-JACTARI-V62-FULL-ENCOUNTER-ORACLE.md). Le présent document conserve les résultats historiques propres à V6.1.
