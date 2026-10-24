@@ -59,3 +59,13 @@ test('faction cannot be supplied or forged by the spell order',()=>{
  assert.throws(()=>run(undefined,undefined,{attackerSummons:{1:{...summon(),casterFaction:2}}}),/Unsupported/);
  assert.throws(()=>run(undefined,undefined,{attackerSummons:{1:summon()},context:{}}),/Missing authoritative/);
 });
+
+test('surviving magical summons are discarded and not turned into recruits',()=>{
+ const a=army(s(100)),d=army(s(10));
+ const r=simulateSummonedBattleReport({attackers:a,defenders:d,unitCatalog:catalog,
+  context:{attackerHero:{faction:1},defenderHero:{faction:2}},
+  attackerSummons:{1:summon(1000)},lossPolicy:{lossFactor:.25}});
+ assert.equal(r.discardedSummons.attacker[1].remaining,90);
+ assert.equal(r.discardedSummons.attacker[1].discarded,true);
+ assert.equal(r.persistentArmies.attacker[0].count,100);
+});
