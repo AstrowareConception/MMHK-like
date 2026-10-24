@@ -40,17 +40,17 @@
       "caster_faction": "derived from server-controlled hero context, not request",
       "enemy_power": "original seven-stack force, initial troop counts"
     },
-    "cleanup": "special summoned units discarded after battle; permanent casualties and stocks limited to original seven slots",
+    "cleanup": "Both dead and surviving magical summons are discarded after battle; persistent casualties apply only to original seven slots",
     "spell_selection": "faction schools, first list circles<=5, second Arcana circle, unique spells and turns 1..14; source Jactari UI only",
     "mana": "No mana implementation found in inspected client code; unverified for MMHK S2, no invented cost"
   },
   "tests": {
     "node_version": "22.16.0",
-    "local_non_differential_passed": 106,
+    "local_non_differential_passed": 107,
     "local_non_differential_failed": 0,
-    "new_cases": 19,
+    "new_cases": 20,
     "breakdown": {
-      "summoned_battle": 12,
+      "summoned_battle": 13,
       "spell_eligibility": 7
     },
     "github_actions_status": "not verified",
