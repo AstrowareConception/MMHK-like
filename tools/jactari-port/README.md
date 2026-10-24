@@ -318,3 +318,14 @@ node --test tools/jactari-port/*.test.mjs
 **Ce module reste expérimental**, et ne remplace pas automatiquement les anciens adaptateurs séparés pour les cas qu'il refuse. Les cas de magie interrompant un duel, le troisième slot d'invocation, les héros vaincus, la fuite, les sièges, la disponibilité réelle des sorts et la **parité sur des batailles entières** restent à traiter. Les fichiers dérivés conservent la licence **GPL-3.0-or-later**.
 
 Voir [le rapport V6.0](../../docs/game-design/27-JACTARI-V60-UNIFIED-BATTLE.md) et [la fixture de combat mixte](../../data/analysis/jactari-v60-unified-battle-demo-2026-10-24.json).
+
+
+## V6.1 — Séquences multi-tours confrontées au véritable duel Jactari (24 octobre 2026)
+
+Le nouveau [banc différentiel multi-tours](full-round-differential.test.mjs) invoque le **`simulation_combat(tour)` original** du fichier `data/Jactari/src/scripts/combat.min.js`, isolé dans `node:vm`, avec une boucle de pelotons reconstituée par [`legacy-sequence-oracle.mjs`](legacy-sequence-oracle.mjs). Le [comparateur](battle-differential.mjs) vérifie tour, positions, pertes, effectifs, dispersion, puissances, égalité, faux-nul et stocks des pelotons réguliers. Le corpus couvre **10 cas nommés + 180 scénarios déterministes**, sans magie ni salves.
+
+**Validation GitHub Actions effective : [206 tests réussis, 0 échec](https://github.com/AstrowareConception/MMHK-like/actions/runs/40069106325).** Cette suite comprend 15 nouveaux tests Node, dont un test de 180 batailles. Elle a aussi confirmé la réparation de deux défauts antérieurs : le rapport historique `report.mjs` omettait par erreur les pertes des duels, et `terminal-cleanup-differential.test.mjs` évaluait un `return` illégal au niveau script.
+
+Les bonus utilisés sont issus du **même adaptateur partagé**, et la boucle est **reconstruite** : ceci ne prouve **pas** la fidélité du calculateur intégral `simulation_rencontre()`. La prochaine étape est son exécution et celle de `lancement_sorts()` via un adaptateur headless, puis le rapprochement des journaux de batailles mixtes, des morts définitives et des branches spéciales. Ne pas utiliser le moteur comme arbitre S2 de production.
+
+Voir le [rapport de V6.1](../../docs/game-design/28-JACTARI-V61-HISTORICAL-SEQUENCE-DIFFERENTIAL.md) et les [résultats structurés](../../data/analysis/jactari-v61-historical-sequence-differential-2026-10-24.json). Licence et attribution Jactari : **GPL-3.0-or-later**.
