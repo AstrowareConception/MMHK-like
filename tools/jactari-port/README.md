@@ -281,3 +281,17 @@ La validation réelle effectuée comprend **87/87 tests Node non différentiels*
 **À ne pas confondre :** cette vérification des sous-routines n'est **pas** une parité globale des batailles Jactari. La branche de terminalisation demeure une projection du rapport, pas un changement du registre persistant des armées. Les invocations ne sont pas intégrées aux tours, les prérequis de mana et la majorité des sorts restent partiels. **Le succès de la CI GitHub n'est pas confirmé**. Les modules adaptés sont sous **GPL-3.0-or-later**, comme leur source.
 
 Voir [rapport V5.8](../../docs/game-design/25-JACTARI-V58-CLOTURE-INVOCATIONS.md) et [résultats structurés](../../data/analysis/jactari-v58-differential-2026-10-24.json).
+
+
+## V5.9 — Invocations actives, slots spéciaux et prérequis de l'interface (24 octobre 2026)
+
+- `summoned-battle.mjs` expose `simulateSummonedMeleeEncounter()` et `simulateSummonedBattleReport()` : le moteur différencie **deux emplacements spéciaux historiques 0/1** et les **sept slots réguliers 2 à 8**. Une invocation apparaît sur le slot 1, puis sur le 0 si elle se répète, et les unités invoquées participent aux duels de ce tour selon l'ordre de parcours Jactari (0→8). Elles sont **toujours rejetées du registre persistant** à la fin, même lorsqu'elles survivent au combat.
+- `summoned-battle.test.mjs` : **12 tests exécutés** sur les invocations des deux camps, les deux emplacements, la puissance relative à l'armée adverse, le rapport de pertes et la sécurité de la faction. **La faction est fournie par le héros dans `context`, pas par l'ordre de sort.**
+- `spell-eligibility.mjs` : filtres de `controle_liste_sorts` et `controle_magie` selon les **écoles de la faction**, le cercle des **Arcanes** pour le deuxième sort, les possibilités magiques de l'archétype, deux sorts distincts et deux tours distincts entre **1 et 14**. Le premier menu n'est pas filtré par Arcanes dans le client Jactari ancien : ce comportement d'interface est documenté, **pas nécessairement à conserver comme règle métier S2**.
+- `spell-eligibility.test.mjs` : **7 tests exécutés**.
+
+**Résultat local : 106/106 tests non différentiels réussis**, sur la copie locale des composants ; le résultat GitHub Actions n'est pas confirmé. Aucune donnée de mana n'a été trouvée dans le fichier client examiné : **ne pas en inventer les coûts**, ni déduire pour autant l'absence de mana dans tout MMHK S2.
+
+**Limitation principale** : ce chemin gère des **invocations seules** en mêlée, pas encore des invocations combinées à tous les autres types de sorts. Il refuse un troisième emplacement occupé plutôt que de reproduire un éventuel remplacement du slot 0 d'origine. La puissance magique reste pré-résolue. Les pertes permanentes reposent sur un `lossFactor` injecté et le moteur n'est **pas encore un arbitre S2 certifié**.
+
+Rapport : [Jactari V5.9](../../docs/game-design/26-JACTARI-V59-INVOCATIONS-ET-SORTS.md) · [Résumé des tests](../../data/analysis/jactari-v59-summons-2026-10-24.json). Modules adaptés identifiés **GPL-3.0-or-later**.
