@@ -12,7 +12,7 @@ const statuses=new Set(['differential_bounded','integration_tested','implemented
 test('conformance plan has unique stable requirements with real source paths',()=>{
  assert.equal(json.schemaVersion,1);
  assert.equal(json.requirements.length,19);
- const ids=new Set(),milestones=new Set(json.milestones.map(x=>x.id));
+ const ids=new Set(),milestones=new Set([...json.milestones,...json.historicalMilestones].map(x=>x.id));
  for(const req of json.requirements){
   assert.match(req.id,/^C\d{2}$/);
   assert.equal(ids.has(req.id),false,'Duplicate requirement '+req.id);
