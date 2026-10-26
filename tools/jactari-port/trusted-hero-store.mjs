@@ -427,6 +427,8 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
       throw new Error('Military mission actor or hero binding mismatch');
      if(journey.status!=='arrived')
       throw new Error('Military mission has not reached an authorized arrival');
+     if(worldContext&&serverNowMs<journey.arrival_at_ms)
+      throw new Error('World battle cannot resolve before server scheduled arrival');
      if(journey.attacker_revision!==attacker.revision)
       throw new Error('Military mission attacker revision changed since dispatch');
     }else if(missionId!==null)throw new Error('Unknown military mission');
