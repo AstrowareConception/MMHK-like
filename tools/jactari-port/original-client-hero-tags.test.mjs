@@ -7,7 +7,7 @@ import {fileURLToPath} from 'node:url';
 import {getJactariHeroTables} from './hero-source-tables.mjs';
 import {deriveJactariLegendaryTalents} from './hero-legendary.mjs';
 import {originalClientLegendaryTagMap,projectOriginalHeroLegendarySkills,
- upstreamAddonPath} from './original-client-hero-tags.mjs';
+ upstreamAddonPath,originalClientHereditaryTagMap,projectOriginalPlayerHeredity} from './original-client-hero-tags.mjs';
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const original=fs.readFileSync(path.join(root,upstreamAddonPath),'utf8');
@@ -72,4 +72,37 @@ test('malformed, duplicate and forged game skill ranks fail closed',()=>{
   heroSkillList:[{heroClassSkillEntityTagName:first,level:-1}]}),/Invalid original/);
  assert.throws(()=>projectOriginalHeroLegendarySkills({
   heroSkillList:[{heroClassSkillEntityTagName:first}]}),/Invalid original/);
+});
+
+test('2013 native heredity bridge maps exact server CHARACTERISTICS_ILLUMINATION to source-backed skill',()=>{
+ const map=originalClientHereditaryTagMap();
+ assert.equal(Object.keys(map).length,9);
+ assert.equal(map.CHARACTERISTICS_ILLUMINATION,'revelation_de_caracteristiques');
+ assert.equal(Object.values(map).includes('revelation_de_caracteristiques_15'),false);
+ assert.equal(Object.values(map).includes('revelation_de_caracteristiques_30'),false);
+ for(const name of Object.values(map))
+  assert.ok(tables.hereditary[name],'Native Jactari heredity target not in archived catalog: '+name);
+ const payload={playerHeredityAbilityList:[
+  {heredityAbilityEntity:{tagName:'CHARACTERISTICS_ILLUMINATION',rankingPath:'H'},level:7},
+  {heredityAbilityEntity:{tagName:'TOUGHER_HERO',rankingPath:'R'},level:3}
+ ]};
+ const before=structuredClone(payload);
+ const x=projectOriginalPlayerHeredity(payload);
+ assert.deepEqual(x.heritage,{revelation_de_caracteristiques:7,heros_superieur:3});
+ assert.equal(x.authoritative,false);
+ assert.deepEqual(payload,before);
+});
+test('unknown native heredity tags do not silently become fictitious _15/_30 skills',()=>{
+ const x=projectOriginalPlayerHeredity({playerHeredityAbilityList:[
+  {heredityAbilityEntity:{tagName:'CHARACTERISTICS_ILLUMINATION_15'},level:2}
+ ]});
+ assert.deepEqual(x.heritage,{});
+ assert.deepEqual(x.unmappedTags,['CHARACTERISTICS_ILLUMINATION_15']);
+ assert.throws(()=>projectOriginalPlayerHeredity({playerHeredityAbilityList:[
+  {heredityAbilityEntity:{tagName:'TOUGHER_HERO'},level:1},
+  {heredityAbilityEntity:{tagName:'TOUGHER_HERO'},level:2}
+ ]}),/Duplicate original hereditary/);
+ assert.throws(()=>projectOriginalPlayerHeredity({playerHeredityAbilityList:[
+  {heredityAbilityEntity:{tagName:'TOUGHER_HERO'},level:'9'}
+ ]}),/Invalid archived player heredity/);
 });
