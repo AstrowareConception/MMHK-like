@@ -226,3 +226,41 @@ test('another actor cannot arrive, schedule, finish or cancel an owned mission',
   assert.equal(store.getMission('mission-001').status,'traveling');
  }finally{store.close();}
 });
+
+test('field interception of another traveling hero is refused until world-movement rules exist',()=>{
+ const store=fixture();
+ const bob={authContext:{token:'bob'},
+  authenticate:ctx=>({authenticated:true,playerId:ctx.token})};
+ try{
+  launch(store);
+  assert.throws(()=>dispatchServerHeroMission(args(store,{
+   ...bob,command:{missionId:'bob-mission',attackerHeroId:'d',defenderHeroId:'a'},
+   trustedSchedule:{nowMs:1100,arrivalAtMs:2200}
+  })),/Target hero is on an active mission/);
+  assert.throws(()=>commitServerAuthorizedJactariBattle(args(store,{
+   ...bob,command:{commandId:'bob-attack',attackerHeroId:'d',defenderHeroId:'a'},
+   trustedRules:rules
+  })),/Defending hero is traveling or returning/);
+  assert.deepEqual(store.getBattleAuditCounts(),{commands:0,events:0});
+ }finally{store.close();}
+});
+test('a mission cannot resolve against a target that departed after initial dispatch',()=>{
+ const store=fixture();
+ const bob={authContext:{token:'bob'},
+  authenticate:ctx=>({authenticated:true,playerId:ctx.token})};
+ try{
+  store.putHero(hero('e','eve',160,3));
+  launch(store);
+  const outbound=dispatchServerHeroMission(args(store,{
+    ...bob,command:{missionId:'bob-travel',attackerHeroId:'d',defenderHeroId:'e'},
+    trustedSchedule:{nowMs:1100,arrivalAtMs:2400}
+  }));
+  assert.equal(outbound.status,'traveling');
+  assert.throws(()=>arrive(store),/Mission defender departed/);
+  assert.equal(store.getMission('mission-001').status,'traveling');
+  cancelServerUnresolvedMission(args(store,{
+   ...bob,command:{missionId:'bob-travel'},authorizeCancellation:()=>true
+  }));
+  assert.equal(arrive(store).status,'arrived');
+ }finally{store.close();}
+});
