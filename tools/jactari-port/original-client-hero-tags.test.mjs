@@ -7,6 +7,7 @@ import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {getJactariHeroTables} from './hero-source-tables.mjs';
 import {deriveJactariLegendaryTalents} from './hero-legendary.mjs';
+import {simulateBattleWithDerivedHeroes} from './hero-combat-battle.mjs';
 import {originalClientLegendaryTagMap,projectOriginalHeroLegendarySkills,
  upstreamAddonPath,originalClientHereditaryTagMap,projectOriginalPlayerHeredity} from './original-client-hero-tags.mjs';
 
@@ -125,4 +126,35 @@ test('original 2013 Jactari bridge coerces game seasons 1 and 2 into season 3',(
   assert.equal(ctx.donnees.saison,expected,
    'Original addon must NOT be presented as season '+requested+' oracle');
  }
+});
+
+test('original heroSkillList can drive a battle only under independently granted server talent rank',()=>{
+ const legacy=projectOriginalHeroLegendarySkills({heroSkillList:[
+  {heroClassSkillEntityTagName:'MASTER_FIGHTER_3',level:2}
+ ]});
+ const heredity=projectOriginalPlayerHeredity({playerHeredityAbilityList:[
+  {heredityAbilityEntity:{tagName:'TOUGHER_HERO'},level:1}
+ ]});
+ assert.equal(legacy.authoritative,false);
+ assert.equal(legacy.observedRanks.legendary_dragonkinght_c,2);
+ const troop=count=>[{count,weapon:'I',unitPower:10,goldCost:5},
+  null,null,null,null,null,null];
+ const input={
+  attackers:troop(150),defenders:troop(120),
+  heroProfiles:{
+   attacker:{faction:1,archetype:0,level:40,heritage:heredity.heritage},
+   defender:{faction:2,archetype:0,level:40}
+  },
+  heroLegendaries:{attacker:legacy.selections,defender:[]},
+  // This ledger is assumed to have been checked by a *separate server*;
+  // it must NEVER be taken as authoritatively true from legacy.observedRanks.
+  heroLegendaryGrants:{attacker:{legendary_dragonkinght_c:2},defender:{}},
+  lossPolicy:{lossFactor:.3,source:'JACTARI_2013_TEST_NOT_CERTIFIED_S2'}
+ };
+ const result=simulateBattleWithDerivedHeroes(input);
+ assert.equal(result.heroSnapshots.attacker.hero.niveau_legendary_dragonkinght_c,2);
+ assert.ok(result.events.some(x=>x.phase==='duel'));
+ assert.throws(()=>simulateBattleWithDerivedHeroes({...input,
+  heroLegendaryGrants:{attacker:{legendary_dragonkinght_c:1},defender:{}}
+ }),/not granted/);
 });
