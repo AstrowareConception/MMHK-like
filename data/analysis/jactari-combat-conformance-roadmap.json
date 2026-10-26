@@ -25,11 +25,11 @@
   ],
   "tracking": {
     "lastVerifiedFullSuite": {
-      "tests": 335,
-      "passed": 335,
+      "tests": 343,
+      "passed": 343,
       "failed": 0,
-      "ciUrl": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40333523770",
-      "commit": "2d26abc066963851bc791ed83ec451e0eea785ca"
+      "ciUrl": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40336924030",
+      "commit": "f443c1cae7e78200fc6a915109f71d1323663b30"
     },
     "metricPolicy": "Les nombres de tests sont des régressions, pas un pourcentage d'équivalence historique.",
     "lastStatusReview": "2026-10-26"
@@ -80,10 +80,11 @@
         "tools/jactari-port/historical-heritage-audit.test.mjs",
         "tools/jactari-port/historical-multilegend-differential.test.mjs",
         "tools/jactari-port/original-client-hero-tags.test.mjs",
-        "tools/jactari-port/original-ubisoft-source-audit.test.mjs"
+        "tools/jactari-port/original-ubisoft-source-audit.test.mjs",
+        "tools/jactari-port/server-authorized-battle.test.mjs"
       ],
-      "validated": "V6.6 tranche 1: 310 fiches de héros comparées à maj_adm/maj_comp/equipe_artefact, 150 choix de talents comparés au fragment combat original, 200 profils de héros de combat confrontés à maj_situation, puis raccordement testé au moteur unifié. V6.6 tranche 2: accès aux carrières comparé sur la matrice faction/archétype/carrière du calculateur original, 170 achats de talents, 120 transitions rang+remboursement et Scribe/Arcana partagés, validation de budgets au pont de combat. V6.6 tranche 3: 60 transitions historiques de sélection/remplacement/abandon comparées aux fonctions originales, y compris remboursement et partage Scribe/Arcanes; contrôles historiques respec et tenancier vérifiés par level/cas limites. V6.6 tranche 4: 8 classes légendaires / 24 talents historiques cartographiés; 144 préparations de héros originales; 48 rencontres complètes avec effets légendaires comparées à l'original; registre des droits des rangs explicite et obligatoire au pont de bataille. V6.6 tranche 5: audit de source démontrant l'absence des tables héréditaires _15/_30, refus explicite de ces valeurs; 120 niveaux documentés + 90 cas de priorité héréditaire contre la préparation historique, 120 héros cumulant 2 à 8 bonus légendaires. V6.6 tranche 6: pont MMHK-Plus original 2013 récupéré et attesté par empreinte Git; 96 correspondances de 24 talents légendaires aux quatre rangs confrontées à prepare_talent() originale; neuf types d'hérédité effectivement reçus du client et transformés depuis playerHeredityAbilityList. Raccordement natif au combat testé: heroSkillList d'époque projeté en talents légendaires, autorisation de rang contrôlée séparément ; test d'intégrité Git du pont et comparaison directe 96 cas.",
-      "gap": "L'accès serveur réel aux classes et à l'hérédité reste non démontré ; aucune table _15/_30 dans six versions de donnees.general.min.js. Les nouvelles projections sont des observations de données de jeu, pas des autorisations ni des preuves S2.",
+      "validated": "V6.6 tranche 1: 310 fiches de héros comparées à maj_adm/maj_comp/equipe_artefact, 150 choix de talents comparés au fragment combat original, 200 profils de héros de combat confrontés à maj_situation, puis raccordement testé au moteur unifié. V6.6 tranche 2: accès aux carrières comparé sur la matrice faction/archétype/carrière du calculateur original, 170 achats de talents, 120 transitions rang+remboursement et Scribe/Arcana partagés, validation de budgets au pont de combat. V6.6 tranche 3: 60 transitions historiques de sélection/remplacement/abandon comparées aux fonctions originales, y compris remboursement et partage Scribe/Arcanes; contrôles historiques respec et tenancier vérifiés par level/cas limites. V6.6 tranche 4: 8 classes légendaires / 24 talents historiques cartographiés; 144 préparations de héros originales; 48 rencontres complètes avec effets légendaires comparées à l'original; registre des droits des rangs explicite et obligatoire au pont de bataille. V6.6 tranche 5: audit de source démontrant l'absence des tables héréditaires _15/_30, refus explicite de ces valeurs; 120 niveaux documentés + 90 cas de priorité héréditaire contre la préparation historique, 120 héros cumulant 2 à 8 bonus légendaires. V6.6 tranche 6: pont MMHK-Plus original 2013 récupéré et attesté par empreinte Git; 96 correspondances de 24 talents légendaires aux quatre rangs confrontées à prepare_talent() originale; neuf types d'hérédité effectivement reçus du client et transformés depuis playerHeredityAbilityList. Raccordement natif au combat testé: heroSkillList d'époque projeté en talents légendaires, autorisation de rang contrôlée séparément ; test d'intégrité Git du pont et comparaison directe 96 cas. V6.6 tranche 7: chargement cohérent depuis SQLite de deux profils de héros, budget d'apprentissage et attribution légendaire enregistrés et contrôlés ; refus des statistiques préfabriquées et des classes légendaires cachées parmi les carrières ordinaires.",
+      "gap": "L'accès serveur réel aux classes et à l'hérédité reste non démontré ; aucune table _15/_30 dans six versions de donnees.general.min.js. Les nouvelles projections sont des observations de données de jeu, pas des autorisations ni des preuves S2. Contrôle de propriété et session réelle non intégrés dans une application réseau ; seuls des hooks d'authentification serveur et une projection persistée en lecture seule sont disponibles.",
       "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
     },
     {
@@ -258,12 +259,14 @@
     {
       "id": "C17",
       "title": "Arbitrage serveur transactionnel",
-      "status": "not_started",
+      "status": "implemented_partial",
       "milestone": "V7.0",
-      "implementation": "docs/game-design/23-ROADMAP-V5-4-V7.md",
-      "evidence": [],
-      "validated": "Objectif architectural défini, aucun arbitre autorisé pour la production",
-      "gap": "Réservation d'armées, ordres atomiques, reprise, capture, blessures, idempotence et rollback",
+      "implementation": "tools/jactari-port/server-authorized-battle.mjs",
+      "evidence": [
+        "tools/jactari-port/server-authorized-battle.test.mjs"
+      ],
+      "validated": "V6.6 tranche 7: base SQLite Node22 avec joueurs et héros persistés, propriété, droits légendaires, armées et ordres de sorts ; profils historiques dérivés, transaction de lecture cohérente, révisions de progression optimistes et simulation de combat en lecture seule avec hooks de session et d'autorisation cible. Aucun arbitrage militaire en écriture.",
+      "gap": "Pas de vrai serveur HTTP ou authentification/sessions, ni politique diplomatie/protection débutant, ni transaction de pertes/captures/blessures, idempotence de combat, réservation de troupes, audit durable, reprise sur panne, test multi-processus, ni validation S2.",
       "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
     },
     {
@@ -284,7 +287,7 @@
       "milestone": "V7.0",
       "implementation": "tools/jactari-port/README.md",
       "evidence": [],
-      "validated": "Licence historique GPL-3.0-or-later identifiée et moteur JS pur",
+      "validated": "Licence historique GPL-3.0-or-later identifiée et moteur JS pur Des contrôles unitaires de sécurité des données de héros, de permissions et de concurrence optimiste sont introduits dans la tranche 7; audit global non effectué.",
       "gap": "Audit redistribution, sources compatibles, charge, limites, validation côté serveur",
       "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
     }
@@ -300,7 +303,7 @@
       "id": "V6.6",
       "title": "Génération des caractéristiques et talents",
       "state": "in_progress",
-      "exit": "Tranches 1-6: calcul et combinaisons de héros, progression, hérédités documentées, pont natif MMHK-Plus 2013 (24 légendaires et 9 hérédités) vérifiés. Obstacles: tables _15/_30 absentes, déblocages S2 inconnus, ingestion d'identité serveur; addon 2013 transforme saisons <3 en 3."
+      "exit": "Tranches 1-7 : calcul historique, talents, légendaires, pont client ancien et stockage SQLite des héros avec preview authentifié via hooks. Reste source indépendante MMHK S2 et serveur/session réels; pas d'application des pertes."
     },
     {
       "id": "V6.7",
@@ -336,7 +339,7 @@
       "id": "V7.0",
       "title": "Arbitre serveur multi-joueur",
       "state": "open",
-      "exit": "Moteur autoritatif, transactionnel, sécurisé, documenté GPL, CI exhaustive et essais de charge"
+      "exit": "Fondations SQLite et previews autorisés réalisés mais arbitrage serveur transactionnel, auth réelle, prévention de doubles exécutions, captures/retours et compliance S2 non livrés."
     }
   ],
   "releaseGate": {
