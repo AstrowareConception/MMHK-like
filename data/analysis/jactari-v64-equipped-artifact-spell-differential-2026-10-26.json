@@ -1,0 +1,46 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-26",
+  "source_calculator": "Jactari v.4.1.3-MTR",
+  "source_files": [
+    "data/Jactari/src/scripts/combat.min.js",
+    "data/Jactari/src/scripts/donnees.artefacts.min.js"
+  ],
+  "evidence": {
+    "original_functions": [
+      "bonus_magie_artefacts",
+      "puissance_effective_sort"
+    ],
+    "validated_modules": [
+      "tools/jactari-port/artifact-spell-bonus.mjs",
+      "tools/jactari-port/spell-power.mjs"
+    ],
+    "independent_oracles": [
+      "tools/jactari-port/historical-artifact-oracle.mjs",
+      "tools/jactari-port/historical-spell-power-oracle.mjs"
+    ],
+    "artifact_eligibility_guided": 100,
+    "artifact_eligibility_seeded": 180,
+    "equipped_hero_spell_power_cases": 120,
+    "total_Node_tests": 267,
+    "passed": 267,
+    "failed": 0,
+    "ci_run_url": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40295576832",
+    "tested_commit_sha": "83f6ba8b3fda9db838069ad4862fa1f13f6579e9"
+  },
+  "issues_resolved": [
+    "Reject simultaneous server artifact inventory and caller-provided generic bonus percent",
+    "Pass actual spell target into original oracle, avoiding false mismatch on artifacts with target-specific effects"
+  ],
+  "not_yet_proved": [
+    "automatic per-round spell calculation inside simulateUnifiedBattle",
+    "full hero progression, talents and item sets",
+    "original full siege and barrage branches",
+    "all heroic XP and PvE NPC policies",
+    "MMHK Season 2 equality independent of 2013 Jactari",
+    "multiplayer persistence and transaction replay"
+  ],
+  "note": "Passing 267 node:test test cases is not the same as 267 original battle references; 280 artifact and 120 equipped spell scenarios are grouped in separate tests.",
+  "licensed_derivative": "GPL-3.0-or-later",
+  "production_ready": false
+}
