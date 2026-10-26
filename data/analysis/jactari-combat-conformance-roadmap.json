@@ -25,11 +25,11 @@
   ],
   "tracking": {
     "lastVerifiedFullSuite": {
-      "tests": 367,
-      "passed": 367,
+      "tests": 381,
+      "passed": 381,
       "failed": 0,
-      "ciUrl": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40397746399",
-      "commit": "007ceb4ffb7a5eab84abc2b73dfb90a9eb5d4eb0"
+      "ciUrl": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40400427668",
+      "commit": "bbb79240efcdc06406b4fa497dd2981be359b610"
     },
     "metricPolicy": "Les nombres de tests sont des régressions, pas un pourcentage d'équivalence historique.",
     "lastStatusReview": "2026-10-26"
@@ -265,10 +265,13 @@
       "evidence": [
         "tools/jactari-port/server-authorized-battle.test.mjs",
         "tools/jactari-port/server-transactional-battle.test.mjs",
-        "tools/jactari-port/server-military-mission.test.mjs"
+        "tools/jactari-port/server-military-mission.test.mjs",
+        "tools/jactari-port/world-distance.test.mjs",
+        "tools/jactari-port/world-engagement-policy.test.mjs",
+        "tools/jactari-port/server-world-engagement.test.mjs"
       ],
-      "validated": "V6.6 tranche 7: base SQLite Node22 avec joueurs et héros persistés, propriété, droits légendaires, armées et ordres de sorts ; profils historiques dérivés, transaction de lecture cohérente, révisions de progression optimistes et simulation de combat en lecture seule avec hooks de session et d'autorisation cible. Aucun arbitrage militaire en écriture. V7.0 tranche 1: BEGIN IMMEDIATE couvre simultanément contrôle du propriétaire et de la cible, simulation admise par Jactari, mise à jour des deux effectifs et révisions, reçu idempotent durable et événements d'audit ordonnés. Tests de rollback après écriture, concurrence par deux connexions, redémarrage, collisions sur clés de combat, tentative de réécriture de pertes et pelotons annihilés. V7.0 tranche 2: missions SQLite travelling/arrived/returning/completed/cancelled, réservation unique du héros attaquant, arrivée et retour horodatés exclusivement par politique serveur, événement d'audit à chaque étape, liaison transactionnelle arrived → returning avec application des pertes et idempotence, récupération après redémarrage et refus des interceptions sur héros en mission. Tests réels sur deux connexions, rollback, capture non résolue et annulation administrative.",
-      "gap": "Déplacement géographique, temps historiques, sous-détachements, interception de héros mobiles, missions de siège/PvE, blessures/captures, diplomatie, protection débutant, visibilité, serveur HTTP authentifié, scheduler distribué, migrations et règles MMHK S2 indépendantes non livrés.",
+      "validated": "V6.6 tranche 7: base SQLite Node22 avec joueurs et héros persistés, propriété, droits légendaires, armées et ordres de sorts ; profils historiques dérivés, transaction de lecture cohérente, révisions de progression optimistes et simulation de combat en lecture seule avec hooks de session et d'autorisation cible. Aucun arbitrage militaire en écriture. V7.0 tranche 1: BEGIN IMMEDIATE couvre simultanément contrôle du propriétaire et de la cible, simulation admise par Jactari, mise à jour des deux effectifs et révisions, reçu idempotent durable et événements d'audit ordonnés. Tests de rollback après écriture, concurrence par deux connexions, redémarrage, collisions sur clés de combat, tentative de réécriture de pertes et pelotons annihilés. V7.0 tranche 2: missions SQLite travelling/arrived/returning/completed/cancelled, réservation unique du héros attaquant, arrivée et retour horodatés exclusivement par politique serveur, événement d'audit à chaque étape, liaison transactionnelle arrived → returning avec application des pertes et idempotence, récupération après redémarrage et refus des interceptions sur héros en mission. Tests réels sur deux connexions, rollback, capture non résolue et annulation administrative. V7.0 tranche 3: carte carrée à bords raccordés et 500 distances confrontées à MMHK-Plus 2013 original; deux modules 2013 attestés par empreinte Git. Mondes/villes/postings de héros persistés dans SQLite; source/destination de mission versionnées, vérifiées à l'arrivée et au combat; première ville bloquée jusqu'à une expiration fournie côté serveur; refus des attaques inter-mondes, de la cible mobile, du combat sans mission et des horloges non serveur.",
+      "gap": "Géométrie euclidienne du module communautaire source-adossée mais vitesses/haltes/trêves et trajets effectifs saison 2 non certifiés. Protection première ville 7 jours = hypothèse du projet, expiration explicitement configurée par serveur. Absence d'auth réseau, politique diplomatique/visibilité, sous-escouades, interceptions, captures/blessures, XP/butin, etc.",
       "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
     },
     {
@@ -341,7 +344,7 @@
       "id": "V7.0",
       "title": "Arbitre serveur multi-joueur",
       "state": "in_progress",
-      "exit": "Tranches 1-2 : combat admis atomique avec reçu idempotent et journal, missions persistantes, réservation exclusive de l'attaquant, arrivée/retour et audit durable. Non terminés : géographie/vitesse, interceptions, capture/blessure, sous-armées, diplomatie/protection débutant, serveur authentifié et validation S2."
+      "exit": "Tranches 1–3 : transactions et journal idempotents, missions persistantes, positions de héros/villes dans mondes SQLite, distance torique démontrée par 500 comparaisons à MMHK-Plus, itinéraires source/cible figés, protection première ville configurable. Reste planificateur de trajet S2, haltes, sous-armées, diplomatie/authentification, conséquences, équivalence Ubisoft."
     }
   ],
   "releaseGate": {
