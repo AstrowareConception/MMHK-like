@@ -64,7 +64,7 @@ export function simulateCandidateTerritorialTravel(config){
  if(!Array.isArray(segments)||segments.length<1||segments.length>1000)
   throw new RangeError('At least one and at most 1000 route segments are required');
  const normalized=segments.map((seg,i)=>{
-  exact(seg,['from','to','territory','durationFactor'],'segment');
+  exact(seg,['from','to','territory','durationFactor','distanceUnits'],'segment');
   const from=validateWorldCoordinate(seg.from,worldSize);
   const to=validateWorldCoordinate(seg.to,worldSize);
   enumValue(seg.territory,['friendly','allied','neutral','hostile','targetAlliance'],
@@ -76,7 +76,9 @@ export function simulateCandidateTerritorialTravel(config){
     throw new RangeError('Route segments must be contiguous');
   }
   return {from:{...from},to:{...to},territory:seg.territory,
-   durationFactor:factor,distance:jactariToroidalDistance(from,to,worldSize)};
+   durationFactor:factor,distance:seg.distanceUnits===undefined
+   ?jactariToroidalDistance(from,to,worldSize)
+   :finite(seg.distanceUnits,'distanceUnits',Number.MIN_VALUE)};
  });
  if(config.nightPolicy==='disabled'){
   // Explicitly switch off truce only in a non-authoritative simulation.
