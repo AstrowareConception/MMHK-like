@@ -22,3 +22,4 @@ export {originalClientLegendaryTagMap,projectOriginalHeroLegendarySkills,origina
 export {openTrustedHeroStore} from './trusted-hero-store.mjs';
 export {previewServerAuthorizedHeroBattle} from './server-authorized-battle.mjs';
 export {commitServerAuthorizedJactariBattle,computeJactariRulesDigest} from './server-transactional-battle.mjs';
+export {dispatchServerHeroMission,arriveServerHeroMission,scheduleServerHeroReturn,completeServerHeroReturn,cancelServerUnresolvedMission} from './server-military-mission.mjs';
