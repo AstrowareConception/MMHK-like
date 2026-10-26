@@ -113,3 +113,17 @@ Les pages web ne sont pas archivées intégralement dans ce dépôt. Les liens, 
 Les références `SS-001` à `SS-057` pointent vers [l’analyse des captures](ANALYSE-CAPTURES.md) et son inventaire à empreintes. CODE-02-IMAGES désigne `images.min.js`, CODE-02-HEROS `heros.min.js` et leurs CSS, dans le corpus épinglé. Les six tables et `combat.min.js` sont identiques à CODE-01 : ce ne sont pas deux témoignages indépendants du moteur serveur.
 
 Les conclusions de disposition sont issues d’images statiques. Les coûts contextuels, les langues et le numéro de client sont conservés lorsqu’ils sont lisibles ; une absence de date n’est pas comblée par une supposition. Aucune capture de la Guerre des Larmes elle-même n’est identifiée dans ce lot.
+
+
+## Complément du 26 octobre 2026 — horaires, haltes et cas particulier Graal (V7.0)
+
+| ID | Source historique | Constat et limite |
+| --- | --- | --- |
+| SRC-14 | [Entretien de l'équipe Heroes Kingdoms, copie Maps4Heroes](https://www.maps4heroes.com/heroes5/heroes_kingdoms_eng.php) | Réponse attribuée aux développeurs : vitesse héros seul / vitesse héros avec armée, non modifiables par sorts, compétences ou artefacts ; haltes à la tombée de la nuit ou après parcours en territoire ennemi. Entretien antérieur au lancement ; ne certifie pas les paramètres S2. |
+| SRC-15 | [Forum jeuxvideo.com, témoignage du 7 décembre 2010](https://www.jeuxvideo.com/forums/1-14545-507-2-0-1-0-tres-decevant.htm) | Témoignage contemporain S2 : attaques de Graals exemptées de haltes hors territoire de l'alliance visée ; bugs des temps de haltes et du retour rapportés. Ni code serveur ni preuve de formules exactes. |
+| SRC-16 | [Fandom, fiche MMHK](https://mightandmagic.fandom.com/wiki/Might_%26_Magic%3A_Heroes_Kingdoms) | Source secondaire rétrospective : trêve indiquée entre 22:00 et 08:00 GMT ; fuseau et applicabilité S2 français non certifiés. |
+
+Ne pas compter SRC-14 à SRC-16 comme trois confirmations indépendantes d'une même
+formule : elles documentent trois aspects distincts et des périodes incertaines.
+La [tranche 5](../game-design/44-JACTARI-V70-HALTES-TERRITOIRES-TREVE.md)
+explicite ces divergences et refuse de publier un ETA officiel sans validation.
