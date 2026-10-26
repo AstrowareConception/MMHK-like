@@ -366,3 +366,33 @@ Le [port des règles d'artefacts](artifact-spell-bonus.mjs) lit un inventaire **
 **[CI GitHub Actions #40295576832 : 267/267 tests réussis, zéro échec](https://github.com/AstrowareConception/MMHK-like/actions/runs/40295576832).**
 
 **Limites :** le moteur unifié n'appelle pas encore automatiquement cette résolution magique à chaque tour. Certaines règles de progression, de sets d'artefacts, de siège et de héros restent non validées ; l'égalité complète avec **MMHK S2** n'est pas prouvée. Cette suite certifie uniquement les scénarios exécutés contre le calculateur communautaire d'origine. [Rapport V6.4](../../docs/game-design/31-JACTARI-V64-ARTEFACTS-ET-MAGIE-HEROS.md).
+
+
+## V6.5 — Résolution dynamique des sorts et roadmap de conformité (26 octobre 2026)
+
+La fonction `simulateUnifiedBattle()` accepte désormais en mode **expérimental opt-in** des ordres de sorts `{id: spellId}`, avec `spellContext` fourni exclusivement par une source **de confiance côté serveur**. Le module [`hero-spell-resolution.mjs`](hero-spell-resolution.mjs) vérifie les identifiants, les tours 1–14, l'unicité des sorts, leurs signatures autorisées et le catalogue versionné. Il calcule la puissance de chaque sort **au moment de son tour** en fonction du héros, de l'arme du peloton actif, de la résistance ennemie, de l'antimagie et des artefacts authentiques du lanceur. Les dégâts de zone ont une puissance distincte par arme. L'ancienne API à `power` explicite reste inchangée.
+
+**Contrat illustratif — cet exemple utilise des fiches synthétiques et non une véritable construction de héros S2 :**
+
+```js
+import {simulateUnifiedBattle} from './index.mjs';
+const heroA={faction:1,attaque_modifiee:0,magie:20};
+const heroD={faction:2,defense_modifiee:0,magie:10};
+const troop=count=>({count,weapon:'I',unitPower:10,goldCost:5});
+const slots=count=>[troop(count),null,null,null,null,null,null];
+const result=simulateUnifiedBattle({
+ attackers:slots(100),defenders:slots(80),
+ context:{attackerHero:heroA,defenderHero:heroD},
+ attackerSpells:{1:{id:0}},
+ spellContext:{
+  catalog:[{school:3,circle:1,type:0,target:4,unit:7,power:1,
+    factors:{I:1,R:1,C:1}}],
+  attacker:{},defender:{}
+ },
+ lossPolicy:{lossFactor:.30,source:'DEMONSTRATION_NOT_S2'}
+});
+```
+
+**Vérification :** [tests d'intégration V6.5](hero-spell-resolution.test.mjs), CI Node complète **276 tests réussis** au moment du raccordement. Pour garantir la **conformité à 100 %**, consulter systématiquement la [roadmap vivante](../../docs/game-design/32-ROADMAP-CONFORMITE-MOTEUR-COMBAT.md) et son [registre JSON avec barrières de certification](../../data/analysis/jactari-combat-conformance-roadmap.json).
+
+**Limite :** `spellContext` contient pour le moment un snapshot héroïque déjà dérivé côté serveur. La construction automatique des caractéristiques à partir de l'archétype, des niveaux, talents, hérédité, objets, bonus de set et carrières relève de **V6.6**. La validation de cette chaîne entière contre le client Jactari et contre MMHK saison 2 reste ouverte. Ne pas accepter des statistiques de héros ou objets calculés par un client web comme vérité serveur.
