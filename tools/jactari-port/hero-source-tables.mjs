@@ -26,6 +26,7 @@ export function getJactariHeroTables(){
      artifacts:context._artefacts,
      artifactEffects:context._effets,
      combatArtifactEffects:context._effets_combat,
+     magicArtifactCategories:context._types_effets_magie,
      equipmentSlots:context._slots,
      careers:context._carrieres,
      talents:context._talents,
