@@ -87,3 +87,34 @@ export function calculateJactariCareerBudget({profile,careers=[]},tables=getJact
    'Shared-rank agreement imposed as an explicit strict server safety policy',
    'No proof of full MMHK S2 career equivalence']};
 }
+
+/**
+ * A deterministic rank transition for an already-valid final career state.
+ * In a synchronized Scribe/Arcana family the updated rank is propagated to
+ * every selected career exposing that talent, as in the corresponding
+ * legacy UI branch when peers share the highest rank.
+ *
+ * This does not execute a historical delete/change-career action.
+ */
+export function changeJactariCareerRank({profile,careers,slot,index,rank},tables=getJactariHeroTables()){
+ if(!validInt(slot)||slot<1||slot>3||!validInt(index)||!validInt(rank))
+   fail('Invalid career rank transition');
+ const prior=calculateJactariCareerBudget({profile,careers},tables);
+ const target=prior.careers.find(c=>c.slot===slot);
+ if(!target)fail('Missing career slot in current hero plan');
+ const talent=tables.talents[target.careerId]?.[index];
+ if(!talent||!Array.isArray(talent.v)||rank>=talent.v.length||
+   rank>=tables.learningCosts.length)fail('Target rank unavailable in original talent table');
+ const shared=sharedNames.has(talent.nom?.fr)?talent.nom.fr:null;
+ const next=prior.careers.map(c=>{
+   const ranks=[...c.ranks],tree=tables.talents[c.careerId];
+   if(c.slot===slot)ranks[index]=rank;
+   if(shared)for(let i=0;i<tree.length;i++)
+     if(tree[i]?.nom?.fr===shared)ranks[i]=rank;
+   return {slot:c.slot,careerId:c.careerId,
+    talents:ranks.flatMap((value,i)=>value>0?[{index:i,rank:value}]:[])};
+ });
+ const after=calculateJactariCareerBudget({profile,careers:next},tables);
+ return {before:prior,after,deltaSpent:after.spent-prior.spent,
+   currentCareerPlan:next,source:'Strict Jactari career-rank transition for already-synchronized states'};
+}
