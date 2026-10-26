@@ -110,6 +110,14 @@ test('store rejects forged calculated stats, unauthorized legendary ranks and un
   assert.throws(()=>store.putHero({...original,
     careers:[{slot:1,careerId:20,talents:[{index:2,rank:2}]}]}),
    /Legendary career IDs require a separate server grant/);
+  assert.throws(()=>store.putHero({...original,
+    profile:{...original.profile,faction:999}}),/Invalid historical hero faction/);
+  assert.throws(()=>store.putHero({...original,
+    legendaryGrants:{legendary_dragonkinght_c:4}}),/Stored legendary grant/);
+  assert.throws(()=>store.putHero({...original,
+    legendaryGrants:{not_a_real_legendary:2}}),/Stored legendary grant/);
+  assert.throws(()=>store.putHero({...original,
+    spellOrders:{1:{id:2},2:{id:2}}}),/Duplicate stored spell ID/);
   assert.equal(store.getHero('hero-c'),null);
  }finally{store.close();}
 });
