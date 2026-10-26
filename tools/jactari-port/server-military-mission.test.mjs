@@ -264,3 +264,26 @@ test('a mission cannot resolve against a target that departed after initial disp
   assert.equal(arrive(store).status,'arrived');
  }finally{store.close();}
 });
+
+test('historical prebattle capture cannot be invented: arrival remains unresolved until authorized cancellation',()=>{
+ const store=openTrustedHeroStore();
+ try{
+  store.registerPlayer('alice');store.registerPlayer('bob');
+  store.putHero(hero('a','alice',4,1));
+  store.putHero(hero('d','bob',180,2));
+  launch(store);arrive(store);
+  const beforeA=store.getHero('a'),beforeD=store.getHero('d');
+  assert.throws(()=>fight(store),
+   /PvP admission requires unimplemented hero consequences/);
+  assert.equal(store.getMission('mission-001').status,'arrived');
+  assert.equal(store.getBattleReceipt('battle-001'),null);
+  assert.deepEqual(store.getHero('a'),beforeA);
+  assert.deepEqual(store.getHero('d'),beforeD);
+  assert.deepEqual(store.getMissionEvents('mission-001')
+   .map(row=>row.event.phase),['dispatched','arrived']);
+  assert.equal(cancelServerUnresolvedMission(args(store,{
+   command:{missionId:'mission-001'},authorizeCancellation:()=>true
+  })).status,'cancelled');
+  assert.equal(store.getMission('mission-001').battleCommandId,null);
+ }finally{store.close();}
+});
