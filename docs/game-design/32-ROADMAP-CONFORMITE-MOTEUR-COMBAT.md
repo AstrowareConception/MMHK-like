@@ -24,7 +24,7 @@ La règle de décision est stricte : une exigence n'est `certified` que si **tou
 | Admission PvE/PvP | V6.3 ; 4 000 calculs contre les branches originales |
 | Puissance magique, artefacts | V6.3–V6.4 ; 400 calculs de magie, 280 affinités d'artefacts, 120 sorts avec équipement |
 | Résolution dynamique au tour | **V6.5 en cours** : ordres de sorts par ID, puissance calculée avec héros/arme/inventaire courants, tests d'intégration |
-| Dernière CI de base vérifiée | **333/333 tests Node passés**, [run GitHub Actions #40332476221](https://github.com/AstrowareConception/MMHK-like/actions/runs/40332476221), tests de carrières et contrôles du registre compris |
+| Dernière CI de base vérifiée | **335/335 tests Node passés**, [run GitHub Actions #40333523770](https://github.com/AstrowareConception/MMHK-like/actions/runs/40333523770), tests de carrières et contrôles du registre compris |
 | Certification historique Jactari complète | **Non acquise** |
 | Équivalence MMHK saison 2 | **Non acquise ; sources spécifiques incomplètes** |
 | Arbitre PvP autorisé en production | **Non** |
@@ -92,7 +92,7 @@ Le [rapport de provenance](38-JACTARI-V66-PROVENANCE-CLIENT-ET-SAISONS.md) compl
 
 Une **restriction de portée S2 majeure** a été découverte : ce pont modifie explicitement `donnees.saison` pour fixer la valeur `3` lorsque le jeu renvoie une saison inférieure à 3. Les six versions Git retrouvées de `donnees.general.min.js` restent aussi dépourvues de tables `_15/_30`. **L'équivalence à MMHK saison 2 n'est donc pas déduite de cet outil.**
 
-**Tranche 6 : 333/333 tests Node réussis sur la dernière CI code vérifiée ; C03 toujours partiel, C18 toujours bloqué sources, V6.6 en cours.** La recherche suivante doit isoler de véritables paramètres/règles S2 et créer un dépôt serveur de héros avec droits authentifiés.
+**Tranche 6 : 335/335 tests Node réussis sur la dernière CI code vérifiée ; C03 toujours partiel, C18 toujours bloqué sources, V6.6 en cours.** La recherche suivante doit isoler de véritables paramètres/règles S2 et créer un dépôt serveur de héros avec droits authentifiés.
 
 ### V6.6 : tranche 5 — hérédités avancées et combinaisons légendaires
 
