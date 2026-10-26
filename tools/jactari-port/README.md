@@ -422,3 +422,14 @@ La [référence indépendante](historical-career-oracle.mjs) réexécute `validi
 **CI : [306/306 tests passés](https://github.com/AstrowareConception/MMHK-like/actions/runs/40302654585).** Le périmètre reste une validation de l'état final des carrières et des transitions de rang couvertes ; **l'abandon, le remplacement de carrière, tous les états intermédiaires Scribe/Arcanes, les classes légendaires et la progression serveur authentifiée ne sont pas encore conformes à 100 %**.
 
 [Rapport V6.6 — tranche 2](../../docs/game-design/34-JACTARI-V66-PROGRESSION-CARRIERES-TALENTS.md) · [Roadmap C03](../../docs/game-design/32-ROADMAP-CONFORMITE-MOTEUR-COMBAT.md).
+
+
+## V6.6 — Tranche 3 : cycle de vie des carrières et remboursements
+
+Le port [`hero-career-lifecycle.mjs`](hero-career-lifecycle.mjs) ajoute les opérations **`select`**, **`replace`** et **`abandon`** sur les emplacements de carrière, en calculant leur nouvel état final et les points rendus ou dépensés sans muter les entrées. Il traite explicitement le remplacement d'une carrière **par elle-même**, les rangs Scribe/Arcanes hérités d'autres carrières et le remboursement de leur dernier détenteur.
+
+Le [banc historique](historical-career-lifecycle-oracle.mjs) exécute **`change_carriere()` et `desactive_carriere()` originaux non modifiés** depuis `heros.min.js` sous une façade de DOM contrôlée. [Tests](hero-career-lifecycle.test.mjs) : **60 scénarios de sélections/remplacements/abandons**, plus cas de restitution de talents de rang 3 et mutualisations. Le [contrôle des respecialisations](historical-respecialization.test.mjs) confronte également les limites de niveau et de tenancier aux fonctions historiques `change_respec()`/`change_tenancier()`.
+
+**CI vérifiée : [313 tests réussis sur 313](https://github.com/AstrowareConception/MMHK-like/actions/runs/40306285724).** [Rapport V6.6 tranche 3](../../docs/game-design/35-JACTARI-V66-CYCLE-VIE-CARRIERES.md) · [preuves JSON](../../data/analysis/jactari-v66-career-lifecycle-differential-2026-10-26.json).
+
+**Limite :** les contrôles portent sur des **états de carrière initialement cohérents**, pas sur toute l'interface d'édition ni sur chaque cas de divergence intermédiaire. Il reste à vérifier les classes légendaires, les prérequis et les contraintes d'état serveur. V6.6 = **en cours**, C03 = **implémentation partielle** ; aucun arbitrage multijoueur certifié.
