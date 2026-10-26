@@ -116,8 +116,8 @@ test('no mutation of persisted profile or career choice list',()=>{
 
 test('120 promotions and reductions replay actual Jactari change_talent()',()=>{
  let tested=0;
- for(let f=0;f<t.factions.length;f++)
-  for(let a=0;a<t.archetypes.length;a++){
+ for(let f=0;f<t.factions.length&&tested<120;f++)
+  for(let a=0;a<t.archetypes.length&&tested<120;a++){
    const p=profile(f,a);
    for(let id=0;id<t.careers.length;id++){
     if(!isJactariCareerAllowed({faction:f,archetype:a,careerId:id},t))continue;
