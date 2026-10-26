@@ -85,3 +85,12 @@ Le calcul de `maj_situation()` a été validé **sur le fragment couvrant les st
 La construction des héros prend désormais en compte la **validité de l'accès aux carrières** et les **dépenses d'apprentissage** depuis les vraies données `_carrieres`, `_talents` et `_apprentissage`. Les règles de coût, les talents partagés Scribe/Arcanes et les promotions/réductions de rang ont été confrontés au code source original. L'adaptateur de bataille accepte en option des listes `heroCareers` et rejette tout calcul de talent brut supplémentaire concurrent. Voir le [rapport technique V6.6 — tranche 2](34-JACTARI-V66-PROGRESSION-CARRIERES-TALENTS.md).
 
 **Validation courante : 306 tests Node.js réussis sur 306** ([CI](https://github.com/AstrowareConception/MMHK-like/actions/runs/40302654585)). La validation du budget d'un **état final cohérent** ne remplace pas l'exécution de l'intégralité des transitions `change_carriere` et `desactive_carriere`. C03 et V6.6 restent en cours.
+
+
+## Mise à jour — tranche 4 : effets des classes légendaires
+
+Le [rapport V6.6 tranche 4](36-JACTARI-V66-CLASSES-LEGENDAIRES.md) complète le calcul des héros avec **8 classes légendaires et 24 talents authentiques**, aux rangs de la version Jactari archivée. Ces effets ont été comparés au code original sur **144 profils légendaires** et **48 batailles intégrales**, avec vérification des bonus magiques correspondants.
+
+Un **registre de droits explicite** est désormais obligatoire dans l'adaptateur de combat lorsque des talents légendaires sont sélectionnés ; les rangs passés par l'ancien argument brut `heroTalents` sont refusés. Le droit réel de débloquer ces classes dans MMHK S2 reste **inconnu et non certifié**, de même que le contrôle d'identité et de propriété du héros par le futur serveur.
+
+**Résultat de base de la tranche 4 : 319/319 tests Node réussis** ([GitHub Actions](https://github.com/AstrowareConception/MMHK-like/actions/runs/40316048810)). V6.6/C03 restent en cours ; ces tests ne prouvent pas les prérequis de classe.
