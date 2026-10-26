@@ -103,3 +103,23 @@ test('invalid lifecycle operations fail closed, never alter input',()=>{
    slot:1,careerId:allowed[1]}),/no new career ID/);
  assert.deepEqual(current,before);
 });
+
+test('reselecting same career resets its last shared rank, unlike adding a peer',()=>{
+ const skill='Scribe';
+ const offering=tables.careers.map((_,id)=>({
+   id,index:tables.talents[id].findIndex(t=>t?.nom?.fr===skill)
+ })).filter(x=>x.index>=0);
+ let sample=null;
+ for(let f=0;f<tables.factions.length&&!sample;f++)
+  for(let a=0;a<tables.archetypes.length&&!sample;a++){
+   const found=offering.find(x=>isJactariCareerAllowed({
+     faction:f,archetype:a,careerId:x.id},tables));
+   if(found)sample={p:profile(f,a),...found};
+  }
+ assert.ok(sample);
+ const p=sample.p,careers=[entry(sample.id,1,[{index:sample.index,rank:2}])];
+ const r=check({profile:p,careers,op:'replace',slot:1,careerId:sample.id},
+  'same career reselect with shared Scribe');
+ assert.equal(r.result.after.shared.Scribe??0,0);
+ assert.equal(r.result.deltaSpent,-3,'Shared talent rank is refunded on reset');
+});
