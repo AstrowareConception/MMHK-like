@@ -24,7 +24,7 @@ La règle de décision est stricte : une exigence n'est `certified` que si **tou
 | Admission PvE/PvP | V6.3 ; 4 000 calculs contre les branches originales |
 | Puissance magique, artefacts | V6.3–V6.4 ; 400 calculs de magie, 280 affinités d'artefacts, 120 sorts avec équipement |
 | Résolution dynamique au tour | **V6.5 en cours** : ordres de sorts par ID, puissance calculée avec héros/arme/inventaire courants, tests d'intégration |
-| Dernière CI de base vérifiée | **280/280 tests Node passés**, [run GitHub Actions #40297642347](https://github.com/AstrowareConception/MMHK-like/actions/runs/40297642347), contrôles du registre compris |
+| Dernière CI de base vérifiée | **296/296 tests Node passés**, [run GitHub Actions #40300003415](https://github.com/AstrowareConception/MMHK-like/actions/runs/40300003415), contrôles du registre et nouveaux tests V6.6 compris |
 | Certification historique Jactari complète | **Non acquise** |
 | Équivalence MMHK saison 2 | **Non acquise ; sources spécifiques incomplètes** |
 | Arbitre PvP autorisé en production | **Non** |
@@ -37,7 +37,7 @@ La règle de décision est stricte : une exigence n'est `certified` que si **tou
 - **Non livré** : branche métier pas encore implémentée/testée.
 - **Bloqué par les sources** : aucune équivalence S2 ne pourra être annoncée tant que les archives nécessaires manquent.
 
-**Répartition des 19 familles de règles** : 8 en différentiel borné, 1 intégrée et testée, 4 partiellement implémentées, 5 non livrées, 1 bloquée par les sources S2. **0 famille entièrement certifiée.** Ce bilan n'est pas un score de fidélité ; il permet d'identifier la nature des preuves manquantes.
+**Répartition des 19 familles de règles** : 8 en différentiel borné, 1 intégrée et testée, 5 partiellement implémentées, 4 non livrées, 1 bloquée par les sources S2. **0 famille entièrement certifiée.** Ce bilan n'est pas un score de fidélité ; il permet d'identifier la nature des preuves manquantes.
 
 ## 3. Registre exhaustif et traçable des 19 chantiers
 
@@ -45,7 +45,7 @@ La règle de décision est stricte : une exigence n'est `certified` que si **tou
 | --- | --- | --- | --- |
 | C01 | Arithmétique des duels | Différentiel borné | Branches extrêmes, arrondis et paramètres de saison |
 | C02 | Tours, positions et invocations | Différentiel borné | Interruptions, 3e invocation, interactions inhabituelles |
-| C03 | **Création des statistiques complètes d'un héros** | **Non livré** | Archétypes, niveaux, carrières, talents, hérédité et légendaires |
+| C03 | **Construction des caractéristiques d'un héros** | **Partiel — V6.6 en cours** | Arbres de carrières, prérequis légendaires, restrictions, variantes héréditaires et attestations S2 |
 | C04 | Modificateurs militaires des héros | Différentiel borné | Héros absents, anomalies d'origine, interactions des objets |
 | C05 | Artefacts, équipement et ensembles | Partiel | Effets non magiques, bonus de set, contraintes d'équipement |
 | C06 | Calcul de puissance magique | Différentiel borné | Toutes variantes de maîtrise, résistance et synergies |
@@ -70,7 +70,7 @@ Les **états et liens de preuve par exigence** sont conservés dans le [registre
 | Livraison | Objectif métier et technique | Critères de sortie vérifiables | État |
 | --- | --- | --- | --- |
 | **V6.5** | Sorts ID-only résolus au tour en fonction des héros, unités et artefacts | API compatible V6.0 ; refus de puissance et équipement forgés ; parité historique de bout en bout sur cas mixtes | **En cours** |
-| **V6.6** | Dérivation des caractéristiques réelles des héros | Archétype + niveau + carrière + talents + hérédité + bonus légendaires ⇒ attributs calculés ; tests différentiels sur vraies fiches | À faire |
+| **V6.6** | Dérivation des caractéristiques réelles des héros | Fiches de héros + talents + états de combat depuis tables historiques (tranche 1 livrée) ; finir légalité des carrières, restrictions, variantes et diff complet | **En cours** |
 | **V6.7** | Équipement et interactions de talents complets | Tous slots/ensembles/statistiques non magiques ; restrictions ; ordre des modificateurs ; diff complet | À faire |
 | **V6.8** | Tirs préalables, engins et sièges | Fuite/haltes, barrage, balistes, fortifications, bombardements ; ordre historique des phases et des morts | À faire |
 | **V6.9** | Scénarios exceptionnels et PvE | Héros absents/PNJ, sorts interrompant un tour, troisième invocation, zéro unité, égalités ; aucune sortie fictive | À faire |
@@ -86,11 +86,13 @@ Tests [`hero-spell-resolution.test.mjs`](../../tools/jactari-port/hero-spell-res
 
 **Dette critique :** le serveur de jeu final ne construit pas encore ces fiches de héros et ces catalogues à partir d'objets persistés. Le `spellContext` doit donc provenir d'un composant de confiance ; ce n'est **pas** un nouveau champ que le joueur peut fixer librement depuis le navigateur.
 
-### V6.6 : prochaine tranche prioritaire
+### V6.6 : tranche 1 validée, qualifications restantes
+
+La [tranche 1 V6.6](33-JACTARI-V66-FICHES-HEROS-ET-COMBAT.md) livre désormais les fonctions de construction de la fiche d'éditeur, des bonus de talents et de la fiche de combat, toutes comparées à des **fragments originaux indépendants**. Les essais couvrent **310 fiches**, **150 sélections de talents**, **200 préparations de héros pour le combat** et **6 contrôles de raccordement** à l'orchestrateur. La CI de référence comprend **296 tests Node réussis**. Le statut reste *implémentation partielle* car les prérequis de carrière et les règles de progression et d'équipement ne sont pas encore entièrement vérifiés.
 
 Les données originales `donnees.heros.min.js`, `donnees.artefacts.min.js`, `donnees.sorts.min.js` et `donnees.general.min.js` existent déjà dans le dépôt.
 
-Réaliser un **agrégat `HeroCombatSnapshot`** reconstruit depuis un héros côté serveur : identité, faction, niveau, archétype, statistiques brutes/modifiées, carrières, talents, légendaires, hérédité, huit slots d'artefacts, sorts autorisés et droits de lancer. Distinguer explicitement les **données persistées validées** des **modificateurs calculés**. Ne jamais recevoir `attaque_modifiee`, `defense_modifiee`, `magie` ou des bonus de combat comme une vérité envoyée par le client.
+Compléter un **agrégat `HeroCombatSnapshot`** reconstruit depuis un héros côté serveur : identité, faction, niveau, archétype, statistiques brutes/modifiées, carrières, talents, légendaires, hérédité, huit slots d'artefacts, sorts autorisés et droits de lancer. Distinguer explicitement les **données persistées validées** des **modificateurs calculés**. Ne jamais recevoir `attaque_modifiee`, `defense_modifiee`, `magie` ou des bonus de combat comme une vérité envoyée par le client.
 
 Pour chacune des familles de statistiques, extraire le code original qui la construit, écrire un exécuteur différentiel autonome, confronter quelques héros complets puis un corpus déterministe, et enfin intégrer le snapshot au moteur unifié. La V6.6 n'est « terminée » que lorsque le même héros produit la **même fiche de combat**, le **même ordre des bonus** et la **même puissance magique** que Jactari sur toutes les branches couvertes.
 
