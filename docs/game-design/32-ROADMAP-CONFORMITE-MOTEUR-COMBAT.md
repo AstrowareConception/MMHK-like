@@ -24,7 +24,7 @@ La règle de décision est stricte : une exigence n'est `certified` que si **tou
 | Admission PvE/PvP | V6.3 ; 4 000 calculs contre les branches originales |
 | Puissance magique, artefacts | V6.3–V6.4 ; 400 calculs de magie, 280 affinités d'artefacts, 120 sorts avec équipement |
 | Résolution dynamique au tour | **V6.5 en cours** : ordres de sorts par ID, puissance calculée avec héros/arme/inventaire courants, tests d'intégration |
-| Dernière CI de base vérifiée | **326/326 tests Node passés**, [run GitHub Actions #40329388212](https://github.com/AstrowareConception/MMHK-like/actions/runs/40329388212), tests de carrières et contrôles du registre compris |
+| Dernière CI de base vérifiée | **333/333 tests Node passés**, [run GitHub Actions #40332476221](https://github.com/AstrowareConception/MMHK-like/actions/runs/40332476221), tests de carrières et contrôles du registre compris |
 | Certification historique Jactari complète | **Non acquise** |
 | Équivalence MMHK saison 2 | **Non acquise ; sources spécifiques incomplètes** |
 | Arbitre PvP autorisé en production | **Non** |
@@ -85,6 +85,14 @@ Le module [`hero-spell-resolution.mjs`](../../tools/jactari-port/hero-spell-reso
 Tests [`hero-spell-resolution.test.mjs`](../../tools/jactari-port/hero-spell-resolution.test.mjs) : magie attaquant et défenseur, magie de zone, invocation avant une nouvelle salve, puissance d'un héros équipé vérifiée par le code original, refus de faux IDs/puissances injectées, immuabilité des entrées et absence de caractéristique magique obligatoire. La **suite Node complète est verte**.
 
 **Dette critique :** le serveur de jeu final ne construit pas encore ces fiches de héros et ces catalogues à partir d'objets persistés. Le `spellContext` doit donc provenir d'un composant de confiance ; ce n'est **pas** un nouveau champ que le joueur peut fixer librement depuis le navigateur.
+
+### V6.6 : tranche 6 — pont authentique du client MMHK vers les héros Jactari
+
+Le [rapport de provenance](38-JACTARI-V66-PROVENANCE-CLIENT-ET-SAISONS.md) complète les oracles communautaires par le module d'intégration **MMHK-Plus de 2013**, conservé avec son empreinte Git d'origine. Ses **24 correspondances de compétences légendaires** et **9 correspondances d'hérédité** permettent désormais d'interpréter les champs réels `heroSkillList` et `playerHeredityAbilityList`, avec **96 exécutions du `prepare_talent()` original**. Les projections renvoient `authoritative:false` : aucune donnée reçue d'un client ne devient une autorisation serveur sans authentification.
+
+Une **restriction de portée S2 majeure** a été découverte : ce pont modifie explicitement `donnees.saison` pour fixer la valeur `3` lorsque le jeu renvoie une saison inférieure à 3. Les six versions Git retrouvées de `donnees.general.min.js` restent aussi dépourvues de tables `_15/_30`. **L'équivalence à MMHK saison 2 n'est donc pas déduite de cet outil.**
+
+**Tranche 6 : 333/333 tests Node réussis sur la dernière CI code vérifiée ; C03 toujours partiel, C18 toujours bloqué sources, V6.6 en cours.** La recherche suivante doit isoler de véritables paramètres/règles S2 et créer un dépôt serveur de héros avec droits authentifiés.
 
 ### V6.6 : tranche 5 — hérédités avancées et combinaisons légendaires
 
