@@ -116,6 +116,42 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
   );
   CREATE UNIQUE INDEX IF NOT EXISTS first_city_per_world_player
    ON military_cities(world_id,owner_player_id) WHERE is_first_city=1;
+  CREATE TABLE IF NOT EXISTS military_world_revisions(
+   world_id TEXT PRIMARY KEY REFERENCES military_worlds(world_id),
+   revision INTEGER NOT NULL CHECK(revision>=1)
+  );
+  CREATE TABLE IF NOT EXISTS military_alliances(
+   alliance_id TEXT PRIMARY KEY,
+   world_id TEXT NOT NULL REFERENCES military_worlds(world_id),
+   UNIQUE(world_id,alliance_id)
+  );
+  CREATE TABLE IF NOT EXISTS military_alliance_memberships(
+   world_id TEXT NOT NULL REFERENCES military_worlds(world_id),
+   player_id TEXT NOT NULL REFERENCES players(player_id),
+   alliance_id TEXT NOT NULL,
+   PRIMARY KEY(world_id,player_id),
+   FOREIGN KEY(world_id,alliance_id) REFERENCES military_alliances(world_id,alliance_id)
+  );
+  CREATE TABLE IF NOT EXISTS military_diplomatic_relations(
+   world_id TEXT NOT NULL REFERENCES military_worlds(world_id),
+   alliance_a TEXT NOT NULL,
+   alliance_b TEXT NOT NULL,
+   relation TEXT NOT NULL CHECK(relation IN ('allied','neutral','hostile')),
+   PRIMARY KEY(world_id,alliance_a,alliance_b),
+   CHECK(alliance_a < alliance_b),
+   FOREIGN KEY(world_id,alliance_a) REFERENCES military_alliances(world_id,alliance_id),
+   FOREIGN KEY(world_id,alliance_b) REFERENCES military_alliances(world_id,alliance_id)
+  );
+  CREATE TABLE IF NOT EXISTS military_territory_claims(
+   world_id TEXT NOT NULL REFERENCES military_worlds(world_id),
+   x INTEGER NOT NULL CHECK(x>=1),
+   y INTEGER NOT NULL CHECK(y>=1),
+   owner_player_id TEXT REFERENCES players(player_id),
+   owner_alliance_id TEXT,
+   PRIMARY KEY(world_id,x,y),
+   CHECK((owner_player_id IS NOT NULL) <> (owner_alliance_id IS NOT NULL)),
+   FOREIGN KEY(world_id,owner_alliance_id) REFERENCES military_alliances(world_id,alliance_id)
+  );
   CREATE TABLE IF NOT EXISTS hero_city_postings(
    hero_id TEXT PRIMARY KEY REFERENCES heroes(hero_id),
    city_id TEXT NOT NULL REFERENCES military_cities(city_id)
@@ -199,6 +235,22 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
  const readWorld=db.prepare('SELECT world_size FROM military_worlds WHERE world_id=?');
  const insertCity=db.prepare('INSERT INTO military_cities(city_id,world_id,owner_player_id,x,y,is_first_city,protected_until_ms) VALUES(?,?,?,?,?,?,?)');
  const readCity=db.prepare('SELECT * FROM military_cities WHERE city_id=?');
+ const bumpWorldRevision=db.prepare('INSERT INTO military_world_revisions(world_id,revision) VALUES(?,1) ON CONFLICT(world_id) DO UPDATE SET revision=revision+1');
+ const readWorldRevision=db.prepare('SELECT revision FROM military_world_revisions WHERE world_id=?');
+ const createAlliance=db.prepare('INSERT INTO military_alliances(alliance_id,world_id) VALUES(?,?)');
+ const readAlliance=db.prepare('SELECT world_id FROM military_alliances WHERE alliance_id=?');
+ const selectAlliances=db.prepare('SELECT alliance_id FROM military_alliances WHERE world_id=? ORDER BY alliance_id');
+ const upsertMembership=db.prepare('INSERT INTO military_alliance_memberships(world_id,player_id,alliance_id) VALUES(?,?,?) ON CONFLICT(world_id,player_id) DO UPDATE SET alliance_id=excluded.alliance_id');
+ const removeMembership=db.prepare('DELETE FROM military_alliance_memberships WHERE world_id=? AND player_id=?');
+ const selectMemberships=db.prepare('SELECT player_id,alliance_id FROM military_alliance_memberships WHERE world_id=? ORDER BY player_id');
+ const upsertRelation=db.prepare('INSERT INTO military_diplomatic_relations(world_id,alliance_a,alliance_b,relation) VALUES(?,?,?,?) ON CONFLICT(world_id,alliance_a,alliance_b) DO UPDATE SET relation=excluded.relation');
+ const selectRelations=db.prepare('SELECT alliance_a,alliance_b,relation FROM military_diplomatic_relations WHERE world_id=? ORDER BY alliance_a,alliance_b');
+ const upsertClaim=db.prepare('INSERT INTO military_territory_claims(world_id,x,y,owner_player_id,owner_alliance_id) VALUES(?,?,?,?,?) ON CONFLICT(world_id,x,y) DO UPDATE SET owner_player_id=excluded.owner_player_id,owner_alliance_id=excluded.owner_alliance_id');
+ const removeClaim=db.prepare('DELETE FROM military_territory_claims WHERE world_id=? AND x=? AND y=?');
+ const readClaim=db.prepare('SELECT 1 FROM military_territory_claims WHERE world_id=? AND x=? AND y=?');
+ const readCityAtTile=db.prepare('SELECT city_id FROM military_cities WHERE world_id=? AND x=? AND y=?');
+ const selectClaims=db.prepare('SELECT x,y,owner_player_id,owner_alliance_id FROM military_territory_claims WHERE world_id=? ORDER BY x,y');
+ const selectWorldCities=db.prepare('SELECT x,y,owner_player_id FROM military_cities WHERE world_id=? ORDER BY x,y');
  const insertPosting=db.prepare('INSERT INTO hero_city_postings(hero_id,city_id) VALUES(?,?) ON CONFLICT(hero_id) DO UPDATE SET city_id=excluded.city_id');
  const cityOfHero=db.prepare('SELECT c.*,w.world_size FROM hero_city_postings p JOIN military_cities c ON c.city_id=p.city_id JOIN military_worlds w ON w.world_id=c.world_id WHERE p.hero_id=?');
  const saveRoute=db.prepare('INSERT INTO military_mission_routes(mission_id,route_json) VALUES(?,?)');
@@ -324,6 +376,7 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
   defineMilitaryWorld({worldId,worldSize}){
    id(worldId,'world ID');validateWorldCoordinate({x:1,y:1},worldSize);
    return transaction(()=>{insertWorld.run(worldId,worldSize);
+    bumpWorldRevision.run(worldId);
     return {worldId,worldSize};});
   },
   registerMilitaryCity({cityId,worldId,ownerPlayerId,x,y,
@@ -340,10 +393,97 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
      throw new Error('First city must have trusted beginner protection expiry');
     if(!firstCity&&protectedUntilMs!==null)
      throw new Error('Only the first city can have beginner protection');
+    if(readClaim.get(worldId,x,y))
+     throw new Error('City tile overlaps an explicit territory claim');
     insertCity.run(cityId,worldId,ownerPlayerId,x,y,
      Number(firstCity),protectedUntilMs);
+    bumpWorldRevision.run(worldId);
     return {cityId,worldId,ownerPlayerId,x,y,firstCity,protectedUntilMs};
    });
+  },
+  // Trusted administration only. Nothing in these methods grants attack rights.
+  createMilitaryAlliance({worldId,allianceId}){
+   id(worldId,'world ID');id(allianceId,'alliance ID');
+   return transaction(()=>{
+    if(!readWorld.get(worldId))throw new Error('Unknown military world');
+    createAlliance.run(allianceId,worldId);
+    bumpWorldRevision.run(worldId);
+    return {worldId,allianceId};
+   });
+  },
+  setMilitaryAllianceMembership({worldId,playerId,allianceId}){
+   id(worldId,'world ID');id(playerId,'membership player');
+   if(allianceId!==null)id(allianceId,'alliance ID');
+   return transaction(()=>{
+    if(!readWorld.get(worldId))throw new Error('Unknown military world');
+    if(!currentPlayer.get(playerId))throw new Error('Unknown membership player');
+    if(allianceId!==null){
+     if(readAlliance.get(allianceId)?.world_id!==worldId)
+      throw new Error('Alliance does not belong to world');
+     upsertMembership.run(worldId,playerId,allianceId);
+    }else removeMembership.run(worldId,playerId);
+    bumpWorldRevision.run(worldId);
+    return {worldId,playerId,allianceId};
+   });
+  },
+  setMilitaryDiplomacy({worldId,firstAllianceId,secondAllianceId,relation}){
+   id(worldId,'world ID');id(firstAllianceId,'first alliance');
+   id(secondAllianceId,'second alliance');
+   if(firstAllianceId===secondAllianceId)throw new Error('Cannot define self diplomacy');
+   if(!['allied','neutral','hostile'].includes(relation))
+    throw new RangeError('Explicit relation allied, neutral or hostile required');
+   return transaction(()=>{
+    if(readAlliance.get(firstAllianceId)?.world_id!==worldId||
+       readAlliance.get(secondAllianceId)?.world_id!==worldId)
+     throw new Error('Diplomatic alliances must belong to same world');
+    const [a,b]=[firstAllianceId,secondAllianceId].sort();
+    upsertRelation.run(worldId,a,b,relation);
+    bumpWorldRevision.run(worldId);
+    return {worldId,allianceA:a,allianceB:b,relation};
+   });
+  },
+  setMilitaryTerritoryClaim({worldId,x,y,ownerPlayerId=null,ownerAllianceId=null}){
+   id(worldId,'world ID');
+   if(ownerPlayerId!==null)id(ownerPlayerId,'claim player');
+   if(ownerAllianceId!==null)id(ownerAllianceId,'claim alliance');
+   if(ownerPlayerId!==null&&ownerAllianceId!==null)
+    throw new Error('A tile cannot have two different owner types');
+   return transaction(()=>{
+    const world=readWorld.get(worldId);
+    if(!world)throw new Error('Unknown military world');
+    validateWorldCoordinate({x,y},world.world_size);
+    if(readCityAtTile.get(worldId,x,y))
+     throw new Error('City tiles use their own owner; conflicting claims forbidden');
+    if(ownerPlayerId!==null&&!currentPlayer.get(ownerPlayerId))
+     throw new Error('Unknown territory owner');
+    if(ownerAllianceId!==null&&readAlliance.get(ownerAllianceId)?.world_id!==worldId)
+     throw new Error('Territory alliance must belong to same world');
+    if(ownerPlayerId===null&&ownerAllianceId===null)
+     removeClaim.run(worldId,x,y);
+    else upsertClaim.run(worldId,x,y,ownerPlayerId,ownerAllianceId);
+    bumpWorldRevision.run(worldId);
+    return {worldId,x,y,ownerPlayerId,ownerAllianceId};
+   });
+  },
+  getWorldTerritorySnapshot(worldId){
+   alive();id(worldId,'world ID');
+   db.exec('BEGIN');
+   try{
+    const world=readWorld.get(worldId);
+    if(!world)throw new Error('Unknown military world');
+    const result={worldId,worldSize:world.world_size,
+     revision:readWorldRevision.get(worldId)?.revision??0,
+     alliances:selectAlliances.all(worldId).map(r=>r.alliance_id),
+     memberships:selectMemberships.all(worldId).map(r=>({
+      playerId:r.player_id,allianceId:r.alliance_id})),
+     relations:selectRelations.all(worldId).map(r=>({
+      allianceA:r.alliance_a,allianceB:r.alliance_b,relation:r.relation})),
+     claims:selectClaims.all(worldId).map(r=>({x:r.x,y:r.y,
+      ownerPlayerId:r.owner_player_id,ownerAllianceId:r.owner_alliance_id})),
+     cities:selectWorldCities.all(worldId).map(r=>({x:r.x,y:r.y,
+      ownerPlayerId:r.owner_player_id}))};
+    db.exec('COMMIT');return result;
+   }catch(error){db.exec('ROLLBACK');throw error;}
   },
   stationHeroInCity({heroId,cityId}){
    id(heroId,'hero ID');id(cityId,'city ID');
