@@ -498,3 +498,16 @@ Les tests du [fichier transactionnel](server-transactional-battle.test.mjs) cont
 **Tests : [356/356 réussis](https://github.com/AstrowareConception/MMHK-like/actions/runs/40339759720) sur la tranche code vérifiée.** [Rapport V7.0](../../docs/game-design/40-JACTARI-V70-TRANSACTIONS-COMBAT-IDEMPOTENCE.md) · [preuves](../../data/analysis/jactari-v70-atomic-battle-differential-2026-10-26.json) · [roadmap](../../docs/game-design/32-ROADMAP-CONFORMITE-MOTEUR-COMBAT.md).
 
 **Statut : C17 `implemented_partial` et V7.0 `in_progress` ; `productionBattleArbiterAllowed=false`.** Il s'agit d'un socle transactionnel expérimental, pas d'un serveur PvP public.
+
+
+## V7.0 — Tranche 2 : missions militaires SQLite, arrivée et retour
+
+Le module [`server-military-mission.mjs`](server-military-mission.mjs) fournit les opérations authentifiées `dispatchServerHeroMission`, `arriveServerHeroMission`, `scheduleServerHeroReturn`, `completeServerHeroReturn` et `cancelServerUnresolvedMission`.
+
+Chaque mission est enregistrée dans `military_missions` (identité, acteurs, révision du héros, arrivée et retour, statut). Un index SQLite unique partiel protège la réservation exclusive du héros attaquant tant qu'il est `traveling`, `arrived` ou `returning`. Un journal `military_mission_events` append-only capture chaque transition dans la même transaction. Les horaires d'arrivée et de retour **proviennent du serveur de jeu** : aucun temps de déplacement ou vitesse d'unité n'a été inféré.
+
+La commande [`commitServerAuthorizedJactariBattle`](server-transactional-battle.mjs) accepte maintenant facultativement `missionId` : elle exige alors une mission **`arrived`** correspondant au même acteur, à l'attaquant et au défenseur. La transition vers `returning` et l'événement `battle_committed` se font dans **la même transaction que les pertes d'armées et le reçu idempotent**, annulable sans résultat partiel en cas de panne. Le héros reste indisponible jusqu'à la date de retour fournie par le serveur.
+
+**Décisions de sûreté distinctes des règles MMHK S2 :** le héros est entièrement réservé, les interventions directes pendant la mission et les interceptions d'un héros mobile sont refusées, les captures/blessures sans transition serveur documentée restent non résolues, et seules les annulations administratives explicitement autorisées peuvent libérer une mission sans bataille. La protection débutant, les déplacements géographiques et la diplomatie ne sont pas encore codés.
+
+[Rapport V7.0 — tranche 2](../../docs/game-design/41-JACTARI-V70-MISSIONS-MILITAIRES-PERSISTANTES.md) · [Tests d'intégration](server-military-mission.test.mjs) · [Preuves structurées](../../data/analysis/jactari-v70-mission-lifecycle-2026-10-26.json). **C17 `implemented_partial`, V7.0 `in_progress`, arbitre public désactivé.**
