@@ -15,6 +15,7 @@ import {calculateJactariCareerBudget} from './hero-career-progression.mjs';
 import {deriveJactariLegendaryTalents,listJactariLegendaryClasses} from './hero-legendary.mjs';
 import {getJactariHeroTables} from './hero-source-tables.mjs';
 import {validateArmySlots} from './core.mjs';
+import {jactariToroidalDistance,validateWorldCoordinate} from './world-distance.mjs';
 
 const isRecord=o=>o!==null&&typeof o==='object'&&!Array.isArray(o);
 const idPattern=/^[a-zA-Z0-9_-]{1,64}$/;
@@ -97,6 +98,28 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
    CHECK(length(hero_id)>0)
   );
   CREATE INDEX IF NOT EXISTS heroes_owner ON heroes(owner_player_id);
+  CREATE TABLE IF NOT EXISTS military_worlds(
+   world_id TEXT PRIMARY KEY,
+   world_size INTEGER NOT NULL CHECK(world_size BETWEEN 2 AND 100000)
+  );
+  CREATE TABLE IF NOT EXISTS military_cities(
+   city_id TEXT PRIMARY KEY,
+   world_id TEXT NOT NULL REFERENCES military_worlds(world_id),
+   owner_player_id TEXT NOT NULL REFERENCES players(player_id),
+   x INTEGER NOT NULL CHECK(x >= 1),
+   y INTEGER NOT NULL CHECK(y >= 1),
+   is_first_city INTEGER NOT NULL CHECK(is_first_city IN (0,1)),
+   protected_until_ms INTEGER,
+   UNIQUE(world_id,x,y),
+   CHECK((is_first_city=1 AND protected_until_ms IS NOT NULL AND protected_until_ms>=0)
+     OR (is_first_city=0 AND protected_until_ms IS NULL))
+  );
+  CREATE UNIQUE INDEX IF NOT EXISTS first_city_per_world_player
+   ON military_cities(world_id,owner_player_id) WHERE is_first_city=1;
+  CREATE TABLE IF NOT EXISTS hero_city_postings(
+   hero_id TEXT PRIMARY KEY REFERENCES heroes(hero_id),
+   city_id TEXT NOT NULL REFERENCES military_cities(city_id)
+  );
   CREATE TABLE IF NOT EXISTS battle_commands(
    command_id TEXT PRIMARY KEY,
    actor_player_id TEXT NOT NULL REFERENCES players(player_id),
@@ -106,6 +129,10 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
    receipt_json TEXT NOT NULL CHECK(json_valid(receipt_json)),
    committed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
    CHECK(attacker_hero_id <> defender_hero_id)
+  );
+  CREATE TABLE IF NOT EXISTS military_mission_routes(
+   mission_id TEXT PRIMARY KEY REFERENCES military_missions(mission_id),
+   route_json TEXT NOT NULL CHECK(json_valid(route_json))
   );
   CREATE TABLE IF NOT EXISTS military_mission_events(
    mission_id TEXT NOT NULL REFERENCES military_missions(mission_id),
@@ -167,6 +194,50 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
   if(!Number.isSafeInteger(value)||value<0)
    throw new RangeError('Trusted '+label+' must be epoch milliseconds');
   return value;
+ };
+ const insertWorld=db.prepare('INSERT INTO military_worlds(world_id,world_size) VALUES(?,?)');
+ const readWorld=db.prepare('SELECT world_size FROM military_worlds WHERE world_id=?');
+ const insertCity=db.prepare('INSERT INTO military_cities(city_id,world_id,owner_player_id,x,y,is_first_city,protected_until_ms) VALUES(?,?,?,?,?,?,?)');
+ const readCity=db.prepare('SELECT * FROM military_cities WHERE city_id=?');
+ const insertPosting=db.prepare('INSERT INTO hero_city_postings(hero_id,city_id) VALUES(?,?) ON CONFLICT(hero_id) DO UPDATE SET city_id=excluded.city_id');
+ const cityOfHero=db.prepare('SELECT c.*,w.world_size FROM hero_city_postings p JOIN military_cities c ON c.city_id=p.city_id JOIN military_worlds w ON w.world_id=c.world_id WHERE p.hero_id=?');
+ const saveRoute=db.prepare('INSERT INTO military_mission_routes(mission_id,route_json) VALUES(?,?)');
+ const readRoute=db.prepare('SELECT route_json FROM military_mission_routes WHERE mission_id=?');
+ const placeView=row=>row?{
+  cityId:row.city_id,worldId:row.world_id,ownerPlayerId:row.owner_player_id,
+  x:row.x,y:row.y,worldSize:row.world_size,
+  firstCity:row.is_first_city===1,protectedUntilMs:row.protected_until_ms
+ }:null;
+ const trustedGeo=(attackerId,defenderId,nowMs)=>{
+  const a=placeView(cityOfHero.get(attackerId));
+  const d=placeView(cityOfHero.get(defenderId));
+  if(a===null&&d===null)return null; // legacy non-map test environment
+  if(!a||!d)throw new Error('World engagement requires both stationed heroes');
+  if(a.worldId!==d.worldId)throw new Error('Cross-world military attack forbidden');
+  if(a.cityId===d.cityId)throw new Error('Cannot attack a hero stationed in the same city');
+  if(!Number.isSafeInteger(nowMs)||nowMs<0)
+   throw new Error('World engagement requires server-verified epoch milliseconds');
+  if(d.firstCity&&nowMs<d.protectedUntilMs)
+   throw new Error('Target first city is under beginner protection');
+  return {worldId:a.worldId,worldSize:a.worldSize,
+   origin:{cityId:a.cityId,x:a.x,y:a.y},
+   destination:{cityId:d.cityId,x:d.x,y:d.y},
+   distance:jactariToroidalDistance(a,d,a.worldSize),
+   provenance:'2013 MMHK-Plus wrapped Euclidean city distance; NOT verified S2 travel time',
+   protectedUntilMs:d.protectedUntilMs};
+ };
+ const verifiedRoute=(missionId,attackerId,defenderId,nowMs)=>{
+  const original=readRoute.get(missionId);
+  if(!original)return null;
+  const route=decode(original.route_json);
+  const current=trustedGeo(attackerId,defenderId,nowMs);
+  if(!current||current.worldId!==route.worldId||
+   current.origin.cityId!==route.origin.cityId||
+   current.destination.cityId!==route.destination.cityId||
+   current.origin.x!==route.origin.x||current.origin.y!==route.origin.y||
+   current.destination.x!==route.destination.x||current.destination.y!==route.destination.y)
+   throw new Error('Mission source or destination location changed since dispatch');
+  return route;
  };
  const readBattle=db.prepare('SELECT * FROM battle_commands WHERE command_id=?');
  const putBattle=db.prepare('INSERT INTO battle_commands(command_id,actor_player_id,attacker_hero_id,defender_hero_id,rules_digest,receipt_json) VALUES(?,?,?,?,?,?)');
@@ -249,6 +320,51 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
   getHero(heroId){
    alive();return toView(readHero.get(id(heroId,'hero ID')));
   },
+  // INTERNAL world administration. Never expose these write methods to players.
+  defineMilitaryWorld({worldId,worldSize}){
+   id(worldId,'world ID');validateWorldCoordinate({x:1,y:1},worldSize);
+   return transaction(()=>{insertWorld.run(worldId,worldSize);
+    return {worldId,worldSize};});
+  },
+  registerMilitaryCity({cityId,worldId,ownerPlayerId,x,y,
+    firstCity=false,protectedUntilMs=null}){
+   id(cityId,'city ID');id(worldId,'world ID');id(ownerPlayerId,'city owner');
+   if(typeof firstCity!=='boolean')throw new TypeError('First city flag must be boolean');
+   return transaction(()=>{
+    const w=readWorld.get(worldId);
+    if(!w)throw new Error('Unknown world');
+    if(!currentPlayer.get(ownerPlayerId))
+     throw new Error('Unknown city owner');
+    validateWorldCoordinate({x,y},w.world_size);
+    if(firstCity&&(!Number.isSafeInteger(protectedUntilMs)||protectedUntilMs<0))
+     throw new Error('First city must have trusted beginner protection expiry');
+    if(!firstCity&&protectedUntilMs!==null)
+     throw new Error('Only the first city can have beginner protection');
+    insertCity.run(cityId,worldId,ownerPlayerId,x,y,
+     Number(firstCity),protectedUntilMs);
+    return {cityId,worldId,ownerPlayerId,x,y,firstCity,protectedUntilMs};
+   });
+  },
+  stationHeroInCity({heroId,cityId}){
+   id(heroId,'hero ID');id(cityId,'city ID');
+   return transaction(()=>{
+    const h=readHero.get(heroId),city=readCity.get(cityId);
+    if(!h||!city)throw new Error('Missing city or hero');
+    if(h.owner_player_id!==city.owner_player_id)
+     throw new Error('Hero can be stationed only in a city owned by its player');
+    if(activeMission.get(heroId))
+     throw new Error('Cannot relocate hero while a military mission is active');
+    insertPosting.run(heroId,cityId);
+    return placeView(cityOfHero.get(heroId));
+   });
+  },
+  getHeroWorldPosition(heroId){
+   alive();return placeView(cityOfHero.get(id(heroId,'hero ID')));
+  },
+  getMissionRoute(missionId){
+   alive();const row=readRoute.get(id(missionId,'mission ID'));
+   return row?structuredClone(decode(row.route_json)):null;
+  },
   readConsistentPair(firstId,secondId){
    alive();id(firstId,'attacker hero ID');id(secondId,'defender hero ID');
    if(firstId===secondId)throw new Error('Cannot fight the same hero');
@@ -266,7 +382,7 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
    */
   commitAuthorizedBattle({
     commandId,actorPlayerId,attackerHeroId,defenderHeroId,rulesDigest,
-    missionId=null,authorizeTarget,calculate,beforeCommit
+    missionId=null,serverNowMs=null,authorizeTarget,calculate,beforeCommit
   }){
    for(const [name,value] of [['command ID',commandId],['actor ID',actorPlayerId],
     ['attacker hero ID',attackerHeroId],['defender hero ID',defenderHeroId]])
@@ -316,6 +432,10 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
     }else if(missionId!==null)throw new Error('Unknown military mission');
     if(missionId===null&&activeMission.get(attackerHeroId))
      throw new Error('Attacking hero is reserved by a military mission');
+    const worldContext=trustedGeo(attackerHeroId,defenderHeroId,serverNowMs);
+    if(worldContext&&missionId===null)
+     throw new Error('World-mapped battles require a registered arrived military mission');
+    if(worldContext)verifiedRoute(missionId,attackerHeroId,defenderHeroId,serverNowMs);
     if(activeMission.get(defenderHeroId))
      throw new Error('Defending hero is traveling or returning; field interception unsupported');
     const result=calculate({attacker:structuredClone(attacker),
@@ -393,8 +513,10 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
      throw new Error('Attacking hero already reserved by active military mission');
     if(activeMission.get(defenderHeroId))
      throw new Error('Target hero is on an active mission; field interception unsupported');
+    const route=trustedGeo(attackerHeroId,defenderHeroId,nowMs);
     insertMission.run(missionId,actorPlayerId,attackerHeroId,
      defenderHeroId,arrivalAtMs,attacker.revision);
+    if(route)saveRoute.run(missionId,json(route));
     addMissionEvent(missionId,{phase:'dispatched',timeMs:nowMs,
      arrivalAtMs,attackerRevision:attacker.revision});
     return {...missionView(readMission.get(missionId)),replayed:false};
@@ -425,6 +547,7 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
      throw new Error('Mission attacker changed since dispatch');
     if(activeMission.get(m.defender_hero_id))
      throw new Error('Mission defender departed; field interception is unsupported');
+    verifiedRoute(missionId,m.attacker_hero_id,m.defender_hero_id,nowMs);
     if(arriveMission.run(missionId).changes!==1)
      throw new Error('Arrival state transition failed');
     addMissionEvent(missionId,{phase:'arrived',timeMs:nowMs,
