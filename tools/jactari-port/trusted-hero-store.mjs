@@ -107,6 +107,12 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
    committed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
    CHECK(attacker_hero_id <> defender_hero_id)
   );
+  CREATE TABLE IF NOT EXISTS military_mission_events(
+   mission_id TEXT NOT NULL REFERENCES military_missions(mission_id),
+   sequence INTEGER NOT NULL CHECK(sequence >= 0),
+   event_json TEXT NOT NULL CHECK(json_valid(event_json)),
+   PRIMARY KEY(mission_id,sequence)
+  );
   CREATE TABLE IF NOT EXISTS military_missions(
    mission_id TEXT PRIMARY KEY,
    actor_player_id TEXT NOT NULL REFERENCES players(player_id),
@@ -135,6 +141,13 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
  const insertHero=db.prepare('INSERT INTO heroes(hero_id,owner_player_id,revision,payload) VALUES(?,?,1,?)');
  const readHero=db.prepare('SELECT hero_id,owner_player_id,revision,payload FROM heroes WHERE hero_id=?');
  const swap=db.prepare('UPDATE heroes SET payload=?,revision=revision+1 WHERE hero_id=? AND revision=?');
+ const nextMissionSequence=db.prepare('SELECT COALESCE(MAX(sequence),-1)+1 AS sequence FROM military_mission_events WHERE mission_id=?');
+ const writeMissionEvent=db.prepare('INSERT INTO military_mission_events(mission_id,sequence,event_json) VALUES(?,?,?)');
+ const missionEvents=db.prepare('SELECT sequence,event_json FROM military_mission_events WHERE mission_id=? ORDER BY sequence');
+ const addMissionEvent=(missionId,event)=>{
+  const sequence=nextMissionSequence.get(missionId).sequence;
+  writeMissionEvent.run(missionId,sequence,json(event));
+ };
  const readMission=db.prepare('SELECT * FROM military_missions WHERE mission_id=?');
  const activeMission=db.prepare("SELECT mission_id FROM military_missions WHERE attacker_hero_id=? AND status IN ('traveling','arrived','returning')");
  const insertMission=db.prepare("INSERT INTO military_missions(mission_id,actor_player_id,attacker_hero_id,defender_hero_id,status,arrival_at_ms,attacker_revision) VALUES(?,?,?,?,'traveling',?,?)");
@@ -335,6 +348,7 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
       rulesDigest,json(receipt));
     if(journey&&returnMission.run(commandId,missionId).changes!==1)
      throw new Error('Military mission return transition was not committed');
+    if(journey)addMissionEvent(missionId,{phase:'battle_committed',commandId});
     for(let i=0;i<result.events.length;i++)
      putBattleEvent.run(commandId,i,json(result.events[i]));
     if(beforeCommit)beforeCommit(structuredClone(receipt));
@@ -377,6 +391,8 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
      throw new Error('Attacking hero already reserved by active military mission');
     insertMission.run(missionId,actorPlayerId,attackerHeroId,
      defenderHeroId,arrivalAtMs,attacker.revision);
+    addMissionEvent(missionId,{phase:'dispatched',timeMs:nowMs,
+     arrivalAtMs,attackerRevision:attacker.revision});
     return {...missionView(readMission.get(missionId)),replayed:false};
    });
   },
@@ -405,6 +421,8 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
      throw new Error('Mission attacker changed since dispatch');
     if(arriveMission.run(missionId).changes!==1)
      throw new Error('Arrival state transition failed');
+    addMissionEvent(missionId,{phase:'arrived',timeMs:nowMs,
+     defenderRevision:defender.revision});
     return {...missionView(readMission.get(missionId)),replayed:false};
    });
   },
@@ -424,6 +442,7 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
     }
     if(setReturnTime.run(returnAtMs,missionId).changes!==1)
      throw new Error('Mission return schedule failed');
+    addMissionEvent(missionId,{phase:'return_scheduled',timeMs:nowMs,returnAtMs});
     return {...missionView(readMission.get(missionId)),replayed:false};
    });
   },
@@ -441,6 +460,7 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
     if(nowMs<m.return_at_ms)throw new Error('Military mission return not yet due');
     if(completeMission.run(missionId).changes!==1)
      throw new Error('Military mission return completion failed');
+    addMissionEvent(missionId,{phase:'return_completed',timeMs:nowMs});
     return {...missionView(readMission.get(missionId)),replayed:false};
    });
   },
@@ -459,11 +479,16 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
      throw new Error('Cannot cancel an already committed battle mission');
     if(cancelMission.run(missionId).changes!==1)
      throw new Error('Military mission cancellation failed');
+    addMissionEvent(missionId,{phase:'administratively_cancelled'});
     return {...missionView(readMission.get(missionId)),replayed:false};
    });
   },
   getMission(missionId){
    alive();return missionView(readMission.get(id(missionId,'mission ID')));
+  },
+  getMissionEvents(missionId){
+   alive();return missionEvents.all(id(missionId,'mission ID'))
+    .map(row=>({sequence:row.sequence,event:decode(row.event_json)}));
   },
   getBattleReceipt(commandId){
    alive();const row=readBattle.get(id(commandId,'command ID'));
