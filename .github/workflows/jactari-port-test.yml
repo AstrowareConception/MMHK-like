@@ -4,11 +4,17 @@ on:
     paths:
       - 'tools/jactari-port/**'
       - 'data/Jactari/src/scripts/combat.min.js'
+      - 'data/Jactari/src/scripts/donnees.*.min.js'
+      - 'data/analysis/jactari-combat-conformance-roadmap.json'
+      - 'docs/game-design/32-ROADMAP-CONFORMITE-MOTEUR-COMBAT.md'
       - '.github/workflows/jactari-port-test.yml'
   pull_request:
     paths:
       - 'tools/jactari-port/**'
       - 'data/Jactari/src/scripts/combat.min.js'
+      - 'data/Jactari/src/scripts/donnees.*.min.js'
+      - 'data/analysis/jactari-combat-conformance-roadmap.json'
+      - 'docs/game-design/32-ROADMAP-CONFORMITE-MOTEUR-COMBAT.md'
       - '.github/workflows/jactari-port-test.yml'
   workflow_dispatch:
 permissions:
