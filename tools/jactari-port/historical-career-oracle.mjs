@@ -87,3 +87,23 @@ export function originalCareerTalentLedger({profile,careers}){
   provenance:'native validite_carriere/maj_comp/maj_talent/change_talent'
  };
 }
+
+/** Historical change_talent replay after the pre-existing career ranks. */
+export function originalCareerRankTransition({profile,careers,slot,index,rank}){
+ const ctx=loadOriginal(profile,careers);
+ for(const c of careers){
+  for(const choice of c.talents??[]){
+   ctx.slot=c.slot;ctx.index=choice.index;ctx.rank=choice.rank;
+   const ok=vm.runInContext('change_talent(slot,index,rank)',ctx,{timeout:1000});
+   if(ok!==true)throw new Error('Original initial career rank denied');
+  }
+ }
+ const before=ctx.heros.competence_utilisee;
+ ctx.slot=slot;ctx.index=index;ctx.rank=rank;
+ vm.runInContext('change_talent(slot,index,rank)',ctx,{timeout:1000});
+ const final=careers.map(c=>({slot:c.slot,careerId:c.careerId,
+   ranks:Array.from(ctx.heros.talent[c.slot])}));
+ return {beforeSpent:before,spent:ctx.heros.competence_utilisee,
+  deltaSpent:ctx.heros.competence_utilisee-before,
+  careers:final,source:'unmodified Jactari change_talent() transition'};
+}
