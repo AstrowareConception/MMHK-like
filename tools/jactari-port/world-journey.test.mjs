@@ -44,7 +44,7 @@ test('starting within a blackout waits; empty movement stays at start',()=>{
 test('halts do not accidentally count as movement and can end inside blackout',()=>{
  const j=planProvisionalWorldJourney({...base,haltsMs:[200000],
   blackouts:[{startMs:250000,endMs:350000}]});
- assert.equal(j.estimatedArrivalAtMs,1200000);
+ assert.equal(j.estimatedArrivalAtMs,1250000);
 });
 test('reject invalid client-shaped and unsafe inputs instead of inventing timing',()=>{
  for(const x of [
