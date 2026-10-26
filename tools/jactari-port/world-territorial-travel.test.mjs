@@ -32,7 +32,7 @@ test('two-hour halt starts only when a further eligible move is needed',()=>{
  const two=simulateCandidateTerritorialTravel({
   ...config,departAtMs:0,speedUnitsPerHour:1,haltRule,
   segments:[leg(1,3)]});
- assert.equal(two.haltCount,1);
+ assert.equal(two.haltCount,1,JSON.stringify({distance:two.totalDistance,events:two.events,meter:two.movementPointsCarried}));
  assert.equal(two.estimatedArrivalAtMs,4*H);
  assert.deepEqual(two.events.map(e=>e.phase),['move','halt','move']);
 });
