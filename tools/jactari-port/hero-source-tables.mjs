@@ -18,6 +18,8 @@ export function getJactariHeroTables(){
      vm.runInContext(source,context,{timeout:5000,filename:name});
    }
    cached=JSON.parse(JSON.stringify({
+     factions:context._factions,
+     learningCosts:context._apprentissage,
      archetypes:context._archetypes,
      levels:context._niveaux,
      hereditary:context._competences_hereditaires,
