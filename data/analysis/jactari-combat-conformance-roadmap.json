@@ -25,13 +25,14 @@
   ],
   "tracking": {
     "lastVerifiedFullSuite": {
-      "tests": 280,
-      "passed": 280,
+      "tests": 296,
+      "passed": 296,
       "failed": 0,
-      "ciUrl": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40297642347",
-      "commit": "9ee35d12fba78bd0908ad7619fa11f69cb602200"
+      "ciUrl": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40300003415",
+      "commit": "59f89349725a97e8842fb866f173ff28da5d5f64"
     },
-    "metricPolicy": "Les nombres de tests sont des régressions, pas un pourcentage d'équivalence historique."
+    "metricPolicy": "Les nombres de tests sont des régressions, pas un pourcentage d'équivalence historique.",
+    "lastStatusReview": "2026-10-26"
   },
   "requirements": [
     {
@@ -63,12 +64,17 @@
     {
       "id": "C03",
       "title": "Construction complète des héros",
-      "status": "not_started",
+      "status": "implemented_partial",
       "milestone": "V6.6",
-      "implementation": "data/Jactari/src/scripts/donnees.heros.min.js",
-      "evidence": [],
-      "validated": "Catalogue original d'archétypes, progression et carrières disponible",
-      "gap": "Calcul des caractéristiques depuis niveau, carrière, talents, légendaires et héritage ; fixtures originales",
+      "implementation": "tools/jactari-port/hero-combat-snapshot.mjs",
+      "evidence": [
+        "tools/jactari-port/hero-page-snapshot.test.mjs",
+        "tools/jactari-port/hero-talent-bonuses.test.mjs",
+        "tools/jactari-port/hero-combat-snapshot.test.mjs",
+        "tools/jactari-port/hero-combat-battle.test.mjs"
+      ],
+      "validated": "V6.6 tranche 1: 310 fiches de héros comparées à maj_adm/maj_comp/equipe_artefact, 150 choix de talents comparés au fragment combat original, 200 profils de héros de combat confrontés à maj_situation, puis raccordement testé au moteur unifié.",
+      "gap": "Validation exhaustive des arbres de carrières et prérequis de talents, classes légendaires, hérédité alternative _15/_30, bonus de sets et dérivation complète des règles de situation/S2; phase multi-joueurs non autorisée.",
       "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
     },
     {
@@ -280,8 +286,8 @@
     {
       "id": "V6.6",
       "title": "Génération des caractéristiques et talents",
-      "state": "open",
-      "exit": "Fiches réelles de héros → valeurs militaires/magiques conformes à Jactari ; écarts S2 explicités"
+      "state": "in_progress",
+      "exit": "Attributs d'éditeur et statistiques de combat de héros à partir des tables originales intégrés et comparés sur 510 profils; reste la légalité des carrières, héritages alternatifs, bonus de sets et conformité historique complète."
     },
     {
       "id": "V6.7",
