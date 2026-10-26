@@ -24,7 +24,7 @@ La règle de décision est stricte : une exigence n'est `certified` que si **tou
 | Admission PvE/PvP | V6.3 ; 4 000 calculs contre les branches originales |
 | Puissance magique, artefacts | V6.3–V6.4 ; 400 calculs de magie, 280 affinités d'artefacts, 120 sorts avec équipement |
 | Résolution dynamique au tour | **V6.5 en cours** : ordres de sorts par ID, puissance calculée avec héros/arme/inventaire courants, tests d'intégration |
-| Dernière CI de base vérifiée | **319/319 tests Node passés**, [run GitHub Actions #40316048810](https://github.com/AstrowareConception/MMHK-like/actions/runs/40316048810), tests de carrières et contrôles du registre compris |
+| Dernière CI de base vérifiée | **326/326 tests Node passés**, [run GitHub Actions #40329388212](https://github.com/AstrowareConception/MMHK-like/actions/runs/40329388212), tests de carrières et contrôles du registre compris |
 | Certification historique Jactari complète | **Non acquise** |
 | Équivalence MMHK saison 2 | **Non acquise ; sources spécifiques incomplètes** |
 | Arbitre PvP autorisé en production | **Non** |
@@ -85,6 +85,14 @@ Le module [`hero-spell-resolution.mjs`](../../tools/jactari-port/hero-spell-reso
 Tests [`hero-spell-resolution.test.mjs`](../../tools/jactari-port/hero-spell-resolution.test.mjs) : magie attaquant et défenseur, magie de zone, invocation avant une nouvelle salve, puissance d'un héros équipé vérifiée par le code original, refus de faux IDs/puissances injectées, immuabilité des entrées et absence de caractéristique magique obligatoire. La **suite Node complète est verte**.
 
 **Dette critique :** le serveur de jeu final ne construit pas encore ces fiches de héros et ces catalogues à partir d'objets persistés. Le `spellContext` doit donc provenir d'un composant de confiance ; ce n'est **pas** un nouveau champ que le joueur peut fixer librement depuis le navigateur.
+
+### V6.6 : tranche 5 — hérédités avancées et combinaisons légendaires
+
+Le [rapport V6.6 tranche 5](37-JACTARI-V66-HEREDITE-AVANCEE-ET-LEGENDAIRES-CUMULES.md) documente une **lacune de provenance démontrée** : `combat.min.js` fait référence à `revelation_de_caracteristiques_15` et `_30`, mais les tables de compétences archivées ne définissent pas ces entrées. Le port refuse désormais leur utilisation au lieu de renvoyer un résultat inventé. Les **hérédités documentées** sont contrôlées sur **120 profils de seuil**, plus **90 cas d'activation simultanée** pour respecter le `if/else if` de Jactari.
+
+**120 fiches cumulant plusieurs légendaires** et **48 nouvelles batailles avec plusieurs bonus légendaires bilatéraux** sont comparées à l'original. Leur calcul est fidèle sur les cas essayés, mais la possibilité réelle d'accumuler ces rangs dans MMHK S2 n'est toujours pas attestée. **CI : 326/326 tests Node réussis** sur le périmètre livré.
+
+**Statuts inchangés : C03 partiel, C04/C06 en différentiel borné, V6.6 en cours, production PvP interdite.**
 
 ### V6.6 : tranche 4 — classes légendaires et modificateurs de combat
 
