@@ -107,6 +107,21 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
    committed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
    CHECK(attacker_hero_id <> defender_hero_id)
   );
+  CREATE TABLE IF NOT EXISTS military_missions(
+   mission_id TEXT PRIMARY KEY,
+   actor_player_id TEXT NOT NULL REFERENCES players(player_id),
+   attacker_hero_id TEXT NOT NULL REFERENCES heroes(hero_id),
+   defender_hero_id TEXT NOT NULL REFERENCES heroes(hero_id),
+   status TEXT NOT NULL CHECK(status IN ('traveling','arrived','returning','completed','cancelled')),
+   arrival_at_ms INTEGER NOT NULL,
+   attacker_revision INTEGER NOT NULL,
+   return_at_ms INTEGER,
+   battle_command_id TEXT UNIQUE REFERENCES battle_commands(command_id),
+   CHECK(attacker_hero_id <> defender_hero_id)
+  );
+  CREATE UNIQUE INDEX IF NOT EXISTS one_active_mission_per_attacker
+   ON military_missions(attacker_hero_id)
+   WHERE status IN ('traveling','arrived','returning');
   CREATE TABLE IF NOT EXISTS battle_audit_events(
    command_id TEXT NOT NULL REFERENCES battle_commands(command_id),
    sequence INTEGER NOT NULL CHECK(sequence >= 0),
@@ -120,6 +135,26 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
  const insertHero=db.prepare('INSERT INTO heroes(hero_id,owner_player_id,revision,payload) VALUES(?,?,1,?)');
  const readHero=db.prepare('SELECT hero_id,owner_player_id,revision,payload FROM heroes WHERE hero_id=?');
  const swap=db.prepare('UPDATE heroes SET payload=?,revision=revision+1 WHERE hero_id=? AND revision=?');
+ const readMission=db.prepare('SELECT * FROM military_missions WHERE mission_id=?');
+ const activeMission=db.prepare("SELECT mission_id FROM military_missions WHERE attacker_hero_id=? AND status IN ('traveling','arrived','returning')");
+ const insertMission=db.prepare("INSERT INTO military_missions(mission_id,actor_player_id,attacker_hero_id,defender_hero_id,status,arrival_at_ms,attacker_revision) VALUES(?,?,?,?,'traveling',?,?)");
+ const arriveMission=db.prepare("UPDATE military_missions SET status='arrived' WHERE mission_id=? AND status='traveling'");
+ const returnMission=db.prepare("UPDATE military_missions SET status='returning',battle_command_id=? WHERE mission_id=? AND status='arrived'");
+ const setReturnTime=db.prepare("UPDATE military_missions SET return_at_ms=? WHERE mission_id=? AND status='returning' AND return_at_ms IS NULL");
+ const completeMission=db.prepare("UPDATE military_missions SET status='completed' WHERE mission_id=? AND status='returning' AND return_at_ms IS NOT NULL");
+ const cancelMission=db.prepare("UPDATE military_missions SET status='cancelled' WHERE mission_id=? AND status IN ('traveling','arrived') AND battle_command_id IS NULL");
+ const missionView=row=>row===undefined?null:{
+  missionId:row.mission_id,actorPlayerId:row.actor_player_id,
+  attackerHeroId:row.attacker_hero_id,defenderHeroId:row.defender_hero_id,
+  status:row.status,arrivalAtMs:row.arrival_at_ms,
+  attackerRevision:row.attacker_revision,
+  returnAtMs:row.return_at_ms,battleCommandId:row.battle_command_id
+ };
+ const requiredTime=(value,label)=>{
+  if(!Number.isSafeInteger(value)||value<0)
+   throw new RangeError('Trusted '+label+' must be epoch milliseconds');
+  return value;
+ };
  const readBattle=db.prepare('SELECT * FROM battle_commands WHERE command_id=?');
  const putBattle=db.prepare('INSERT INTO battle_commands(command_id,actor_player_id,attacker_hero_id,defender_hero_id,rules_digest,receipt_json) VALUES(?,?,?,?,?,?)');
  const putBattleEvent=db.prepare('INSERT INTO battle_audit_events(command_id,sequence,event_json) VALUES(?,?,?)');
@@ -189,6 +224,8 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
     if(!existing)throw new Error('Unknown hero');
     if(existing.owner_player_id!==clean.ownerId)
       throw new Error('Hero ownership cannot change through progression update');
+    if(activeMission.get(clean.id))
+      throw new Error('Hero is reserved by active military mission');
     if(currentPlayer.get(clean.ownerId)?.enabled!==1)
       throw new Error('Hero owner account inactive');
     const updated=swap.run(json(clean),clean.id,expectedRevision);
@@ -216,12 +253,13 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
    */
   commitAuthorizedBattle({
     commandId,actorPlayerId,attackerHeroId,defenderHeroId,rulesDigest,
-    authorizeTarget,calculate,beforeCommit
+    missionId=null,authorizeTarget,calculate,beforeCommit
   }){
    for(const [name,value] of [['command ID',commandId],['actor ID',actorPlayerId],
     ['attacker hero ID',attackerHeroId],['defender hero ID',defenderHeroId]])
     id(value,name);
    if(attackerHeroId===defenderHeroId)throw new Error('A hero cannot fight itself');
+   if(missionId!==null)id(missionId,'military mission ID');
    if(typeof rulesDigest!=='string'||!/^[a-f0-9]{64}$/.test(rulesDigest))
     throw new TypeError('Versioned server rules digest required');
    if(typeof authorizeTarget!=='function'||typeof calculate!=='function')
@@ -243,6 +281,8 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
      throw new Error('Target authorization denied');
     const prior=readBattle.get(commandId);
     if(prior){
+     if((decode(prior.receipt_json).missionId??null)!==missionId)
+      throw new Error('Idempotency key collision: mission binding differs');
      if(prior.actor_player_id!==actorPlayerId||
         prior.attacker_hero_id!==attackerHeroId||
         prior.defender_hero_id!==defenderHeroId||
@@ -250,6 +290,19 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
       throw new Error('Idempotency key collision: original battle parameters differ');
      return {...decode(prior.receipt_json),replayed:true};
     }
+    const journey=missionId===null?null:readMission.get(missionId);
+    if(journey){
+     if(journey.actor_player_id!==actorPlayerId||
+        journey.attacker_hero_id!==attackerHeroId||
+        journey.defender_hero_id!==defenderHeroId)
+      throw new Error('Military mission actor or hero binding mismatch');
+     if(journey.status!=='arrived')
+      throw new Error('Military mission has not reached an authorized arrival');
+     if(journey.attacker_revision!==attacker.revision)
+      throw new Error('Military mission attacker revision changed since dispatch');
+    }else if(missionId!==null)throw new Error('Unknown military mission');
+    if(missionId===null&&activeMission.get(attackerHeroId))
+     throw new Error('Attacking hero is reserved by a military mission');
     const result=calculate({attacker:structuredClone(attacker),
       defender:structuredClone(defender)});
     if(!isRecord(result)||!['attacker','defender','mutual-dispersion'].includes(result.status)||
@@ -262,6 +315,7 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
       result.permanent.defender?.reports,'defender');
     const receipt={
      commandId,actorPlayerId,attackerHeroId,defenderHeroId,
+     ...(missionId===null?{}:{missionId}),
      rulesDigest,status:result.status,rounds:result.rounds,
      revisions:{attacker:{before:attacker.revision,after:attacker.revision+1},
       defender:{before:defender.revision,after:defender.revision+1}},
@@ -279,11 +333,137 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
      throw new Error('Concurrent hero revision conflict, rolled back');
     putBattle.run(commandId,actorPlayerId,attackerHeroId,defenderHeroId,
       rulesDigest,json(receipt));
+    if(journey&&returnMission.run(commandId,missionId).changes!==1)
+     throw new Error('Military mission return transition was not committed');
     for(let i=0;i<result.events.length;i++)
      putBattleEvent.run(commandId,i,json(result.events[i]));
     if(beforeCommit)beforeCommit(structuredClone(receipt));
     return {...receipt,replayed:false};
    });
+  },
+  /** Reserved hero remains in its persisted slot; no troop count is removed at dispatch. */
+  dispatchMission({missionId,actorPlayerId,attackerHeroId,defenderHeroId,
+    nowMs,arrivalAtMs,authorizeTarget}){
+   [missionId,actorPlayerId,attackerHeroId,defenderHeroId].forEach((v,i)=>
+    id(v,['mission ID','actor ID','attacker ID','defender ID'][i]));
+   requiredTime(nowMs,'departure time');
+   requiredTime(arrivalAtMs,'scheduled arrival');
+   if(arrivalAtMs<=nowMs)throw new RangeError('Travel arrival must follow departure');
+   if(attackerHeroId===defenderHeroId)throw new Error('Mission cannot attack its own hero');
+   if(typeof authorizeTarget!=='function')throw new Error('Server target authorization required');
+   return transaction(()=>{
+    if(currentPlayer.get(actorPlayerId)?.enabled!==1)
+     throw new Error('Mission actor inactive');
+    const attacker=toView(readHero.get(attackerHeroId));
+    const defender=toView(readHero.get(defenderHeroId));
+    if(!attacker||!defender)throw new Error('Mission requires two stored heroes');
+    if(attacker.ownerId!==actorPlayerId)
+     throw new Error('Mission attacker not owned by actor');
+    if(currentPlayer.get(defender.ownerId)?.enabled!==1)
+     throw new Error('Mission target owner inactive');
+    if(authorizeTarget({actorPlayerId,attacker:structuredClone(attacker),
+      defender:structuredClone(defender)})!==true)
+     throw new Error('Mission target authorization denied');
+    const prior=readMission.get(missionId);
+    if(prior){
+     if(prior.actor_player_id!==actorPlayerId||
+       prior.attacker_hero_id!==attackerHeroId||
+       prior.defender_hero_id!==defenderHeroId||
+       prior.arrival_at_ms!==arrivalAtMs)
+      throw new Error('Mission ID collision with different original dispatch');
+     return {...missionView(prior),replayed:true};
+    }
+    if(activeMission.get(attackerHeroId))
+     throw new Error('Attacking hero already reserved by active military mission');
+    insertMission.run(missionId,actorPlayerId,attackerHeroId,
+     defenderHeroId,arrivalAtMs,attacker.revision);
+    return {...missionView(readMission.get(missionId)),replayed:false};
+   });
+  },
+  markMissionArrived({missionId,actorPlayerId,nowMs,authorizeTarget}){
+   id(missionId,'mission ID');id(actorPlayerId,'actor ID');
+   requiredTime(nowMs,'arrival time');
+   if(typeof authorizeTarget!=='function')throw new Error('Arrival target policy required');
+   return transaction(()=>{
+    const m=readMission.get(missionId);
+    if(!m)throw new Error('Unknown military mission');
+    if(m.actor_player_id!==actorPlayerId||
+      currentPlayer.get(actorPlayerId)?.enabled!==1)
+     throw new Error('Unauthorized mission arrival');
+    const attacker=toView(readHero.get(m.attacker_hero_id));
+    const defender=toView(readHero.get(m.defender_hero_id));
+    if(!attacker||!defender||attacker.ownerId!==actorPlayerId||
+       currentPlayer.get(defender.ownerId)?.enabled!==1)
+     throw new Error('Mission hero ownership no longer valid');
+    if(authorizeTarget({actorPlayerId,attacker:structuredClone(attacker),
+      defender:structuredClone(defender)})!==true)
+     throw new Error('Arrival target authorization denied');
+    if(m.status==='arrived')return {...missionView(m),replayed:true};
+    if(m.status!=='traveling')throw new Error('Mission cannot arrive in state '+m.status);
+    if(nowMs<m.arrival_at_ms)throw new Error('Military mission has not arrived yet');
+    if(m.attacker_revision!==attacker.revision)
+     throw new Error('Mission attacker changed since dispatch');
+    if(arriveMission.run(missionId).changes!==1)
+     throw new Error('Arrival state transition failed');
+    return {...missionView(readMission.get(missionId)),replayed:false};
+   });
+  },
+  scheduleMissionReturn({missionId,actorPlayerId,nowMs,returnAtMs}){
+   id(missionId,'mission ID');id(actorPlayerId,'actor ID');
+   requiredTime(nowMs,'scheduling time');requiredTime(returnAtMs,'return time');
+   if(returnAtMs<=nowMs)throw new RangeError('Return must follow server scheduling time');
+   return transaction(()=>{
+    const m=readMission.get(missionId);
+    if(!m||m.actor_player_id!==actorPlayerId||
+       currentPlayer.get(actorPlayerId)?.enabled!==1)
+     throw new Error('Unauthorized or unknown military mission return');
+    if(m.status!=='returning')throw new Error('Mission has no committed combat return');
+    if(m.return_at_ms!==null){
+     if(m.return_at_ms!==returnAtMs)throw new Error('Mission return schedule conflict');
+     return {...missionView(m),replayed:true};
+    }
+    if(setReturnTime.run(returnAtMs,missionId).changes!==1)
+     throw new Error('Mission return schedule failed');
+    return {...missionView(readMission.get(missionId)),replayed:false};
+   });
+  },
+  completeMissionReturn({missionId,actorPlayerId,nowMs}){
+   id(missionId,'mission ID');id(actorPlayerId,'actor ID');
+   requiredTime(nowMs,'completion time');
+   return transaction(()=>{
+    const m=readMission.get(missionId);
+    if(!m||m.actor_player_id!==actorPlayerId||
+       currentPlayer.get(actorPlayerId)?.enabled!==1)
+     throw new Error('Unauthorized or unknown military mission');
+    if(m.status==='completed')return {...missionView(m),replayed:true};
+    if(m.status!=='returning'||m.return_at_ms===null)
+     throw new Error('Military mission return was not scheduled');
+    if(nowMs<m.return_at_ms)throw new Error('Military mission return not yet due');
+    if(completeMission.run(missionId).changes!==1)
+     throw new Error('Military mission return completion failed');
+    return {...missionView(readMission.get(missionId)),replayed:false};
+   });
+  },
+  cancelUnresolvedMission({missionId,actorPlayerId,authorizeCancellation}){
+   id(missionId,'mission ID');id(actorPlayerId,'actor ID');
+   if(typeof authorizeCancellation!=='function')
+    throw new Error('Server administrative cancellation policy required');
+   return transaction(()=>{
+    const m=readMission.get(missionId);
+    if(!m||m.actor_player_id!==actorPlayerId)
+     throw new Error('Unauthorized or unknown military mission');
+    if(authorizeCancellation(structuredClone(missionView(m)))!==true)
+     throw new Error('Military mission cancellation denied');
+    if(m.status==='cancelled')return {...missionView(m),replayed:true};
+    if(!['traveling','arrived'].includes(m.status)||m.battle_command_id!==null)
+     throw new Error('Cannot cancel an already committed battle mission');
+    if(cancelMission.run(missionId).changes!==1)
+     throw new Error('Military mission cancellation failed');
+    return {...missionView(readMission.get(missionId)),replayed:false};
+   });
+  },
+  getMission(missionId){
+   alive();return missionView(readMission.get(id(missionId,'mission ID')));
   },
   getBattleReceipt(commandId){
    alive();const row=readBattle.get(id(commandId,'command ID'));
