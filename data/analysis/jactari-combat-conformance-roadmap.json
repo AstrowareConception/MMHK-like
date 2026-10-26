@@ -25,11 +25,11 @@
   ],
   "tracking": {
     "lastVerifiedFullSuite": {
-      "tests": 276,
-      "passed": 276,
+      "tests": 280,
+      "passed": 280,
       "failed": 0,
-      "ciUrl": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40296728414",
-      "commit": "92ab5b9131a6daba69b06e80c993ad3b851a5faf"
+      "ciUrl": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40297642347",
+      "commit": "9ee35d12fba78bd0908ad7619fa11f69cb602200"
     },
     "metricPolicy": "Les nombres de tests sont des régressions, pas un pourcentage d'équivalence historique."
   },
