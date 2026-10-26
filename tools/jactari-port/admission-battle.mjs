@@ -6,6 +6,7 @@
  */
 import {decideJactariAdmission,armyPower} from './admission.mjs';
 import {simulateUnifiedBattle} from './unified-battle.mjs';
+import {jactariReferenceProfile} from './source-profile.mjs';
 export function adjudicateJactariBattle({mode,attackers,defenders,...rest}){
   const decision=decideJactariAdmission({
     attackPower:armyPower(attackers),
@@ -36,4 +37,20 @@ export function adjudicateJactariBattle({mode,attackers,defenders,...rest}){
     limitations:['No server capture/wound state mutation',
       'No hero mission/return transaction','No MMHK S2 equivalence guaranteed']
   };
+}
+
+/**
+ * EXPLICIT opt-in reference-calculator profile; cannot be silently interpreted
+ * as an authentic MMHK Season 2 profile. Only for reproducible validation.
+ */
+export function adjudicateJactariReferenceBattle(request) {
+ if(request.lossPolicy!==undefined)throw new Error('Reference profile fixes loss factor; omit lossPolicy');
+ if(request.context?.weaponAdvantageFactor!==undefined)
+   throw new Error('Reference profile fixes weapon advantage factor');
+ const profile=jactariReferenceProfile();
+ const result=adjudicateJactariBattle({
+  ...request,context:{...request.context,weaponAdvantageFactor:profile.weaponAdvantageFactor},
+  lossPolicy:{lossFactor:profile.lossFactor,source:profile.calculatorVersion}
+ });
+ return {...result,historicalRuleset:profile};
 }
