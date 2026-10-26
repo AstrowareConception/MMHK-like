@@ -24,7 +24,7 @@ La règle de décision est stricte : une exigence n'est `certified` que si **tou
 | Admission PvE/PvP | V6.3 ; 4 000 calculs contre les branches originales |
 | Puissance magique, artefacts | V6.3–V6.4 ; 400 calculs de magie, 280 affinités d'artefacts, 120 sorts avec équipement |
 | Résolution dynamique au tour | **V6.5 en cours** : ordres de sorts par ID, puissance calculée avec héros/arme/inventaire courants, tests d'intégration |
-| Dernière CI de base vérifiée | **335/335 tests Node passés**, [run GitHub Actions #40333523770](https://github.com/AstrowareConception/MMHK-like/actions/runs/40333523770), tests de carrières et contrôles du registre compris |
+| Dernière CI de base vérifiée | **343/343 tests Node passés**, [run GitHub Actions #40336924030](https://github.com/AstrowareConception/MMHK-like/actions/runs/40336924030), tests de carrières et contrôles du registre compris |
 | Certification historique Jactari complète | **Non acquise** |
 | Équivalence MMHK saison 2 | **Non acquise ; sources spécifiques incomplètes** |
 | Arbitre PvP autorisé en production | **Non** |
@@ -37,7 +37,7 @@ La règle de décision est stricte : une exigence n'est `certified` que si **tou
 - **Non livré** : branche métier pas encore implémentée/testée.
 - **Bloqué par les sources** : aucune équivalence S2 ne pourra être annoncée tant que les archives nécessaires manquent.
 
-**Répartition des 19 familles de règles** : 8 en différentiel borné, 1 intégrée et testée, 5 partiellement implémentées, 4 non livrées, 1 bloquée par les sources S2. **0 famille entièrement certifiée.** Ce bilan n'est pas un score de fidélité ; il permet d'identifier la nature des preuves manquantes.
+**Répartition des 19 familles de règles** : 8 en différentiel borné, 1 intégrée et testée, 6 partiellement implémentées, 3 non livrées, 1 bloquée par les sources S2. **0 famille entièrement certifiée.** Ce bilan n'est pas un score de fidélité ; il permet d'identifier la nature des preuves manquantes.
 
 ## 3. Registre exhaustif et traçable des 19 chantiers
 
@@ -59,7 +59,7 @@ La règle de décision est stricte : une exigence n'est `certified` que si **tou
 | C14 | **PNJ, héros absents et cas exceptionnels** | **Non livré** | Fixtures adversariales, états limites |
 | C15 | Pertes définitives, relève et persistance | Différentiel borné | Politiques PNJ, pénalités, coefficients S2 |
 | C16 | Butin, XP, honneur, économie | Partiel | Bilan complet et évolution du héros |
-| C17 | **Serveur transactionnel de combat** | **Non livré** | Idempotence, ordres, captures, blessures, retours |
+| C17 | **Serveur transactionnel de combat** | **Partiel — stockage et prévisualisation seulement** | Authentification réseau réelle, diplomatie, écritures atomiques de pertes, captures, blessures et idempotence |
 | C18 | **Preuve indépendante MMHK saison 2** | **Bloqué sources** | Reconstituer vrais paramètres/règles saisonnières |
 | C19 | **Sécurité, charge et conformité GPL** | **Non livré** | Validation architecture et redistribution |
 
@@ -76,7 +76,7 @@ Les **états et liens de preuve par exigence** sont conservés dans le [registre
 | **V6.9** | Scénarios exceptionnels et PvE | Héros absents/PNJ, sorts interrompant un tour, troisième invocation, zéro unité, égalités ; aucune sortie fictive | À faire |
 | **V6.10** | Bilan de bataille et progression | Effectifs persistants, perte économique, récupérations, butin, classement, honneur et XP conformes aux oracles | À faire |
 | **V6.11** | Réconciliation Jactari / MMHK saison 2 | Sources authentiques S2, tableau des différences, politiques explicites, reproductibilité des rapports | Bloqué par sources |
-| **V7.0** | Arbitre de combat intégré au serveur | Rejeu idempotent, réservations/retours, locks, blessure/capture, audit, tests de charge, licence | À faire |
+| **V7.0** | Arbitre de combat intégré au serveur | Fondations SQLite en lecture seule (livrées), mais arbitre PvP transactionnel, auth réelle et reprise de mission à développer | **À faire — fondations disponibles** |
 
 ### V6.5 : raccordement réalisé, preuves encore à obtenir
 
@@ -85,6 +85,14 @@ Le module [`hero-spell-resolution.mjs`](../../tools/jactari-port/hero-spell-reso
 Tests [`hero-spell-resolution.test.mjs`](../../tools/jactari-port/hero-spell-resolution.test.mjs) : magie attaquant et défenseur, magie de zone, invocation avant une nouvelle salve, puissance d'un héros équipé vérifiée par le code original, refus de faux IDs/puissances injectées, immuabilité des entrées et absence de caractéristique magique obligatoire. La **suite Node complète est verte**.
 
 **Dette critique :** le serveur de jeu final ne construit pas encore ces fiches de héros et ces catalogues à partir d'objets persistés. Le `spellContext` doit donc provenir d'un composant de confiance ; ce n'est **pas** un nouveau champ que le joueur peut fixer librement depuis le navigateur.
+
+### V6.6 : tranche 7 — persistance SQLite des héros et simulation autorisée
+
+Le [rapport V6.6 tranche 7](39-JACTARI-V66-PERSISTANCE-HEROS-AUTORISATIONS.md) inaugure la frontière de confiance serveur. [`trusted-hero-store.mjs`](../../tools/jactari-port/trusted-hero-store.mjs) conserve dans SQLite les profils originaux, armées, carrières, ordres de sorts et droits légendaires, avec propriété, révision optimiste et transactions de lecture cohérentes. [`server-authorized-battle.mjs`](../../tools/jactari-port/server-authorized-battle.mjs) n'accepte d'une demande utilisateur que **les identifiants de deux héros** ; il exige un acteur authentifié, propriétaire de l'attaquant, une autorisation explicite de la cible et des règles injectées côté serveur. **Aucune donnée militaire calculée n'est fournie par le client.**
+
+Le chemin historique autorise seulement une **prévisualisation en lecture seule**. Le moteur ne sait toujours pas engager des armées, appliquer des pertes, capturer un héros ou rendre une commande idempotente dans une transaction. Les hooks de sécurité sont injectés par les tests : **il n'existe pas encore de vraie couche HTTP ou d'identité serveur**. Les accès par carrière légendaire ordinaire sont refusés pour éviter un contournement des droits.
+
+**CI : 343/343 tests réussis** sur la dernière tranche code vérifiée. **C17 passe à `implemented_partial` pour ses fondations, mais V7.0 reste `open`, C03 reste partiel et `productionBattleArbiterAllowed=false`**.
 
 ### V6.6 : tranche 6 — pont authentique du client MMHK vers les héros Jactari
 
