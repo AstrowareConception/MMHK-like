@@ -8,8 +8,9 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
-const source=fs.readFileSync(path.resolve(path.dirname(fileURLToPath(import.meta.url)),
-  '../../data/Jactari/src/scripts/combat.min.js'),'utf8');
+const scriptFolder=path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../data/Jactari/src/scripts');
+const source=fs.readFileSync(path.join(scriptFolder,'combat.min.js'),'utf8');
+const realArtifacts=fs.readFileSync(path.join(scriptFolder,'donnees.artefacts.min.js'),'utf8');
 function extract(name){
  const start=source.indexOf('function '+name+'(');
  if(start<0)throw Error('Historical function not found: '+name);
@@ -39,11 +40,16 @@ export function runOriginalSpellPower({spell,side,attackerWeapon,defenderWeapon,
  schoolBonusPercent=0,artifactEfficiencyPercent=0,
  mastery={level:0,bonusPercent:0,maximumCircle:0,wayBonus:0},
  resistance={level:0,bonusPercent:0,wayBonus:0},
- antiMagic={level:0,bonusPercentPerLevel:0}}){
- if(artifactEfficiencyPercent!==0)throw new Error('Historical spell oracle requires real artifacts for nonzero efficiency');
+ antiMagic={level:0,bonusPercentPerLevel:0},artifactIds=null}){
+ if(artifactEfficiencyPercent!==0)throw new Error('Use a real artifactIds inventory instead of injecting artifact percentage');
  if(!['attacker','defender'].includes(side))throw new RangeError('Invalid side');
  const a=side==='attacker',key=a?'attaquant':'defenseur',enemy=a?'defenseur':'attaquant';
  const hydrated=normalizedHero(hero);
+ if(artifactIds!==null){
+   if(!Array.isArray(artifactIds)||!artifactIds.every(Number.isSafeInteger))
+     throw new RangeError('Untrusted or invalid original artifact inventory');
+   for(let i=0;i<artifactIds.length;i++)hydrated['slot_'+i]=artifactIds[i];
+ }
  const array=Array.from({length:4},(_,i)=>i===spell.school?schoolBonusPercent:0);
  const ctx={
   _sorts:[{ecole:spell.school,unite:spell.unit,cercle:spell.circle,
@@ -53,7 +59,7 @@ export function runOriginalSpellPower({spell,side,attackerWeapon,defenderWeapon,
   inArray:(arr,item)=>arr.includes(item),
   maxInArrayIndex:o=>Object.keys(o).reduce((k,next)=>
     k===undefined||o[next]>o[k]?next:k,undefined),
-  _langue:0,detail_sorts:false,
+  _langue:'fr',detail_sorts:false,
   _traduction:new Proxy({}, {get:()=>['label']}),
   _talents:Array.from({length:10},()=>Array.from({length:4},()=>({nom:['talent']}))),
   _ecoles_magie:Array.from({length:4},()=>({carriere:0,nom:['school']})),
@@ -84,7 +90,11 @@ export function runOriginalSpellPower({spell,side,attackerWeapon,defenderWeapon,
   inputSide:a?'a':'d'
  };
  vm.createContext(ctx,{name:'jactari-spell-power-vendor'});
+ if(artifactIds!==null){
+   vm.runInContext(realArtifacts,ctx,{timeout:3000});
+   if(artifactIds.length!==ctx._slots.length)throw new RangeError('Wrong original artifact slot count');
+ }
  vm.runInContext(original,ctx,{timeout:1000});
  const result=vm.runInContext('puissance_effective_sort(0,inputSide,0,inputA,inputD)',ctx,{timeout:1000});
- return {power:result?.puissance,provenance:'unmodified Jactari puissance_effective_sort with empty artifact slots'};
+ return {power:result?.puissance,provenance:artifactIds===null?'unmodified Jactari spell power with empty artifact slots':'unmodified Jactari spell power and authentic artifact catalog'};
 }
