@@ -159,8 +159,8 @@ test('client cannot override stored military context, spell powers or target arm
 test('spell orders are read from persisted hero data and resolved from server catalog only',()=>{
  const store=fixture();
  try{
-  let current=store.getHero('hero-a');
-  store.replaceHero({...current,spellOrders:{1:{id:0}}},{expectedRevision:1});
+  const {revision,...current}=store.getHero('hero-a');
+  store.replaceHero({...current,spellOrders:{1:{id:0}}},{expectedRevision:revision});
   const spellContext={
    catalog:[{school:3,circle:1,type:0,target:4,unit:7,power:1,
     factors:{I:1,R:1,C:1}}],
