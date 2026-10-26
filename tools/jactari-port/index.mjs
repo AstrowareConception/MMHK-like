@@ -9,3 +9,4 @@ export {adjudicateJactariBattle,adjudicateJactariReferenceBattle} from './admiss
 export {decideJactariAdmission,armyPower} from './admission.mjs';
 export {jactariReferenceProfile} from './source-profile.mjs';
 export {calculateBonuses} from './bonuses.mjs';
+export {validateHeroSpellOrders,resolveHeroSpellAtRound} from './hero-spell-resolution.mjs';
