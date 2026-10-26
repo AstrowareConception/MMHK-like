@@ -24,7 +24,7 @@ La règle de décision est stricte : une exigence n'est `certified` que si **tou
 | Admission PvE/PvP | V6.3 ; 4 000 calculs contre les branches originales |
 | Puissance magique, artefacts | V6.3–V6.4 ; 400 calculs de magie, 280 affinités d'artefacts, 120 sorts avec équipement |
 | Résolution dynamique au tour | **V6.5 en cours** : ordres de sorts par ID, puissance calculée avec héros/arme/inventaire courants, tests d'intégration |
-| Dernière CI de base vérifiée | **306/306 tests Node passés**, [run GitHub Actions #40302654585](https://github.com/AstrowareConception/MMHK-like/actions/runs/40302654585), tests de carrières et contrôles du registre compris |
+| Dernière CI de base vérifiée | **313/313 tests Node passés**, [run GitHub Actions #40306285724](https://github.com/AstrowareConception/MMHK-like/actions/runs/40306285724), tests de carrières et contrôles du registre compris |
 | Certification historique Jactari complète | **Non acquise** |
 | Équivalence MMHK saison 2 | **Non acquise ; sources spécifiques incomplètes** |
 | Arbitre PvP autorisé en production | **Non** |
@@ -85,6 +85,12 @@ Le module [`hero-spell-resolution.mjs`](../../tools/jactari-port/hero-spell-reso
 Tests [`hero-spell-resolution.test.mjs`](../../tools/jactari-port/hero-spell-resolution.test.mjs) : magie attaquant et défenseur, magie de zone, invocation avant une nouvelle salve, puissance d'un héros équipé vérifiée par le code original, refus de faux IDs/puissances injectées, immuabilité des entrées et absence de caractéristique magique obligatoire. La **suite Node complète est verte**.
 
 **Dette critique :** le serveur de jeu final ne construit pas encore ces fiches de héros et ces catalogues à partir d'objets persistés. Le `spellContext` doit donc provenir d'un composant de confiance ; ce n'est **pas** un nouveau champ que le joueur peut fixer librement depuis le navigateur.
+
+### V6.6 : tranche 3 — remplacement et abandon de carrières
+
+La [tranche 3](35-JACTARI-V66-CYCLE-VIE-CARRIERES.md) introduit `transitionJactariCareer()` et compare ses résultats aux **fonctions originales non modifiées** `change_carriere()` et `desactive_carriere()`, exécutées avec des sélecteurs jQuery simulés. Elle couvre **60 scénarios d'ajout, remplacement et abandon**, les remboursements des rangs de talents, les rangs partagés Scribe/Arcanes et le remplacement d'une carrière par elle-même. Les bornes `change_respec()` et `change_tenancier()` sont également vérifiées directement contre la source. L'ensemble atteint **313 tests CI verts** sur la branche principale.
+
+**C03 demeure `implemented_partial`, V6.6 demeure `in_progress`** : séquences transitoires ambiguës, carrières légendaires, hérédités avancées, persistance sécurisée et preuve MMHK S2 ne sont pas certifiées. Les projections produites sont des propositions d'état, pas des mutations automatiques en base.
 
 ### V6.6 : tranche 2 — carrières et apprentissage vérifiés sur périmètre borné
 
