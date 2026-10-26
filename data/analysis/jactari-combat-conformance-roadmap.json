@@ -25,11 +25,11 @@
   ],
   "tracking": {
     "lastVerifiedFullSuite": {
-      "tests": 319,
-      "passed": 319,
+      "tests": 326,
+      "passed": 326,
       "failed": 0,
-      "ciUrl": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40316048810",
-      "commit": "840fb8c3ccc050b21d647b6151fb765090be69ff"
+      "ciUrl": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40329388212",
+      "commit": "f9f9920a25fbcb8b227bd0a11d1b9c36f3b1f7a9"
     },
     "metricPolicy": "Les nombres de tests sont des régressions, pas un pourcentage d'équivalence historique.",
     "lastStatusReview": "2026-10-26"
@@ -76,10 +76,12 @@
         "tools/jactari-port/hero-career-lifecycle.test.mjs",
         "tools/jactari-port/historical-respecialization.test.mjs",
         "tools/jactari-port/hero-legendary.test.mjs",
-        "tools/jactari-port/historical-legendary-encounters.test.mjs"
+        "tools/jactari-port/historical-legendary-encounters.test.mjs",
+        "tools/jactari-port/historical-heritage-audit.test.mjs",
+        "tools/jactari-port/historical-multilegend-differential.test.mjs"
       ],
-      "validated": "V6.6 tranche 1: 310 fiches de héros comparées à maj_adm/maj_comp/equipe_artefact, 150 choix de talents comparés au fragment combat original, 200 profils de héros de combat confrontés à maj_situation, puis raccordement testé au moteur unifié. V6.6 tranche 2: accès aux carrières comparé sur la matrice faction/archétype/carrière du calculateur original, 170 achats de talents, 120 transitions rang+remboursement et Scribe/Arcana partagés, validation de budgets au pont de combat. V6.6 tranche 3: 60 transitions historiques de sélection/remplacement/abandon comparées aux fonctions originales, y compris remboursement et partage Scribe/Arcanes; contrôles historiques respec et tenancier vérifiés par level/cas limites. V6.6 tranche 4: 8 classes légendaires / 24 talents historiques cartographiés; 144 préparations de héros originales; 48 rencontres complètes avec effets légendaires comparées à l'original; registre des droits des rangs explicite et obligatoire au pont de bataille.",
-      "gap": "Conditions réelles d'obtention des classes/rangs légendaires absentes du calculateur, combinaisons et séquences de plusieurs classes, hérédités _15/_30, attribution sécurisée côté serveur et documents MMHK S2 non certifiés.",
+      "validated": "V6.6 tranche 1: 310 fiches de héros comparées à maj_adm/maj_comp/equipe_artefact, 150 choix de talents comparés au fragment combat original, 200 profils de héros de combat confrontés à maj_situation, puis raccordement testé au moteur unifié. V6.6 tranche 2: accès aux carrières comparé sur la matrice faction/archétype/carrière du calculateur original, 170 achats de talents, 120 transitions rang+remboursement et Scribe/Arcana partagés, validation de budgets au pont de combat. V6.6 tranche 3: 60 transitions historiques de sélection/remplacement/abandon comparées aux fonctions originales, y compris remboursement et partage Scribe/Arcanes; contrôles historiques respec et tenancier vérifiés par level/cas limites. V6.6 tranche 4: 8 classes légendaires / 24 talents historiques cartographiés; 144 préparations de héros originales; 48 rencontres complètes avec effets légendaires comparées à l'original; registre des droits des rangs explicite et obligatoire au pont de bataille. V6.6 tranche 5: audit de source démontrant l'absence des tables héréditaires _15/_30, refus explicite de ces valeurs; 120 niveaux documentés + 90 cas de priorité héréditaire contre la préparation historique, 120 héros cumulant 2 à 8 bonus légendaires.",
+      "gap": "Les branches _15/_30 sont présentes dans combat.min.js mais absentes de donnees.general.min.js ; aucune valeur chiffrée ne peut être certifiée. Également à découvrir : obtention légendaire réelle, combinaisons légales par saison, propriété du héros et conditions serveur MMHK S2.",
       "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
     },
     {
@@ -90,9 +92,10 @@
       "implementation": "tools/jactari-port/bonuses.mjs",
       "evidence": [
         "tools/jactari-port/historical-hero-encounters.test.mjs",
-        "tools/jactari-port/historical-legendary-encounters.test.mjs"
+        "tools/jactari-port/historical-legendary-encounters.test.mjs",
+        "tools/jactari-port/historical-multilegend-differential.test.mjs"
       ],
-      "validated": "600 profils arithmétiques, 83 rencontres avec héros, bonus historiques indépendants 48 batailles historiques de héros dérivés portant un talent légendaire attestent les modificateurs des duels et pertes finales sur ce corpus.",
+      "validated": "600 profils arithmétiques, 83 rencontres avec héros, bonus historiques indépendants 48 batailles historiques de héros dérivés portant un talent légendaire attestent les modificateurs des duels et pertes finales sur ce corpus. 48 combats natifs supplémentaires mettant en jeu des talents légendaires multiples dans les deux camps, duels et pertes finaux comparés.",
       "gap": "Héros absents, combinaison complète des objets et bug legwarrior original",
       "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
     },
@@ -117,9 +120,10 @@
       "implementation": "tools/jactari-port/spell-power.mjs",
       "evidence": [
         "tools/jactari-port/historical-equipped-spell.test.mjs",
-        "tools/jactari-port/hero-legendary.test.mjs"
+        "tools/jactari-port/hero-legendary.test.mjs",
+        "tools/jactari-port/historical-multilegend-differential.test.mjs"
       ],
-      "validated": "400 puissances sans équipement + 120 avec artefacts confrontées au code original Bonus légendaires de quatre écoles magiques comparés à puissance_effective_sort() originale.",
+      "validated": "400 puissances sans équipement + 120 avec artefacts confrontées au code original Bonus légendaires de quatre écoles magiques comparés à puissance_effective_sort() originale. Test du cumul de deux bonus légendaires sur les écoles de magie concernées contre puissance_effective_sort historique.",
       "gap": "Plusieurs artefacts et résistances combinées, effets nuls, plafonds saisonniers",
       "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
     },
@@ -294,7 +298,7 @@
       "id": "V6.6",
       "title": "Génération des caractéristiques et talents",
       "state": "in_progress",
-      "exit": "Tranches 1 à 4 : stats et budget héros, carrières, transitions, 8 classes légendaires/24 effets validés sur cas historiques. Manquent prérequis d'obtention légendaire, combinaisons de classes, hérédités alternatives, données serveur authentifiées et équivalence S2."
+      "exit": "Tranches 1 à 5 : héros/carrières/légendaires, 210 cas d'hérédité documentée, 120 profils légendaires cumulés et 48 combats bilatéraux vérifiés. Bloqueurs: tables héréditaires _15/_30 absentes de l'archive, prérequis légendaires MMHK S2, identité et progression serveur."
     },
     {
       "id": "V6.7",
