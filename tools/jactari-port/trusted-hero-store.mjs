@@ -419,6 +419,7 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
       throw new Error('Idempotency key collision: original battle parameters differ');
      return {...decode(prior.receipt_json),replayed:true};
     }
+    const worldContext=trustedGeo(attackerHeroId,defenderHeroId,serverNowMs);
     const journey=missionId===null?null:readMission.get(missionId);
     if(journey){
      if(journey.actor_player_id!==actorPlayerId||
@@ -434,7 +435,6 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
     }else if(missionId!==null)throw new Error('Unknown military mission');
     if(missionId===null&&activeMission.get(attackerHeroId))
      throw new Error('Attacking hero is reserved by a military mission');
-    const worldContext=trustedGeo(attackerHeroId,defenderHeroId,serverNowMs);
     if(worldContext&&missionId===null)
      throw new Error('World-mapped battles require a registered arrived military mission');
     if(worldContext)verifiedRoute(missionId,attackerHeroId,defenderHeroId,serverNowMs);
