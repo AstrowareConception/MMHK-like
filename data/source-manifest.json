@@ -95,5 +95,20 @@
       "sha256": "f9460d9090045fb77cc5c8b7ce6a7f2de6bbcffcfd79c5d69e8540e3c45a3301",
       "bytes": 7678
     }
+  ],
+  "supplementary_sources": [
+    {
+      "source_id": "CODE-01-MMHKPLUS-JACTARI-BRIDGE",
+      "repository": "https://github.com/Aendawyn/MMHK-Plus",
+      "commit": "e8d862d82741986759b88012421aed8e8175e26e",
+      "source_path": "MMHK-Plus/src/modules/common/jactari.js",
+      "preserved_path": "data/Jactari/upstream-addon/mmhkplus-jactari-2013.js",
+      "git_blob_sha": "da8d683044d5803c557888218169b6c722ea0abf",
+      "bytes": 41473,
+      "license": "GPL-3.0-or-later",
+      "verification": "tools/jactari-port/original-client-hero-tags.test.mjs",
+      "evidence": "Preserved byte-for-byte original native MMHK client heroSkillList and playerHeredityAbilityList mapper; source coerces seasons below 3 to 3 for Jactari links",
+      "limitations": "No proof of Ubisoft season 2 unlock constraints or authenticated server data"
+    }
   ]
 }
