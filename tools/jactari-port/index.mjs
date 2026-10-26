@@ -23,3 +23,5 @@ export {openTrustedHeroStore} from './trusted-hero-store.mjs';
 export {previewServerAuthorizedHeroBattle} from './server-authorized-battle.mjs';
 export {commitServerAuthorizedJactariBattle,computeJactariRulesDigest} from './server-transactional-battle.mjs';
 export {dispatchServerHeroMission,arriveServerHeroMission,scheduleServerHeroReturn,completeServerHeroReturn,cancelServerUnresolvedMission} from './server-military-mission.mjs';
+export {validateWorldCoordinate,jactariToroidalDistance,communityDistanceEstimates} from './world-distance.mjs';
+export {candidateFirstCityProtectionExpiry,PROVISIONAL_FIRST_CITY_DAYS} from './world-engagement-policy.mjs';
