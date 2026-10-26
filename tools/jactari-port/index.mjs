@@ -10,3 +10,8 @@ export {decideJactariAdmission,armyPower} from './admission.mjs';
 export {jactariReferenceProfile} from './source-profile.mjs';
 export {calculateBonuses} from './bonuses.mjs';
 export {validateHeroSpellOrders,resolveHeroSpellAtRound} from './hero-spell-resolution.mjs';
+export {getJactariHeroTables} from './hero-source-tables.mjs';
+export {deriveJactariHeroPageSnapshot} from './hero-page-snapshot.mjs';
+export {deriveJactariTalentBonuses} from './hero-talent-bonuses.mjs';
+export {deriveJactariCombatHeroSnapshot} from './hero-combat-snapshot.mjs';
+export {simulateBattleWithDerivedHeroes} from './hero-combat-battle.mjs';
