@@ -215,3 +215,64 @@ test('engagement results reject malformed historical engine outcomes before comm
   assert.equal(store.getHero('hero-a').revision,1);
  }finally{store.close();}
 });
+
+test('complete loss of an original troop stack is stored as an empty slot, never count zero',()=>{
+ const store=fixture(openTrustedHeroStore(),700,10);
+ try{
+  const fatal={...rules,lossPolicy:{lossFactor:1,
+   source:'synthetic-boundary-not-MMHK-S2'}};
+  const first=commitServerAuthorizedJactariBattle(request(store,{
+   trustedRules:fatal
+  }));
+  assert.equal(first.permanent.defender.reports[0].permanent,10);
+  assert.equal(store.getHero('hero-d').army[0],null);
+  assert.equal(store.getHero('hero-d').revision,2);
+  const replay=commitServerAuthorizedJactariBattle(request(store,{
+   trustedRules:fatal
+  }));
+  assert.equal(replay.replayed,true);
+  assert.equal(store.getHero('hero-d').army[0],null);
+  assert.equal(store.getBattleAuditCounts().commands,1);
+  // Another battle under a different id must fail, since a defender has no army.
+  assert.throws(()=>commitServerAuthorizedJactariBattle(request(store,{
+   command:{...baseCommand,commandId:'battle-after-zero'},
+   trustedRules:fatal
+  })),/strictly positive defender power|defender power/);
+  assert.equal(store.getBattleAuditCounts().commands,1);
+ }finally{store.close();}
+});
+test('revocation of target permission prevents reading even an idempotent prior battle receipt',()=>{
+ const store=fixture();let allowed=true;
+ try{
+  const req=request(store,{authorizeTarget:()=>allowed});
+  const first=commitServerAuthorizedJactariBattle(req);
+  assert.equal(first.persistence.applied,true);
+  allowed=false;
+  assert.throws(()=>commitServerAuthorizedJactariBattle(req),
+   /Target authorization denied/);
+  assert.equal(store.getBattleAuditCounts().commands,1);
+  allowed=true;
+  assert.equal(commitServerAuthorizedJactariBattle(req).replayed,true);
+ }finally{store.close();}
+});
+test('a forged engine with mismatched casualty count cannot atomically replace persisted armies',()=>{
+ const store=fixture();
+ try{
+  const a=store.getHero('hero-a'),d=store.getHero('hero-d');
+  const fake={
+   status:'attacker',rounds:1,events:[{phase:'duel',turn:1}],
+   persistentArmies:{attacker:army(170),defender:army(100)},
+   permanent:{attacker:{reports:[{permanent:0},null,null,null,null,null,null]},
+    defender:{reports:[{permanent:0},null,null,null,null,null,null]}}
+  };
+  assert.throws(()=>store.commitAuthorizedBattle({
+    commandId:'fabricated',actorPlayerId:'alice',
+    attackerHeroId:'hero-a',defenderHeroId:'hero-d',
+    rulesDigest:computeJactariRulesDigest(rules),
+    authorizeTarget:()=>true,calculate:()=>fake
+  }),/casualty ledger mismatch/);
+  assert.deepEqual(store.getHero('hero-a'),a);
+  assert.deepEqual(store.getHero('hero-d'),d);
+  assert.deepEqual(store.getBattleAuditCounts(),{commands:0,events:0});
+ }finally{store.close();}
+});
