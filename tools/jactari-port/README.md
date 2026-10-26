@@ -468,3 +468,18 @@ Le pont original contient une restriction de provenance essentielle pour notre p
 Le scanner [`original-ubisoft-source-audit.mjs`](original-ubisoft-source-audit.mjs) explore **en lecture seule** deux fichiers `prod.js` Ubisoft archivés d'environ 1,7 et 2 Mo, sans les exécuter. Les occurrences observées permettent de guider des recherches sur le client, mais ne prouvent pas les règles serveur ni les prérequis légendaires.
 
 [Rapport complet V6.6 — tranche 6](../../docs/game-design/38-JACTARI-V66-PROVENANCE-CLIENT-ET-SAISONS.md) · [registre et sources](../../data/analysis/jactari-combat-conformance-roadmap.json) · [preuve structurée](../../data/analysis/jactari-v66-original-client-source-provenance-2026-10-26.json).
+
+
+## V6.6 — Tranche 7 : hébergement SQLite et contrôle des droits avant combat
+
+Les composants Node 22 [`trusted-hero-store.mjs`](trusted-hero-store.mjs) et [`server-authorized-battle.mjs`](server-authorized-battle.mjs) introduisent une **première couche de persistance de héros** et une prévisualisation de combat en lecture seule.
+
+`openTrustedHeroStore({filename})` conserve les héros, propriétaires, rangs de carrières, armées, équipements, droits légendaires et ordres de magie sous SQLite (API `node:sqlite` native encore **expérimentale**). Les mises à jour d'un héros emploient une révision attendue avec conflit optimiste et ne peuvent changer son propriétaire. Les données de combat dérivées ne sont pas persistées comme des valeurs autoritatives.
+
+`previewServerAuthorizedHeroBattle({command,authContext,authenticate,authorizeTarget,heroStore,trustedRules})` exige une **commande client limitée à deux identifiants de héros**. Il interroge les fiches enregistrées, contrôle le propriétaire de l'attaquant à partir d'un principal issu d'un callback **serveur**, exige une autorisation explicite de la cible et réexécute le port historique depuis les données persistées. Les ordres de sorts viennent aussi de la base, avec puissance et bonus calculés par le moteur, et non d'un pouvoir déclaré par le client.
+
+**Protection nouvelle :** les talents légendaires du catalogue ne peuvent plus être injectés via `heroCareers` ordinaires (IDs 13–20), pas plus que via `heroTalents`. Le stockage rejette les rangs légendaires hors limites et les IDs de sorts dupliqués. Ces contrôles sont testés avec des comptes fictifs uniquement, **pas avec un service d'identité réel**.
+
+[Tests d'intégration](server-authorized-battle.test.mjs) · [rapport avec modèle de menace](../../docs/game-design/39-JACTARI-V66-PERSISTANCE-HEROS-AUTORISATIONS.md) · [preuves structurées](../../data/analysis/jactari-v66-sqlite-authorized-hero-preview-2026-10-26.json) · [registre C03/C17](../../data/analysis/jactari-combat-conformance-roadmap.json).
+
+**Limites fermes :** aucun serveur HTTP, aucune session réellement authentifiée, aucune diplomatie/portée/protection débutant validée, aucune application transactionnelle des pertes, captures ou blessures, ni idempotence des combats. Les méthodes administratives du stockage ne doivent jamais être exposées aux joueurs. L'aperçu ne doit pas être considéré comme un ordre d'attaque consommé. **V7.0 reste ouvert ; pas de moteur PvP autorisé en production.**
