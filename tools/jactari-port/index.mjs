@@ -19,3 +19,6 @@ export {isJactariCareerAllowed,calculateJactariCareerBudget,changeJactariCareerR
 export {transitionJactariCareer} from './hero-career-lifecycle.mjs';
 export {listJactariLegendaryClasses,deriveJactariLegendaryTalents} from './hero-legendary.mjs';
 export {originalClientLegendaryTagMap,projectOriginalHeroLegendarySkills,originalClientHereditaryTagMap,projectOriginalPlayerHeredity} from './original-client-hero-tags.mjs';
+export {openTrustedHeroStore} from './trusted-hero-store.mjs';
+export {previewServerAuthorizedHeroBattle} from './server-authorized-battle.mjs';
+export {commitServerAuthorizedJactariBattle,computeJactariRulesDigest} from './server-transactional-battle.mjs';
