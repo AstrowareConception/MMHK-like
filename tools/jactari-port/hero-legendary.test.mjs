@@ -116,4 +116,8 @@ test('hero battle adapter uses entitlement ranks and forbids unsanctioned legend
  assert.throws(()=>simulateBattleWithDerivedHeroes({
   ...input,heroLegendaryGrants:null
  }),/grant ledger required/);
+ assert.throws(()=>simulateBattleWithDerivedHeroes({
+  ...input,heroLegendaries:null,heroLegendaryGrants:null,
+  heroTalents:{attacker:[grant]}
+ }),/Legendary ranks require explicit server grants/);
 });
