@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-26",
+  "milestone": "V6.6 tranche 4 — legendary hero effects",
+  "reference": {
+    "source": "data/Jactari/src/scripts/donnees.heros.min.js",
+    "calculator": "Jactari v.4.1.3-MTR",
+    "MMHK_s2_certified": false
+  },
+  "authentic_talent_structure": {
+    "class_indices": [
+      13,
+      14,
+      15,
+      16,
+      17,
+      18,
+      19,
+      20
+    ],
+    "talents_per_class": 3,
+    "rank_indices": [
+      0,
+      1,
+      2,
+      3
+    ],
+    "talent_count": 24
+  },
+  "evidence": {
+    "hero_preparation_original_vs_port": 144,
+    "original_complete_encounters_with_legendary_talents": 48,
+    "spell_power_original_vs_port_legendary_schools": [
+      "summon",
+      "dark",
+      "light",
+      "destruction"
+    ],
+    "protected_grants": "explicit per-hero server-entitlement only; 0-3 ranks checked",
+    "anti_bypass": "legacy raw heroTalents cannot smuggle legendary ranks",
+    "github_actions_url": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40316048810",
+    "tests_passed": 319,
+    "tests_total": 319,
+    "test_failures": 0,
+    "verified_code_commit": "840fb8c3ccc050b21d647b6151fb765090be69ff"
+  },
+  "implementation_paths": [
+    "tools/jactari-port/hero-legendary.mjs",
+    "tools/jactari-port/hero-combat-snapshot.mjs",
+    "tools/jactari-port/hero-combat-battle.mjs"
+  ],
+  "test_paths": [
+    "tools/jactari-port/hero-legendary.test.mjs",
+    "tools/jactari-port/historical-legendary-encounters.test.mjs"
+  ],
+  "no_independent_unlock_rule_evidence": true,
+  "limitations": [
+    "Original calculator freely displays selector ranks, not verified Ubisoft unlock prerequisites",
+    "Entitlement ledger MUST come from a trusted server and persistent hero ownership records",
+    "No complete combined multi-legendary/equipment/siege differential",
+    "MMHK S2 independent season equality not proven",
+    "not authorized as multiplayer PvP arbiter"
+  ],
+  "conformance_gate": {
+    "C03": "implemented_partial",
+    "C04": "differential_bounded",
+    "C06": "differential_bounded",
+    "V66": "in_progress",
+    "production_ready": false
+  },
+  "license": "GPL-3.0-or-later"
+}
