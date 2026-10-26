@@ -94,3 +94,23 @@ test('huge map crossings fail before allocating unbounded route spans',()=>{
  assert.throws(()=>traceToroidalTileLine({x:1,y:1},{x:10000,y:10000},100000),
  /crossing limit/);
 });
+
+test('400 deterministic toroidal traces conserve length and reverse their cells',()=>{
+ let seed=0x3a0b71d1;
+ const next=()=>{seed=(Math.imul(seed,1664525)+1013904223)>>>0;return seed;};
+ for(let i=0;i<400;i++){
+  const size=2+next()%97;
+  const from={x:1+next()%size,y:1+next()%size};
+  const to={x:1+next()%size,y:1+next()%size};
+  const a=traceToroidalTileLine(from,to,size);
+  const b=traceToroidalTileLine(to,from,size);
+  const dx=Math.min(Math.abs(from.x-to.x),size-Math.abs(from.x-to.x));
+  const dy=Math.min(Math.abs(from.y-to.y),size-Math.abs(from.y-to.y));
+  const expected=Math.hypot(dx,dy);
+  assert.ok(Math.abs(a.reduce((s,p)=>s+p.distanceUnits,0)-expected)<1e-9);
+  assert.ok(Math.abs(b.reduce((s,p)=>s+p.distanceUnits,0)-expected)<1e-9);
+  assert.deepEqual(a.map(x=>x.tile),b.map(x=>x.tile).reverse());
+  assert.ok(a.every(x=>x.distanceUnits>0&&x.tile.x>=1&&x.tile.x<=size&&
+   x.tile.y>=1&&x.tile.y<=size));
+ }
+});
