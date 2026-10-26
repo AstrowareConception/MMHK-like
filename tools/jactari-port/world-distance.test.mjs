@@ -1,6 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
+import {createHash} from 'node:crypto';
 import vm from 'node:vm';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
@@ -15,7 +16,10 @@ const b=original.indexOf('MMHKPLUS.getRegionId = function(',a);
 if(a<0||b<a)throw Error('The original 2013 MMHK world distance function changed');
 const code=original.slice(a,b);
 const sourceEstimator=fs.readFileSync(path.join(root,
- 'docs/game-design/05-CARTE-PVP-SIEGES.md'),'utf8');
+ 'data/Jactari/upstream-addon/mmhkplus-distances-2013.js'),'utf8');
+const originalBlobHash=(buffer)=>createHash('sha1')
+ .update(Buffer.from('blob '+buffer.length+String.fromCharCode(0)))
+ .update(buffer).digest('hex');
 
 function originalDistance(size,from,to){
  const ctx={MMHKPLUS:{getElement:()=>({get:label=>{
@@ -47,7 +51,9 @@ test('opposite map edges wrap, diagonal and same tile behave geometrically',()=>
  assert.equal(jactariToroidalDistance({x:1,y:1},{x:51,y:1},w),50);
 });
 test('2013 community movement ratios are INFORMATIONAL not a server arrival calculation',()=>{
- assert.ok(sourceEstimator.includes('distance/4'));
+ assert.match(sourceEstimator,/dist\/12/);
+ assert.match(sourceEstimator,/dist\/4/);
+ assert.match(sourceEstimator,/dist\/9\.375/);
  const p=communityDistanceEstimates({x:1,y:1},{x:5,y:1},100);
  assert.equal(p.distance,4);
  assert.equal(p.hours.unaccompaniedHero,4/12);
@@ -63,4 +69,13 @@ test('invalid, fractional and outside coordinates never silently wrap into anoth
   assert.throws(()=>validateWorldCoordinate(bad,64),/coordinate|Integer/);
  for(const size of [0,1,1.5,Infinity,-2])
   assert.throws(()=>jactariToroidalDistance(pt,pt,size),/world size/);
+});
+
+test('archived world distance and client estimate modules match source-original Git blob hashes',()=>{
+ const utilities=fs.readFileSync(path.join(root,
+  'data/Jactari/upstream-addon/mmhkplus-utilities-2013.js'));
+ const estimates=fs.readFileSync(path.join(root,
+  'data/Jactari/upstream-addon/mmhkplus-distances-2013.js'));
+ assert.equal(originalBlobHash(utilities),'90d808618ba819df155197752d14508a2a76cc88');
+ assert.equal(originalBlobHash(estimates),'fd0ec7c7acfdf0999edb29552be4eeab606d7d21');
 });
