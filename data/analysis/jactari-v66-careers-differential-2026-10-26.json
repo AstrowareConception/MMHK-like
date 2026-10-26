@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-26",
+  "status": "historical_Jactari_bounded_transition_and_budget_parity",
+  "calculator": "Jactari v.4.1.3-MTR, 2013-03-04",
+  "sources": [
+    "data/Jactari/src/scripts/heros.min.js",
+    "data/Jactari/src/scripts/donnees.heros.min.js",
+    "data/Jactari/src/scripts/donnees.general.min.js"
+  ],
+  "executed_original": [
+    "validite_carriere",
+    "change_talent",
+    "maj_talent",
+    "maj_comp"
+  ],
+  "reconstructed_from_source": [
+    "change_carriere first activation costs one point"
+  ],
+  "reference_code": [
+    "tools/jactari-port/historical-career-oracle.mjs"
+  ],
+  "ported_code": [
+    "tools/jactari-port/hero-career-progression.mjs",
+    "tools/jactari-port/hero-combat-battle.mjs"
+  ],
+  "tests": [
+    "tools/jactari-port/hero-career-progression.test.mjs",
+    "tools/jactari-port/hero-combat-battle.test.mjs"
+  ],
+  "coverage": {
+    "career_access": "all faction×archetype×career combinations in vendored tables",
+    "purchases": 170,
+    "rank_up_down": 120,
+    "shared_talents": "Scribe and Maitre des arcanes, rank purchases and up/down synchronizations",
+    "real_battle_integration_tests_added": 2,
+    "node_test_cases_total": 306,
+    "passed": 306,
+    "failed": 0,
+    "verified_run": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40302654585",
+    "verified_sha": "83648c1497f6ef4cd15bcf06a1264aec655861db"
+  },
+  "actual_source_costs": [
+    0,
+    1,
+    3,
+    6
+  ],
+  "career_activation_cost": 1,
+  "strict_server_policy": [
+    "shared Scribe/Arcanes ranks must agree across a valid final state",
+    "no duplicate careers, slots or talent indexes",
+    "no user-supplied computed combat bonuses when heroCareers mode is selected",
+    "no accepted plan may spend more learning points than historical maj_comp budget"
+  ],
+  "excluded": [
+    "original change_carriere full DOM-dependent transition",
+    "original desactive_carriere full transition",
+    "historical transient mixed shared ranks and bugs",
+    "full career-tree and legendary prerequisites",
+    "class legality beyond school/type",
+    "authentic server hero ownership and progression",
+    "MMHK season 2-independent verification"
+  ],
+  "registered_requirement": "C03",
+  "registered_status": "implemented_partial",
+  "production_certified": false,
+  "license": "GPL-3.0-or-later"
+}
