@@ -142,7 +142,7 @@ export function runHistoricalEncounter({
     competences_hereditaires:{attaquant:zeroSkills(),defenseur:zeroSkills()},
     competences_speciales:{attaquant:zeroSpecial(),defenseur:zeroSpecial()},
     _competences_hereditaires:{},
-    _competences_speciales:{pieges:{bonus:context.special?.trapBonus??0}},
+    _competences_speciales:{pieges:{bonus:context.special?.trapBonus??0,nom:['traps']}},
     _multiplicateur_voie:0,_classement_voies:{},classement_voies:{attaquant:0,defenseur:0},
     pelotons_defense_reordonnes:false,
     rencontre_jcj:true,_seuil_fuite_jce:0,
