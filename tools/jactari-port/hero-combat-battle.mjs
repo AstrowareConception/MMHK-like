@@ -35,6 +35,9 @@ export function simulateBattleWithDerivedHeroes({
   throw new TypeError('Both server-validated career lists are required');
  if(heroCareers!==null&&(Object.keys(heroTalents).length>0))
   throw new Error('Cannot mix raw talent bonuses with verified career selections');
+ if(heroCareers!==null&&['attacker','defender'].some(side=>
+   heroCareers[side].some(choice=>Number.isSafeInteger(choice?.careerId)&&choice.careerId>=13)))
+  throw new Error('Legendary classes cannot bypass server grants through ordinary heroCareers');
  // The old experimental raw-talent path must NEVER silently authorize
  // legendary ranks. Use heroLegendaries + per-side server grants instead.
  for(const side of ['attacker','defender']){
