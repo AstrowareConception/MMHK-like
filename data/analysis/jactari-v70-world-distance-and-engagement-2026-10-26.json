@@ -1,0 +1,98 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-10-26",
+  "milestone": "V7.0 tranche 3 — source-backed world geometry and persisted target protections",
+  "source": {
+    "original_repository": "Aendawyn/MMHK-Plus",
+    "commit": "e8d862d82741986759b88012421aed8e8175e26e",
+    "world_distance": {
+      "path": "data/Jactari/upstream-addon/mmhkplus-utilities-2013.js",
+      "original_git_blob_sha": "90d808618ba819df155197752d14508a2a76cc88",
+      "algorithm": "Euclidean toroidal world, square side worldSize, coordinates 1..S"
+    },
+    "UI_estimates": {
+      "path": "data/Jactari/upstream-addon/mmhkplus-distances-2013.js",
+      "original_git_blob_sha": "fd0ec7c7acfdf0999edb29552be4eeab606d7d21",
+      "hours_per_distance": "unaccompanied hero = d/12; army = d/4; caravan = d/9.375",
+      "scheduler_accuracy_certified": false
+    },
+    "original_MMHK_S2_travel_certified": false
+  },
+  "delivered": {
+    "geometry": "tools/jactari-port/world-distance.mjs",
+    "candidate_novice_policy": "tools/jactari-port/world-engagement-policy.mjs",
+    "store": "tools/jactari-port/trusted-hero-store.mjs",
+    "trusted_battle_clock": "tools/jactari-port/server-transactional-battle.mjs",
+    "tables": [
+      "military_worlds",
+      "military_cities",
+      "hero_city_postings",
+      "military_mission_routes"
+    ],
+    "enforced": {
+      "world_member_position": "Stored city and world for attacker and defender",
+      "route_binding": "Original city coordinates stored in mission, verified again at arrival and battle",
+      "beginnerProtection": "First-city protected_until_ms stored and checked inside SQLite write transaction",
+      "abort_conditions": [
+        "first city protected",
+        "cross-world hero target",
+        "missing city posting on one camp",
+        "wrong city owner",
+        "moving original destination",
+        "same-city attack",
+        "combat before trusted arrival time",
+        "no mapped mission for direct world battle"
+      ]
+    },
+    "provenance": "Engineering enforcement; not Ubisoft engine's certified 7-day policy"
+  },
+  "test_corpus": {
+    "exact_Jactari_community_geometry_differentials": 500,
+    "new_node_test_suites": [
+      "tools/jactari-port/world-distance.test.mjs",
+      "tools/jactari-port/world-engagement-policy.test.mjs",
+      "tools/jactari-port/server-world-engagement.test.mjs"
+    ],
+    "scenarios": [
+      "wrapped edges",
+      "400+ randomized locations",
+      "equal city coordinates",
+      "invalid/outside positions",
+      "Git blob integrity for both 2013 modules",
+      "novice first city protected before server-supplied expiry",
+      "authorization exact at protection expiry",
+      "changing target city before arrival",
+      "changing target city after arrival",
+      "cross-world target",
+      "reopening file-backed SQLite and idempotent mission receipt",
+      "direct world battle denied"
+    ],
+    "ci_tests": 381,
+    "ci_passed": 381,
+    "ci_failed": 0,
+    "verified_ci": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40400427668",
+    "verified_source_commit": "bbb79240efcdc06406b4fa497dd2981be359b610"
+  },
+  "provisional_claim": {
+    "source": "User recollection of seven-day first-city protection",
+    "formula": "foundedAtMs + 7 * 24 * 60 * 60 * 1000",
+    "implemented_as_candidate_only": true,
+    "actual_city_protection_requires_explicit_server_expiry": true,
+    "validated_ubisoft_S2": false
+  },
+  "open": [
+    "real movement speeds by faction, army and terrain",
+    "halt mechanics and nightly truce",
+    "intercepting moving armies and partial detachments",
+    "first-city protection start conditions and exceptions from independent S2 sources",
+    "combat siege/hero capture and wounds",
+    "real HTTP session/diplomacy and world visibility enforcement"
+  ],
+  "release": {
+    "C17": "implemented_partial",
+    "V70": "in_progress",
+    "C18": "blocked_source",
+    "productionBattleArbiterAllowed": false
+  },
+  "license": "GPL-3.0-or-later"
+}
