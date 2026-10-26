@@ -10,6 +10,7 @@
  */
 import {deriveJactariHeroPageSnapshot} from './hero-page-snapshot.mjs';
 import {deriveJactariTalentBonuses} from './hero-talent-bonuses.mjs';
+import {deriveJactariLegendaryTalents} from './hero-legendary.mjs';
 import {getJactariHeroTables} from './hero-source-tables.mjs';
 
 const numeric=(v,name)=>{if(!Number.isFinite(v))throw new RangeError('Invalid '+name);return v;};
@@ -33,7 +34,9 @@ function heredityBonus({stat,level,heritage,heritageWay,tables}){
  * require their own upstream fixtures before being accepted.
  */
 export function deriveJactariCombatHeroSnapshot({
- profile,side,talentSelections=[],allianceAttackPercent=0,
+ profile,side,talentSelections=[],legendarySelections=[],
+ legendaryPolicy='calculator-reference',legendaryEntitlements=null,
+ allianceAttackPercent=0,
  allianceDefensePercent=0,attackMalusPercent=0
 },tables=getJactariHeroTables()){
  if(!['attacker','defender'].includes(side))throw new RangeError('Unknown combat camp');
@@ -43,7 +46,9 @@ export function deriveJactariCombatHeroSnapshot({
  const {archetype,level,heritageWay}=editor.identity;
  const heritage=p.heritage??{};
  const levels=tables.levels[level],arch=tables.archetypes[archetype];
- const tal=deriveJactariTalentBonuses(talentSelections,tables);
+ const legendary=deriveJactariLegendaryTalents({selections:legendarySelections,
+  policy:legendaryPolicy,entitlements:legendaryEntitlements},tables);
+ const tal=deriveJactariTalentBonuses([...talentSelections,...legendary.selections],tables);
  const hero={...tal.levels,...tal.bonuses};
  const originalEffects=tables.combatArtifactEffects;
  for(const effect of originalEffects){
@@ -94,6 +99,7 @@ export function deriveJactariCombatHeroSnapshot({
   equipment:[...editor.equipment],
   provenance:'Jactari combat.min.js maj_situation bounded combat stats / authentic talent+artifact tables',
   limitations:[
+   'Legendary effects from authentic table; class unlock prerequisites not certified',
    'No validation of career learning path or legendary prerequisites',
    'No hereditary _15/_30 alternate branch',
    'No full situational morale / siege / PvE / alliance skill derivation',
