@@ -78,6 +78,11 @@ test('full mission lifecycle applies combat only after authorized arrival and re
   assert.equal(store.getHero('a').revision,2);
   assert.equal(store.getHero('d').revision,2);
   assert.equal(store.getBattleAuditCounts().commands,1);
+  const timeline=store.getMissionEvents('mission-001');
+  assert.deepEqual(timeline.map(x=>x.event.phase),[
+   'dispatched','arrived','battle_committed','return_scheduled','return_completed'
+  ]);
+  assert.deepEqual(timeline.map(x=>x.sequence),[0,1,2,3,4]);
   const changed=store.getHero('a');
   const {revision,...withoutRev}=changed;
   assert.equal(store.replaceHero({...withoutRev,profile:{
@@ -136,6 +141,8 @@ test('cancel unresolved mission requires distinct server policy and unlocks its 
   assert.equal(cancel.status,'cancelled');
   assert.equal(cancelServerUnresolvedMission({...data,
    authorizeCancellation:()=>true}).replayed,true);
+  assert.deepEqual(store.getMissionEvents('mission-001').map(x=>x.event.phase),
+   ['dispatched','administratively_cancelled']);
   assert.throws(()=>fight(store),/has not reached an authorized arrival/);
   assert.equal(dispatchServerHeroMission(args(store,{
    command:{...missionCommand,missionId:'mission-002'},
@@ -156,6 +163,9 @@ test('battle transaction error rolls back mission state and both hero armies tog
   assert.deepEqual(store.getHero('a'),a);
   assert.deepEqual(store.getHero('d'),d);
   assert.deepEqual(store.getBattleAuditCounts(),{commands:0,events:0});
+  assert.deepEqual(store.getMissionEvents('mission-001').map(x=>x.event.phase),[
+    'dispatched','arrived'
+  ],'Rolled-back battle writes must not create an audit entry');
   assert.equal(fight(store).replayed,false);
   assert.equal(store.getMission('mission-001').status,'returning');
   assert.throws(()=>cancelServerUnresolvedMission(args(store,{
@@ -185,6 +195,9 @@ test('mission lifecycle persists across SQLite connections and process-style reo
   assert.equal(finish(b).status,'completed');
   assert.equal(b.getBattleAuditCounts().commands,1);
   assert.equal(b.getMission('mission-001').status,'completed');
+  assert.deepEqual(b.getMissionEvents('mission-001').map(x=>x.event.phase),[
+   'dispatched','arrived','battle_committed','return_scheduled','return_completed'
+  ]);
  }finally{a?.close();b?.close();fs.rmSync(temp,{recursive:true,force:true});}
 });
 test('the same battle idempotency key cannot be bound to a different mission',()=>{
