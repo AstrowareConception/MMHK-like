@@ -114,3 +114,15 @@ test('unknown native heredity tags do not silently become fictitious _15/_30 ski
   {heredityAbilityEntity:{tagName:'TOUGHER_HERO'},level:'9'}
  ]}),/Invalid archived player heredity/);
 });
+
+test('original 2013 Jactari bridge coerces game seasons 1 and 2 into season 3',()=>{
+ const originalSeasonCode=original.match(/donnees\.saison\s*=\s*MMHKPLUS\.getElement\("Player"\)\.get\("season"\);\s*if\s*\(donnees\.saison\s*<\s*3\)\s*donnees\.saison\s*=\s*3;/);
+ assert.ok(originalSeasonCode,'Source season rule was changed or no longer matches');
+ for(const [requested,expected] of [[1,3],[2,3],[3,3],[4,4]]){
+  const ctx={donnees:{},MMHKPLUS:{getElement:()=>({get:()=>requested})}};
+  vm.createContext(ctx);
+  vm.runInContext(originalSeasonCode[0],ctx,{timeout:1000});
+  assert.equal(ctx.donnees.saison,expected,
+   'Original addon must NOT be presented as season '+requested+' oracle');
+ }
+});
