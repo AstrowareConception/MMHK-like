@@ -12,7 +12,8 @@
 import {DatabaseSync} from 'node:sqlite';
 import {deriveJactariHeroPageSnapshot} from './hero-page-snapshot.mjs';
 import {calculateJactariCareerBudget} from './hero-career-progression.mjs';
-import {deriveJactariLegendaryTalents} from './hero-legendary.mjs';
+import {deriveJactariLegendaryTalents,listJactariLegendaryClasses} from './hero-legendary.mjs';
+import {getJactariHeroTables} from './hero-source-tables.mjs';
 import {validateArmySlots} from './core.mjs';
 
 const isRecord=o=>o!==null&&typeof o==='object'&&!Array.isArray(o);
@@ -32,7 +33,10 @@ function verifyHeroRecord(record){
  const profile=exact(record.profile,['faction','archetype','level','heritage','heritageWay',
   'equipment','stewardBonus','respecializations'],'Hero profile');
  // Reject values that exist only after computation, and reject unknown data.
- deriveJactariHeroPageSnapshot(profile);
+ const tables=getJactariHeroTables();
+ if(!Number.isSafeInteger(profile.faction)||!tables.factions[profile.faction])
+  throw new RangeError('Invalid historical hero faction');
+ deriveJactariHeroPageSnapshot(profile,tables);
  const careers=record.careers??[];
  const grant=record.legendaryGrants??{};
  const chosen=record.legendarySelections??[];
@@ -42,13 +46,21 @@ function verifyHeroRecord(record){
  if(careers.some(row=>Number.isSafeInteger(row?.careerId)&&row.careerId>=13))
   throw new Error('Legendary career IDs require a separate server grant and cannot be stored as ordinary careers');
  calculateJactariCareerBudget({profile,careers});
+ const known=new Set(listJactariLegendaryClasses(tables)
+   .flatMap(x=>x.talents.map(t=>t.name)));
+ for(const [name,rank] of Object.entries(grant))
+  if(!known.has(name)||!Number.isSafeInteger(rank)||rank<0||rank>3)
+   throw new RangeError('Stored legendary grant must be an original 0..3 talent rank');
  deriveJactariLegendaryTalents({selections:chosen,
-  policy:'server-entitlement',entitlements:grant});
+  policy:'server-entitlement',entitlements:grant},tables);
  if(Object.keys(orders).length>2)throw new RangeError('At most two stored spell orders');
+ const scheduled=new Set();
  for(const [turn,order] of Object.entries(orders)){
   if(!/^(?:[1-9]|1[0-4])$/.test(turn)||!isRecord(order)||
     Object.keys(order).length!==1||!Number.isSafeInteger(order.id)||order.id<0)
    throw new RangeError('Stored spell order must contain a valid original ID and round');
+  if(scheduled.has(order.id))throw new RangeError('Duplicate stored spell ID');
+  scheduled.add(order.id);
  }
  validateArmySlots(record.army);
  for(const stack of record.army.filter(Boolean)){
