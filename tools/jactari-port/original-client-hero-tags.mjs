@@ -72,3 +72,44 @@ export function projectOriginalHeroLegendarySkills({heroSkillList},
    'Mapping proves original game field names but not legendary unlock criteria or S2 parity'
   ]};
 }
+
+/**
+ * Native playerHeredityAbilityList tag mapping captured by MMHK-Plus:
+ * `heredityAbilityEntity.tagName` -> Jactari `_competences_hereditaires`.
+ * It does not manufacture the _15/_30 pseudo-branches, which are absent
+ * in the archived server-to-calculator mapping.
+ */
+export function originalClientHereditaryTagMap(){
+ const start=code.indexOf('_competences_hereditaires :');
+ const end=code.indexOf('_fortifications :',start);
+ if(start<0||end<start)throw new Error('Archived original heredity tag block absent');
+ const fragment=code.slice(start,end),out={};
+ for(const [,tag,name] of fragment.matchAll(/([A-Z_]+)\s*:\s*'([a-z_]+)'/g)){
+  if(Object.hasOwn(out,tag))throw new Error('Duplicate archived heritage tag '+tag);
+  out[tag]=name;
+ }
+ if(Object.keys(out).length!==9 ||
+    out.CHARACTERISTICS_ILLUMINATION!=='revelation_de_caracteristiques')
+  throw new Error('Original 2013 native heritage mapping changed');
+ return out;
+}
+export function projectOriginalPlayerHeredity({playerHeredityAbilityList}){
+ if(!Array.isArray(playerHeredityAbilityList))
+  throw new TypeError('Original playerHeredityAbilityList is required');
+ const lookup=originalClientHereditaryTagMap(),result={},unmapped=[];
+ for(const item of playerHeredityAbilityList){
+  const tag=item?.heredityAbilityEntity?.tagName;
+  if(typeof tag!=='string'||!Number.isSafeInteger(item?.level)||item.level<0)
+   throw new RangeError('Invalid archived player heredity record');
+  const name=lookup[tag];
+  if(!name){unmapped.push(tag);continue;}
+  if(Object.hasOwn(result,name))throw new Error('Duplicate original hereditary ability '+name);
+  result[name]=item.level;
+ }
+ return {heritage:result,unmappedTags:unmapped,
+  evidenceSource:upstreamAddonPath,authoritative:false,
+  provenance:'2013 MMHK-Plus direct playerHeredityAbilityList mapping',
+  limitations:['Unknown native tags cannot be granted to hero on inference',
+   'These are observations only; game-server authenticity is not established',
+   'No _15/_30 hereditary variant in original addon mapper']};
+}
