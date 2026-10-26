@@ -39,6 +39,8 @@ function verifyHeroRecord(record){
  const orders=record.spellOrders??{};
  if(!Array.isArray(careers)||!Array.isArray(chosen)||!isRecord(grant)||
     !isRecord(orders))throw new TypeError('Malformed stored career/legendary/spell choices');
+ if(careers.some(row=>Number.isSafeInteger(row?.careerId)&&row.careerId>=13))
+  throw new Error('Legendary career IDs require a separate server grant and cannot be stored as ordinary careers');
  calculateJactariCareerBudget({profile,careers});
  deriveJactariLegendaryTalents({selections:chosen,
   policy:'server-entitlement',entitlements:grant});
