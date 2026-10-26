@@ -324,5 +324,32 @@
     "certified": false,
     "productionBattleArbiterAllowed": false,
     "required": "Zéro exigence non certifiée, corpus S2 authentique indépendant, vérification réglementaire et licence, historique des combats reproductible, atomicité/anti-double-exécution"
-  }
+  },
+  "historicalMilestones": [
+    {
+      "id": "V6.0",
+      "state": "delivered_bounded",
+      "evidence": "docs/game-design/27-JACTARI-V60-UNIFIED-BATTLE.md"
+    },
+    {
+      "id": "V6.1",
+      "state": "delivered_bounded",
+      "evidence": "docs/game-design/28-JACTARI-V61-HISTORICAL-SEQUENCE-DIFFERENTIAL.md"
+    },
+    {
+      "id": "V6.2",
+      "state": "delivered_bounded",
+      "evidence": "docs/game-design/29-JACTARI-V62-FULL-ENCOUNTER-ORACLE.md"
+    },
+    {
+      "id": "V6.3",
+      "state": "delivered_bounded",
+      "evidence": "docs/game-design/30-JACTARI-V63-HEROS-ADMISSION-MODIFICATEURS.md"
+    },
+    {
+      "id": "V6.4",
+      "state": "delivered_bounded",
+      "evidence": "docs/game-design/31-JACTARI-V64-ARTEFACTS-ET-MAGIE-HEROS.md"
+    }
+  ]
 }
