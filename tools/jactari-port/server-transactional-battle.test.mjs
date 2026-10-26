@@ -200,13 +200,17 @@ test('engagement results reject malformed historical engine outcomes before comm
    attackerHeroId:'hero-a',defenderHeroId:'hero-d',
    rulesDigest:computeJactariRulesDigest(rules),
    authorizeTarget:()=>true};
-  assert.throws(()=>store.commitAuthorizedBattle({...trustedArgs,
-   calculate:()=>({status:'captured',events:[],persistentArmies:{}})}
-  }),/Unsupported battle result/);
-  assert.throws(()=>store.commitAuthorizedBattle({...trustedArgs,
-   calculate:()=>({status:'attacker',events:[],permanent:{},
-    persistentArmies:{attacker:army(999),defender:army(120)}})}
-  }),/malformed persistent army/);
+  assert.throws(()=>store.commitAuthorizedBattle({
+    ...trustedArgs,calculate:()=>({
+     status:'captured',events:[],persistentArmies:{}
+    })
+   }),/Unsupported battle result/);
+  assert.throws(()=>store.commitAuthorizedBattle({
+    ...trustedArgs,calculate:()=>({
+     status:'attacker',events:[],permanent:{},
+     persistentArmies:{attacker:army(999),defender:army(120)}
+    })
+   }),/malformed persistent army/);
   assert.deepEqual(store.getBattleAuditCounts(),{commands:0,events:0});
   assert.equal(store.getHero('hero-a').revision,1);
  }finally{store.close();}
