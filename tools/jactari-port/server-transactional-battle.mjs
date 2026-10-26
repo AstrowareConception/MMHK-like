@@ -62,7 +62,7 @@ export function commitServerAuthorizedJactariBattle({
  beforeCommit
 }){
  if(!record(command)||Object.keys(command).some(k=>![
-   'commandId','attackerHeroId','defenderHeroId'].includes(k)))
+   'commandId','attackerHeroId','defenderHeroId','missionId'].includes(k)))
   throw new TypeError('Combat command may only contain idempotency key and two hero IDs');
  if(typeof authenticate!=='function'||typeof authorizeTarget!=='function'||
    typeof heroStore?.commitAuthorizedBattle!=='function'||
