@@ -455,3 +455,16 @@ Le [différentiel des cumuls légendaires](historical-multilegend-differential.t
 **[CI validée : 326 tests Node passés sur 326](https://github.com/AstrowareConception/MMHK-like/actions/runs/40329388212).** [Rapport V6.6 tranche 5](../../docs/game-design/37-JACTARI-V66-HEREDITE-AVANCEE-ET-LEGENDAIRES-CUMULES.md) · [preuves JSON](../../data/analysis/jactari-v66-advanced-heritage-multilegend-2026-10-26.json) · [roadmap](../../docs/game-design/32-ROADMAP-CONFORMITE-MOTEUR-COMBAT.md).
 
 **Statut :** V6.6 toujours en cours ; C03 partiel ; pas d'arbitre PvP serveur autorisé. Les tables manquantes ne doivent pas être reconstituées au jugé.
+
+
+## V6.6 — Tranche 6 : source authentique des identifiants de héros du client MMHK
+
+L'intégration originale **MMHK-Plus → Jactari**, extraite d'un projet Git daté de 2013, est conservée dans [`data/Jactari/upstream-addon/mmhkplus-jactari-2013.js`](../../data/Jactari/upstream-addon/mmhkplus-jactari-2013.js). Son intégrité est vérifiée par son empreinte de blob Git d'origine `da8d683044d5803c557888218169b6c722ea0abf`.
+
+Le nouvel [`original-client-hero-tags.mjs`](original-client-hero-tags.mjs) identifie les **24 compétences légendaires Ubisoft** par leur `heroClassSkillEntityTagName` dans `heroSkillList`, et **9 compétences héréditaires natives** dans `playerHeredityAbilityList`. Le [test original](original-client-hero-tags.test.mjs) exécute la vraie fonction `prepare_talent()` de 2013 pour les **96 correspondances rangées**. Les projections sont purement descriptives : les réponses indiquent `authoritative:false`. Les droits de possession d'un héros, les niveaux et les compétences légendaires doivent venir de l'état serveur validé, jamais d'une liste reçue du joueur.
+
+Le pont original contient une restriction de provenance essentielle pour notre projet : il exécute littéralement `if(donnees.saison < 3) donnees.saison = 3` avant de calculer le lien Jactari. Cela empêche de traiter **les simulations reçues via ce chemin comme des preuves indépendantes de conformité MMHK saison 2**. Le code original manque toujours les valeurs des hérédités `revelation_de_caracteristiques_15`/`_30` dans les six versions Git du catalogue examinées.
+
+Le scanner [`original-ubisoft-source-audit.mjs`](original-ubisoft-source-audit.mjs) explore **en lecture seule** deux fichiers `prod.js` Ubisoft archivés d'environ 1,7 et 2 Mo, sans les exécuter. Les occurrences observées permettent de guider des recherches sur le client, mais ne prouvent pas les règles serveur ni les prérequis légendaires.
+
+[Rapport complet V6.6 — tranche 6](../../docs/game-design/38-JACTARI-V66-PROVENANCE-CLIENT-ET-SAISONS.md) · [registre et sources](../../data/analysis/jactari-combat-conformance-roadmap.json) · [preuve structurée](../../data/analysis/jactari-v66-original-client-source-provenance-2026-10-26.json).
