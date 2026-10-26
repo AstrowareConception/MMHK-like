@@ -409,3 +409,16 @@ Le pont de bataille **refuse les statistiques militaires calculées et l'inventa
 **Très important :** `maj_adm` (éditeur de héros) et `maj_situation` (simulateur de combat) n'utilisent pas tous les mêmes arrondis, précédences héréditaires et bonus circonstanciels. Nos deux résultats restent donc volontairement distincts.
 
 La V6.6 n'est pas close : la **légalité des carrières, le budget d'apprentissage, les liens Scribe/Arcanes, les classes légendaires, les hérédités alternatives, les sets et le contrôle côté serveur** ne sont pas démontrés exhaustivement. L'équivalence à **MMHK saison 2** ne peut pas être revendiquée. [Rapport V6.6](../../docs/game-design/33-JACTARI-V66-FICHES-HEROS-ET-COMBAT.md) et [preuves structurées](../../data/analysis/jactari-v66-derived-hero-differential-2026-10-26.json).
+
+
+## V6.6 — Tranche 2 : carrières, talents et coût de progression
+
+Le [calculateur de carrière](hero-career-progression.mjs) vérifie directement le droit d'accès selon faction et archétype, les trois emplacements sans doublon, le **point d'activation de chaque carrière**, les coûts de rangs cumulatifs `[0,1,3,6]` et la mutualisation des talents **Scribe / Maitre des arcanes**. La fonction `changeJactariCareerRank()` valide les promotions et remboursements de points sur un plan déjà cohérent.
+
+La [référence indépendante](historical-career-oracle.mjs) réexécute `validite_carriere()` et `change_talent()` du `heros.min.js` historique. Les [tests différentiels](hero-career-progression.test.mjs) couvrent toutes les combinaisons de carrières des tables archivées, 170 acquisitions et 120 transitions de rang, ainsi que des scénarios ciblés de talents partagés.
+
+[`hero-combat-battle.mjs`](hero-combat-battle.mjs) accepte maintenant facultativement `heroCareers:{attacker:[],defender:[]}` pour préparer les bonus du héros en vérifiant **en amont** les budgets historiques. Les carrières **non combattantes** continuent de coûter leurs points mais ne créent aucun bonus fictif. Le nouvel argument `heroCareers` ne peut pas coexister avec `heroTalents` (ancien format expérimental brut).
+
+**CI : [306/306 tests passés](https://github.com/AstrowareConception/MMHK-like/actions/runs/40302654585).** Le périmètre reste une validation de l'état final des carrières et des transitions de rang couvertes ; **l'abandon, le remplacement de carrière, tous les états intermédiaires Scribe/Arcanes, les classes légendaires et la progression serveur authentifiée ne sont pas encore conformes à 100 %**.
+
+[Rapport V6.6 — tranche 2](../../docs/game-design/34-JACTARI-V66-PROGRESSION-CARRIERES-TALENTS.md) · [Roadmap C03](../../docs/game-design/32-ROADMAP-CONFORMITE-MOTEUR-COMBAT.md).
