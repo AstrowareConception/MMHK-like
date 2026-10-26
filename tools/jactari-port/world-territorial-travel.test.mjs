@@ -26,11 +26,11 @@ test('source-backed toroidal geometry, externally supplied speed and candidate c
 test('two-hour halt starts only when a further eligible move is needed',()=>{
  const rule={...haltRule,thresholdPoints:1,pointsPerDistanceUnit:1};
  const j=simulateCandidateTerritorialTravel({
-  ...config,departAtMs:0,speedUnitsPerHour:1,haltRule,
+  ...config,departAtMs:0,speedUnitsPerHour:1,haltRule:rule,
   segments:[leg(1,2)]});
  assert.equal(j.haltCount,0);
  const two=simulateCandidateTerritorialTravel({
-  ...config,departAtMs:0,speedUnitsPerHour:1,haltRule,
+  ...config,departAtMs:0,speedUnitsPerHour:1,haltRule:rule,
   segments:[leg(1,3)]});
  assert.equal(two.haltCount,1,JSON.stringify({distance:two.totalDistance,events:two.events,meter:two.movementPointsCarried}));
  assert.equal(two.estimatedArrivalAtMs,4*H);
