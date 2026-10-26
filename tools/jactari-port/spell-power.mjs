@@ -4,6 +4,7 @@
  * Spell efficiency artefact bonus, mastery, resistance and school effects are supplied
  * as resolved parameters. No DOM or game globals.
  */
+import {calculateArtifactSpellBonus} from './artifact-spell-bonus.mjs';
 const finite=(n,label)=>{if(!Number.isFinite(n))throw new RangeError(label+' must be finite');return n;};
 const n=(v)=>v??0;
 const ownWeaponUnits=new Set([0,2,4]);
@@ -16,7 +17,7 @@ const legendaryBySchool={
 };
 export function calculateEffectiveSpellPower({
   spell, side, attackerWeapon, defenderWeapon, hero,
-  schoolBonusPercent=0, artifactEfficiencyPercent=0,
+  schoolBonusPercent=0, artifactEfficiencyPercent=0,artifactContext=null,
   mastery={level:0,bonusPercent:0,maximumCircle:0,wayBonus:0},
   resistance={level:0,bonusPercent:0,wayBonus:0},
   antiMagic={level:0,bonusPercentPerLevel:0}
@@ -40,10 +41,17 @@ export function calculateEffectiveSpellPower({
   const resistancePercent=[0,3].includes(spell.type)
     ?resistance.bonusPercent*(1+resistance.wayBonus):0;
   const antiMagicPercent=antiMagic.level*antiMagic.bonusPercentPerLevel;
-  const multiplier=1+(experts+schoolBonusPercent+artifactEfficiencyPercent+masteryPercent-resistancePercent-antiMagicPercent)/100;
+  if(artifactContext!==null&&artifactEfficiencyPercent!==0)
+    throw new RangeError('Real equipment and an injected artifact percent cannot both supply an effect');
+  const resolvedArtifactPercent=artifactContext===null?artifactEfficiencyPercent:
+    calculateArtifactSpellBonus({
+      artifactIds:artifactContext.artifactIds,catalog:artifactContext.catalog,
+      spell,castingWeapon,opposingWeapon
+    }).bonus;
+  const multiplier=1+(experts+schoolBonusPercent+resolvedArtifactPercent+masteryPercent-resistancePercent-antiMagicPercent)/100;
   const result=base*magic*multiplier;
   for(const [label,value] of Object.entries({base,magic,multiplier,result}))finite(value,label);
   return {power:result,base,magic,weaponFactor:factor,multiplier,
-    bonuses:{expertPercent:experts,schoolBonusPercent,artifactEfficiencyPercent,masteryPercent,resistancePercent,antiMagicPercent},
+    bonuses:{expertPercent:experts,schoolBonusPercent,artifactEfficiencyPercent:resolvedArtifactPercent,masteryPercent,resistancePercent,antiMagicPercent},
     affectedWeapon,side,scope:'Jactari mathematical spell-power core; external inputs already resolved'};
 }
