@@ -14,7 +14,7 @@ const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const original=fs.readFileSync(path.join(root,upstreamAddonPath),'utf8');
 test('preserved 2013 MMHK-Plus bridge matches its original Git blob content exactly',()=>{
  const bytes=fs.readFileSync(path.join(root,upstreamAddonPath));
- const objectHeader=Buffer.from('blob '+bytes.length+'\\0');
+ const objectHeader=Buffer.from('blob '+bytes.length+String.fromCharCode(0));
  const sha=createHash('sha1').update(objectHeader).update(bytes).digest('hex');
  assert.equal(sha,'da8d683044d5803c557888218169b6c722ea0abf');
 });
