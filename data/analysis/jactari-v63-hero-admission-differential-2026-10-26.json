@@ -1,0 +1,60 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-26",
+  "status": "verified_limited_original_Jactari_4.1.3-MTR_function_parity_NOT_complete_MMHK_S2",
+  "original_source": "data/Jactari/src/scripts/combat.min.js",
+  "version_source": "data/Jactari/src/scripts/donnees.general.min.js",
+  "functional_sources": [
+    "bonus_attaque_defense",
+    "simulation_rencontre admission branch",
+    "puissance_effective_sort",
+    "bonus_magie_artefacts empty artifact slots"
+  ],
+  "tests": {
+    "base_v62_node_tests": 236,
+    "node_test_cases": 261,
+    "passed": 261,
+    "failed": 0,
+    "hero_bonus_differential_configs": 600,
+    "pvp_admissions_differential_configs": 2000,
+    "pve_admissions_differential_configs": 2000,
+    "hero_full_encounters_seeded": 80,
+    "hero_full_encounters_named": 3,
+    "spell_power_differential_configs": 400,
+    "source_profile_asserted": true,
+    "ci": {
+      "url": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40294182227",
+      "commit_sha": "4d61f22ce27b3bcb8748a6ff852ecebe95a2271f",
+      "result": "success",
+      "command": "node --test tools/jactari-port/*.test.mjs"
+    }
+  },
+  "source_coefficients": {
+    "calculator_version": "v.4.1.3-MTR",
+    "released": "2013-03-04",
+    "factor_weapon": 0.5,
+    "factor_losses": 0.3,
+    "pve_retreat": "1/7",
+    "declared_pvp_threshold": 0.23
+  },
+  "hero_legendary_source_quirk": {
+    "property": "bonus_legendary_legwarrior_b",
+    "original": "checks attackerHero property twice and adds defenderHero property twice; missing defender value can yield NaN",
+    "default_behavior": "jactari-original with nonfinite fail-closed",
+    "alternative": "normalized opt-in explicitly not claimed historical"
+  },
+  "strict_missing_coverage": [
+    "true MMHK S2 unique rule values",
+    "actual hero progression and artifact catalog effects",
+    "original bonus_magie_artefacts equipped artifact combinations",
+    "full siege and preliminary salvo differential",
+    "hereditary skill program and hero equipment",
+    "hero XP after battle",
+    "PvE NPC status permutations and absent hero",
+    "third summon overwrite",
+    "transactional hero captures wounds returns",
+    "full historical client simulation against authentic reports"
+  ],
+  "server_authoritative_ready": false,
+  "license": "GPL-3.0-or-later"
+}
