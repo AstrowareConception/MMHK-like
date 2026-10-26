@@ -433,3 +433,14 @@ Le [banc historique](historical-career-lifecycle-oracle.mjs) exécute **`change_
 **CI vérifiée : [313 tests réussis sur 313](https://github.com/AstrowareConception/MMHK-like/actions/runs/40306285724).** [Rapport V6.6 tranche 3](../../docs/game-design/35-JACTARI-V66-CYCLE-VIE-CARRIERES.md) · [preuves JSON](../../data/analysis/jactari-v66-career-lifecycle-differential-2026-10-26.json).
 
 **Limite :** les contrôles portent sur des **états de carrière initialement cohérents**, pas sur toute l'interface d'édition ni sur chaque cas de divergence intermédiaire. Il reste à vérifier les classes légendaires, les prérequis et les contraintes d'état serveur. V6.6 = **en cours**, C03 = **implémentation partielle** ; aucun arbitrage multijoueur certifié.
+
+
+## V6.6 — Tranche 4 : classes et talents légendaires
+
+[`hero-legendary.mjs`](hero-legendary.mjs) lit **8 classes × 3 talents** dans `_talents[13..20]` (niveaux 0 à 3). Aucun bonus ni condition d'accès n'est inventé : les rangs sont les valeurs des tables Jactari. [`hero-combat-snapshot.mjs`](hero-combat-snapshot.mjs) calcule les attributs légendaires du héros et [`hero-combat-battle.mjs`](hero-combat-battle.mjs) les applique aux combats/magies.
+
+La **sélection libre de l'outil Jactari** (`calculator-reference`) est distincte de la **vérification des droits serveur** (`server-entitlement`). Les appels `simulateBattleWithDerivedHeroes()` portant des `heroLegendaries` réclament un `heroLegendaryGrants` par camp, considéré comme issu de l'état serveur. Le vieux paramètre `heroTalents` rejette les talents légendaires : pas de contournement par liste brute.
+
+Les tests exécutent **144 fiches légendaires** contre le fragment original de `maj_situation()`, **48 rencontres complètes** contre le moteur original et des comparaisons de puissance magique pour quatre écoles. La suite a été vérifiée à **[319/319 tests passants](https://github.com/AstrowareConception/MMHK-like/actions/runs/40316048810)**.
+
+**Pas encore certifié :** l'outil de calcul ne prouve pas la légalité des accès aux classes légendaires pour un héros dans MMHK S2. Niveau minimum, prérequis, coût et cumul doivent être retrouvés auprès de sources indépendantes et appliqués par un serveur persistant. [Rapport et délimitations](../../docs/game-design/36-JACTARI-V66-CLASSES-LEGENDAIRES.md) · [corpus de preuves](../../data/analysis/jactari-v66-legendary-combat-differential-2026-10-26.json).
