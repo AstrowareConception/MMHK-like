@@ -52,7 +52,7 @@ export function runOriginalSpellPower({spell,side,attackerWeapon,defenderWeapon,
  }
  const array=Array.from({length:4},(_,i)=>i===spell.school?schoolBonusPercent:0);
  const ctx={
-  _sorts:[{ecole:spell.school,unite:spell.unit,cercle:spell.circle,
+  _sorts:[{ecole:spell.school,cible:spell.target,unite:spell.unit,cercle:spell.circle,
     type:spell.type,puissance:spell.power,facteur:spell.factors,nom:['sort']}],
   liste_heros:{0:hydrated},
   _slots:{},_artefacts:{},_effets:{},_types_effets_magie:{},
