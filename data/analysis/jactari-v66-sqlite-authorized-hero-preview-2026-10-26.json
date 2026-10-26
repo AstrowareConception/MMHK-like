@@ -1,0 +1,77 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-26",
+  "milestone": "V6.6 tranche 7 / V7.0 groundwork",
+  "goal": "Persist historical hero choices and demonstrate a server-only read-only battle gate",
+  "runtime": {
+    "node": "22",
+    "database": "node:sqlite / SQLite DatabaseSync",
+    "status": "experimental built-in API"
+  },
+  "storage": {
+    "schema": [
+      "players(player_id,enabled)",
+      "heroes(hero_id,owner_player_id,revision,payload JSON)"
+    ],
+    "fields": [
+      "profile",
+      "careers",
+      "legendarySelections",
+      "legendaryGrants",
+      "army",
+      "spellOrders"
+    ],
+    "constraints": [
+      "foreign keys",
+      "unique hero IDs",
+      "optimistic revision on replace",
+      "read transaction for hero pair",
+      "SQLite WAL for disk files",
+      "no computed hero attack/defense/magic persisted"
+    ]
+  },
+  "securityTests": [
+    "reject browser-injected attacker / defender stats, army sizes and spell powers",
+    "require separately injected verified principal and explicit target policy",
+    "reject attacker hero owned by another player",
+    "reject inactive account and missing hero",
+    "reject invalid historical faction, forged legendary 0..3 grants and unknown talent names",
+    "reject legendary career IDs placed among ordinary careers",
+    "reject unknown spell order fields and duplicate spell IDs",
+    "reject stale optimistic revision and illegal owner transfer",
+    "ensure no DB changes occur during preview or denied requests",
+    "reopen actual temporary SQLite database and compare versioned hero profile",
+    "read signed-off spell catalog from trusted rules only"
+  ],
+  "shippedModules": [
+    "tools/jactari-port/trusted-hero-store.mjs",
+    "tools/jactari-port/server-authorized-battle.mjs"
+  ],
+  "shippedTests": [
+    "tools/jactari-port/server-authorized-battle.test.mjs"
+  ],
+  "verification": {
+    "tests": 343,
+    "passed": 343,
+    "failed": 0,
+    "ci": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40336924030",
+    "verifiedSourceCommit": "f443c1cae7e78200fc6a915109f71d1323663b30"
+  },
+  "notImplemented": [
+    "HTTP server with actual identity provider/session validation",
+    "Territorial diplomacy, beginner protection, attacker and defender legal engagement policy",
+    "Atomic hero wounds/captures and permanent army losses applied to DB",
+    "PVP command idempotency across retries and concurrent attack reservation",
+    "Distributed locking/migrations/backup/performance tests",
+    "Complete historical Jactari and Ubisoft MMHK season 2 parity",
+    "Public response filtering for sensitive enemy hero combat data"
+  ],
+  "gate": {
+    "C03": "implemented_partial",
+    "C17": "implemented_partial",
+    "V66": "in_progress",
+    "V70": "open",
+    "productionBattleArbiterAllowed": false
+  },
+  "note": "Authentication and target policies are server-supplied interfaces. Tests inject test-only implementations; no real account login or multiplayer server exists."
+}
