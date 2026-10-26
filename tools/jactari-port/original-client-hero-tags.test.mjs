@@ -1,4 +1,5 @@
 import test from 'node:test';
+import {createHash} from 'node:crypto';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import vm from 'node:vm';
@@ -11,6 +12,13 @@ import {originalClientLegendaryTagMap,projectOriginalHeroLegendarySkills,
 
 const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'../..');
 const original=fs.readFileSync(path.join(root,upstreamAddonPath),'utf8');
+test('preserved 2013 MMHK-Plus bridge matches its original Git blob content exactly',()=>{
+ const bytes=fs.readFileSync(path.join(root,upstreamAddonPath));
+ const objectHeader=Buffer.from('blob '+bytes.length+'\\0');
+ const sha=createHash('sha1').update(objectHeader).update(bytes).digest('hex');
+ assert.equal(sha,'da8d683044d5803c557888218169b6c722ea0abf');
+});
+
 const tables=getJactariHeroTables();
 const start=original.indexOf('prepare_talent : function(');
 const end=original.indexOf('prepare_heros : function(',start);
