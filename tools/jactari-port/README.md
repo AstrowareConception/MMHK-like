@@ -444,3 +444,14 @@ La **sélection libre de l'outil Jactari** (`calculator-reference`) est distinct
 Les tests exécutent **144 fiches légendaires** contre le fragment original de `maj_situation()`, **48 rencontres complètes** contre le moteur original et des comparaisons de puissance magique pour quatre écoles. La suite a été vérifiée à **[319/319 tests passants](https://github.com/AstrowareConception/MMHK-like/actions/runs/40316048810)**.
 
 **Pas encore certifié :** l'outil de calcul ne prouve pas la légalité des accès aux classes légendaires pour un héros dans MMHK S2. Niveau minimum, prérequis, coût et cumul doivent être retrouvés auprès de sources indépendantes et appliqués par un serveur persistant. [Rapport et délimitations](../../docs/game-design/36-JACTARI-V66-CLASSES-LEGENDAIRES.md) · [corpus de preuves](../../data/analysis/jactari-v66-legendary-combat-differential-2026-10-26.json).
+
+
+## V6.6 — Tranche 5 : audit des hérédités avancées et légendaires cumulés
+
+Le [module d'audit des hérédités](historical-heritage-audit.mjs) confronte le vrai `combat.min.js` et les données `_competences_hereditaires` archivées. **Les références de code aux variantes `revelation_de_caracteristiques_15` et `_30` existent, mais leurs coefficients n'existent pas dans le catalogue Jactari versionné** : le [snapshot de combat](hero-combat-snapshot.mjs) rejette désormais explicitement leur activation au lieu de fournir une valeur imaginée. Les hérédités documentées sont comparées à la préparation Jactari originale sur **120 cas de seuil** et **90 cas de priorité entre branches**.
+
+Le [différentiel des cumuls légendaires](historical-multilegend-differential.test.mjs) vérifie **120 héros à talents légendaires multiples**, **48 batailles complètes avec plusieurs légendaires des deux côtés** et le calcul des bonus cumulés de différentes écoles magiques contre le code original. La légalité des cumuls pour un véritable héros MMHK saison 2 n'est **pas démontrée** ; ces données concernent la puissance arithmétique du calculateur Jactari.
+
+**[CI validée : 326 tests Node passés sur 326](https://github.com/AstrowareConception/MMHK-like/actions/runs/40329388212).** [Rapport V6.6 tranche 5](../../docs/game-design/37-JACTARI-V66-HEREDITE-AVANCEE-ET-LEGENDAIRES-CUMULES.md) · [preuves JSON](../../data/analysis/jactari-v66-advanced-heritage-multilegend-2026-10-26.json) · [roadmap](../../docs/game-design/32-ROADMAP-CONFORMITE-MOTEUR-COMBAT.md).
+
+**Statut :** V6.6 toujours en cours ; C03 partiel ; pas d'arbitre PvP serveur autorisé. Les tables manquantes ne doivent pas être reconstituées au jugé.
