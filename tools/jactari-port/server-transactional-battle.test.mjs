@@ -57,7 +57,7 @@ test('atomic historical duel permanently applies both losses ONCE and records or
   assert.deepEqual(store.getBattleAuditCounts(),{commands:1,events:events.length});
   const repeat=commitServerAuthorizedJactariBattle(request(store));
   assert.equal(repeat.replayed,true);
-  assert.deepEqual({...repeat,replayed:false},first);
+  assert.deepEqual({...repeat,replayed:false,persistence:{...repeat.persistence,replayed:false}},first);
   assert.deepEqual(store.getHero('hero-a'),finalA);
   assert.deepEqual(store.getHero('hero-d'),finalD);
   assert.deepEqual(store.getBattleAuditCounts(),{commands:1,events:events.length});
@@ -172,7 +172,7 @@ test('two SQLite clients share durable idempotency and refuse a different battle
   b=openTrustedHeroStore({filename:file});
   const first=commitServerAuthorizedJactariBattle(request(a));
   const replay=commitServerAuthorizedJactariBattle(request(b));
-  assert.deepEqual({...replay,replayed:false},first);
+  assert.deepEqual({...replay,replayed:false,persistence:{...replay.persistence,replayed:false}},first);
   assert.equal(a.getHero('hero-a').revision,2);
   assert.equal(b.getHero('hero-d').revision,2);
   assert.throws(()=>commitServerAuthorizedJactariBattle(request(b,{
