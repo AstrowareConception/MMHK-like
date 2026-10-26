@@ -24,7 +24,7 @@ La règle de décision est stricte : une exigence n'est `certified` que si **tou
 | Admission PvE/PvP | V6.3 ; 4 000 calculs contre les branches originales |
 | Puissance magique, artefacts | V6.3–V6.4 ; 400 calculs de magie, 280 affinités d'artefacts, 120 sorts avec équipement |
 | Résolution dynamique au tour | **V6.5 en cours** : ordres de sorts par ID, puissance calculée avec héros/arme/inventaire courants, tests d'intégration |
-| Dernière CI de base vérifiée | **356/356 tests Node passés**, [run GitHub Actions #40339759720](https://github.com/AstrowareConception/MMHK-like/actions/runs/40339759720), tests de carrières et contrôles du registre compris |
+| Dernière CI de base vérifiée | **367/367 tests Node passés**, [run GitHub Actions #40397746399](https://github.com/AstrowareConception/MMHK-like/actions/runs/40397746399), tests de carrières et contrôles du registre compris |
 | Certification historique Jactari complète | **Non acquise** |
 | Équivalence MMHK saison 2 | **Non acquise ; sources spécifiques incomplètes** |
 | Arbitre PvP autorisé en production | **Non** |
@@ -59,7 +59,7 @@ La règle de décision est stricte : une exigence n'est `certified` que si **tou
 | C14 | **PNJ, héros absents et cas exceptionnels** | **Non livré** | Fixtures adversariales, états limites |
 | C15 | Pertes définitives, relève et persistance | Différentiel borné | Politiques PNJ, pénalités, coefficients S2 |
 | C16 | Butin, XP, honneur, économie | Partiel | Bilan complet et évolution du héros |
-| C17 | **Serveur transactionnel de combat** | **Partiel — combats admis avec pertes atomiques** | Authentification réelle, politique territoriale, mission/réservation, fuite, captures, blessures et conformité S2 |
+| C17 | **Serveur transactionnel de combat** | **Partiel — combats admis et missions persistantes** | Authentification réelle, géographie, déplacements S2, sous-armées, interceptions, fuite, captures et blessures |
 | C18 | **Preuve indépendante MMHK saison 2** | **Bloqué sources** | Reconstituer vrais paramètres/règles saisonnières |
 | C19 | **Sécurité, charge et conformité GPL** | **Non livré** | Validation architecture et redistribution |
 
@@ -76,7 +76,7 @@ Les **états et liens de preuve par exigence** sont conservés dans le [registre
 | **V6.9** | Scénarios exceptionnels et PvE | Héros absents/PNJ, sorts interrompant un tour, troisième invocation, zéro unité, égalités ; aucune sortie fictive | À faire |
 | **V6.10** | Bilan de bataille et progression | Effectifs persistants, perte économique, récupérations, butin, classement, honneur et XP conformes aux oracles | À faire |
 | **V6.11** | Réconciliation Jactari / MMHK saison 2 | Sources authentiques S2, tableau des différences, politiques explicites, reproductibilité des rapports | Bloqué par sources |
-| **V7.0** | Arbitre de combat intégré au serveur | Première tranche : pertes bilatérales atomiques, reçus idempotents et audit sur batailles admises ; restent missions, captures/blessures, identité réseau et règles S2 | **En cours — tranche 1 validée** |
+| **V7.0** | Arbitre de combat intégré au serveur | Deux tranches : combats admis atomiques puis missions SQLite avec départ, arrivée, réservation et retour ; restent monde, captures/blessures, sessions réelles et S2 | **En cours — tranches 1–2 validées** |
 
 ### V6.5 : raccordement réalisé, preuves encore à obtenir
 
@@ -85,6 +85,14 @@ Le module [`hero-spell-resolution.mjs`](../../tools/jactari-port/hero-spell-reso
 Tests [`hero-spell-resolution.test.mjs`](../../tools/jactari-port/hero-spell-resolution.test.mjs) : magie attaquant et défenseur, magie de zone, invocation avant une nouvelle salve, puissance d'un héros équipé vérifiée par le code original, refus de faux IDs/puissances injectées, immuabilité des entrées et absence de caractéristique magique obligatoire. La **suite Node complète est verte**.
 
 **Dette critique :** le serveur de jeu final ne construit pas encore ces fiches de héros et ces catalogues à partir d'objets persistés. Le `spellContext` doit donc provenir d'un composant de confiance ; ce n'est **pas** un nouveau champ que le joueur peut fixer librement depuis le navigateur.
+
+### V7.0 : tranche 2 — missions persistantes et retour des survivants
+
+La [tranche 2 V7.0](41-JACTARI-V70-MISSIONS-MILITAIRES-PERSISTANTES.md) livre des missions SQLite `traveling → arrived → returning → completed` avec annulation administrative `cancelled`. Le héros attaquant est **réservé exclusivement** pendant tout le trajet et le retour. Les opérations d'arrivée et de retour nécessitent des **horaires fournis par le serveur**, les droits de cible sont réévalués à l'arrivée et le combat ne peut être appliqué que sur une mission `arrived`.
+
+Le **reçu du combat, les pertes définitives des deux armées, la transition vers `returning` et l'événement de mission `battle_committed`** appartiennent à la même transaction SQLite. Les étapes successives sont consignées dans `military_mission_events`, avec séquence stable et sans doubles événements après retry. Les tests vérifient la reprise après redémarrage et via deux connexions, les arrivées trop tôt, les permissions révoquées, les doubles départs, le rollback et les interceptions non couvertes. **367/367 tests Node réussis** à la dernière CI code vérifiée.
+
+**Distinction essentielle :** réservation intégrale du héros, horaires et contrôles de mission sont **des choix techniques de fiabilisation**, pas une transcription attestée des déplacements MMHK saison 2. Sous-détachements, vraies durées, interceptions, blessures/captures et retour d'unités sur la carte restent ouverts. C17 reste `implemented_partial`, V7.0 en cours, et l'arbitre PvP public reste désactivé.
 
 ### V7.0 : tranche 1 — première exécution transactionnelle d'un combat admis
 
