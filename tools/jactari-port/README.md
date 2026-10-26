@@ -483,3 +483,18 @@ Les composants Node 22 [`trusted-hero-store.mjs`](trusted-hero-store.mjs) et [`s
 [Tests d'intégration](server-authorized-battle.test.mjs) · [rapport avec modèle de menace](../../docs/game-design/39-JACTARI-V66-PERSISTANCE-HEROS-AUTORISATIONS.md) · [preuves structurées](../../data/analysis/jactari-v66-sqlite-authorized-hero-preview-2026-10-26.json) · [registre C03/C17](../../data/analysis/jactari-combat-conformance-roadmap.json).
 
 **Limites fermes :** aucun serveur HTTP, aucune session réellement authentifiée, aucune diplomatie/portée/protection débutant validée, aucune application transactionnelle des pertes, captures ou blessures, ni idempotence des combats. Les méthodes administratives du stockage ne doivent jamais être exposées aux joueurs. L'aperçu ne doit pas être considéré comme un ordre d'attaque consommé. **V7.0 reste ouvert ; pas de moteur PvP autorisé en production.**
+
+
+## V7.0 — Tranche 1 : commande PvP atomique et idempotente (26 octobre 2026)
+
+La base SQLite `trusted-hero-store.mjs` écrit désormais **les deux armées après pertes définitives, les révisions de héros, un reçu de combat et un journal ordonné d'événements dans une SEULE transaction `BEGIN IMMEDIATE`**.
+
+[`server-transactional-battle.mjs`](server-transactional-battle.mjs) fournit `commitServerAuthorizedJactariBattle()` : le navigateur ne peut envoyer que `commandId`, `attackerHeroId` et `defenderHeroId`. Les autres entrées proviennent obligatoirement de la session, de la politique de cible et des règles historiques injectées par le serveur. Une même clé `commandId` accompagnée du même acteur, des mêmes héros et de la même empreinte SHA-256 des règles renvoie le reçu précédent, sans refaire les pertes ; des données différentes produisent une **erreur de collision d'idempotence**.
+
+Les tests du [fichier transactionnel](server-transactional-battle.test.mjs) contrôlent les deux débits, le rejeu après redémarrage et entre deux connexions, les champs client frauduleux, la révocation d'une autorisation, le refus des pertes falsifiées, la conversion d'un peloton entièrement perdu en slot `null` et le **rollback bilatéral** lorsqu'une panne est injectée juste avant `COMMIT`.
+
+**Ce module exécute seulement des combats PvP admis par le sous-ensemble original Jactari.** Il refuse explicitement les décisions de **capture, blessure ou retraite**, sans mutation, tant que la machine d'état correspondante n'a pas de preuve historique et de politique serveur. Il n'existe encore ni serveur HTTP, ni véritable contrôle de session, ni gestion des mouvements, diplomatie, protections débutant, butin/XP, missions ou conformité globale MMHK saison 2.
+
+**Tests : [356/356 réussis](https://github.com/AstrowareConception/MMHK-like/actions/runs/40339759720) sur la tranche code vérifiée.** [Rapport V7.0](../../docs/game-design/40-JACTARI-V70-TRANSACTIONS-COMBAT-IDEMPOTENCE.md) · [preuves](../../data/analysis/jactari-v70-atomic-battle-differential-2026-10-26.json) · [roadmap](../../docs/game-design/32-ROADMAP-CONFORMITE-MOTEUR-COMBAT.md).
+
+**Statut : C17 `implemented_partial` et V7.0 `in_progress` ; `productionBattleArbiterAllowed=false`.** Il s'agit d'un socle transactionnel expérimental, pas d'un serveur PvP public.
