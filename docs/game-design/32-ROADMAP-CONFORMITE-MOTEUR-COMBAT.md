@@ -24,7 +24,7 @@ La règle de décision est stricte : une exigence n'est `certified` que si **tou
 | Admission PvE/PvP | V6.3 ; 4 000 calculs contre les branches originales |
 | Puissance magique, artefacts | V6.3–V6.4 ; 400 calculs de magie, 280 affinités d'artefacts, 120 sorts avec équipement |
 | Résolution dynamique au tour | **V6.5 en cours** : ordres de sorts par ID, puissance calculée avec héros/arme/inventaire courants, tests d'intégration |
-| Dernière CI de base vérifiée | **296/296 tests Node passés**, [run GitHub Actions #40300003415](https://github.com/AstrowareConception/MMHK-like/actions/runs/40300003415), contrôles du registre et nouveaux tests V6.6 compris |
+| Dernière CI de base vérifiée | **306/306 tests Node passés**, [run GitHub Actions #40302654585](https://github.com/AstrowareConception/MMHK-like/actions/runs/40302654585), tests de carrières et contrôles du registre compris |
 | Certification historique Jactari complète | **Non acquise** |
 | Équivalence MMHK saison 2 | **Non acquise ; sources spécifiques incomplètes** |
 | Arbitre PvP autorisé en production | **Non** |
@@ -85,6 +85,12 @@ Le module [`hero-spell-resolution.mjs`](../../tools/jactari-port/hero-spell-reso
 Tests [`hero-spell-resolution.test.mjs`](../../tools/jactari-port/hero-spell-resolution.test.mjs) : magie attaquant et défenseur, magie de zone, invocation avant une nouvelle salve, puissance d'un héros équipé vérifiée par le code original, refus de faux IDs/puissances injectées, immuabilité des entrées et absence de caractéristique magique obligatoire. La **suite Node complète est verte**.
 
 **Dette critique :** le serveur de jeu final ne construit pas encore ces fiches de héros et ces catalogues à partir d'objets persistés. Le `spellContext` doit donc provenir d'un composant de confiance ; ce n'est **pas** un nouveau champ que le joueur peut fixer librement depuis le navigateur.
+
+### V6.6 : tranche 2 — carrières et apprentissage vérifiés sur périmètre borné
+
+La [tranche 2 documentée](34-JACTARI-V66-PROGRESSION-CARRIERES-TALENTS.md) porte l'accès aux carrières selon faction/archétype, le point dépensé par carrière, les coûts cumulatifs de talent `[0,1,3,6]`, la mutualisation de Scribe/Arcanes et les changements de rang avec remboursement. Elle dispose d'un **oracle historique indépendant** : matrice complète des droits de carrière, **170 achats et 120 promotions/réductions de rang** confrontés à `validite_carriere()` et `change_talent()`. Le pont des héros valide désormais les budgets avant d'utiliser les bonus militaires en combat.
+
+**Statut : C03 = `implemented_partial`, V6.6 = `in_progress`.** La suppression/remplacement des carrières, les règles d'arbre et de prérequis légendaires, l'hérédité alternative et le contrôle de propriété serveur restent ouverts. Le mode « 100 % conforme » demeure désactivé.
 
 ### V6.6 : tranche 1 validée, qualifications restantes
 
