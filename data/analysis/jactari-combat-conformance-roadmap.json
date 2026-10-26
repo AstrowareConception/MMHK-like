@@ -25,11 +25,11 @@
   ],
   "tracking": {
     "lastVerifiedFullSuite": {
-      "tests": 306,
-      "passed": 306,
+      "tests": 313,
+      "passed": 313,
       "failed": 0,
-      "ciUrl": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40302654585",
-      "commit": "83648c1497f6ef4cd15bcf06a1264aec655861db"
+      "ciUrl": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40306285724",
+      "commit": "6c3c6639fe40dab8df0185f9ea86e54cd1aa6004"
     },
     "metricPolicy": "Les nombres de tests sont des régressions, pas un pourcentage d'équivalence historique.",
     "lastStatusReview": "2026-10-26"
@@ -72,10 +72,12 @@
         "tools/jactari-port/hero-talent-bonuses.test.mjs",
         "tools/jactari-port/hero-combat-snapshot.test.mjs",
         "tools/jactari-port/hero-combat-battle.test.mjs",
-        "tools/jactari-port/hero-career-progression.test.mjs"
+        "tools/jactari-port/hero-career-progression.test.mjs",
+        "tools/jactari-port/hero-career-lifecycle.test.mjs",
+        "tools/jactari-port/historical-respecialization.test.mjs"
       ],
-      "validated": "V6.6 tranche 1: 310 fiches de héros comparées à maj_adm/maj_comp/equipe_artefact, 150 choix de talents comparés au fragment combat original, 200 profils de héros de combat confrontés à maj_situation, puis raccordement testé au moteur unifié. V6.6 tranche 2: accès aux carrières comparé sur la matrice faction/archétype/carrière du calculateur original, 170 achats de talents, 120 transitions rang+remboursement et Scribe/Arcana partagés, validation de budgets au pont de combat.",
-      "gap": "Transitions intégrales change_carriere/desactive_carriere, divergence temporaire Scribe/Arcana, carrière légendaire, prérequis de talent et hérédités _15/_30, ensembles d'artefacts, identité serveur et équivalence S2 toujours non certifiés.",
+      "validated": "V6.6 tranche 1: 310 fiches de héros comparées à maj_adm/maj_comp/equipe_artefact, 150 choix de talents comparés au fragment combat original, 200 profils de héros de combat confrontés à maj_situation, puis raccordement testé au moteur unifié. V6.6 tranche 2: accès aux carrières comparé sur la matrice faction/archétype/carrière du calculateur original, 170 achats de talents, 120 transitions rang+remboursement et Scribe/Arcana partagés, validation de budgets au pont de combat. V6.6 tranche 3: 60 transitions historiques de sélection/remplacement/abandon comparées aux fonctions originales, y compris remboursement et partage Scribe/Arcanes; contrôles historiques respec et tenancier vérifiés par level/cas limites.",
+      "gap": "Séquences longues et états intermédiaires divergents Scribe/Arcanes, activation/remplacement navigateur complet, prérequis légendaires et hérédités alternatives, validation serveur d'appartenance du héros et sources MMHK S2 restent non certifiés.",
       "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
     },
     {
@@ -288,7 +290,7 @@
       "id": "V6.6",
       "title": "Génération des caractéristiques et talents",
       "state": "in_progress",
-      "exit": "Tranches 1 et 2 implémentées et validées sur cas historiques bornés; poursuivre transitions complètes achat/abandon/remplacement de carrières, prérequis légendaires, respec et contrôle serveur."
+      "exit": "Tranches 1-3 publiées: stats et combat héros, coût d'apprentissage, remplacement/abandon de carrières et contraintes de respec. Restent états transitoires, classes légendaires, héritages alternatifs, progression serveur et preuves S2."
     },
     {
       "id": "V6.7",
