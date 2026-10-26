@@ -40,7 +40,7 @@ test('120 equipped hero spells agree with original full spell-power AND artifact
   assert.ok(Number.isFinite(original.power));
   assert.ok(Math.abs(port.power-original.power)<1e-8*
     Math.max(1,Math.abs(port.power),Math.abs(original.power)),
-    'case '+i+' original '+original.power+' port '+port.power+' artifactPercent '+port.bonuses.artifactEfficiencyPercent+' gear '+JSON.stringify(artifactIds)+' spell '+JSON.stringify(input.spell));
+    'case '+i+' original '+original.power+' port '+port.power+' originalArtifactPercent '+original.actualArtifactBonus+' artifactPercent '+port.bonuses.artifactEfficiencyPercent+' gear '+JSON.stringify(artifactIds)+' spell '+JSON.stringify(input.spell));
   if(port.bonuses.artifactEfficiencyPercent>0)actualPositive++;
  }
  assert.ok(actualPositive>10,'Real magical equipment must contribute in the fixture set');
