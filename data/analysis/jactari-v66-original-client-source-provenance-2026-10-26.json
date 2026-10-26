@@ -44,13 +44,16 @@
     "original_mapping_function": "prepare_talent",
     "test_path": "tools/jactari-port/original-client-hero-tags.test.mjs",
     "bridge_code": "tools/jactari-port/original-client-hero-tags.mjs",
-    "trustworthy_entitlement_claim": false
+    "trustworthy_entitlement_claim": false,
+    "native_hero_to_battle_integration_test": 1,
+    "independent_grant_guard_tested": true
   },
   "key_season_limitation": {
     "observed_literal": "donnees.saison = MMHKPLUS.getElement(\"Player\").get(\"season\"); if (donnees.saison < 3) donnees.saison = 3;",
     "meaning": "The addon-to-calculator path replaces game seasons 1 and 2 by 3. It cannot establish independent S2 rules.",
     "observed_in": "data/Jactari/upstream-addon/mmhkplus-jactari-2013.js",
-    "mmhk_s2_parity_certified": false
+    "mmhk_s2_parity_certified": false,
+    "replayed_original_season_normalizer": true
   },
   "client_bundles": {
     "1.5.0.39-4-MTR": {
@@ -66,11 +69,11 @@
     "disclaimer": "Lexical occurrences reflect client UI content and do not certify server-side game mechanics"
   },
   "verification": {
-    "node_tests": 333,
-    "passed": 333,
+    "node_tests": 335,
+    "passed": 335,
     "failed": 0,
-    "ci_url": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40332476221",
-    "verified_head_sha": "14d3a70d1ed9b65403709c6726cbd44c1c6d14f5"
+    "ci_url": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40333523770",
+    "verified_head_sha": "2d26abc066963851bc791ed83ec451e0eea785ca"
   },
   "policy": {
     "C03": "implemented_partial",
