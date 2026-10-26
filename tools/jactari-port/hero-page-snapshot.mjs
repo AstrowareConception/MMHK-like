@@ -42,6 +42,11 @@ export function deriveJactariHeroPageSnapshot({
  safe(respecializations,'respecializations');safe(skillPointsUsed,'spent skill points');
  if(!tables.archetypes[archetype]||!tables.levels[level]||!tables.wayRanking[heritageWay])
   throw new RangeError('Hero archetype, level or heritage way not in original catalog');
+ // Original change_tenancier and change_respec controls bound these fields.
+ // Reject an impossible persisted profile rather than silently over-crediting.
+ if(stewardBonus>3)throw new RangeError('Original steward bonus outside 0..3');
+ if(respecializations>Math.floor(level/2))
+  throw new RangeError('Original respecialization cap exceeded');
  clean(heritage,'hero heritage');
  for(const key of Object.keys(heritage))hereditaryLevel(tables,heritage,key);
  const chosen=equipment===null?Array(tables.equipmentSlots.length).fill(0):equipment;
