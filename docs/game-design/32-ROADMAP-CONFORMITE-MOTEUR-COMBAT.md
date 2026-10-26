@@ -24,7 +24,7 @@ La règle de décision est stricte : une exigence n'est `certified` que si **tou
 | Admission PvE/PvP | V6.3 ; 4 000 calculs contre les branches originales |
 | Puissance magique, artefacts | V6.3–V6.4 ; 400 calculs de magie, 280 affinités d'artefacts, 120 sorts avec équipement |
 | Résolution dynamique au tour | **V6.5 en cours** : ordres de sorts par ID, puissance calculée avec héros/arme/inventaire courants, tests d'intégration |
-| Dernière CI de base vérifiée | **313/313 tests Node passés**, [run GitHub Actions #40306285724](https://github.com/AstrowareConception/MMHK-like/actions/runs/40306285724), tests de carrières et contrôles du registre compris |
+| Dernière CI de base vérifiée | **319/319 tests Node passés**, [run GitHub Actions #40316048810](https://github.com/AstrowareConception/MMHK-like/actions/runs/40316048810), tests de carrières et contrôles du registre compris |
 | Certification historique Jactari complète | **Non acquise** |
 | Équivalence MMHK saison 2 | **Non acquise ; sources spécifiques incomplètes** |
 | Arbitre PvP autorisé en production | **Non** |
@@ -85,6 +85,12 @@ Le module [`hero-spell-resolution.mjs`](../../tools/jactari-port/hero-spell-reso
 Tests [`hero-spell-resolution.test.mjs`](../../tools/jactari-port/hero-spell-resolution.test.mjs) : magie attaquant et défenseur, magie de zone, invocation avant une nouvelle salve, puissance d'un héros équipé vérifiée par le code original, refus de faux IDs/puissances injectées, immuabilité des entrées et absence de caractéristique magique obligatoire. La **suite Node complète est verte**.
 
 **Dette critique :** le serveur de jeu final ne construit pas encore ces fiches de héros et ces catalogues à partir d'objets persistés. Le `spellContext` doit donc provenir d'un composant de confiance ; ce n'est **pas** un nouveau champ que le joueur peut fixer librement depuis le navigateur.
+
+### V6.6 : tranche 4 — classes légendaires et modificateurs de combat
+
+Le [rapport V6.6 tranche 4](36-JACTARI-V66-CLASSES-LEGENDAIRES.md) isole **8 classes légendaires et 24 talents**, aux rangs 1–3, directement depuis les données Jactari. **144 préparations de héros** et **48 rencontres complètes** ont été comparées avec le code original, ainsi que quatre familles de bonus magiques. L'intégration impose un **registre de droits légendaires** issu de l'état serveur et refuse désormais le contournement par `heroTalents`.
+
+**C03 reste partiellement implémenté**, car l'interface du calculateur ne prouve pas les conditions véritables d'obtention des classes/rangs dans le jeu Ubisoft MMHK saison 2 ; les contraintes historiques de débloquage et de cumul, les héroïsmes hérités alternatifs et la persistance doivent encore être démontrés. **V6.6 reste en cours.** Une différence est maintenue entre sélection libre dans Jactari et attribution réelle autorisée par un serveur.
 
 ### V6.6 : tranche 3 — remplacement et abandon de carrières
 
