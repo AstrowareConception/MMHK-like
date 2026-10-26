@@ -25,11 +25,11 @@
   ],
   "tracking": {
     "lastVerifiedFullSuite": {
-      "tests": 356,
-      "passed": 356,
+      "tests": 367,
+      "passed": 367,
       "failed": 0,
-      "ciUrl": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40339759720",
-      "commit": "6a6a9d7050a533dc523fc90b8d26212170729fbc"
+      "ciUrl": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40397746399",
+      "commit": "007ceb4ffb7a5eab84abc2b73dfb90a9eb5d4eb0"
     },
     "metricPolicy": "Les nombres de tests sont des régressions, pas un pourcentage d'équivalence historique.",
     "lastStatusReview": "2026-10-26"
@@ -264,10 +264,11 @@
       "implementation": "tools/jactari-port/server-transactional-battle.mjs",
       "evidence": [
         "tools/jactari-port/server-authorized-battle.test.mjs",
-        "tools/jactari-port/server-transactional-battle.test.mjs"
+        "tools/jactari-port/server-transactional-battle.test.mjs",
+        "tools/jactari-port/server-military-mission.test.mjs"
       ],
-      "validated": "V6.6 tranche 7: base SQLite Node22 avec joueurs et héros persistés, propriété, droits légendaires, armées et ordres de sorts ; profils historiques dérivés, transaction de lecture cohérente, révisions de progression optimistes et simulation de combat en lecture seule avec hooks de session et d'autorisation cible. Aucun arbitrage militaire en écriture. V7.0 tranche 1: BEGIN IMMEDIATE couvre simultanément contrôle du propriétaire et de la cible, simulation admise par Jactari, mise à jour des deux effectifs et révisions, reçu idempotent durable et événements d'audit ordonnés. Tests de rollback après écriture, concurrence par deux connexions, redémarrage, collisions sur clés de combat, tentative de réécriture de pertes et pelotons annihilés.",
-      "gap": "Le combat traité reste une sous-partie admise par le calculateur; captures, blessures et fuites sont refusées sans mutation. Pas encore de véritable service HTTP et sessions signées, diplomatie/visibilité/protection débutant, réservation d'armée de mission, siège/PvE, XP/butin, montée en charge ni règles certifiées Ubisoft S2.",
+      "validated": "V6.6 tranche 7: base SQLite Node22 avec joueurs et héros persistés, propriété, droits légendaires, armées et ordres de sorts ; profils historiques dérivés, transaction de lecture cohérente, révisions de progression optimistes et simulation de combat en lecture seule avec hooks de session et d'autorisation cible. Aucun arbitrage militaire en écriture. V7.0 tranche 1: BEGIN IMMEDIATE couvre simultanément contrôle du propriétaire et de la cible, simulation admise par Jactari, mise à jour des deux effectifs et révisions, reçu idempotent durable et événements d'audit ordonnés. Tests de rollback après écriture, concurrence par deux connexions, redémarrage, collisions sur clés de combat, tentative de réécriture de pertes et pelotons annihilés. V7.0 tranche 2: missions SQLite travelling/arrived/returning/completed/cancelled, réservation unique du héros attaquant, arrivée et retour horodatés exclusivement par politique serveur, événement d'audit à chaque étape, liaison transactionnelle arrived → returning avec application des pertes et idempotence, récupération après redémarrage et refus des interceptions sur héros en mission. Tests réels sur deux connexions, rollback, capture non résolue et annulation administrative.",
+      "gap": "Déplacement géographique, temps historiques, sous-détachements, interception de héros mobiles, missions de siège/PvE, blessures/captures, diplomatie, protection débutant, visibilité, serveur HTTP authentifié, scheduler distribué, migrations et règles MMHK S2 indépendantes non livrés.",
       "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
     },
     {
@@ -340,7 +341,7 @@
       "id": "V7.0",
       "title": "Arbitre serveur multi-joueur",
       "state": "in_progress",
-      "exit": "Tranche 1 réalisée: écritures bilatérales des pertes atomiques SQLite, idempotence durable et audit de batailles admises; restent système de missions, captures/blessures, vrai serveur d'identité et de diplomatie, conformité S2 et essais de charge."
+      "exit": "Tranches 1-2 : combat admis atomique avec reçu idempotent et journal, missions persistantes, réservation exclusive de l'attaquant, arrivée/retour et audit durable. Non terminés : géographie/vitesse, interceptions, capture/blessure, sous-armées, diplomatie/protection débutant, serveur authentifié et validation S2."
     }
   ],
   "releaseGate": {
