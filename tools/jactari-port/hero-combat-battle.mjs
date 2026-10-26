@@ -17,6 +17,7 @@ const has=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
  */
 export function simulateBattleWithDerivedHeroes({
  attackers,defenders,heroProfiles,heroTalents={},heroCareers=null,
+ heroLegendaries=null,heroLegendaryGrants=null,
  attackerSpells={},defenderSpells={},
  spellContext=null,unitCatalog=[],context={},lossPolicy,maxRounds=1000
 }){
@@ -34,6 +35,13 @@ export function simulateBattleWithDerivedHeroes({
   throw new TypeError('Both server-validated career lists are required');
  if(heroCareers!==null&&(Object.keys(heroTalents).length>0))
   throw new Error('Cannot mix raw talent bonuses with verified career selections');
+ if(heroLegendaries!==null&&(!record(heroLegendaries)||
+     !Array.isArray(heroLegendaries.attacker)||!Array.isArray(heroLegendaries.defender)||
+     !record(heroLegendaryGrants)||!record(heroLegendaryGrants.attacker)||
+     !record(heroLegendaryGrants.defender)))
+   throw new Error('Authoritative legendary grant ledger required for both camps');
+ if(heroLegendaryGrants!==null&&heroLegendaries===null)
+   throw new Error('Legendary grants without selections not accepted');
  if(has(context,'attackerHero')||has(context,'defenderHero'))
   throw new Error('Precomputed hero modifiers cannot override derived hero profiles');
  const tables=getJactariHeroTables();
@@ -47,12 +55,18 @@ export function simulateBattleWithDerivedHeroes({
  const a=deriveJactariCombatHeroSnapshot({
   profile:heroProfiles.attacker,side:'attacker',
   talentSelections:combatSelections('attacker'),
+  legendarySelections:heroLegendaries?.attacker??[],
+  legendaryPolicy:heroLegendaries===null?'calculator-reference':'server-entitlement',
+  legendaryEntitlements:heroLegendaryGrants?.attacker??null,
   allianceAttackPercent:context.allianceAttackPercent??0,
   attackMalusPercent:context.attackMalusPercent??0
  },tables);
  const d=deriveJactariCombatHeroSnapshot({
   profile:heroProfiles.defender,side:'defender',
   talentSelections:combatSelections('defender'),
+  legendarySelections:heroLegendaries?.defender??[],
+  legendaryPolicy:heroLegendaries===null?'calculator-reference':'server-entitlement',
+  legendaryEntitlements:heroLegendaryGrants?.defender??null,
   allianceDefensePercent:context.allianceDefensePercent??0
  },tables);
  let resolvedSpellContext=null;
