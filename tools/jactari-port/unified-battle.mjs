@@ -11,6 +11,7 @@ import {planSummoning} from './summoning.mjs';
 import {resolveSingleTargetDamageSpell,resolveAttackStackBuff,resolveHeroDefenseDebuff} from './magic-effects.mjs';
 import {resolvePostDuelRevival} from './magic-revival.mjs';
 import {finalizePermanentLosses,casualtyModifier} from './losses.mjs';
+import {validateHeroSpellOrders,resolveHeroSpellAtRound} from './hero-spell-resolution.mjs';
 
 const sides=['attacker','defender'];
 const opposite=s=>s==='attacker'?'defender':'attacker';
@@ -111,11 +112,13 @@ function applySpell({spell,side,turn,activeBefore,armies,heroes,catalog,initial,
 }
 /** Unified supported mechanics, one deterministic snapshot, not an authentic complete Jactari oracle. */
 export function simulateUnifiedBattle({attackers,defenders,attackerSpells={},defenderSpells={},
- attackerSalvos=[],defenderSalvos=[],unitCatalog=[],context={},lossPolicy,maxRounds=1000}){
+ attackerSalvos=[],defenderSalvos=[],unitCatalog=[],context={},lossPolicy,maxRounds=1000,spellContext=null}){
  validateArmySlots(attackers);validateArmySlots(defenders);
  for(const stack of [...attackers,...defenders].filter(Boolean))
   if(!['I','R','C'].includes(stack.weapon))throw new RangeError('Unrecognized unit weapon');
- validateMagic(attackerSpells,'attacker');validateMagic(defenderSpells,'defender');
+ if(spellContext===null){
+  validateMagic(attackerSpells,'attacker');validateMagic(defenderSpells,'defender');
+ }else validateHeroSpellOrders({attackerSpells,defenderSpells,spellContext});
  for(const [side,book] of [['attacker',attackerSpells],['defender',defenderSpells]]){
   if(Object.keys(book).length>0&&(!context[side+'Hero']||typeof context[side+'Hero']!=='object'))
    throw new Error('Spell casting requires a trusted '+side+' hero');
@@ -154,7 +157,21 @@ export function simulateUnifiedBattle({attackers,defenders,attackerSpells={},def
     throw new Error('Spell cast after enemy elimination in same round is unsupported');
    if(side==='attacker')start.attacker=armies.attacker[current.attacker].remaining;
    if(side==='defender')start.defender=armies.defender[current.defender].remaining;
-   pending[side]=applySpell({spell:books[side][turn],side,turn,activeBefore:current,armies,heroes,catalog:unitCatalog,initial:original,events});
+   let effect=books[side][turn];
+   if(spellContext!==null){
+    const currentAttacker=armies.attacker[current.attacker];
+    const currentDefender=armies.defender[current.defender];
+    const preparedSpell=resolveHeroSpellAtRound({
+      order:effect,side,spellContext,heroes,
+      attackerWeapon:currentAttacker.weapon,defenderWeapon:currentDefender.weapon
+    });
+    effect=preparedSpell.spell;
+    validateMagic({[turn]:effect},side);
+    events.push({turn,phase:'spell-power',side,spellId:preparedSpell.spellId,
+      power:effect.power??null,powerByWeapon:effect.powerByWeapon??null,
+      provenance:preparedSpell.provenance});
+   }
+   pending[side]=applySpell({spell:effect,side,turn,activeBefore:current,armies,heroes,catalog:unitCatalog,initial:original,events});
   }
   const ai=active(armies.attacker),di=active(armies.defender);
   if(ai<0||di<0){
@@ -219,5 +236,6 @@ export function simulateUnifiedBattle({attackers,defenders,attackerSpells={},def
   lossPolicy:{source:lossPolicy.source??'explicit-experimental',lossFactor:lossPolicy.lossFactor},
   scope:'unified-supported-Jactari-subset',
   limitations:['No full original Jactari encounter parity','No real mana or spell-learning server rules',
-   'No retreat/siege/hero wounds','Uncovered historical summon overwrite is refused']};
+   'No retreat/siege/hero wounds','Uncovered historical summon overwrite is refused',
+   'ID-based casting requires trusted server-provided catalog and resolved hero progression']};
 }
