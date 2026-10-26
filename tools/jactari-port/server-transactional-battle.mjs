@@ -59,7 +59,7 @@ function verifyRules(trustedRules){
  */
 export function commitServerAuthorizedJactariBattle({
  command,authContext,authenticate,authorizeTarget,heroStore,trustedRules,
- beforeCommit
+ serverNowMs=null,beforeCommit
 }){
  if(!record(command)||Object.keys(command).some(k=>![
    'commandId','attackerHeroId','defenderHeroId','missionId'].includes(k)))
@@ -78,6 +78,7 @@ export function commitServerAuthorizedJactariBattle({
  const decision=heroStore.commitAuthorizedBattle({
   ...command,
   actorPlayerId:principal.playerId,
+  serverNowMs,
   rulesDigest:digest,
   authorizeTarget:({attacker,defender})=>authorizeTarget({
    principal:structuredClone(principal),
