@@ -79,3 +79,9 @@ La **V6.6 reste EN COURS** : cette tranche ne démontre pas encore la légalité
 Le calcul de `maj_situation()` a été validé **sur le fragment couvrant les statistiques du héros**, pas sur toutes les opérations de cette fonction, ni sur chaque combinaison extrême de règles. Les fixtures et profils Jactari 4.1.3-MTR ne prouvent pas l'équivalence avec Ubisoft MMHK saison 2.
 
 **Étape suivante conseillée :** porter la validation de l'arbre complet de carrières et du coût des talents depuis `heros.min.js`, avec échantillons exécutés par le code historique, puis verrouiller les `HeroCombatSnapshot` à une vraie identité serveur (niveau et équipements authentifiés).
+
+## Mise à jour — tranche 2, carrières et budgets de talents (26 octobre 2026)
+
+La construction des héros prend désormais en compte la **validité de l'accès aux carrières** et les **dépenses d'apprentissage** depuis les vraies données `_carrieres`, `_talents` et `_apprentissage`. Les règles de coût, les talents partagés Scribe/Arcanes et les promotions/réductions de rang ont été confrontés au code source original. L'adaptateur de bataille accepte en option des listes `heroCareers` et rejette tout calcul de talent brut supplémentaire concurrent. Voir le [rapport technique V6.6 — tranche 2](34-JACTARI-V66-PROGRESSION-CARRIERES-TALENTS.md).
+
+**Validation courante : 306 tests Node.js réussis sur 306** ([CI](https://github.com/AstrowareConception/MMHK-like/actions/runs/40302654585)). La validation du budget d'un **état final cohérent** ne remplace pas l'exécution de l'intégralité des transitions `change_carriere` et `desactive_carriere`. C03 et V6.6 restent en cours.
