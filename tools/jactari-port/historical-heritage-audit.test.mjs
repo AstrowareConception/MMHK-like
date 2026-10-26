@@ -63,3 +63,21 @@ test('undocumented heritage ranks cannot silently modify combat even if a numeri
   revelation_de_caracteristiques:10,heros_superieur:3
  }),true);
 });
+
+test('90 coupled superior+revelation profiles preserve original combat precedence at levels 15/30',()=>{
+ let count=0;
+ for(const level of [14,15,29,30,40])
+  for(const side of ['attacker','defender'])
+   for(const heredityWay of [0,1,2])
+    for(const rank of [1,3,7]){
+     const profile={faction:1,archetype:2,level,heritageWay,
+      heritage:{heros_superieur:rank,revelation_de_caracteristiques:10-rank}};
+     const original=runOriginalCombatHeroSnapshot({profile,side});
+     const port=deriveJactariCombatHeroSnapshot({profile,side}).hero;
+     for(const field of fields)
+      assert.ok(Math.abs(original.stats[field]-port[field])<1e-9,
+       'coupled heritage case '+count+' '+field);
+     count++;
+    }
+ assert.equal(count,90);
+});
