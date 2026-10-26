@@ -396,3 +396,16 @@ const result=simulateUnifiedBattle({
 **Vérification :** [tests d'intégration V6.5](hero-spell-resolution.test.mjs), CI Node complète **276 tests réussis** au moment du raccordement. Pour garantir la **conformité à 100 %**, consulter systématiquement la [roadmap vivante](../../docs/game-design/32-ROADMAP-CONFORMITE-MOTEUR-COMBAT.md) et son [registre JSON avec barrières de certification](../../data/analysis/jactari-combat-conformance-roadmap.json).
 
 **Limite :** `spellContext` contient pour le moment un snapshot héroïque déjà dérivé côté serveur. La construction automatique des caractéristiques à partir de l'archétype, des niveaux, talents, hérédité, objets, bonus de set et carrières relève de **V6.6**. La validation de cette chaîne entière contre le client Jactari et contre MMHK saison 2 reste ouverte. Ne pas accepter des statistiques de héros ou objets calculés par un client web comme vérité serveur.
+
+
+## V6.6 (tranche 1) — Construire des héros depuis leurs données réelles (26 octobre 2026)
+
+La [roadmap de conformité](../../docs/game-design/32-ROADMAP-CONFORMITE-MOTEUR-COMBAT.md) suit désormais C03 en **implémentation partielle** : l'éditeur original des héros (`maj_adm`, `maj_comp`, `equipe_artefact`) et la préparation originale des héros au combat (fragment de `maj_situation`) ont été exécutés dans les **oracles historiques distincts** pour vérifier les fonctions pures correspondantes.
+
+Modules : [tables Jactari](hero-source-tables.mjs), [snapshot éditeur](hero-page-snapshot.mjs), [calcul des talents](hero-talent-bonuses.mjs), [snapshot combat](hero-combat-snapshot.mjs), [pont combats](hero-combat-battle.mjs). Les tests regroupent **310 fiches d'éditeur**, **150 sélections de talents**, **200 fiches de combat** et **6 contrôles d'intégration** au moteur unifié. Le résultat CI vérifié est **296/296 tests Node.js réussis** : [GitHub Actions](https://github.com/AstrowareConception/MMHK-like/actions/runs/40300003415).
+
+Le pont de bataille **refuse les statistiques militaires calculées et l'inventaire magique forgés en arguments explicites** : les calculs viennent des profils et tables fournies par un composant serveur de confiance. Cette garantie est *locale à l'API* : elle **ne vérifie pas encore l'identité du joueur** ni le droit de posséder le héros ou les objets. Ne pas exposer ce point d'entrée directement au réseau.
+
+**Très important :** `maj_adm` (éditeur de héros) et `maj_situation` (simulateur de combat) n'utilisent pas tous les mêmes arrondis, précédences héréditaires et bonus circonstanciels. Nos deux résultats restent donc volontairement distincts.
+
+La V6.6 n'est pas close : la **légalité des carrières, le budget d'apprentissage, les liens Scribe/Arcanes, les classes légendaires, les hérédités alternatives, les sets et le contrôle côté serveur** ne sont pas démontrés exhaustivement. L'équivalence à **MMHK saison 2** ne peut pas être revendiquée. [Rapport V6.6](../../docs/game-design/33-JACTARI-V66-FICHES-HEROS-ET-COMBAT.md) et [preuves structurées](../../data/analysis/jactari-v66-derived-hero-differential-2026-10-26.json).
