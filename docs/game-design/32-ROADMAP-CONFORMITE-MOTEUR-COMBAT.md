@@ -193,6 +193,31 @@ Le passage à « **100 % conforme** » nécessite simultanément : 0 exigence sa
 
 **Décision actuelle : moteur expérimental, usage comme arbitre PvP de production toujours interdit.**
 
+## V7.0 — Tranches 3 à 6 : géographie, haltes et territoires (26 octobre 2026)
+
+Le [rapport des positions et engagements](42-JACTARI-V70-MONDE-DEPLACEMENTS-PROTECTION.md)
+décrit les mondes et villes persistés, la géométrie torique vérifiée contre le
+calculateur MMHK-Plus, les routes immuables des missions et une protection
+débutant provisoire. Les [itinéraires expérimentaux](43-JACTARI-V70-ITINERAIRES-PROVISOIRES.md)
+puis les [haltes et trêves](44-JACTARI-V70-HALTES-TERRITOIRES-TREVE.md)
+font évoluer les ETA **non autoritatifs**, sans prétendre reconstituer le
+serveur Ubisoft saison 2.
+
+La [tranche 6](45-JACTARI-V70-TERRITOIRES-DIPLOMATIE.md) ajoute dans SQLite
+des revendications de cases, alliances/membres/relations, une révision de monde
+et la lecture cohérente d'un instantané. Un tracé centre-à-centre sur carte
+raccordée qualifie les segments `friendly/allied/neutral/hostile/targetAlliance`,
+refuse une diplomatie inconnue, puis les transmet au moteur de haltes.
+Les aperçus sont identifiés par un instantané et deviennent obsolètes après
+modification des revendications ou relations. Aucun résultat ne constitue
+un `trustedSchedule` et aucun plan n'est appliqué à une mission active.
+
+**Etat : V7.0 = `in_progress`, C17 = `implemented_partial`,
+C18 = `blocked_source`, `productionBattleArbiterAllowed=false`.**
+Les rayons de contrôle territoriaux réels, changements d'alliance en marche,
+interceptions, ordonnancement retour et heure nocturne historique S2
+restent à déterminer par sources indépendantes.
+
 ## 7. Utilisation pratique
 
 Pour reprendre dans un autre fil, conserver cette consigne : *« Reprends la roadmap `docs/game-design/32-ROADMAP-CONFORMITE-MOTEUR-COMBAT.md` et le registre JSON, vérifie les derniers commits/CI, puis attaque le premier critère de sortie non satisfait sans changer arbitrairement le statut des exigences. Documente les preuves et mets à jour le registre avant de terminer. »*
