@@ -18,3 +18,4 @@ export {simulateBattleWithDerivedHeroes} from './hero-combat-battle.mjs';
 export {isJactariCareerAllowed,calculateJactariCareerBudget,changeJactariCareerRank} from './hero-career-progression.mjs';
 export {transitionJactariCareer} from './hero-career-lifecycle.mjs';
 export {listJactariLegendaryClasses,deriveJactariLegendaryTalents} from './hero-legendary.mjs';
+export {originalClientLegendaryTagMap,projectOriginalHeroLegendarySkills,originalClientHereditaryTagMap,projectOriginalPlayerHeredity} from './original-client-hero-tags.mjs';
