@@ -12,6 +12,7 @@ import {deriveJactariHeroPageSnapshot} from './hero-page-snapshot.mjs';
 import {deriveJactariTalentBonuses} from './hero-talent-bonuses.mjs';
 import {deriveJactariLegendaryTalents} from './hero-legendary.mjs';
 import {getJactariHeroTables} from './hero-source-tables.mjs';
+import {assertDocumentedJactariCombatHeritage} from './historical-heritage-audit.mjs';
 
 const numeric=(v,name)=>{if(!Number.isFinite(v))throw new RangeError('Invalid '+name);return v;};
 const own=(o,k)=>Object.prototype.hasOwnProperty.call(o,k);
@@ -41,6 +42,8 @@ export function deriveJactariCombatHeroSnapshot({
 },tables=getJactariHeroTables()){
  if(!['attacker','defender'].includes(side))throw new RangeError('Unknown combat camp');
  const p=profile;
+ // Audit missing vendor _15/_30 tables explicitly before generic profile checks.
+ assertDocumentedJactariCombatHeritage(p.heritage??{});
  // Real catalog validation (level, artifacts, heritage skills, slot and level).
  const editor=deriveJactariHeroPageSnapshot(p,tables);
  const {archetype,level,heritageWay}=editor.identity;
@@ -101,7 +104,7 @@ export function deriveJactariCombatHeroSnapshot({
   limitations:[
    'Legendary effects from authentic table; class unlock prerequisites not certified',
    'No validation of career learning path or legendary prerequisites',
-   'No hereditary _15/_30 alternate branch',
+   'Historic _15/_30 branches refer to absent catalog definitions and are explicitly rejected',
    'No full situational morale / siege / PvE / alliance skill derivation',
    'No statement of full Ubisoft MMHK season-2 equivalence'
   ]
