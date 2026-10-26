@@ -1,5 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
 import {openTrustedHeroStore} from './trusted-hero-store.mjs';
 import {dispatchServerHeroMission,arriveServerHeroMission,
  scheduleServerHeroReturn,completeServerHeroReturn}
@@ -148,4 +151,38 @@ test('world mapped battles require a mission and a server clock, even from a tru
   }),/registered arrived military mission/);
   assert.deepEqual(store.getBattleAuditCounts(),{commands:0,events:0});
  }finally{store.close();}
+});
+
+test('world city placements and mission route survive database reopen and multiple connections',()=>{
+ const temp=fs.mkdtempSync(path.join(os.tmpdir(),'mmhk-world-map-'));
+ const filename=path.join(temp,'world.sqlite');
+ let a,b;
+ try{
+  a=openTrustedHeroStore({filename});
+  a.registerPlayer('alice');a.registerPlayer('bob');
+  a.putHero(hero('hero-a','alice',1,180));
+  a.putHero(hero('hero-d','bob',2,140));
+  a.defineMilitaryWorld({worldId:'persistent-world',worldSize:100});
+  a.registerMilitaryCity({cityId:'start',worldId:'persistent-world',
+    ownerPlayerId:'alice',x:1,y:50,firstCity:false});
+  a.registerMilitaryCity({cityId:'target',worldId:'persistent-world',
+    ownerPlayerId:'bob',x:100,y:50,firstCity:true,protectedUntilMs:900});
+  a.stationHeroInCity({heroId:'hero-a',cityId:'start'});
+  a.stationHeroInCity({heroId:'hero-d',cityId:'target'});
+  const first=dispatch(a);
+  assert.equal(first.status,'traveling');
+  assert.equal(a.getMissionRoute(move.missionId).distance,1);
+  b=openTrustedHeroStore({filename});
+  assert.deepEqual(b.getHeroWorldPosition('hero-d'),a.getHeroWorldPosition('hero-d'));
+  assert.deepEqual(b.getMissionRoute(move.missionId),a.getMissionRoute(move.missionId));
+  assert.equal(dispatch(b).replayed,true);
+  a.close();a=null;
+  assert.equal(arrive(b).status,'arrived');
+  assert.equal(fight(b).replayed,false);
+  assert.equal(fight(b).replayed,true);
+  assert.equal(b.getMission(move.missionId).status,'returning');
+  assert.equal(b.getBattleAuditCounts().commands,1);
+ }finally{
+  a?.close();b?.close();fs.rmSync(temp,{recursive:true,force:true});
+ }
 });
