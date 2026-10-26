@@ -355,3 +355,14 @@ L'anomalie du bonus légendaire `bonus_legendary_legwarrior_b` est conservée en
 **Validation : 261 tests Node.js réussis, 0 échec**, [GitHub Actions #40294182227](https://github.com/AstrowareConception/MMHK-like/actions/runs/40294182227). [Rapport technique complet et limites](../../docs/game-design/30-JACTARI-V63-HEROS-ADMISSION-MODIFICATEURS.md) ; [preuves JSON](../../data/analysis/jactari-v63-hero-admission-differential-2026-10-26.json).
 
 **Pas encore « 100 % MMHK saison 2 » :** équipement/artefacts, progression complète des héros, sièges, calculs de salves originaux, XP, groupes PvE et règles de saison restent à réconcilier et tester. Ne pas activer ce moteur comme arbitre serveur PvP avant résolution de ces écarts et revue de licence GPL.
+
+
+## V6.4 — Artefacts réels, éligibilité des effets et puissance des sorts (26 octobre 2026)
+
+Le [port des règles d'artefacts](artifact-spell-bonus.mjs) lit un inventaire **fiable et complet de slots** et le véritable catalogue Jactari pour filtrer chaque bonus magique selon école, cible, type, cercle, arme et niveau. [280 comparaisons](historical-artifact-differential.test.mjs) ont été effectuées en exécutant la **fonction originale** `bonus_magie_artefacts()` avec les tables `_artefacts`, `_effets`, `_types_effets_magie` et `_slots`.
+
+[`calculateEffectiveSpellPower()`](spell-power.mjs) accepte maintenant un `artifactContext` et applique lui-même les bonus d'artefacts, sans autoriser leur addition à un pourcentage arbitraire. [120 sorts de héros équipés](historical-equipped-spell.test.mjs) ont été comparés à la vraie `puissance_effective_sort()` originale, qui invoque elle-même `bonus_magie_artefacts()`. Une première divergence provenait d'un oubli du champ historique `cible` dans le **banc de référence** ; il a été corrigé.
+
+**[CI GitHub Actions #40295576832 : 267/267 tests réussis, zéro échec](https://github.com/AstrowareConception/MMHK-like/actions/runs/40295576832).**
+
+**Limites :** le moteur unifié n'appelle pas encore automatiquement cette résolution magique à chaque tour. Certaines règles de progression, de sets d'artefacts, de siège et de héros restent non validées ; l'égalité complète avec **MMHK S2** n'est pas prouvée. Cette suite certifie uniquement les scénarios exécutés contre le calculateur communautaire d'origine. [Rapport V6.4](../../docs/game-design/31-JACTARI-V64-ARTEFACTS-ET-MAGIE-HEROS.md).
