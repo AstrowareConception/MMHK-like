@@ -13,7 +13,6 @@ import vm from 'node:vm';
 import path from 'node:path';
 import {fileURLToPath} from 'node:url';
 import {validateArmySlots} from './core.mjs';
-import {calculateBonuses} from './bonuses.mjs';
 
 const pathname = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '../../data/Jactari/src/scripts/combat.min.js');
 const source = fs.readFileSync(pathname, 'utf8');
@@ -30,7 +29,7 @@ function extractFunction(name) {
   }
   throw new Error('Unbalanced upstream function ' + name);
 }
-const historicFunctions = ['simulation_combat','lancement_sorts','simulation_rencontre']
+const historicFunctions = ['bonus_attaque_defense','simulation_combat','lancement_sorts','simulation_rencontre']
   .map(extractFunction).join('\n');
 const zeroSkills = () => ({
   moral_eleve:0, resistance_magique:0, tir_de_barrage:0, relever_les_morts:0,
@@ -142,12 +141,17 @@ export function runHistoricalEncounter({
     statut:{attaquant:1,defenseur:1},
     competences_hereditaires:{attaquant:zeroSkills(),defenseur:zeroSkills()},
     competences_speciales:{attaquant:zeroSpecial(),defenseur:zeroSpecial()},
-    _competences_hereditaires:{},_competences_speciales:{},
+    _competences_hereditaires:{},
+    _competences_speciales:{pieges:{bonus:context.special?.trapBonus??0}},
     _multiplicateur_voie:0,_classement_voies:{},classement_voies:{attaquant:0,defenseur:0},
     pelotons_defense_reordonnes:false,
     rencontre_jcj:true,_seuil_fuite_jce:0,
-    moral_eleve:{attaquant:0,defenseur:0},
-    saison:2,lieu:0,bonus_defense_cite:0,bonus_defense_region:0,
+    moral_eleve:{attaquant:context.morale?.attacker??0,defenseur:context.morale?.defender??0},
+    saison:2,lieu:context.fortification?.place??0,
+    bonus_defense_cite:context.fortification?.city??0,
+    bonus_defense_region:context.fortification?.region??0,
+    bonus_larmes_defense:context.fortification?.tears??0,
+    _facteur_bonus:context.weaponAdvantageFactor??0,
     _facteur_pertes:lossFactor,
     bonus_larmes_pertes_attaquant:0,bonus_larmes_pertes_defenseur:0,
     honneur_royaume_attaquant:0,honneur_royaume_defenseur:0,_bonus_jcj:0,
@@ -187,20 +191,10 @@ export function runHistoricalEncounter({
     return r;
   };
   const historicDuel=ctx.simulation_combat;
-  ctx.bonus_attaque_defense=(_ha,_hd,aw,dw)=>{
-    const m=calculateBonuses({
-      attackerWeapon:aw,defenderWeapon:dw,
-      attackerHero:ctx.liste_heros[0],defenderHero:ctx.liste_heros[1],
-      weaponAdvantageFactor:context.weaponAdvantageFactor??0,
-      morale:context.morale??{},special:context.special??{},
-      fortification:context.fortification??{}
-    });
-    return {attaque_peloton_heros:m.attackStackHero,attaque_unites_heros:m.attackUnitsHero,
-      attaque_peloton_arme:m.attackWeapon,attaque_peloton_special:m.attackSpecial,
-      defense_peloton_heros:m.defendStackHero,defense_unites_heros:m.defendUnitsHero,
-      defense_peloton_arme:m.defendWeapon,defense_peloton_special:m.defendSpecial,
-      defense_peloton_fortifications:m.defendFortification};
-  };
+  // Unlike V6.2, the bonus calculation is now the UNMODIFIED
+  // historical bonus_attaque_defense, not the adapter under test.
+  ctx.competences_speciales.attaquant.pieges=context.special?.attackerTraps??0;
+  ctx.competences_speciales.defenseur.pieges=context.special?.defenderTraps??0;
   ctx.simulation_combat=turn=>{
     if(turn>maxRounds)throw new Error('Historical encounter exceeded test round limit');
     const ai=ctx.peloton_attaque,di=ctx.peloton_defense;
@@ -245,6 +239,6 @@ export function runHistoricalEncounter({
     permanent,htmlRows:{battle:battleRows.length,losses:rawRows.length},
     hero:{attacker:ctx.liste_heros[0],defender:ctx.liste_heros[1]},
     provenance:'original-simulation_rencontre+lancement_sorts+simulation_combat (headless shim)',
-    limitations:['synthetic unit catalog and resolved spell powers','shared bonus policy; not the original bonus function',
+    limitations:['synthetic unit catalog and resolved spell powers','native historical hero bonuses with fixture-injected context',
       'no authentic browser/UI rendering','no siege/PvE/admission branch validation','no MMHK S2 coefficient certification']};
 }
