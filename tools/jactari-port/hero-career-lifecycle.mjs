@@ -35,10 +35,13 @@ export function transitionJactariCareer({profile,careers,op,slot,careerId},
  }else if(careerId!==undefined)throw new RangeError('Abandon requires no new career ID');
 
  let next=previous.careers.filter(c=>c.slot!==slot).map(convert);
+ // Replacing a career must first drop its own Scribe/Arcana contribution.
+ // Only the surviving OTHER careers may pass along a shared learned rank.
+ const remaining=calculateJactariCareerBudget({profile,careers:next},tables);
  if(op!=='abandon'){
   const talents=tables.talents[careerId].flatMap((talent,index)=>{
    const name=talent?.nom?.fr;
-   const rank=sharedNames.has(name)?previous.shared[name]??0:0;
+   const rank=sharedNames.has(name)?remaining.shared[name]??0:0;
    return rank>0?[{index,rank}]:[];
   });
   next.push({slot,careerId,talents});
