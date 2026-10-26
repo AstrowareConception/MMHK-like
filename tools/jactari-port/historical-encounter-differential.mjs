@@ -34,6 +34,18 @@ export function compareHistoricalEncounter(input) {
         check(key+'.startPower.'+side,
           a.before[side]*modernUnit.unitPower,b.duel.basePower[side]);
     }
+    for(const [nativeField,portedField] of Object.entries({
+      attaque_unites_heros:'attackUnitsHero',
+      attaque_peloton_heros:'attackStackHero',
+      attaque_peloton_arme:'attackWeapon',
+      attaque_peloton_special:'attackSpecial',
+      defense_unites_heros:'defendUnitsHero',
+      defense_peloton_heros:'defendStackHero',
+      defense_peloton_arme:'defendWeapon',
+      defense_peloton_special:'defendSpecial',
+      defense_peloton_fortifications:'defendFortification'
+    }))check(key+'.bonuses.'+portedField,
+      a.historicalBonuses[nativeField],b.modifiers[portedField]);
     check(key+'.draw',a.draw,b.duel.draw);
     check(key+'.falseDraw',a.falseDraw,b.duel.falseDraw);
   }
