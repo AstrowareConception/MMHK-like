@@ -96,5 +96,7 @@ export function runOriginalSpellPower({spell,side,attackerWeapon,defenderWeapon,
  }
  vm.runInContext(original,ctx,{timeout:1000});
  const result=vm.runInContext('puissance_effective_sort(0,inputSide,0,inputA,inputD)',ctx,{timeout:1000});
- return {power:result?.puissance,provenance:artifactIds===null?'unmodified Jactari spell power with empty artifact slots':'unmodified Jactari spell power and authentic artifact catalog'};
+ const actualArtifactBonus=artifactIds===null?0:
+  vm.runInContext('bonus_magie_artefacts(liste_heros[0],_sorts[0],inputSide===\'a\'?inputA:inputD,inputSide===\'a\'?inputD:inputA).bonus',ctx,{timeout:1000});
+ return {power:result?.puissance,actualArtifactBonus,provenance:artifactIds===null?'unmodified Jactari spell power with empty artifact slots':'unmodified Jactari spell power and authentic artifact catalog'};
 }
