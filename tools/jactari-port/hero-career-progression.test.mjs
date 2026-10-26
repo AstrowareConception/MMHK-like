@@ -1,8 +1,8 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import {getJactariHeroTables} from './hero-source-tables.mjs';
-import {isJactariCareerAllowed,calculateJactariCareerBudget} from './hero-career-progression.mjs';
-import {originalCareerAllowed,originalCareerTalentLedger} from './historical-career-oracle.mjs';
+import {isJactariCareerAllowed,calculateJactariCareerBudget,changeJactariCareerRank} from './hero-career-progression.mjs';
+import {originalCareerAllowed,originalCareerTalentLedger,originalCareerRankTransition} from './historical-career-oracle.mjs';
 
 const t=getJactariHeroTables();
 const profile=(faction=0,archetype=0)=>({
@@ -112,4 +112,62 @@ test('no mutation of persisted profile or career choice list',()=>{
  const copy=structuredClone(input);
  calculateJactariCareerBudget(input,t);
  assert.deepEqual(input,copy);
+});
+
+test('120 promotions and reductions replay actual Jactari change_talent()',()=>{
+ let tested=0;
+ for(let f=0;f<t.factions.length;f++)
+  for(let a=0;a<t.archetypes.length;a++){
+   const p=profile(f,a);
+   for(let id=0;id<t.careers.length;id++){
+    if(!isJactariCareerAllowed({faction:f,archetype:a,careerId:id},t))continue;
+    const tree=t.talents[id];
+    for(let index=0;index<tree.length;index++){
+     const skill=tree[index];
+     if(!skill?.v||skill.v.length<4)continue;
+     const scenarios=[
+      {before:1,after:3},{before:3,after:1}
+     ];
+     for(const x of scenarios){
+      const careers=[career(id,1,[{index,rank:x.before}])];
+      const input={profile:p,careers,slot:1,index,rank:x.after};
+      const actual=changeJactariCareerRank(input,t);
+      const original=originalCareerRankTransition(input);
+      assert.equal(actual.before.spent,original.beforeSpent);
+      assert.equal(actual.deltaSpent,original.deltaSpent,
+       JSON.stringify({f,a,id,index,...x}));
+      assert.deepEqual(actual.after.careers[0].ranks,original.careers[0].ranks);
+      tested++;
+      if(tested>=120)break;
+     }
+     if(tested>=120)break;
+    }
+    if(tested>=120)break;
+   }
+   if(tested>=120)break;
+  }
+ assert.equal(tested,120);
+});
+test('shared rank promotion and reduction replay historical propagation',()=>{
+ for(const name of ['Scribe','Maitre des arcanes']){
+  const found=t.careers.map((_,id)=>({id,index:t.talents[id]?.findIndex(x=>x?.nom?.fr===name)}))
+   .filter(v=>v.index>=0);
+  let pair=null,p=null;
+  for(let f=0;f<t.factions.length&&!pair;f++)
+   for(let a=0;a<t.archetypes.length&&!pair;a++){
+    const options=found.filter(x=>isJactariCareerAllowed({faction:f,archetype:a,careerId:x.id},t));
+    if(options.length>=2){pair=options.slice(0,2);p=profile(f,a);}
+   }
+  assert.ok(pair,name+' two eligible careers required');
+  for(const [before,after] of [[1,3],[3,1]]){
+   const input={profile:p,careers:pair.map((x,i)=>
+     career(x.id,i+1,[{index:x.index,rank:before}])),
+    slot:1,index:pair[0].index,rank:after};
+   const actual=changeJactariCareerRank(input,t);
+   const original=originalCareerRankTransition(input);
+   assert.equal(actual.deltaSpent,original.deltaSpent,name+' '+before+'→'+after);
+   for(let i=0;i<2;i++)
+    assert.deepEqual(actual.after.careers[i].ranks,original.careers[i].ranks);
+  }
+ }
 });
