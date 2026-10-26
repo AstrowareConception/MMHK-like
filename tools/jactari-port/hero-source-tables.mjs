@@ -24,6 +24,8 @@ export function getJactariHeroTables(){
      wayRanking:context._classement_voies,
      wayMultiplier:context._multiplicateur_voie,
      artifacts:context._artefacts,
+     artifactEffects:context._effets,
+     combatArtifactEffects:context._effets_combat,
      equipmentSlots:context._slots,
      careers:context._carrieres,
      talents:context._talents,
