@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-26",
+  "milestone": "V7.0 tranche 2 — military missions state machine and trusted scheduler integration",
+  "reference": "Engineering reliability subset; no certified Ubisoft MMHK S2 movement, mission or capture model.",
+  "delivery": {
+    "store": "tools/jactari-port/trusted-hero-store.mjs",
+    "lifecycle": "tools/jactari-port/server-military-mission.mjs",
+    "binding": "tools/jactari-port/server-transactional-battle.mjs",
+    "tests": "tools/jactari-port/server-military-mission.test.mjs"
+  },
+  "sqliteSchema": {
+    "tables": [
+      "military_missions",
+      "military_mission_events"
+    ],
+    "uniqueReservation": "partial UNIQUE index on active attacker in traveling, arrived, returning",
+    "states": [
+      "traveling",
+      "arrived",
+      "returning",
+      "completed",
+      "cancelled"
+    ],
+    "events": [
+      "dispatched",
+      "arrived",
+      "battle_committed",
+      "return_scheduled",
+      "return_completed",
+      "administratively_cancelled"
+    ],
+    "atomicBinding": "casualties, receipt, battle events and arrived -> returning within one BEGIN IMMEDIATE",
+    "travel": "server-supplied trusted epoch millis, never inferred"
+  },
+  "verified": {
+    "baseline_tests": 356,
+    "initial_mission_tests": 364,
+    "later_interception_guard_tests": 366,
+    "last_verified_ci": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40397513128",
+    "original_mmkh_s2_movement_proof": false
+  },
+  "exercised": [
+    "idempotent dispatch and one active reservation per attacker",
+    "blocked profile updates and direct combat while traveling",
+    "trusted arrival clock and fresh target authorization",
+    "exact mission binding for idempotent battle",
+    "returning transition atomic with troop losses",
+    "trusted return scheduling and completion",
+    "ordered durable mission journal, no repeated audit events",
+    "rollback of battle keeps arrived state and untouched armies",
+    "reopening SQLite across stages",
+    "administrative cancellation only before a combat",
+    "refuse field interception of traveling target",
+    "fail-closed historical prebattle capture without invented wounds"
+  ],
+  "unavailable": [
+    "authoritative world map distances and historical travel speeds",
+    "real sessions and server diplomacy, target visibility, beginner protection",
+    "physical detachment movements and hero interceptions",
+    "capture/wound/recovery effects and mission planning",
+    "distributed scheduler reliability and migrations",
+    "independent Ubisoft MMHK S2 rule certification"
+  ],
+  "gate": {
+    "C17": "implemented_partial",
+    "V70": "in_progress",
+    "productionBattleArbiterAllowed": false
+  },
+  "source_license": "GPL-3.0-or-later"
+}
