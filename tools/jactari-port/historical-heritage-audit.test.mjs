@@ -34,7 +34,7 @@ test('original source references level-15/30 variants but the archived skill cat
 test('documented heritage level thresholds and rounding: 120 original combat comparisons',()=>{
  let count=0;
  const levels=[1,14,15,16,29,30,31,40];
- for(const level of levels)for(const side of ['attacker','defender'])
+ outer: for(const level of levels)for(const side of ['attacker','defender'])
   for(const archetype of [0,1,3])
    for(const kind of ['heros_superieur','revelation_de_caracteristiques','none']){
     const heritage=kind==='none'?{}:{[kind]:1+(count%10)};
@@ -49,10 +49,7 @@ test('documented heritage level thresholds and rounding: 120 original combat com
       ' original='+a+' port='+b);
     }
     count++;
-    if(count>=120)break;
-    if(count>=120)break;
-    if(count>=120)break;
-    if(count>=120)break;
+    if(count>=120)break outer;
    }
  assert.equal(count,120);
 });
