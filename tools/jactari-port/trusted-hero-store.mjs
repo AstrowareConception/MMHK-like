@@ -316,6 +316,8 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
     }else if(missionId!==null)throw new Error('Unknown military mission');
     if(missionId===null&&activeMission.get(attackerHeroId))
      throw new Error('Attacking hero is reserved by a military mission');
+    if(activeMission.get(defenderHeroId))
+     throw new Error('Defending hero is traveling or returning; field interception unsupported');
     const result=calculate({attacker:structuredClone(attacker),
       defender:structuredClone(defender)});
     if(!isRecord(result)||!['attacker','defender','mutual-dispersion'].includes(result.status)||
@@ -389,6 +391,8 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
     }
     if(activeMission.get(attackerHeroId))
      throw new Error('Attacking hero already reserved by active military mission');
+    if(activeMission.get(defenderHeroId))
+     throw new Error('Target hero is on an active mission; field interception unsupported');
     insertMission.run(missionId,actorPlayerId,attackerHeroId,
      defenderHeroId,arrivalAtMs,attacker.revision);
     addMissionEvent(missionId,{phase:'dispatched',timeMs:nowMs,
@@ -419,6 +423,8 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
     if(nowMs<m.arrival_at_ms)throw new Error('Military mission has not arrived yet');
     if(m.attacker_revision!==attacker.revision)
      throw new Error('Mission attacker changed since dispatch');
+    if(activeMission.get(m.defender_hero_id))
+     throw new Error('Mission defender departed; field interception is unsupported');
     if(arriveMission.run(missionId).changes!==1)
      throw new Error('Arrival state transition failed');
     addMissionEvent(missionId,{phase:'arrived',timeMs:nowMs,
