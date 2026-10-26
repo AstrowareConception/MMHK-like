@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-26",
+  "phase": "Jactari V6.6 tranche 3",
+  "reference": "Jactari 4.1.3-MTR community calculator, NOT independently verified MMHK S2",
+  "original_script": "data/Jactari/src/scripts/heros.min.js",
+  "native_functions_executed": [
+    "change_carriere",
+    "desactive_carriere",
+    "change_talent",
+    "maj_comp",
+    "validite_carriere",
+    "change_respec",
+    "change_tenancier"
+  ],
+  "bounded_scope": "Starting from consistent normalized career plans; native original function bodies with simulated jQuery controls; original transient interface states not fully modeled",
+  "delivered_files": [
+    "tools/jactari-port/hero-career-lifecycle.mjs",
+    "tools/jactari-port/historical-career-lifecycle-oracle.mjs",
+    "tools/jactari-port/hero-career-lifecycle.test.mjs",
+    "tools/jactari-port/historical-respecialization.test.mjs"
+  ],
+  "verified": {
+    "scenarios_select_replace_abandon": 60,
+    "ordinary_refund_and_shared_scenarios": "targeted tests for rank-3 refund, Scribe/Arcana peer survival, same-career reset",
+    "respecialization_boundaries": "40 hero levels × 22 requested respecialization values; original change_respec",
+    "steward_boundaries": "0 through 5; original change_tenancier",
+    "node_test_cases_total": 313,
+    "node_test_cases_passed": 313,
+    "failed": 0,
+    "workflow_url": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40306285724",
+    "head_sha_verified": "6c3c6639fe40dab8df0185f9ea86e54cd1aa6004"
+  },
+  "discrepancies_and_resolutions": [
+    "Missing shared Scribe/Arcana key in strict final ledger has rank-zero semantics; test normalizes this when comparing original arrays",
+    "Original UI permits reselecting the same career, resetting its ranks; this is an actual allowed transition",
+    "First lifecycle implementation incorrectly carried the outgoing career's own shared rank into a replacement; port now derives only from surviving careers"
+  ],
+  "important_limitations": [
+    "Source-accurate only in checked scenarios; not all UI changes or intermediate divergent shared ranks are modeled",
+    "Legendary career prerequisites and season-specific progression rules remain open",
+    "No database transaction or ownership verification for hero changes",
+    "Original Jactari version does not prove Ubisoft MMHK Season 2 equivalence"
+  ],
+  "c03": "implemented_partial",
+  "v66": "in_progress",
+  "production_ready": false,
+  "source_license": "GPL-3.0-or-later"
+}
