@@ -1,0 +1,82 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-10-26",
+  "subject": "V6.6 tranche 6: recover original MMHK-Plus 2013 real client-to-Jactari hero mapping and S2 caveat",
+  "primary_source": {
+    "repo": "Aendawyn/MMHK-Plus",
+    "commit": "e8d862d82741986759b88012421aed8e8175e26e",
+    "original": "MMHK-Plus/src/modules/common/jactari.js",
+    "mirrored": "data/Jactari/upstream-addon/mmhkplus-jactari-2013.js",
+    "original_git_blob_sha": "da8d683044d5803c557888218169b6c722ea0abf",
+    "verified_bytes": 41473,
+    "license": "GPL-3.0-or-later"
+  },
+  "historical_general_table_commits": [
+    "cf74dba3695faf654ac11549a2e14b3bd8e6a7d9",
+    "3ef6eb704b8101128fb5f4327070771f58a8e14a",
+    "d512785e389b3e053fee3cdeb2046385e1c27450",
+    "155a87b174ffe6e59fd389f921a4396af35d44fe",
+    "468e1d59cf5e7f8c9f75a09e6b785a8585b3d005",
+    "7fac4b9bda0425df154b39681d1e3c25e09a5350"
+  ],
+  "historical_general_table_absences": {
+    "revelation_de_caracteristiques_15": true,
+    "revelation_de_caracteristiques_30": true,
+    "revelation_de_caracteristiques": false,
+    "note": "Absence from six inspected revisions, not proof of absence on Ubisoft's server"
+  },
+  "native_server_shaped_fields": [
+    "heroSkillList",
+    "heroClassSkillEntityTagName",
+    "level",
+    "equipedArtefacts",
+    "playerHeredityAbilityList",
+    "heredityAbilityEntity.tagName",
+    "heredityAbilityEntity.rankingPath"
+  ],
+  "verified_bindings": {
+    "legendary_client_tag_count": 24,
+    "legendary_values_per_tag": 4,
+    "legendary_runtime_original_comparisons": 96,
+    "heredity_client_tag_count": 9,
+    "example_original_heritage_tag": "CHARACTERISTICS_ILLUMINATION",
+    "jactari_target": "revelation_de_caracteristiques",
+    "original_mapping_function": "prepare_talent",
+    "test_path": "tools/jactari-port/original-client-hero-tags.test.mjs",
+    "bridge_code": "tools/jactari-port/original-client-hero-tags.mjs",
+    "trustworthy_entitlement_claim": false
+  },
+  "key_season_limitation": {
+    "observed_literal": "donnees.saison = MMHKPLUS.getElement(\"Player\").get(\"season\"); if (donnees.saison < 3) donnees.saison = 3;",
+    "meaning": "The addon-to-calculator path replaces game seasons 1 and 2 by 3. It cannot establish independent S2 rules.",
+    "observed_in": "data/Jactari/upstream-addon/mmhkplus-jactari-2013.js",
+    "mmhk_s2_parity_certified": false
+  },
+  "client_bundles": {
+    "1.5.0.39-4-MTR": {
+      "path": "data/assets-recovered/ubisoft-archive/1.5.0.39-4-MTR/js/prod.js",
+      "bytes": 1731927,
+      "lexical_legendary_mentions": 0
+    },
+    "4.1.3-MTR": {
+      "path": "data/assets-recovered/ubisoft-archive/4.1.3-MTR/js/prod.js",
+      "bytes": 1997286,
+      "lexical_legendary_mentions": 243
+    },
+    "disclaimer": "Lexical occurrences reflect client UI content and do not certify server-side game mechanics"
+  },
+  "verification": {
+    "node_tests": 333,
+    "passed": 333,
+    "failed": 0,
+    "ci_url": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40332476221",
+    "verified_head_sha": "14d3a70d1ed9b65403709c6726cbd44c1c6d14f5"
+  },
+  "policy": {
+    "C03": "implemented_partial",
+    "C18": "blocked_source",
+    "V66": "in_progress",
+    "production_battle_arbiter_allowed": false
+  },
+  "next": "Obtain independent Ubisoft MMHK S2 source for legendary unlocks and missing _15/_30 heritage coefficients; wire a real authenticated persisted hero repository"
+}
