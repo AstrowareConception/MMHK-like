@@ -93,7 +93,15 @@ Le scanner [`original-ubisoft-source-audit.mjs`](../../tools/jactari-port/origin
 
 Les occurrences lexicales sont un **indice d'interface et de période**, pas des constantes ni des permissions du moteur de combat. Les versions des clients récupérées ne suffisent pas à déterminer les prérequis ni les valeurs de la saison 2.
 
-## 5. Clôture limitée et prochaines tâches
+## 5. Vérification jusqu'à la bataille
+
+Une [fixture d'intégration supplémentaire](../../tools/jactari-port/original-client-hero-tags.test.mjs) transforme une `heroSkillList` d'époque et une `playerHeredityAbilityList` en données de construction d'un héros, puis exécute un vrai combat dans `simulateBattleWithDerivedHeroes()`. Un **registre de droits distinct, supposé confirmé côté serveur**, doit approuver les rangs observés ; un rang observé à 2 refusé par une autorisation plafonnée à 1 provoque une erreur.
+
+Le test réexécute aussi le code original de normalisation des saisons pour les valeurs **1, 2, 3 et 4** (résultats **3, 3, 3, 4**). Cette preuve supplémentaire est archivée dans [le rapport de données](../../data/analysis/jactari-v66-original-client-source-provenance-2026-10-26.json).
+
+La suite complète est **[335 tests Node réussis sur 335](https://github.com/AstrowareConception/MMHK-like/actions/runs/40333523770)**, sans échec. Les correspondances 24×4 sont des scénarios d'un même test `node:test`, pas 96 tests Node distincts.
+
+## 6. Clôture limitée et prochaines tâches
 
 **Tranche 6 — Acquis :** source 2013 originale archivée, 24 tags légendaires validés par exécution de `prepare_talent()`, neuf tags d'hérédité source-adossés, intégrité Git vérifiée, six éditions historiques du catalogue examinées, et fail-closed sur les branches orphelines.
 
