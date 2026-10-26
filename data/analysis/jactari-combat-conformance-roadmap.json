@@ -25,11 +25,11 @@
   ],
   "tracking": {
     "lastVerifiedFullSuite": {
-      "tests": 296,
-      "passed": 296,
+      "tests": 306,
+      "passed": 306,
       "failed": 0,
-      "ciUrl": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40300003415",
-      "commit": "59f89349725a97e8842fb866f173ff28da5d5f64"
+      "ciUrl": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40302654585",
+      "commit": "83648c1497f6ef4cd15bcf06a1264aec655861db"
     },
     "metricPolicy": "Les nombres de tests sont des régressions, pas un pourcentage d'équivalence historique.",
     "lastStatusReview": "2026-10-26"
@@ -71,10 +71,11 @@
         "tools/jactari-port/hero-page-snapshot.test.mjs",
         "tools/jactari-port/hero-talent-bonuses.test.mjs",
         "tools/jactari-port/hero-combat-snapshot.test.mjs",
-        "tools/jactari-port/hero-combat-battle.test.mjs"
+        "tools/jactari-port/hero-combat-battle.test.mjs",
+        "tools/jactari-port/hero-career-progression.test.mjs"
       ],
-      "validated": "V6.6 tranche 1: 310 fiches de héros comparées à maj_adm/maj_comp/equipe_artefact, 150 choix de talents comparés au fragment combat original, 200 profils de héros de combat confrontés à maj_situation, puis raccordement testé au moteur unifié.",
-      "gap": "Validation exhaustive des arbres de carrières et prérequis de talents, classes légendaires, hérédité alternative _15/_30, bonus de sets et dérivation complète des règles de situation/S2; phase multi-joueurs non autorisée.",
+      "validated": "V6.6 tranche 1: 310 fiches de héros comparées à maj_adm/maj_comp/equipe_artefact, 150 choix de talents comparés au fragment combat original, 200 profils de héros de combat confrontés à maj_situation, puis raccordement testé au moteur unifié. V6.6 tranche 2: accès aux carrières comparé sur la matrice faction/archétype/carrière du calculateur original, 170 achats de talents, 120 transitions rang+remboursement et Scribe/Arcana partagés, validation de budgets au pont de combat.",
+      "gap": "Transitions intégrales change_carriere/desactive_carriere, divergence temporaire Scribe/Arcana, carrière légendaire, prérequis de talent et hérédités _15/_30, ensembles d'artefacts, identité serveur et équivalence S2 toujours non certifiés.",
       "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
     },
     {
@@ -287,7 +288,7 @@
       "id": "V6.6",
       "title": "Génération des caractéristiques et talents",
       "state": "in_progress",
-      "exit": "Attributs d'éditeur et statistiques de combat de héros à partir des tables originales intégrés et comparés sur 510 profils; reste la légalité des carrières, héritages alternatifs, bonus de sets et conformité historique complète."
+      "exit": "Tranches 1 et 2 implémentées et validées sur cas historiques bornés; poursuivre transitions complètes achat/abandon/remplacement de carrières, prérequis légendaires, respec et contrôle serveur."
     },
     {
       "id": "V6.7",
