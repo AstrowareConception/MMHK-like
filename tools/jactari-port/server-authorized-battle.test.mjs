@@ -107,6 +107,9 @@ test('store rejects forged calculated stats, unauthorized legendary ranks and un
   ]}),/Unrecognized stored army stack field/);
   assert.throws(()=>store.putHero({...original,ownerId:'unknown'}),
    /registered active player/);
+  assert.throws(()=>store.putHero({...original,
+    careers:[{slot:1,careerId:20,talents:[{index:2,rank:2}]}]}),
+   /Legendary career IDs require a separate server grant/);
   assert.equal(store.getHero('hero-c'),null);
  }finally{store.close();}
 });
@@ -174,5 +177,20 @@ test('spell orders are read from persisted hero data and resolved from server ca
   assert.equal(result.events.find(e=>e.phase==='spell-power').spellId,0);
   assert.equal(store.getHero('hero-a').spellOrders[1].id,0);
   assert.equal(store.getHero('hero-a').revision,2);
+ }finally{store.close();}
+});
+
+test('ordinary career path cannot bypass legendary entitlement checks during a battle',()=>{
+ const store=fixture();
+ try{
+  const options={...request(store),command};
+  assert.throws(()=>simulateBattleWithDerivedHeroes({
+   attackers:army(180),defenders:army(120),
+   heroProfiles:{attacker:profile(1),defender:profile(2)},
+   heroCareers:{attacker:[{slot:1,careerId:20,
+    talents:[{index:2,rank:2}]}],defender:[]},
+   lossPolicy:rules.lossPolicy
+  }),/Legendary classes cannot bypass server grants/);
+  assert.equal(previewServerAuthorizedHeroBattle(options).authorization.readOnly,true);
  }finally{store.close();}
 });
