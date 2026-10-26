@@ -1,0 +1,328 @@
+{
+  "schemaVersion": 1,
+  "asOf": "2026-10-26",
+  "project": "AstrowareConception/MMHK-like",
+  "goal": "Vérifier toutes les branches pertinentes du moteur de combat et des héros à Jactari, puis établir les divergences avec MMHK saison 2 avant arbitrage serveur",
+  "originalReference": {
+    "version": "v.4.1.3-MTR",
+    "date": "2013-03-04",
+    "source": "data/Jactari/src/scripts/combat.min.js",
+    "seasonTwoCertified": false
+  },
+  "statusDefinitions": {
+    "differential_bounded": "Différentiel borné — ne prouve pas tous les scénarios",
+    "integration_tested": "Intégré et testé — comparaison globale historique à compléter",
+    "implemented_partial": "Implémentation partielle — preuve exhaustive absente",
+    "not_started": "Non livré — chantier priorisé",
+    "blocked_source": "Bloqué par sources de saison non retrouvées"
+  },
+  "evidenceRules": [
+    "Un fichier de code ou un test passant ne confère jamais une certification globale.",
+    "differential_bounded requiert un test comparant directement une branche Jactari originale aux résultats portés.",
+    "integration_tested couvre le câblage et les entrées de confiance mais pas tous les cas historiques.",
+    "Les coefficients du calculateur Jactari ne sont pas étiquetés valeurs MMHK S2 sans source propre à la saison.",
+    "Une ligne passe à certified uniquement si 100% de ses cas et frontières ont un oracle indépendant, les écarts expliqués, et une CI reproductible."
+  ],
+  "tracking": {
+    "lastVerifiedFullSuite": {
+      "tests": 276,
+      "passed": 276,
+      "failed": 0,
+      "ciUrl": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40296728414",
+      "commit": "92ab5b9131a6daba69b06e80c993ad3b851a5faf"
+    },
+    "metricPolicy": "Les nombres de tests sont des régressions, pas un pourcentage d'équivalence historique."
+  },
+  "requirements": [
+    {
+      "id": "C01",
+      "title": "Mathématiques des duels",
+      "status": "differential_bounded",
+      "milestone": "V6.1",
+      "implementation": "tools/jactari-port/core.mjs",
+      "evidence": [
+        "tools/jactari-port/differential.test.mjs"
+      ],
+      "validated": "Duel isolé original comparé à la fonction portée ; plusieurs centaines de cas",
+      "gap": "Marges extrêmes, valeurs flottantes, profils S2 distincts",
+      "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
+    },
+    {
+      "id": "C02",
+      "title": "Ordonnancement des neuf pelotons",
+      "status": "differential_bounded",
+      "milestone": "V6.2",
+      "implementation": "tools/jactari-port/unified-battle.mjs",
+      "evidence": [
+        "tools/jactari-port/historical-full-seeded.test.mjs"
+      ],
+      "validated": "Séquences complètes sans/avec magie et invocations soumises à l'orchestrateur Jactari",
+      "gap": "États invalides, interruption en plein tour et troisièmes invocations",
+      "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
+    },
+    {
+      "id": "C03",
+      "title": "Construction complète des héros",
+      "status": "not_started",
+      "milestone": "V6.6",
+      "implementation": "data/Jactari/src/scripts/donnees.heros.min.js",
+      "evidence": [],
+      "validated": "Catalogue original d'archétypes, progression et carrières disponible",
+      "gap": "Calcul des caractéristiques depuis niveau, carrière, talents, légendaires et héritage ; fixtures originales",
+      "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
+    },
+    {
+      "id": "C04",
+      "title": "Modificateurs militaires de héros",
+      "status": "differential_bounded",
+      "milestone": "V6.3",
+      "implementation": "tools/jactari-port/bonuses.mjs",
+      "evidence": [
+        "tools/jactari-port/historical-hero-encounters.test.mjs"
+      ],
+      "validated": "600 profils arithmétiques, 83 rencontres avec héros, bonus historiques indépendants",
+      "gap": "Héros absents, combinaison complète des objets et bug legwarrior original",
+      "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
+    },
+    {
+      "id": "C05",
+      "title": "Artefacts et ensembles de héros",
+      "status": "implemented_partial",
+      "milestone": "V6.7",
+      "implementation": "tools/jactari-port/artifact-spell-bonus.mjs",
+      "evidence": [
+        "tools/jactari-port/historical-artifact-differential.test.mjs"
+      ],
+      "validated": "Effets magiques unitaires des artefacts conformes sur les cas essayés",
+      "gap": "Bonus non magiques, sets, équipement valide et restrictions de port",
+      "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
+    },
+    {
+      "id": "C06",
+      "title": "Puissance effective des sorts",
+      "status": "differential_bounded",
+      "milestone": "V6.4",
+      "implementation": "tools/jactari-port/spell-power.mjs",
+      "evidence": [
+        "tools/jactari-port/historical-equipped-spell.test.mjs"
+      ],
+      "validated": "400 puissances sans équipement + 120 avec artefacts confrontées au code original",
+      "gap": "Plusieurs artefacts et résistances combinées, effets nuls, plafonds saisonniers",
+      "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
+    },
+    {
+      "id": "C07",
+      "title": "Puissance recalculée au tour",
+      "status": "integration_tested",
+      "milestone": "V6.5",
+      "implementation": "tools/jactari-port/hero-spell-resolution.mjs",
+      "evidence": [
+        "tools/jactari-port/hero-spell-resolution.test.mjs"
+      ],
+      "validated": "Ordres ID seuls, calcul au tour, armes courantes, héros et artefacts ; aucune valeur forgée dans l'ordre",
+      "gap": "Comparer toute la chaîne ordre→sort→duel à Jactari avec véritables fiches de héros",
+      "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
+    },
+    {
+      "id": "C08",
+      "title": "Disponibilité et programmation des sorts",
+      "status": "implemented_partial",
+      "milestone": "V6.6",
+      "implementation": "tools/jactari-port/spell-eligibility.mjs",
+      "evidence": [
+        "tools/jactari-port/spell-eligibility.test.mjs"
+      ],
+      "validated": "Deux sorts et deux tours, écoles/filtres de l'interface Jactari",
+      "gap": "Déverrouillages réels, coût de mana et contexte de serveur",
+      "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
+    },
+    {
+      "id": "C09",
+      "title": "Invocations, renforts, résurrections",
+      "status": "differential_bounded",
+      "milestone": "V6.2",
+      "implementation": "tools/jactari-port/unified-battle.mjs",
+      "evidence": [
+        "tools/jactari-port/historical-magic-differential.test.mjs"
+      ],
+      "validated": "Invocations en slots 0/1 et effets mixtes testés contre l'orchestrateur historique",
+      "gap": "Troisième invocation, doubles résurrections complexes et clôture exacte",
+      "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
+    },
+    {
+      "id": "C10",
+      "title": "Armes, morale, pièges, fortifications",
+      "status": "differential_bounded",
+      "milestone": "V6.3",
+      "implementation": "tools/jactari-port/bonuses.mjs",
+      "evidence": [
+        "tools/jactari-port/historical-bonuses-differential.test.mjs"
+      ],
+      "validated": "Bonus duels original et 600 compositions de héros/armes/fortifications",
+      "gap": "Moral calculé depuis composition initiale, sièges, bâtiments, dolmens, artefacts",
+      "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
+    },
+    {
+      "id": "C11",
+      "title": "Admission PvE et PvP",
+      "status": "differential_bounded",
+      "milestone": "V6.3",
+      "implementation": "tools/jactari-port/admission.mjs",
+      "evidence": [
+        "tools/jactari-port/admission-differential.test.mjs"
+      ],
+      "validated": "4 000 décisions comparées à la branche de Jactari et frontières vérifiées",
+      "gap": "Événements serveur, conséquences de capture/fuite et règles S2",
+      "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
+    },
+    {
+      "id": "C12",
+      "title": "Salves et tirs préalables",
+      "status": "implemented_partial",
+      "milestone": "V6.8",
+      "implementation": "tools/jactari-port/ranged.mjs",
+      "evidence": [
+        "tools/jactari-port/ranged.test.mjs"
+      ],
+      "validated": "Phases primitives en JS avec tests de salves",
+      "gap": "Différentiel complet du tir de barrage, baliste, bombardement et résistances",
+      "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
+    },
+    {
+      "id": "C13",
+      "title": "Sièges et haltes",
+      "status": "not_started",
+      "milestone": "V6.8",
+      "implementation": "data/Jactari/src/scripts/combat.min.js",
+      "evidence": [],
+      "validated": "Source contenant tir_engins_siege et conditions de lieu",
+      "gap": "Oracles siège et halte, ordre des effets, bonus bâtisseur/sapeur, pertes",
+      "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
+    },
+    {
+      "id": "C14",
+      "title": "PNJ, héros absents et phases exceptionnelles",
+      "status": "not_started",
+      "milestone": "V6.9",
+      "implementation": "data/Jactari/src/scripts/combat.min.js",
+      "evidence": [],
+      "validated": "Branches historiques identifiées",
+      "gap": "Différentiels hostiles : PNJ avec/sans héros, fuite, combat vide, sort tuant tout le monde",
+      "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
+    },
+    {
+      "id": "C15",
+      "title": "Pertes définitives, relève et persistance",
+      "status": "differential_bounded",
+      "milestone": "V6.2",
+      "implementation": "tools/jactari-port/losses.mjs",
+      "evidence": [
+        "tools/jactari-port/historical-encounter.test.mjs"
+      ],
+      "validated": "Rapports par peloton comparés sur fixtures mixtes ; deux types de résurrection",
+      "gap": "Toutes politiques PvE/PNJ et talents de pertes, bornes de résultat, coefficient S2",
+      "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
+    },
+    {
+      "id": "C16",
+      "title": "Butin, économie, XP et honneur",
+      "status": "implemented_partial",
+      "milestone": "V6.10",
+      "implementation": "tools/jactari-port/losses.mjs",
+      "evidence": [
+        "tools/jactari-port/report.test.mjs"
+      ],
+      "validated": "Coût en or et ressources dans les sous-rapports, pertes conservées",
+      "gap": "Expérience héros, honneur, butin, classement de victoire et vraie économie S2",
+      "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
+    },
+    {
+      "id": "C17",
+      "title": "Arbitrage serveur transactionnel",
+      "status": "not_started",
+      "milestone": "V7.0",
+      "implementation": "docs/game-design/23-ROADMAP-V5-4-V7.md",
+      "evidence": [],
+      "validated": "Objectif architectural défini, aucun arbitre autorisé pour la production",
+      "gap": "Réservation d'armées, ordres atomiques, reprise, capture, blessures, idempotence et rollback",
+      "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
+    },
+    {
+      "id": "C18",
+      "title": "Équivalence MMHK saison 2 indépendante",
+      "status": "blocked_source",
+      "milestone": "V6.11",
+      "implementation": "docs/game-design/30-JACTARI-V63-HEROS-ADMISSION-MODIFICATEURS.md",
+      "evidence": [],
+      "validated": "Référence Jactari communautaire 4.1.3-MTR archivée",
+      "gap": "Captures/rapports S2, variantes de saison, règles serveur Ubisoft non publiées",
+      "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
+    },
+    {
+      "id": "C19",
+      "title": "Sécurité, performance et obligations GPL",
+      "status": "not_started",
+      "milestone": "V7.0",
+      "implementation": "tools/jactari-port/README.md",
+      "evidence": [],
+      "validated": "Licence historique GPL-3.0-or-later identifiée et moteur JS pur",
+      "gap": "Audit redistribution, sources compatibles, charge, limites, validation côté serveur",
+      "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
+    }
+  ],
+  "milestones": [
+    {
+      "id": "V6.5",
+      "title": "Sorts dynamiques et snapshot héros",
+      "state": "in_progress",
+      "exit": "Ordres ID seuls, calcul par tour (réalisé) ; vérification intégrale originale et profil de héros authentique (restant)"
+    },
+    {
+      "id": "V6.6",
+      "title": "Génération des caractéristiques et talents",
+      "state": "open",
+      "exit": "Fiches réelles de héros → valeurs militaires/magiques conformes à Jactari ; écarts S2 explicités"
+    },
+    {
+      "id": "V6.7",
+      "title": "Équipements, sets et synergies",
+      "state": "open",
+      "exit": "Toutes propriétés d'artefacts, ensembles, contraintes et niveaux déterministes validés"
+    },
+    {
+      "id": "V6.8",
+      "title": "Salves, fortifications et sièges",
+      "state": "open",
+      "exit": "Chaque branche de tir/siège et de lieu vérifiée avec le simulateur original"
+    },
+    {
+      "id": "V6.9",
+      "title": "PNJ et cas limites",
+      "state": "open",
+      "exit": "Transitions en combat avec/sans héros, sort terminal et troisième invocation couvertes sans approximation"
+    },
+    {
+      "id": "V6.10",
+      "title": "Bilan militaire et progression",
+      "state": "open",
+      "exit": "Pertes, or, ressources, XP, honneur et butin concordent sur scénarios complets"
+    },
+    {
+      "id": "V6.11",
+      "title": "Certification par saison",
+      "state": "blocked_source",
+      "exit": "Matrice de règles S2 avec preuve indépendante et anomalies historiques résolues"
+    },
+    {
+      "id": "V7.0",
+      "title": "Arbitre serveur multi-joueur",
+      "state": "open",
+      "exit": "Moteur autoritatif, transactionnel, sécurisé, documenté GPL, CI exhaustive et essais de charge"
+    }
+  ],
+  "releaseGate": {
+    "certified": false,
+    "productionBattleArbiterAllowed": false,
+    "required": "Zéro exigence non certifiée, corpus S2 authentique indépendant, vérification réglementaire et licence, historique des combats reproductible, atomicité/anti-double-exécution"
+  }
+}
