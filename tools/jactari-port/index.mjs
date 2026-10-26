@@ -15,3 +15,4 @@ export {deriveJactariHeroPageSnapshot} from './hero-page-snapshot.mjs';
 export {deriveJactariTalentBonuses} from './hero-talent-bonuses.mjs';
 export {deriveJactariCombatHeroSnapshot} from './hero-combat-snapshot.mjs';
 export {simulateBattleWithDerivedHeroes} from './hero-combat-battle.mjs';
+export {isJactariCareerAllowed,calculateJactariCareerBudget,changeJactariCareerRank} from './hero-career-progression.mjs';
