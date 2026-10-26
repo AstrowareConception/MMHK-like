@@ -41,7 +41,7 @@ export function runOriginalSpellPower({spell,side,attackerWeapon,defenderWeapon,
  mastery={level:0,bonusPercent:0,maximumCircle:0,wayBonus:0},
  resistance={level:0,bonusPercent:0,wayBonus:0},
  antiMagic={level:0,bonusPercentPerLevel:0},artifactIds=null}){
- if(artifactEfficiencyPercent!==0)throw new Error('Use a real artifactIds inventory instead of injecting artifact percentage');
+ if(artifactEfficiencyPercent!==0)throw new Error('Historical spell oracle requires real artifacts: use artifactIds rather than an injected efficiency percentage');
  if(!['attacker','defender'].includes(side))throw new RangeError('Invalid side');
  const a=side==='attacker',key=a?'attaquant':'defenseur',enemy=a?'defenseur':'attaquant';
  const hydrated=normalizedHero(hero);
