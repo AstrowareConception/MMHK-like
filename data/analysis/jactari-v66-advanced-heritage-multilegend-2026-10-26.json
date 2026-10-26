@@ -1,0 +1,61 @@
+{
+  "schema_version": 1,
+  "date": "2026-10-26",
+  "milestone": "V6.6 tranche 5",
+  "historical_reference": {
+    "name": "Jactari 4.1.3-MTR",
+    "date": "2013-03-04",
+    "combat_source": "data/Jactari/src/scripts/combat.min.js",
+    "skills_source": "data/Jactari/src/scripts/donnees.general.min.js",
+    "heroes_source": "data/Jactari/src/scripts/donnees.heros.min.js",
+    "source_license": "GPL-3.0-or-later",
+    "verified_mmkh_s2": false
+  },
+  "heritage_audit": {
+    "documented_in_reference": [
+      "heros_superieur",
+      "revelation_de_caracteristiques"
+    ],
+    "code_references_without_skill_catalog": [
+      "revelation_de_caracteristiques_15",
+      "revelation_de_caracteristiques_30"
+    ],
+    "action": "fail_closed_with_named_error_on_positive_unresolved_heritage_rank",
+    "reason": "historic combat references fields absent from archived _competences_hereditaires. Numeric coefficients unknown.",
+    "original_heritage_threshold_profiles": 120,
+    "original_simultaneous_heritage_precedence_profiles": 90,
+    "source_proof": "tools/jactari-port/historical-heritage-audit.test.mjs"
+  },
+  "legendary_stacking": {
+    "documented_classes": 8,
+    "documented_talents": 24,
+    "original_multilegend_hero_profiles": 120,
+    "original_bilateral_multilegend_full_encounters": 48,
+    "independent_original_magic_stack_cases": 3,
+    "source_proof": "tools/jactari-port/historical-multilegend-differential.test.mjs",
+    "limitation": "Rank combinations tested in calculator only; acquisition of simultaneously selected classes not demonstrated legitimate in Ubisoft S2."
+  },
+  "verified_ci": {
+    "url": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40329388212",
+    "commit_sha": "f9f9920a25fbcb8b227bd0a11d1b9c36f3b1f7a9",
+    "node_tests_total": 326,
+    "node_tests_passed": 326,
+    "node_tests_failed": 0,
+    "note": "210 heritage + 168 multiple legendary scenarios are grouped within node:test cases."
+  },
+  "changed_code": [
+    "tools/jactari-port/historical-heritage-audit.mjs",
+    "tools/jactari-port/hero-combat-snapshot.mjs",
+    "tools/jactari-port/historical-heritage-audit.test.mjs",
+    "tools/jactari-port/historical-multilegend-differential.test.mjs"
+  ],
+  "release_policy": {
+    "C03": "implemented_partial",
+    "C04": "differential_bounded",
+    "C06": "differential_bounded",
+    "V66": "in_progress",
+    "certified_s2": false,
+    "production_arbiter_allowed": false
+  },
+  "open": "Recover authoritative missing _15/_30 skill entries if an authentic alternate source exists; never infer coefficients. Research server-season legendary access policy and real hero ownership."
+}
