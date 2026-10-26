@@ -25,11 +25,11 @@
   ],
   "tracking": {
     "lastVerifiedFullSuite": {
-      "tests": 333,
-      "passed": 333,
+      "tests": 335,
+      "passed": 335,
       "failed": 0,
-      "ciUrl": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40332476221",
-      "commit": "14d3a70d1ed9b65403709c6726cbd44c1c6d14f5"
+      "ciUrl": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40333523770",
+      "commit": "2d26abc066963851bc791ed83ec451e0eea785ca"
     },
     "metricPolicy": "Les nombres de tests sont des régressions, pas un pourcentage d'équivalence historique.",
     "lastStatusReview": "2026-10-26"
@@ -82,7 +82,7 @@
         "tools/jactari-port/original-client-hero-tags.test.mjs",
         "tools/jactari-port/original-ubisoft-source-audit.test.mjs"
       ],
-      "validated": "V6.6 tranche 1: 310 fiches de héros comparées à maj_adm/maj_comp/equipe_artefact, 150 choix de talents comparés au fragment combat original, 200 profils de héros de combat confrontés à maj_situation, puis raccordement testé au moteur unifié. V6.6 tranche 2: accès aux carrières comparé sur la matrice faction/archétype/carrière du calculateur original, 170 achats de talents, 120 transitions rang+remboursement et Scribe/Arcana partagés, validation de budgets au pont de combat. V6.6 tranche 3: 60 transitions historiques de sélection/remplacement/abandon comparées aux fonctions originales, y compris remboursement et partage Scribe/Arcanes; contrôles historiques respec et tenancier vérifiés par level/cas limites. V6.6 tranche 4: 8 classes légendaires / 24 talents historiques cartographiés; 144 préparations de héros originales; 48 rencontres complètes avec effets légendaires comparées à l'original; registre des droits des rangs explicite et obligatoire au pont de bataille. V6.6 tranche 5: audit de source démontrant l'absence des tables héréditaires _15/_30, refus explicite de ces valeurs; 120 niveaux documentés + 90 cas de priorité héréditaire contre la préparation historique, 120 héros cumulant 2 à 8 bonus légendaires. V6.6 tranche 6: pont MMHK-Plus original 2013 récupéré et attesté par empreinte Git; 96 correspondances de 24 talents légendaires aux quatre rangs confrontées à prepare_talent() originale; neuf types d'hérédité effectivement reçus du client et transformés depuis playerHeredityAbilityList.",
+      "validated": "V6.6 tranche 1: 310 fiches de héros comparées à maj_adm/maj_comp/equipe_artefact, 150 choix de talents comparés au fragment combat original, 200 profils de héros de combat confrontés à maj_situation, puis raccordement testé au moteur unifié. V6.6 tranche 2: accès aux carrières comparé sur la matrice faction/archétype/carrière du calculateur original, 170 achats de talents, 120 transitions rang+remboursement et Scribe/Arcana partagés, validation de budgets au pont de combat. V6.6 tranche 3: 60 transitions historiques de sélection/remplacement/abandon comparées aux fonctions originales, y compris remboursement et partage Scribe/Arcanes; contrôles historiques respec et tenancier vérifiés par level/cas limites. V6.6 tranche 4: 8 classes légendaires / 24 talents historiques cartographiés; 144 préparations de héros originales; 48 rencontres complètes avec effets légendaires comparées à l'original; registre des droits des rangs explicite et obligatoire au pont de bataille. V6.6 tranche 5: audit de source démontrant l'absence des tables héréditaires _15/_30, refus explicite de ces valeurs; 120 niveaux documentés + 90 cas de priorité héréditaire contre la préparation historique, 120 héros cumulant 2 à 8 bonus légendaires. V6.6 tranche 6: pont MMHK-Plus original 2013 récupéré et attesté par empreinte Git; 96 correspondances de 24 talents légendaires aux quatre rangs confrontées à prepare_talent() originale; neuf types d'hérédité effectivement reçus du client et transformés depuis playerHeredityAbilityList. Raccordement natif au combat testé: heroSkillList d'époque projeté en talents légendaires, autorisation de rang contrôlée séparément ; test d'intégrité Git du pont et comparaison directe 96 cas.",
       "gap": "L'accès serveur réel aux classes et à l'hérédité reste non démontré ; aucune table _15/_30 dans six versions de donnees.general.min.js. Les nouvelles projections sont des observations de données de jeu, pas des autorisations ni des preuves S2.",
       "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
     },
@@ -273,7 +273,7 @@
       "milestone": "V6.11",
       "implementation": "docs/game-design/30-JACTARI-V63-HEROS-ADMISSION-MODIFICATEURS.md",
       "evidence": [],
-      "validated": "Référence Jactari communautaire 4.1.3-MTR archivée Audit Git d'Aendawyn/MMHK-Plus réalisé sur six révisions du catalogue héréditaire; pont Jactari 2013 récupéré et vérifié. Son code remplace explicitement les saisons de jeu <3 par 3 lors du transfert vers le calculateur. Deux anciens scripts prod.js Ubisoft inspectés pour structure/nommage client.",
+      "validated": "Référence Jactari communautaire 4.1.3-MTR archivée Audit Git d'Aendawyn/MMHK-Plus réalisé sur six révisions du catalogue héréditaire; pont Jactari 2013 récupéré et vérifié. Son code remplace explicitement les saisons de jeu <3 par 3 lors du transfert vers le calculateur. Deux anciens scripts prod.js Ubisoft inspectés pour structure/nommage client. La règle de conversion saisons 1 et 2 vers saison 3 dans MMHK-Plus a été exécutée dans un test de référence qui confirme le comportement littéral du code d'origine.",
       "gap": "Le pont 2013 est un oracle impropre pour S2 lorsqu'il force saison <3 à 3. Il faut retrouver des règles serveur ou captures/rapports de bataille Ubisoft S2 non transformés, ainsi que l'obtention des rangs légendaires.",
       "acceptance": "Différentiel historique reproductible incluant les limites connues, aucune divergence inexpliquée et revue de la règle S2."
     },
