@@ -15,7 +15,10 @@ const keywords=[
  'legendary','heredit','heritage','revelation','revelation_de_caracteristiques',
  'sovereign','legwarrior','heroClass','HeroClass','heroSkills',
  'career','skills','classId','experience','unlock','levelRequirement',
- 'ascension','perk','advanced','leader'
+ 'ascension','perk','advanced','leader','heroClassSkill','heroClassSkillEntityTagName',
+ 'playerHeredityAbilityList','heroSkillList','learntClasses',
+ 'LEGENDARY_WARRIOR','LEGENDARY_WIZARD','SHEOGH_SOVEREIGN',
+ 'CHARACTERISTICS_ILLUMINATION','rankingPath','classRequirement'
 ];
 const context=(source,index,n=76)=>source.slice(Math.max(0,index-n),Math.min(source.length,index+n))
  .replace(/[\r\n\t]/g,' ').slice(0,170);
