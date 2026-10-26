@@ -109,6 +109,28 @@
       "verification": "tools/jactari-port/original-client-hero-tags.test.mjs",
       "evidence": "Preserved byte-for-byte original native MMHK client heroSkillList and playerHeredityAbilityList mapper; source coerces seasons below 3 to 3 for Jactari links",
       "limitations": "No proof of Ubisoft season 2 unlock constraints or authenticated server data"
+    },
+    {
+      "source_id": "CODE-01-MMHKPLUS-WORLD-UTILITIES",
+      "repository": "https://github.com/Aendawyn/MMHK-Plus",
+      "commit": "e8d862d82741986759b88012421aed8e8175e26e",
+      "source_path": "MMHK-Plus/src/modules/mmhkplusUtilities.js",
+      "preserved_path": "data/Jactari/upstream-addon/mmhkplus-utilities-2013.js",
+      "git_blob_sha": "90d808618ba819df155197752d14508a2a76cc88",
+      "original_blob_bytes": 13026,
+      "license": "GPL-3.0-or-later",
+      "assertion": "Wraparound Euclidean world distance; NOT exact Ubisoft S2 travel schedule"
+    },
+    {
+      "source_id": "CODE-01-MMHKPLUS-DISTANCE-UI",
+      "repository": "https://github.com/Aendawyn/MMHK-Plus",
+      "commit": "e8d862d82741986759b88012421aed8e8175e26e",
+      "source_path": "MMHK-Plus/src/modules/tools/distances.js",
+      "preserved_path": "data/Jactari/upstream-addon/mmhkplus-distances-2013.js",
+      "git_blob_sha": "fd0ec7c7acfdf0999edb29552be4eeab606d7d21",
+      "original_blob_bytes": 4650,
+      "license": "GPL-3.0-or-later",
+      "assertion": "Informational distance estimates /12 hero, /4 army, /9.375 caravan; not server arrival"
     }
   ]
 }
