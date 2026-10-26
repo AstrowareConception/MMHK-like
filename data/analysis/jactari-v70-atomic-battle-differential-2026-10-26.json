@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-10-26",
+  "milestone": "V7.0 tranche 1 — atomic supported PvP battle writes and idempotent durable receipts",
+  "reference": "Jactari 4.1.3-MTR community oracle. NOT certified Ubisoft MMHK Season 2.",
+  "shippedModules": [
+    "tools/jactari-port/trusted-hero-store.mjs",
+    "tools/jactari-port/server-transactional-battle.mjs"
+  ],
+  "tests": [
+    "tools/jactari-port/server-transactional-battle.test.mjs",
+    "tools/jactari-port/server-authorized-battle.test.mjs"
+  ],
+  "storage": {
+    "transaction": "SQLite BEGIN IMMEDIATE covers authentication/target policy, original-derived battle, bilateral troop updates, receipt and ordered event log",
+    "tables": [
+      "battle_commands",
+      "battle_audit_events"
+    ],
+    "uniqueKey": "commandId plus committed actor, attacker and defender IDs, SHA256 of canonical trusted rules",
+    "atomicWrites": [
+      "attacker and defender army count & revision",
+      "immutable command receipt",
+      "indexed sequence of battle events"
+    ],
+    "failClosed": [
+      "invalid target/player session",
+      "ineligible early capture/wound/retreat",
+      "unsupported result",
+      "corrupted casualty ledger",
+      "unknown army stack identity",
+      "idempotency key collision",
+      "calculation error",
+      "injected failure just before COMMIT"
+    ],
+    "replay": "returns persisted immutable receipt, no second charge, after fresh authorization",
+    "zeroTroops": "empty persistent slot stored as null, not a zero-count stack"
+  },
+  "verified": {
+    "total_node_tests": 356,
+    "passed": 356,
+    "failed": 0,
+    "ci": "https://github.com/AstrowareConception/MMHK-like/actions/runs/40339759720",
+    "verified_head": "6a6a9d7050a533dc523fc90b8d26212170729fbc",
+    "notes": "13 new node:test cases exercise transaction; no guaranteed parallel multiprocess stress"
+  },
+  "notYetImplemented": [
+    "real signed authentication/session server",
+    "world/diplomacy/beginner protection policy",
+    "siege/PvE/halt admissions and mission moves",
+    "capture, wounds, recovery and troop reservation in an ongoing mission",
+    "honor, experience and loot distribution",
+    "production SQLite backup/migrations/load testing",
+    "complete independently verified MMHK S2 combat parity"
+  ],
+  "states": {
+    "C17": "implemented_partial",
+    "V70": "in_progress",
+    "C18": "blocked_source",
+    "productionBattleArbiterAllowed": false
+  }
+}
