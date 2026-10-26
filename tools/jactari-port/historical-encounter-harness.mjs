@@ -104,7 +104,7 @@ export function runHistoricalEncounter({
   if (['retreat','siege','magic','spells','resurrection','specialPhases'].some(k=>context[k]))
     throw new Error('Historical harness requires explicit supported context');
   if (context.attackerSalvos || context.defenderSalvos || context.pvp === false ||
-      context.playerControlled === false || context.fortification?.place > 0)
+      context.playerControlled === false || context.fortification?.place === 3)
     throw new Error('Unported phase/configuration in historical full encounter harness');
   for(const s of [...attackers,...defenders].filter(Boolean))
     if(!['I','R','C'].includes(s.weapon))throw new RangeError('Invalid weapon');
@@ -191,6 +191,12 @@ export function runHistoricalEncounter({
     return r;
   };
   const historicDuel=ctx.simulation_combat;
+  const originalBonuses=ctx.bonus_attaque_defense;
+  ctx.bonus_attaque_defense=(a,d,aw,dw)=>{
+    const bonuses=originalBonuses(a,d,aw,dw);
+    ctx.lastBonuses={...bonuses};
+    return bonuses;
+  };
   // Unlike V6.2, the bonus calculation is now the UNMODIFIED
   // historical bonus_attaque_defense, not the adapter under test.
   ctx.competences_speciales.attaquant.pieges=context.special?.attackerTraps??0;
@@ -206,6 +212,7 @@ export function runHistoricalEncounter({
       remaining:{attacker:ctx.pelotons_attaquant[ai].nombre_restant,
         defender:ctx.pelotons_defenseur[di].nombre_restant},
       draw:duel.nul,falseDraw:duel.faux_nul,
+      historicalBonuses:structuredClone(ctx.lastBonuses),
       totalPower:{attacker:duel.puissance_attaque_totale,defender:duel.puissance_defense_totale}});
     return duel;
   };
