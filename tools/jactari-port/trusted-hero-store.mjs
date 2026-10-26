@@ -97,6 +97,22 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
    CHECK(length(hero_id)>0)
   );
   CREATE INDEX IF NOT EXISTS heroes_owner ON heroes(owner_player_id);
+  CREATE TABLE IF NOT EXISTS battle_commands(
+   command_id TEXT PRIMARY KEY,
+   actor_player_id TEXT NOT NULL REFERENCES players(player_id),
+   attacker_hero_id TEXT NOT NULL REFERENCES heroes(hero_id),
+   defender_hero_id TEXT NOT NULL REFERENCES heroes(hero_id),
+   rules_digest TEXT NOT NULL,
+   receipt_json TEXT NOT NULL CHECK(json_valid(receipt_json)),
+   committed_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
+   CHECK(attacker_hero_id <> defender_hero_id)
+  );
+  CREATE TABLE IF NOT EXISTS battle_audit_events(
+   command_id TEXT NOT NULL REFERENCES battle_commands(command_id),
+   sequence INTEGER NOT NULL CHECK(sequence >= 0),
+   event_json TEXT NOT NULL CHECK(json_valid(event_json)),
+   PRIMARY KEY(command_id,sequence)
+  );
  `);
  const addPlayer=db.prepare('INSERT INTO players(player_id,enabled) VALUES(?,1)');
  const setPlayerEnabled=db.prepare('UPDATE players SET enabled=? WHERE player_id=?');
@@ -104,6 +120,34 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
  const insertHero=db.prepare('INSERT INTO heroes(hero_id,owner_player_id,revision,payload) VALUES(?,?,1,?)');
  const readHero=db.prepare('SELECT hero_id,owner_player_id,revision,payload FROM heroes WHERE hero_id=?');
  const swap=db.prepare('UPDATE heroes SET payload=?,revision=revision+1 WHERE hero_id=? AND revision=?');
+ const readBattle=db.prepare('SELECT * FROM battle_commands WHERE command_id=?');
+ const putBattle=db.prepare('INSERT INTO battle_commands(command_id,actor_player_id,attacker_hero_id,defender_hero_id,rules_digest,receipt_json) VALUES(?,?,?,?,?,?)');
+ const putBattleEvent=db.prepare('INSERT INTO battle_audit_events(command_id,sequence,event_json) VALUES(?,?,?)');
+ const eventsForBattle=db.prepare('SELECT sequence,event_json FROM battle_audit_events WHERE command_id=? ORDER BY sequence');
+ const countBattles=db.prepare('SELECT COUNT(*) AS count FROM battle_commands');
+ const countAudit=db.prepare('SELECT COUNT(*) AS count FROM battle_audit_events');
+ const strictArmy=(before,after,reports,side)=>{
+  if(!Array.isArray(after)||after.length!==7||
+     !Array.isArray(reports)||reports.length!==7)
+   throw new Error('Battle engine returned malformed persistent army/ledger: '+side);
+  return before.map((old,i)=>{
+   const next=after[i],proof=reports[i];
+   if(old===null){
+    if(next!==null||proof!==null)throw new Error('Battle created a permanent unit stack');
+    return null;
+   }
+   if(!next||!proof||!Number.isSafeInteger(next.count)||
+     next.count<0||next.count>old.count||!Number.isSafeInteger(proof.permanent)||
+     proof.permanent!==old.count-next.count)
+    throw new Error('Battle casualty ledger mismatch: '+side+' slot '+(i+1));
+   for(const [key,value] of Object.entries(old))
+    if(key!=='count'&&JSON.stringify(next[key])!==JSON.stringify(value))
+     throw new Error('Battle changed persisted unit identity: '+side+' '+key);
+   if(Object.keys(next).some(k=>!Object.hasOwn(old,k)))
+    throw new Error('Battle added an untrusted persistent unit field');
+   return next.count===0?null:{...old,count:next.count};
+  });
+ };
  const toView=row=>row===undefined?null:{
   ...decode(row.payload),revision:row.revision
  };
@@ -164,6 +208,93 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
     db.exec('COMMIT');
     return pair;
    }catch(error){db.exec('ROLLBACK');throw error;}
+  },
+  /**
+   * ONLY for a trusted server service. Serializes the entire combat calculation
+   * under BEGIN IMMEDIATE and applies two casualty ledgers atomically.
+   * Replay is keyed on a stable command ID and immutable rule digest.
+   */
+  commitAuthorizedBattle({
+    commandId,actorPlayerId,attackerHeroId,defenderHeroId,rulesDigest,
+    authorizeTarget,calculate,beforeCommit
+  }){
+   for(const [name,value] of [['command ID',commandId],['actor ID',actorPlayerId],
+    ['attacker hero ID',attackerHeroId],['defender hero ID',defenderHeroId]])
+    id(value,name);
+   if(attackerHeroId===defenderHeroId)throw new Error('A hero cannot fight itself');
+   if(typeof rulesDigest!=='string'||!/^[a-f0-9]{64}$/.test(rulesDigest))
+    throw new TypeError('Versioned server rules digest required');
+   if(typeof authorizeTarget!=='function'||typeof calculate!=='function')
+    throw new Error('Server target authorization and battle engine callbacks required');
+   if(beforeCommit!==undefined&&typeof beforeCommit!=='function')
+    throw new TypeError('beforeCommit must be internal server hook');
+   return transaction(()=>{
+    if(currentPlayer.get(actorPlayerId)?.enabled!==1)
+     throw new Error('Actor is not an enabled registered player');
+    const first=readHero.get(attackerHeroId),second=readHero.get(defenderHeroId);
+    if(!first||!second)throw new Error('Unknown combat hero');
+    if(first.owner_player_id!==actorPlayerId)
+     throw new Error('Actor is not the owner of the attacking hero');
+    if(currentPlayer.get(second.owner_player_id)?.enabled!==1)
+     throw new Error('Defender owner is inactive');
+    const attacker=toView(first),defender=toView(second);
+    if(authorizeTarget({actorPlayerId,attacker:structuredClone(attacker),
+      defender:structuredClone(defender)})!==true)
+     throw new Error('Target authorization denied');
+    const prior=readBattle.get(commandId);
+    if(prior){
+     if(prior.actor_player_id!==actorPlayerId||
+        prior.attacker_hero_id!==attackerHeroId||
+        prior.defender_hero_id!==defenderHeroId||
+        prior.rules_digest!==rulesDigest)
+      throw new Error('Idempotency key collision: original battle parameters differ');
+     return {...decode(prior.receipt_json),replayed:true};
+    }
+    const result=calculate({attacker:structuredClone(attacker),
+      defender:structuredClone(defender)});
+    if(!isRecord(result)||!['attacker','defender','mutual-dispersion'].includes(result.status)||
+      !isRecord(result.persistentArmies)||!isRecord(result.permanent)||
+      !Array.isArray(result.events))
+     throw new Error('Unsupported battle result; server cannot safely commit');
+    const armyA=strictArmy(attacker.army,result.persistentArmies.attacker,
+      result.permanent.attacker?.reports,'attacker');
+    const armyD=strictArmy(defender.army,result.persistentArmies.defender,
+      result.permanent.defender?.reports,'defender');
+    const receipt={
+     commandId,actorPlayerId,attackerHeroId,defenderHeroId,
+     rulesDigest,status:result.status,rounds:result.rounds,
+     revisions:{attacker:{before:attacker.revision,after:attacker.revision+1},
+      defender:{before:defender.revision,after:defender.revision+1}},
+     permanent:structuredClone(result.permanent),
+     persistentArmies:{attacker:armyA,defender:armyD},
+     eventCount:result.events.length,
+     source:'historical-Jactari-subset-transactional-server-demo-NOT-MMHK-S2',
+     completeHistoricalCertification:false
+    };
+    const savedA={...attacker,army:armyA};
+    const savedD={...defender,army:armyD};
+    delete savedA.revision;delete savedD.revision;
+    if(swap.run(json(savedA),attackerHeroId,attacker.revision).changes!==1||
+       swap.run(json(savedD),defenderHeroId,defender.revision).changes!==1)
+     throw new Error('Concurrent hero revision conflict, rolled back');
+    putBattle.run(commandId,actorPlayerId,attackerHeroId,defenderHeroId,
+      rulesDigest,json(receipt));
+    for(let i=0;i<result.events.length;i++)
+     putBattleEvent.run(commandId,i,json(result.events[i]));
+    if(beforeCommit)beforeCommit(structuredClone(receipt));
+    return {...receipt,replayed:false};
+   });
+  },
+  getBattleReceipt(commandId){
+   alive();const row=readBattle.get(id(commandId,'command ID'));
+   return row?structuredClone(decode(row.receipt_json)):null;
+  },
+  getBattleEvents(commandId){
+   alive();return eventsForBattle.all(id(commandId,'command ID'))
+    .map(r=>({sequence:r.sequence,event:decode(r.event_json)}));
+  },
+  getBattleAuditCounts(){
+   alive();return {commands:countBattles.get().count,events:countAudit.get().count};
   },
   close(){if(!closed){db.close();closed=true;}},
   storageKind:'sqlite-node22-experimental',
