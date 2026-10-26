@@ -340,3 +340,18 @@ Scénarios : **7 rencontres sans magie, 12 avec magie, 100 générées et 6 avec
 **Limite majeure :** les unités, la puissance effective magique, les bonus et le facteur de pertes sont injectés. PvE, fuite, blessure/capture, sièges et troisième invocation ne sont pas validés. Ce harness est **un oracle de test borné**, pas un service serveur ni une preuve de conformité exhaustive à MMHK S2. Code source original GPL-3.0-or-later ; ne pas exécuter de code historique externe non audité dans `node:vm`.
 
 [Rapport technique V6.2](../../docs/game-design/29-JACTARI-V62-FULL-ENCOUNTER-ORACLE.md) · [Résultats archivés](../../data/analysis/jactari-v62-full-encounter-differential-2026-10-24.json).
+
+
+## V6.3 — Parité des héros et admission contre le code original (26 octobre 2026)
+
+**Conformité contrôlée sur le périmètre exécuté :** le [moteur original de calcul des bonus](historical-bonuses-oracle.mjs) est indépendant de [`calculateBonuses()`](bonuses.mjs). Le [banc de bataille historique](historical-encounter-harness.mjs) utilise désormais **le véritable `bonus_attaque_defense()`** durant les duels, au lieu de réutiliser les bonus de notre adaptateur. Le comparateur confronte les neuf coefficients de chaque duel, son résultat et les pertes définitives. Les tests couvrent **600 builds de héros** et **83 batailles avec héros, talents et fortifications**.
+
+La [porte d'admission](admission-battle.mjs) gère les fuites PvE, captures, blessures PvP (6/12/18/24 heures) et refuse de facturer des morts lorsque le combat n'a pas eu lieu. **4 000 cas** sont vérifiés contre la branche originale de `simulation_rencontre()`. Les blessures et captures sont émises comme conséquences **à appliquer transactionnellement par le serveur**, jamais simulées comme un état déjà sauvegardé.
+
+Le [calculateur de magie historique](historical-spell-power-oracle.mjs) contrôle **400 puissances effectives de sorts** avec les modificateurs du héros, du côté attaquant et défenseur, maîtrise, résistance et antimagie. Il n'a **pas encore validé les effets réels d'artefacts équipés** : ces entrées sont exclues explicitement. Le [profil Jactari 4.1.3-MTR](source-profile.mjs) lit directement les coefficients archivés (armes +50 %, pertes 30 %), utilisables seulement dans [`adjudicateJactariReferenceBattle()`](admission-battle.mjs) par opt-in. Ne pas les présenter comme paramètres S2 certifiés.
+
+L'anomalie du bonus légendaire `bonus_legendary_legwarrior_b` est conservée en mode par défaut `heroPolicy:'jactari-original'` (double lecture anormale du héros attaquant, double addition de la valeur du défenseur). `heroPolicy:'normalized'` désigne une **correction volontaire non prouvée historiquement**. Les entrées non finies échouent sans produire de résultat militaire trompeur.
+
+**Validation : 261 tests Node.js réussis, 0 échec**, [GitHub Actions #40294182227](https://github.com/AstrowareConception/MMHK-like/actions/runs/40294182227). [Rapport technique complet et limites](../../docs/game-design/30-JACTARI-V63-HEROS-ADMISSION-MODIFICATEURS.md) ; [preuves JSON](../../data/analysis/jactari-v63-hero-admission-differential-2026-10-26.json).
+
+**Pas encore « 100 % MMHK saison 2 » :** équipement/artefacts, progression complète des héros, sièges, calculs de salves originaux, XP, groupes PvE et règles de saison restent à réconcilier et tester. Ne pas activer ce moteur comme arbitre serveur PvP avant résolution de ces écarts et revue de licence GPL.
