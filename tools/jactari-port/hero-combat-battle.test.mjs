@@ -62,3 +62,42 @@ test('missing hero profile is refused before a battle is resolved',()=>{
  assert.throws(()=>simulateBattleWithDerivedHeroes({...base,
   heroProfiles:{attacker:profiles.attacker}}),/Two server-authorized/);
 });
+
+test('career-validated hero battle derives talents and deducts cumulative skills',async()=>{
+ const {getJactariHeroTables}=await import('./hero-source-tables.mjs');
+ const {isJactariCareerAllowed}=await import('./hero-career-progression.mjs');
+ const t=getJactariHeroTables(),p=profiles.attacker;
+ const found=t.careers.map((_,id)=>({id,tree:t.talents[id]})).find(x=>
+  isJactariCareerAllowed({faction:p.faction,archetype:p.archetype,careerId:x.id},t)&&
+  x.tree.some(y=>y?.nom_machine&&y.v?.length>2));
+ assert.ok(found);
+ const index=found.tree.findIndex(y=>y?.nom_machine&&y.v?.length>2);
+ const r=simulateBattleWithDerivedHeroes({...base,heroCareers:{
+  attacker:[{slot:1,careerId:found.id,talents:[{index,rank:2}]}],
+  defender:[]
+ }});
+ assert.equal(r.careerLedgers.attacker.spent,4);
+ assert.equal(r.careerLedgers.defender.spent,0);
+ assert.equal(r.careerLedgers.attacker.remaining,r.careerLedgers.attacker.available-4);
+ const name=found.tree[index].nom_machine;
+ assert.equal(r.heroSnapshots.attacker.hero['niveau_'+name],2);
+ assert.equal(r.heroSnapshots.attacker.hero['bonus_'+name],found.tree[index].v[2]);
+});
+test('career validator rejects forged fields in an otherwise valid battle request',async()=>{
+ const {getJactariHeroTables}=await import('./hero-source-tables.mjs');
+ const {isJactariCareerAllowed}=await import('./hero-career-progression.mjs');
+ const t=getJactariHeroTables(),p=profiles.attacker;
+ const id=t.careers.findIndex((_,id)=>isJactariCareerAllowed({
+  faction:p.faction,archetype:p.archetype,careerId:id},t));
+ assert.throws(()=>simulateBattleWithDerivedHeroes({...base,heroCareers:{
+  attacker:[{slot:1,careerId:id,talents:[{index:0,rank:1,bonus:9999}]}],
+  defender:[]
+ }}),/Only original talent/);
+ assert.throws(()=>simulateBattleWithDerivedHeroes({...base,heroCareers:{
+  attacker:[{slot:1,careerId:id,talents:[]}],defender:[]
+ },heroTalents:{attacker:[]}}),/Cannot mix/);
+ assert.throws(()=>simulateBattleWithDerivedHeroes({...base,
+  heroProfiles:{...profiles,attacker:{...profiles.attacker,level:1}},
+  heroCareers:{attacker:[{slot:1,careerId:id,talents:[{index:0,rank:3}]}],
+   defender:[]}}),/Insufficient historical skill points/);
+});
