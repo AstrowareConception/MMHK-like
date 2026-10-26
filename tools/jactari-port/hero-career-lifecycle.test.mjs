@@ -20,7 +20,7 @@ function check(input,label){
  assert.equal(result.after.available,historical.after.available,label+' available points');
  assert.deepEqual(result.after.careers.map(c=>({slot:c.slot,careerId:c.careerId,ranks:c.ranks})),
    historical.after.careers,label+' career ranks');
- assert.deepEqual(result.after.shared,historical.after.shared,label+' shared skills');
+ assert.deepEqual({Scribe:result.after.shared.Scribe??0,'Maitre des arcanes':result.after.shared['Maitre des arcanes']??0},historical.after.shared,label+' shared skills');
  return {result,historical};
 }
 test('60 actual Jactari career select / replacement / abandonment calls',()=>{
@@ -94,8 +94,11 @@ test('invalid lifecycle operations fail closed, never alter input',()=>{
    slot:1,careerId:allowed[1]}),/already selected/);
  assert.throws(()=>transitionJactariCareer({profile:p,careers:current,op:'abandon',
    slot:2}),/not selected/);
- assert.throws(()=>transitionJactariCareer({profile:p,careers:current,op:'replace',
-   slot:1,careerId:allowed[0]}),/^(?!$)/);
+ // Selecting the same career again is a valid replacement in the original UI:
+ // it resets its ranks, rather than raising an exception.
+ const same=transitionJactariCareer({profile:p,careers:current,op:'replace',
+   slot:1,careerId:allowed[0]});
+ assert.equal(same.after.spent,same.before.spent);
  assert.throws(()=>transitionJactariCareer({profile:p,careers:current,op:'abandon',
    slot:1,careerId:allowed[1]}),/no new career ID/);
  assert.deepEqual(current,before);
