@@ -70,7 +70,7 @@ test('90 coupled superior+revelation profiles preserve original combat precedenc
   for(const side of ['attacker','defender'])
    for(const heredityWay of [0,1,2])
     for(const rank of [1,3,7]){
-     const profile={faction:1,archetype:2,level,heritageWay,
+     const profile={faction:1,archetype:2,level,heritageWay:heredityWay,
       heritage:{heros_superieur:rank,revelation_de_caracteristiques:10-rank}};
      const original=runOriginalCombatHeroSnapshot({profile,side});
      const port=deriveJactariCombatHeroSnapshot({profile,side}).hero;
