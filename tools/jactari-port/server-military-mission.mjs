@@ -89,3 +89,19 @@ export function cancelServerUnresolvedMission({
   })
  });
 }
+
+/**
+ * Owner-authenticated recall INTENT only, never an immediate recall or return.
+ * The client may send only missionId; the timestamp is an authenticated
+ * server input. Historic recall distance/timing remains unsupported.
+ */
+export function requestServerHeroRecall({
+ command,authContext,authenticate,heroStore,serverNowMs
+}){
+ exact(command,['missionId'],'Recall request command');
+ const principal=authority({authContext,authenticate,heroStore},false);
+ return heroStore.requestMissionRecall({
+  missionId:command.missionId,actorPlayerId:principal.playerId,
+  nowMs:serverNowMs
+ });
+}
