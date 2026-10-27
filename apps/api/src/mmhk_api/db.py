@@ -8,7 +8,7 @@ from pathlib import Path
 import psycopg
 from fastapi import HTTPException
 
-_MIGRATIONS = Path(__file__).resolve().parents[2] / "sql"
+_MIGRATIONS = Path(__file__).resolve().parent / "sql"
 
 
 def connect() -> psycopg.Connection:
