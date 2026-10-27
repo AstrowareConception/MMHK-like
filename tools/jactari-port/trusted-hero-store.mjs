@@ -191,6 +191,20 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
    CHECK((status='leased' AND worker_id IS NOT NULL AND lease_until_ms IS NOT NULL)
       OR (status<>'leased' AND lease_until_ms IS NULL))
   );
+  CREATE TABLE IF NOT EXISTS military_due_event_incidents(
+   mission_id TEXT NOT NULL,
+   event_kind TEXT NOT NULL,
+   attempt INTEGER NOT NULL CHECK(attempt>=1),
+   worker_id TEXT NOT NULL,
+   observed_at_ms INTEGER NOT NULL CHECK(observed_at_ms>=0),
+   reason_code TEXT NOT NULL CHECK(reason_code IN
+    ('target_denied','mission_state','lease_conflict','internal_error')),
+   PRIMARY KEY(mission_id,event_kind,attempt),
+   FOREIGN KEY(mission_id,event_kind)
+    REFERENCES military_mission_due_events(mission_id,event_kind)
+  );
+  CREATE INDEX IF NOT EXISTS due_incidents_by_time
+   ON military_due_event_incidents(observed_at_ms,mission_id);
   CREATE INDEX IF NOT EXISTS due_event_time_idx
    ON military_mission_due_events(status,due_at_ms,mission_id,event_kind);
   CREATE TABLE IF NOT EXISTS military_mission_events(
@@ -280,6 +294,9 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
  const markDueDone=db.prepare("UPDATE military_mission_due_events SET status='done',lease_until_ms=NULL,settled_at_ms=? WHERE mission_id=? AND event_kind=? AND status IN ('pending','leased')");
  const markDueCancelled=db.prepare("UPDATE military_mission_due_events SET status='cancelled',lease_until_ms=NULL,settled_at_ms=NULL WHERE mission_id=? AND event_kind=? AND status IN ('pending','leased')");
  const readDue=db.prepare('SELECT * FROM military_mission_due_events WHERE mission_id=? AND event_kind=?');
+ const writeIncident=db.prepare('INSERT INTO military_due_event_incidents(mission_id,event_kind,attempt,worker_id,observed_at_ms,reason_code) VALUES(?,?,?,?,?,?)');
+ const readIncidents=db.prepare('SELECT mission_id,event_kind,attempt,worker_id,observed_at_ms,reason_code FROM military_due_event_incidents WHERE mission_id=? ORDER BY observed_at_ms,event_kind,attempt');
+ const sameArrival=db.prepare("SELECT m.mission_id,m.arrival_at_ms,m.status,r.route_json FROM military_missions m JOIN military_mission_routes r ON m.mission_id=r.mission_id WHERE m.arrival_at_ms=? AND m.status IN ('traveling','arrived') ORDER BY m.mission_id");
  const nextDue=db.prepare("SELECT * FROM military_mission_due_events WHERE due_at_ms<=? AND (status='pending' OR (status='leased' AND lease_until_ms<=?)) ORDER BY due_at_ms,mission_id,event_kind LIMIT 1");
  const leaseDue=db.prepare("UPDATE military_mission_due_events SET status='leased',worker_id=?,lease_until_ms=?,attempt=attempt+1 WHERE mission_id=? AND event_kind=? AND (status='pending' OR (status='leased' AND lease_until_ms<=?))");
  const insertPosting=db.prepare('INSERT INTO hero_city_postings(hero_id,city_id) VALUES(?,?) ON CONFLICT(hero_id) DO UPDATE SET city_id=excluded.city_id');
@@ -309,6 +326,18 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
  };
  const worldDigest=snapshot=>createHash('sha256')
   .update(json(snapshot)).digest('hex');
+ const checkDueLease=(missionId,kind,clock,lease)=>{
+  if(lease===null)return;
+  exact(lease,['workerId','attempt'],'Trusted scheduler lease');
+  id(lease.workerId,'lease worker');
+  if(!Number.isSafeInteger(lease.attempt)||lease.attempt<1)
+   throw new RangeError('Positive lease attempt required');
+  const current=readDue.get(missionId,kind);
+  if(!current||current.status!=='leased'||current.worker_id!==lease.workerId||
+     current.attempt!==lease.attempt||current.lease_until_ms<=clock||
+     current.due_at_ms>clock)
+   throw new Error('Stale or expired scheduler lease');
+ };
  const dueView=row=>row?{
   missionId:row.mission_id,eventKind:row.event_kind,dueAtMs:row.due_at_ms,
   status:row.status,workerId:row.worker_id,leaseUntilMs:row.lease_until_ms,
@@ -602,6 +631,59 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
     return dueView(readDue.get(next.mission_id,next.event_kind));
    });
   },
+  /**
+   * Incident records contain a fixed taxonomy only, NEVER untrusted error text.
+   * A stale worker cannot append a fabricated incident to another attempt.
+   */
+  recordDueMissionIncident({missionId,eventKind,workerId,attempt,nowMs,reasonCode}){
+   id(missionId,'mission ID');id(workerId,'due-event worker');
+   requiredTime(nowMs,'incident time');
+   if(!['arrival','return_completion'].includes(eventKind))
+    throw new RangeError('Unsupported due event kind');
+   if(!['target_denied','mission_state','lease_conflict','internal_error'].includes(reasonCode))
+    throw new RangeError('Unknown incident category');
+   return transaction(()=>{
+    checkDueLease(missionId,eventKind,nowMs,{workerId,attempt});
+    const exists=readIncidents.all(missionId).find(x=>x.event_kind===eventKind&&x.attempt===attempt);
+    if(exists)throw new Error('Duplicate due-event incident attempt');
+    writeIncident.run(missionId,eventKind,attempt,workerId,nowMs,reasonCode);
+    return {missionId,eventKind,attempt,workerId,observedAtMs:nowMs,reasonCode};
+   });
+  },
+  getMissionDueIncidents(missionId){
+   alive();id(missionId,'mission ID');
+   return readIncidents.all(missionId).map(x=>({
+    missionId:x.mission_id,eventKind:x.event_kind,attempt:x.attempt,
+    workerId:x.worker_id,observedAtMs:x.observed_at_ms,reasonCode:x.reason_code
+   }));
+  },
+  /**
+   * Read-only collision observation: equal ETA and destination CITY,
+   * not a historical tie-breaker, lock or permission to engage.
+   */
+  inspectSimultaneousArrivals(missionId){
+   alive();id(missionId,'mission ID');
+   db.exec('BEGIN');
+   try{
+    const mission=readMission.get(missionId);
+    if(!mission){db.exec('COMMIT');return null;}
+    const route=readRoute.get(missionId);
+    if(!route){db.exec('COMMIT');return {
+     missionId,hasGeographicRoute:false,candidateMissionIds:[],requiresArbitration:false
+    };}
+    const anchor=decode(route.route_json);
+    const other=sameArrival.all(mission.arrival_at_ms).filter(row=>{
+     const candidate=decode(row.route_json);
+     return row.mission_id!==missionId&&candidate.worldId===anchor.worldId&&
+      candidate.destination.cityId===anchor.destination.cityId;
+    }).map(row=>row.mission_id);
+    db.exec('COMMIT');
+    return {missionId,hasGeographicRoute:true,
+     worldId:anchor.worldId,destinationCityId:anchor.destination.cityId,
+     arrivalAtMs:mission.arrival_at_ms,candidateMissionIds:other,
+     requiresArbitration:other.length>0,automaticConflictResolution:false};
+   }catch(error){db.exec('ROLLBACK');throw error;}
+  },
   /** Acknowledgement only verifies the mission transition already committed. */
   confirmDueMissionEvent({missionId,eventKind,workerId,attempt}){
    alive();id(missionId,'mission ID');id(workerId,'due-event worker');
@@ -784,11 +866,12 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
     return {...missionView(readMission.get(missionId)),replayed:false};
    });
   },
-  markMissionArrived({missionId,actorPlayerId,nowMs,authorizeTarget}){
+  markMissionArrived({missionId,actorPlayerId,nowMs,authorizeTarget,lease=null}){
    id(missionId,'mission ID');id(actorPlayerId,'actor ID');
    requiredTime(nowMs,'arrival time');
    if(typeof authorizeTarget!=='function')throw new Error('Arrival target policy required');
    return transaction(()=>{
+    checkDueLease(missionId,'arrival',nowMs,lease);
     const m=readMission.get(missionId);
     if(!m)throw new Error('Unknown military mission');
     if(m.actor_player_id!==actorPlayerId||
@@ -841,10 +924,11 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
     return {...missionView(readMission.get(missionId)),replayed:false};
    });
   },
-  completeMissionReturn({missionId,actorPlayerId,nowMs}){
+  completeMissionReturn({missionId,actorPlayerId,nowMs,lease=null}){
    id(missionId,'mission ID');id(actorPlayerId,'actor ID');
    requiredTime(nowMs,'completion time');
    return transaction(()=>{
+    checkDueLease(missionId,'return_completion',nowMs,lease);
     const m=readMission.get(missionId);
     if(!m||m.actor_player_id!==actorPlayerId||
        currentPlayer.get(actorPlayerId)?.enabled!==1)

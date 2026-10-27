@@ -49,20 +49,35 @@ export function runOneDueMissionEvent({
     command:{missionId:work.missionId},heroStore,authContext,authenticate,
     authorizeTarget:context=>authorizeTarget({
      ...context,missionId:work.missionId,workerId
-    })===true,serverNowMs
+    })===true,serverNowMs,lease:{workerId,attempt:work.attempt}
    });
   }else if(work.eventKind==='return_completion'){
    result=completeServerHeroReturn({
     command:{missionId:work.missionId},heroStore,authContext,authenticate,
-    serverNowMs
+    serverNowMs,lease:{workerId,attempt:work.attempt}
    });
   }else throw new Error('Unsupported due-event kind');
   return {kind:'processed',processed:1,event,
    status:result.status,replayed:result.replayed===true};
  }catch(error){
+  const message=String(error?.message??error);
+  const reasonCode=/Stale or expired scheduler lease/.test(message)
+   ?'lease_conflict':/authorization denied|target authorization denied/i.test(message)
+   ?'target_denied':/mission|location|not yet|not reached|not arrived/i.test(message)
+   ?'mission_state':'internal_error';
+  let incidentRecorded=false;
+  try{
+   heroStore.recordDueMissionIncident({
+    missionId:work.missionId,eventKind:work.eventKind,
+    workerId,attempt:work.attempt,nowMs:serverNowMs,reasonCode
+   });
+   incidentRecorded=true;
+  }catch{
+   // The caller must escalate an unrecorded failure. Never claim success.
+  }
   return {kind:'blocked',processed:0,event,
-   errorName:error?.name??'Error',reason:String(error?.message??error),
-   retryAfterMs:work.leaseUntilMs,
+   errorName:error?.name??'Error',reason:message,reasonCode,
+   incidentRecorded,retryAfterMs:work.leaseUntilMs,
    requiresOperatorReview:true};
  }
 }

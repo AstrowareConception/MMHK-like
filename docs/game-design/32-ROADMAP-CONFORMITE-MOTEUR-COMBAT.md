@@ -239,6 +239,25 @@ public n'est autorisé.
 `implemented_partial`, C18 `blocked_source`,
 `productionBattleArbiterAllowed=false`.
 
+### V7.0 — Tranche 9 : fencing et incidents des workers (27 octobre 2026)
+
+La [tranche 9](48-JACTARI-V70-FENCING-INCIDENTS-ARRIVEES.md)
+sécurise les transitions exécutées par l'ordonnanceur : chaque
+arrivée/retour doit présenter dans sa transaction SQLite l'identifiant
+du worker, le numéro de tentative actuellement réservé et un bail non expiré.
+Les incidents sont enregistrés dans une nouvelle table avec des catégories
+fermées (sans persistance du texte libre d'exception). Un observateur en
+lecture seule repère les arrivées exactement simultanées vers une même ville.
+
+Ces composants n'établissent **ni un arbitrage historique de simultanéité,
+ni une autorisation d'attaque**. Les API administratives directes restent des
+chemins de confiance à isoler des workers et du navigateur. Un service réseau,
+le contrôle d'accès des processus, les contrôles de charge et une politique
+de retour/interception saison 2 devront être développés avant production.
+
+**V7.0 `in_progress`, C17 `implemented_partial`,
+C18 `blocked_source`, `productionBattleArbiterAllowed=false`.**
+
 ## 7. Utilisation pratique
 
 Pour reprendre dans un autre fil, conserver cette consigne : *« Reprends la roadmap `docs/game-design/32-ROADMAP-CONFORMITE-MOTEUR-COMBAT.md` et le registre JSON, vérifie les derniers commits/CI, puis attaque le premier critère de sortie non satisfait sans changer arbitrairement le statut des exigences. Documente les preuves et mets à jour le registre avant de terminer. »*
