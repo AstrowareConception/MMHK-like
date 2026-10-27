@@ -92,7 +92,7 @@ def test_migration_catalog_and_undisclosed_enemy_buildings(city):
     with psycopg.connect(URL) as db:
         assert migrate(db)==[]
         assert db.execute("SELECT version FROM app_schema_migrations ORDER BY version").fetchall()==[
-            (1,),(2,),(3,),(4),
+            (1,),(2,),(3,),(4,),
         ]
     assert client.get(f"/api/v1/me/cities/{city['city']}/construction").status_code==401
     own=client.get(f"/api/v1/me/cities/{city['city']}/construction",headers=h)
@@ -142,7 +142,8 @@ def test_payment_at_start_one_active_replay_and_next_upgrade(city):
     assert catalog["active"] is None
     assert catalog["buildings"]==[{"building_code":city["code"],
        "level":1,"active":True,"operator_disabled":False,"prerequisites":{}}]
-    assert catalog["options"][0]["target_level"]==2
+    assert next(o["target_level"] for o in catalog["options"]
+        if o["building_code"]==city["code"])==2
     second=start(city,h,"economic")
     assert second.status_code==201,second.text
     assert second.json()["applied_costs"]["gold"]==8
