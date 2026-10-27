@@ -14,6 +14,9 @@ export type CityDetail = City & {
   stocks: Record<string, number>;
   mines: string[];
   production_active: boolean;
+  production_per_day: Record<string, string>;
+  tick_seconds: number | null;
+  next_credit_at: string | null;
   historical_economy_certified: boolean;
 };
 
