@@ -110,6 +110,9 @@ def owned_city_detail(db: psycopg.Connection, account_id: UUID, city_id: UUID) -
         "SELECT resource FROM city_mines WHERE city_id=%s ORDER BY resource",
         (city_id,),
     ).fetchall()]
+    from .building_effects import resolve_city_effects
+    from decimal import Decimal
+    effects = resolve_city_effects(db,city_id)
     economy = db.execute(
         """SELECT tick_seconds,last_tick_at,enabled FROM city_economy_clock
            WHERE city_id=%s""", (city_id,)
@@ -119,6 +122,15 @@ def owned_city_detail(db: psycopg.Connection, account_id: UUID, city_id: UUID) -
            FROM city_mine_rates WHERE city_id=%s ORDER BY resource""",
         (city_id,),
     ).fetchall()
+    stocks_caps = dict(db.execute(
+        "SELECT resource,capacity FROM city_stocks WHERE city_id=%s",(city_id,),
+    ).fetchall())
+    adjusted_caps = {
+        kind: (stocks_caps.get(kind) or 0) +
+              effects["capacity_bonus"].get(kind,0)
+        if stocks_caps.get(kind) is not None else None
+        for kind in RESOURCE_NAMES
+    }
     return {
         "city_id": row[0],
         "world_id": row[1],
@@ -130,7 +142,14 @@ def owned_city_detail(db: psycopg.Connection, account_id: UUID, city_id: UUID) -
         "mines": mines,
         "production_active": bool(economy and economy[2]),
         "production_per_day": {
-            resource: str(base * (1 + bonus)) for resource, base, bonus in rates
+            resource: str(base * (1 + bonus + Decimal(
+                effects["mine_additive_bonus"].get(resource,"0"))))
+            for resource, base, bonus in rates
+        },
+        "stock_capacities": adjusted_caps,
+        "building_effects": {
+            "mine_additive_bonus": effects["mine_additive_bonus"],
+            "capacity_bonus": effects["capacity_bonus"],
         },
         "tick_seconds": economy[0] if economy else None,
         "next_credit_at": (

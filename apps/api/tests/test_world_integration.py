@@ -74,7 +74,7 @@ def test_schema_migration_is_reusable(scenario):
     with psycopg.connect(URL) as db:
         assert migrate(db) == []
         rows = db.execute("SELECT version FROM app_schema_migrations").fetchall()
-        assert rows == [(1,), (2,), (3,)]
+        assert rows == [(1,), (2,), (3,), (4,)]
 
 
 def test_private_world_and_city_are_readable_only_by_their_owner(scenario):

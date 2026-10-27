@@ -59,6 +59,8 @@ export default async function CityPage({
             <article key={key}>
               <span className="tile-title">{label}</span>
               <strong>{(city.stocks[key] ?? 0).toLocaleString("fr-FR")}</strong>
+              {city.stock_capacities[key] != null &&
+                <small>Capacité effective : {city.stock_capacities[key]?.toLocaleString("fr-FR")}</small>}
               <small>{city.mines.includes(key) ? "Mine présente" : "Pas de mine initiale"}</small>
               {city.production_active && city.production_per_day[key] !== undefined && (
                 <small>+{Number(city.production_per_day[key]).toLocaleString("fr-FR")} / jour (profil expérimental)</small>
@@ -82,7 +84,7 @@ export default async function CityPage({
             <>
               {buildingAnswer.data.buildings.length > 0 && (
                 <p>Bâtiments terminés : {buildingAnswer.data.buildings.map(
-                  (b) => `${b.building_code} niveau ${b.level}`,
+                  (b) => `${b.building_code} niveau ${b.level} (${b.active ? "actif" : "inactif — prérequis indisponible"})`,
                 ).join(", ")}.</p>
               )}
               {buildingAnswer.data.active ? (
@@ -104,7 +106,12 @@ export default async function CityPage({
                       <span>{mode.mode === "normal" ? "Standard" : mode.mode === "rapid" ? "Rapide" : "Économique"}</span>
                       <small>Durée : {mode.duration_seconds.toLocaleString("fr-FR")} secondes</small>
                       <small>Coût : {Object.entries(mode.costs).filter(([,v])=>v>0).map(([k,v])=>`${v} ${k}`).join(", ") || "Gratuit"}</small>
-                      <button type="submit">Lancer ce chantier</button>
+                      {!o.available && (
+                        <small>Prérequises indisponibles : {o.missing_prerequisites.join(", ")}</small>
+                      )}
+                      <button disabled={!o.available} type="submit">
+                        {o.available ? "Lancer ce chantier" : "Construction verrouillée"}
+                      </button>
                     </form>
                   )))}
                 </div>
@@ -114,6 +121,11 @@ export default async function CityPage({
             </>
           ) : (
             <p>Les offres de construction sont momentanément indisponibles.</p>
+          )}
+          {Object.keys(buildingAnswer.data?.effects.mine_additive_bonus ?? {}).length > 0 && (
+            <p>Bonus de mine actifs (additifs) : {Object.entries(
+              buildingAnswer.data!.effects.mine_additive_bonus,
+            ).map(([resource,value]) => `${resource} +${Number(value)*100} %`).join(", ")}.</p>
           )}
           <p className="notice">Une construction active par cité, débit immédiat et achèvement par worker PostgreSQL.
           La convention d'arrondi à l'entier supérieur est expérimentale, pas une règle historique certifiée.</p>

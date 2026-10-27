@@ -14,6 +14,7 @@ import psycopg
 from psycopg.types.json import Jsonb
 
 from .worlds import RESOURCE_NAMES
+from .building_effects import resolve_city_effects, persist_effect_snapshot
 
 _CODE = re.compile(r"^[a-z][a-z0-9_]{1,47}$")
 _BIGINT = 2**63-1
@@ -101,10 +102,9 @@ def catalog_for_city(db: psycopg.Connection, account_id: UUID, city_id: UUID) ->
     """Current levels, active project and server-only experimental quotes."""
     if not _owned_city(db,account_id,city_id):
         raise ConstructionNotFound
-    levels = dict(db.execute(
-        "SELECT building_code,level FROM urban_city_buildings WHERE city_id=%s",
-        (city_id,),
-    ).fetchall())
+    effect_state = resolve_city_effects(db, city_id)
+    levels = {r["building_code"]: r["level"] for r in effect_state["buildings"]}
+    active_codes = {r["building_code"] for r in effect_state["buildings"] if r["active"]}
     current = db.execute(
         """SELECT order_id,building_code,target_level,mode,policy_id,
                   applied_costs,started_at,due_at,status,completed_at
@@ -113,24 +113,38 @@ def catalog_for_city(db: psycopg.Connection, account_id: UUID, city_id: UUID) ->
         (city_id,),
     ).fetchone()
     options = []
-    for code,level,policy,duration,costs in db.execute(
-        """SELECT building_code,target_level,policy_id,base_seconds,base_costs
-           FROM urban_building_profiles WHERE enabled
-           ORDER BY building_code,target_level"""
+    for code,level,policy,duration,costs,req in db.execute(
+        """SELECT b.building_code,b.target_level,b.policy_id,b.base_seconds,
+                  b.base_costs,COALESCE(p.prerequisites,'{}'::jsonb)
+           FROM urban_building_profiles b
+           LEFT JOIN urban_effect_profiles p
+             ON p.building_code=b.building_code AND p.target_level=b.target_level
+           WHERE b.enabled ORDER BY b.building_code,b.target_level"""
     ).fetchall():
         if level == levels.get(code,0)+1:
+            missing = [
+                dep for dep,required in req.items()
+                if dep not in active_codes or levels.get(dep,0)<required
+            ]
+            if level>1 and code not in active_codes:
+                missing.append(code)
             options.append({
                 "building_code":code, "target_level":level, "policy_id":policy,
                 "modes":[quote(costs,duration,mode) for mode in _MODES],
+                "available":not missing,"missing_prerequisites":sorted(set(missing)),
             })
     finished = db.execute(
         """SELECT building_code,level FROM urban_city_buildings
            WHERE city_id=%s ORDER BY building_code""",(city_id,),
     ).fetchall()
     return {
-        "buildings":[{"building_code":r[0],"level":r[1]} for r in finished],
+        "buildings":effect_state["buildings"],
         "active":_order_view(current) if current else None,
         "options":options,
+        "effects":{
+            "mine_additive_bonus":effect_state["mine_additive_bonus"],
+            "capacity_bonus":effect_state["capacity_bonus"],
+        },
     }
 
 
@@ -184,14 +198,24 @@ def start_construction(
         ).fetchone()
         next_level = (existing[0] if existing else 0)+1
         profile = db.execute(
-            """SELECT policy_id,base_seconds,base_costs
-               FROM urban_building_profiles
-               WHERE building_code=%s AND target_level=%s AND enabled""",
+            """SELECT b.policy_id,b.base_seconds,b.base_costs,
+                      COALESCE(e.prerequisites,'{}'::jsonb)
+               FROM urban_building_profiles b
+               LEFT JOIN urban_effect_profiles e
+                 ON e.building_code=b.building_code AND e.target_level=b.target_level
+               WHERE b.building_code=%s AND b.target_level=%s AND b.enabled""",
             (building_code,next_level),
         ).fetchone()
         if not profile:
             raise ConstructionConflict("This building or upgrade has no approved experimental profile")
-        policy_id,seconds,base_costs = profile
+        policy_id,seconds,base_costs,prerequisites = profile
+        active=resolve_city_effects(db,city_id)
+        active_levels={x["building_code"]:x["level"]
+                       for x in active["buildings"] if x["active"]}
+        if any(active_levels.get(dep,0)<level for dep,level in prerequisites.items()):
+            raise ConstructionConflict("Building prerequisites are not satisfied")
+        if next_level>1 and active_levels.get(building_code,0)<next_level-1:
+            raise ConstructionConflict("Cannot upgrade an inactive building")
         quoted = quote(base_costs,seconds,mode)
         resources = db.execute(
             """SELECT resource,amount FROM city_stocks WHERE city_id=%s
@@ -264,6 +288,10 @@ def run_construction_batch(
             if job is None:
                 break
             order_id,city_id,code,level,due = job
+            if not db.execute(
+                "SELECT city_id FROM cities WHERE city_id=%s FOR UPDATE",(city_id,),
+            ).fetchone():
+                raise RuntimeError("Construction lost its parent city")
             current = db.execute(
                 """SELECT level FROM urban_city_buildings
                    WHERE city_id=%s AND building_code=%s FOR UPDATE""",
@@ -298,6 +326,10 @@ def run_construction_batch(
                    VALUES(%s,'completed',%s,%s)""",
                 (order_id,due,Jsonb({"building_code":code,"level":level})),
             )
+            # Effects become eligible only from worker COMMIT time.
+            # The economy worker uses as-of-tick START snapshots, so old
+            # unsettled ticks never gain a newly finished building's bonus.
+            persist_effect_snapshot(db,city_id=city_id,effective_at=now_at)
             events.append({
                 "order_id":str(order_id),"city_id":str(city_id),
                 "building_code":code,"target_level":level,

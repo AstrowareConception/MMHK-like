@@ -137,6 +137,31 @@ def run_economy_batch(
                                     + elapsed.microseconds)
             elapsed_ticks = elapsed_microseconds // (tick_seconds * 1_000_000)
             ticks = min(elapsed_ticks, max_ticks_per_city)
+            # Latest snapshot at the START of the first unpaid tick.
+            active_effect = db.execute(
+                """SELECT mine_additive_bonus,capacity_bonus
+                   FROM city_economy_effect_snapshots
+                   WHERE city_id=%s AND effective_at<=%s
+                   ORDER BY effective_at DESC,revision DESC LIMIT 1""",
+                (city_id,previous_at),
+            ).fetchone()
+            effective_bonus,effective_cap = active_effect or ({},{})
+            # A newer effect cannot be applied to ticks that started before it
+            # became effective. Split catch-up at that tick boundary.
+            upcoming = db.execute(
+                """SELECT effective_at FROM city_economy_effect_snapshots
+                   WHERE city_id=%s AND effective_at>%s
+                   ORDER BY effective_at,revision LIMIT 1""",
+                (city_id,previous_at),
+            ).fetchone()
+            if upcoming:
+                until = upcoming[0] - previous_at
+                micros = ((until.days*86400+until.seconds)*1000000
+                          +until.microseconds)
+                # Number of whole intervals whose START is before change.
+                pre_change_ticks = (micros + tick_seconds*1000000-1)//(
+                    tick_seconds*1000000)
+                ticks = min(ticks,pre_change_ticks)
             if ticks < 1:
                 raise RuntimeError("Due-city clock calculation violated its invariant")
             delta = timedelta(seconds=ticks * tick_seconds)
@@ -157,6 +182,10 @@ def run_economy_batch(
             for resource, base, bonus, carry, amount, cap in rates:
                 if cap is None:
                     raise RuntimeError("Every producing mine needs a storage capacity")
+                bonus = bonus + Decimal(effective_bonus.get(resource,"0"))
+                cap = cap + int(effective_cap.get(resource,0))
+                if bonus < -1 or bonus > 100 or cap > _BIGINT:
+                    raise RuntimeError("Building economic effect exceeds safe bounds")
                 # Avoid losing the remainder of very large yet valid
                 # rate*duration values under Decimal's default 28-digit context.
                 with localcontext() as context:

@@ -7,10 +7,12 @@ from __future__ import annotations
 
 import argparse
 import getpass
+import json
 
 from .db import connect, migrate
 from .economy import configure_haven_mines
 from .construction import configure_building_profile
+from .building_effects import configure_effect_profile, set_building_operational
 from uuid import UUID
 from .security import create_account, USERNAME
 from .worlds import seed_first_haven_city
@@ -49,6 +51,24 @@ def main() -> None:
     building.add_argument("--duration-seconds",required=True,type=int)
     for resource in ("gold","wood","ore","crystal","gems","sulfur","mercury"):
         building.add_argument(f"--cost-{resource}",required=True,type=int)
+    benefits = sub.add_parser(
+        "create-building-effects", help="Operator-only explicit building effects; insert-only",
+    )
+    benefits.add_argument("--code",required=True)
+    benefits.add_argument("--level",required=True,type=int)
+    benefits.add_argument("--policy-id",required=True)
+    benefits.add_argument("--prerequisites",default="{}",
+                          help='JSON mapping of building IDs to required levels')
+    benefits.add_argument("--mine-bonuses",default="{}",
+                          help='JSON decimal additive mine bonuses')
+    benefits.add_argument("--capacity-bonuses",default="{}",
+                          help='JSON integer additional storage capacities')
+    switch = sub.add_parser(
+        "set-building-operational", help="Operator-only suspension or reactivation",
+    )
+    switch.add_argument("--city-id",type=UUID,required=True)
+    switch.add_argument("--code",required=True)
+    switch.add_argument("--enabled",choices=("yes","no"),required=True)
     args = parser.parse_args()
 
     with connect() as db:
@@ -101,6 +121,21 @@ def main() -> None:
                 },
             )
             print(f"Created experimental building profile {args.code} level {args.level}")
+        elif args.command=="create-building-effects":
+            configure_effect_profile(
+                db,building_code=args.code,target_level=args.level,
+                policy_id=args.policy_id,
+                prerequisites=json.loads(args.prerequisites),
+                mine_additive_bonus=json.loads(args.mine_bonuses),
+                capacity_bonus=json.loads(args.capacity_bonuses),
+            )
+            print(f"Configured explicit effects {args.code} level {args.level}")
+        elif args.command=="set-building-operational":
+            state=set_building_operational(
+                db,city_id=args.city_id,building_code=args.code,
+                enabled=args.enabled=="yes",
+            )
+            print(json.dumps(state,ensure_ascii=False))
 
 
 if __name__ == "__main__":

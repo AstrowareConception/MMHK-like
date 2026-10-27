@@ -185,6 +185,38 @@ l'audit. Aucun service de fond n'est encore installé. La documentation
 détaillée est dans
 [CONSTRUCTIONS-URBAINES-POSTGRESQL.md](../../docs/specifications/CONSTRUCTIONS-URBAINES-POSTGRESQL.md).
 
+## Prérequis et effets des bâtiments (migration 004)
+
+Les profils de prix et de temps restent séparés des **profils d'effets**
+déclarés par un opérateur. L'exemple suivant, entièrement fictif,
+accorde +10 % de production de bois et +50 de capacité d'or :
+
+```bash
+python -m mmhk_api.manage migrate
+python -m mmhk_api.manage create-building-effects \
+  --code experimental_hall --level 1 --policy-id LAB-EFFECTS-001 \
+  --prerequisites '{}' --mine-bonuses '{"wood":"0.10"}' \
+  --capacity-bonuses '{"gold":50}'
+```
+
+Les effets sont appliqués à l'achèvement confirmé du chantier, puis
+utilisés par l'économie à partir de la prochaine période entière
+éligible. Les fractions restent en PostgreSQL, les plafonds de base
+ne sont pas réécrits et les effets des niveaux antérieurs ne se
+cumulent pas avec ceux de leurs améliorations.
+
+Une suspension **administrative**, sans suppression du bâtiment,
+permet de tester les prérequis :
+
+```bash
+python -m mmhk_api.manage set-building-operational \
+  --city-id UUID_DE_LA_VILLE --code experimental_hall --enabled no
+```
+
+Un bâtiment dépendant devient alors inactif et cesse de produire des
+bonus. Les détails, limites historiques et tests sont documentés dans
+[EFFETS-BATIMENTS-POSTGRESQL.md](../../docs/specifications/EFFETS-BATIMENTS-POSTGRESQL.md).
+
 ## Limites explicites avant tout déploiement public
 
 - Aucun mécanisme d'inscription publique, réinitialisation de mot de passe,
