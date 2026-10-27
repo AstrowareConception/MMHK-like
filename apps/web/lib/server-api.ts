@@ -45,3 +45,34 @@ export async function privateApi<T>(
     return { ok: false, status: 503 };
   }
 }
+
+export type ConstructionOrder = {
+  order_id: string;
+  building_code: string;
+  target_level: number;
+  mode: "normal" | "rapid" | "economic";
+  policy_id: string;
+  applied_costs: Record<string, number>;
+  started_at: string;
+  due_at: string;
+  status: "building" | "completed";
+  completed_at: string | null;
+  historically_certified: boolean;
+  replayed?: boolean;
+};
+export type ConstructionCatalog = {
+  buildings: { building_code: string; level: number }[];
+  active: ConstructionOrder | null;
+  options: {
+    building_code: string;
+    target_level: number;
+    policy_id: string;
+    modes: {
+      mode: "normal" | "rapid" | "economic";
+      costs: Record<string, number>;
+      duration_seconds: number;
+      rounding_policy: string;
+      historically_certified: boolean;
+    }[];
+  }[];
+};
