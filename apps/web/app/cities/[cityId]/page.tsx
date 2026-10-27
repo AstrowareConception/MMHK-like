@@ -52,13 +52,26 @@ export default async function CityPage({
               <span className="tile-title">{label}</span>
               <strong>{(city.stocks[key] ?? 0).toLocaleString("fr-FR")}</strong>
               <small>{city.mines.includes(key) ? "Mine présente" : "Pas de mine initiale"}</small>
+              {city.production_active && city.production_per_day[key] !== undefined && (
+                <small>+{Number(city.production_per_day[key]).toLocaleString("fr-FR")} / jour (profil expérimental)</small>
+              )}
             </article>
           ))}
         </div>
-        <p className="notice">Les quatre mines du Havre initial sont : or, bois,
-          minerai et cristal. Aucun débit de production ni montant de départ
-          historique n'est encore appliqué. Les réserves viennent directement
-          de PostgreSQL, sans cache Redis.</p>
+        <p className="notice">
+          {city.production_active
+            ? <>Production expérimentale activée : crédits périodiques par worker
+                PostgreSQL, à cadence explicitement définie par l’administrateur.
+                {city.next_credit_at && (
+                  <> Prochaine échéance serveur : {new Date(city.next_credit_at).toLocaleString("fr-FR", { timeZone: "Europe/Paris" })}.</>
+                )}
+              </>
+            : <>Production inactive : l’administrateur n’a pas encore configuré
+                les cadences et capacités de cette ville.</>}
+          {" "}Les quatre mines initiales du Havre sont or, bois, minerai
+          et cristal. Les quantités et cadences historiques restent à vérifier.
+          Les stocks sont lus dans PostgreSQL, pas dans Redis.
+        </p>
       </section>
     </main>
   );
