@@ -42,12 +42,12 @@ export function dispatchServerHeroMission({
 }
 /** Arrival is an authenticated server scheduler action, not a client clock. */
 export function arriveServerHeroMission({
- command,authContext,authenticate,authorizeTarget,heroStore,serverNowMs
+ command,authContext,authenticate,authorizeTarget,heroStore,serverNowMs,lease=null
 }){
  exact(command,['missionId'],'Arrival command');
  const principal=authority({authContext,authenticate,authorizeTarget,heroStore},true);
  return heroStore.markMissionArrived({
-  missionId:command.missionId,actorPlayerId:principal.playerId,nowMs:serverNowMs,
+  missionId:command.missionId,actorPlayerId:principal.playerId,nowMs:serverNowMs,lease,
   authorizeTarget:({attacker,defender})=>targetGate(principal,authorizeTarget)({
    attacker,defender
   })
@@ -66,12 +66,12 @@ export function scheduleServerHeroReturn({
  });
 }
 export function completeServerHeroReturn({
- command,authContext,authenticate,heroStore,serverNowMs
+ command,authContext,authenticate,heroStore,serverNowMs,lease=null
 }){
  exact(command,['missionId'],'Return completion command');
  const principal=authority({authContext,authenticate,heroStore},false);
  return heroStore.completeMissionReturn({
-  missionId:command.missionId,actorPlayerId:principal.playerId,nowMs:serverNowMs
+  missionId:command.missionId,actorPlayerId:principal.playerId,nowMs:serverNowMs,lease
  });
 }
 /** Administrative cancellation is explicit and requires a real server policy. */
