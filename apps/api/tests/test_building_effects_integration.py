@@ -171,3 +171,64 @@ def test_policy_is_versioned_insert_only_and_nonretroactive(site):
             configure_effect_profile(db,building_code=site["base"],target_level=1,
                 policy_id="REWRITE",prerequisites={},
                 mine_additive_bonus={"gold":"0"},capacity_bonus={})
+
+
+def test_upgrade_replaces_previous_level_effect_without_stacking(site):
+    with psycopg.connect(URL,autocommit=True) as db:
+        configure_building_profile(
+            db,building_code=site["base"],target_level=2,
+            policy_id="LAB-EFFECTS-V2",base_seconds=60,base_costs=costs(1),
+        )
+        configure_effect_profile(
+            db,building_code=site["base"],target_level=2,
+            policy_id="LAB-EFFECTS-V2",prerequisites={},
+            mine_additive_bonus={"gold":"0.2"},
+            capacity_bonus={"gold":3},
+        )
+        first=start(db,site,site["base"])
+        settle(db,first)
+        assert Decimal(resolve_city_effects(db,site["city"])[
+            "mine_additive_bonus"]["gold"])==Decimal("0.5")
+        upgraded=start(db,site,site["base"])
+        assert upgraded["target_level"]==2
+        settle(db,upgraded)
+        after=resolve_city_effects(db,site["city"])
+        assert after["capacity_bonus"]["gold"]==3
+        assert Decimal(after["mine_additive_bonus"]["gold"])==Decimal("0.2")
+        assert after["buildings"]==[{
+            "building_code":site["base"],"level":2,
+            "active":True,"operator_disabled":False,"prerequisites":{},
+        }]
+
+
+def test_storage_bonus_allows_extra_credit_only_after_activation(site):
+    with psycopg.connect(URL,autocommit=True) as db:
+        build=start(db,site,site["base"])
+        started=build["started_at"]
+        clock_start=started-timedelta(hours=2,minutes=10)
+        configure_haven_mines(
+            db,city_id=site["city"],tick_seconds=3600,
+            started_at=clock_start,
+            rates_per_day={"gold":"24","wood":"0","ore":"0","crystal":"0"},
+            capacities={"gold":30,"wood":30,"ore":30,"crystal":30},
+        )
+        # First settle old-rate ticks then finish the building.
+        run_economy_batch(db,now_at=build["due_at"]-timedelta(seconds=1),max_cities=1)
+        settle(db,build)
+        # At base cap (30), the next full tick has no capacity to credit unless
+        # the +10 active building bonus is used from its activation snapshot.
+        db.execute("UPDATE city_stocks SET amount=30 WHERE city_id=%s AND resource='gold'",
+                   (site["city"],))
+        old_tick=run_economy_batch(
+            db,now_at=clock_start+timedelta(hours=3),max_cities=1,
+        )
+        assert old_tick[0]["credits"]["gold"]==0
+        new_tick=run_economy_batch(
+            db,now_at=clock_start+timedelta(hours=4),max_cities=1,
+        )
+        assert new_tick[0]["credits"]["gold"]==1
+        assert get_gold(db,site["city"])==31
+        assert db.execute(
+            "SELECT capacity FROM city_stocks WHERE city_id=%s AND resource='gold'",
+            (site["city"],),
+        ).fetchone()[0]==30  # baseline isn't mutated by bonuses
