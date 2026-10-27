@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import re
+from datetime import timedelta
 from uuid import UUID, uuid4
 
 import psycopg
@@ -109,6 +110,15 @@ def owned_city_detail(db: psycopg.Connection, account_id: UUID, city_id: UUID) -
         "SELECT resource FROM city_mines WHERE city_id=%s ORDER BY resource",
         (city_id,),
     ).fetchall()]
+    economy = db.execute(
+        """SELECT tick_seconds,last_tick_at,enabled FROM city_economy_clock
+           WHERE city_id=%s""", (city_id,)
+    ).fetchone()
+    rates = db.execute(
+        """SELECT resource,base_units_per_day,additive_bonus
+           FROM city_mine_rates WHERE city_id=%s ORDER BY resource""",
+        (city_id,),
+    ).fetchall()
     return {
         "city_id": row[0],
         "world_id": row[1],
@@ -118,6 +128,14 @@ def owned_city_detail(db: psycopg.Connection, account_id: UUID, city_id: UUID) -
         "first_city": row[5],
         "stocks": {kind: stocks.get(kind, 0) for kind in RESOURCE_NAMES},
         "mines": mines,
-        "production_active": False,
+        "production_active": bool(economy and economy[2]),
+        "production_per_day": {
+            resource: str(base * (1 + bonus)) for resource, base, bonus in rates
+        },
+        "tick_seconds": economy[0] if economy else None,
+        "next_credit_at": (
+            economy[1] + timedelta(seconds=economy[0])
+            if economy and economy[2] else None
+        ),
         "historical_economy_certified": False,
     }
