@@ -152,6 +152,11 @@ test('server-trusted return scheduling creates exactly one return due-event',()=
    command:{commandId:'b1',attackerHeroId:'a1',defenderHeroId:'d1',missionId:'m1'},
    trustedRules:rules,serverNowMs:2000});
   assert.equal(receipt.persistence.applied,true);
+  assert.throws(()=>scheduleServerHeroReturn({...opts(s),
+   command:{missionId:'m1'},trustedSchedule:{nowMs:1999,returnAtMs:3000}
+  }),/precedes mission arrival/);
+  assert.equal(s.getMissionDueEvent({
+   missionId:'m1',eventKind:'return_completion'}),null);
   const cmd={command:{missionId:'m1'},trustedSchedule:{nowMs:2001,returnAtMs:3000}};
   assert.equal(scheduleServerHeroReturn({...opts(s),...cmd}).status,'returning');
   assert.equal(scheduleServerHeroReturn({...opts(s),...cmd}).replayed,true);
