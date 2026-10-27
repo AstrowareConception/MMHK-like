@@ -15,6 +15,11 @@ export type CityDetail = City & {
   mines: string[];
   production_active: boolean;
   production_per_day: Record<string, string>;
+  stock_capacities: Record<string, number | null>;
+  building_effects: {
+    mine_additive_bonus: Record<string, string>;
+    capacity_bonus: Record<string, number>;
+  };
   tick_seconds: number | null;
   next_credit_at: string | null;
   historical_economy_certified: boolean;
@@ -61,12 +66,20 @@ export type ConstructionOrder = {
   replayed?: boolean;
 };
 export type ConstructionCatalog = {
-  buildings: { building_code: string; level: number }[];
+  buildings: {
+    building_code: string;
+    level: number;
+    active: boolean;
+    operator_disabled: boolean;
+    prerequisites: Record<string, number>;
+  }[];
   active: ConstructionOrder | null;
   options: {
     building_code: string;
     target_level: number;
     policy_id: string;
+    available: boolean;
+    missing_prerequisites: string[];
     modes: {
       mode: "normal" | "rapid" | "economic";
       costs: Record<string, number>;
@@ -75,4 +88,8 @@ export type ConstructionCatalog = {
       historically_certified: boolean;
     }[];
   }[];
+  effects: {
+    mine_additive_bonus: Record<string, string>;
+    capacity_bonus: Record<string, number>;
+  };
 };
