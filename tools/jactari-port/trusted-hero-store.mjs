@@ -10,6 +10,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 import {DatabaseSync} from 'node:sqlite';
+import {createHash} from 'node:crypto';
 import {deriveJactariHeroPageSnapshot} from './hero-page-snapshot.mjs';
 import {calculateJactariCareerBudget} from './hero-career-progression.mjs';
 import {deriveJactariLegendaryTalents,listJactariLegendaryClasses} from './hero-legendary.mjs';
@@ -170,6 +171,28 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
    mission_id TEXT PRIMARY KEY REFERENCES military_missions(mission_id),
    route_json TEXT NOT NULL CHECK(json_valid(route_json))
   );
+  CREATE TABLE IF NOT EXISTS military_mission_world_snapshots(
+   mission_id TEXT PRIMARY KEY REFERENCES military_missions(mission_id),
+   world_id TEXT NOT NULL REFERENCES military_worlds(world_id),
+   world_revision INTEGER NOT NULL CHECK(world_revision>=0),
+   digest TEXT NOT NULL CHECK(length(digest)=64),
+   snapshot_json TEXT NOT NULL CHECK(json_valid(snapshot_json))
+  );
+  CREATE TABLE IF NOT EXISTS military_mission_due_events(
+   mission_id TEXT NOT NULL REFERENCES military_missions(mission_id),
+   event_kind TEXT NOT NULL CHECK(event_kind IN ('arrival','return_completion')),
+   due_at_ms INTEGER NOT NULL CHECK(due_at_ms>=0),
+   status TEXT NOT NULL DEFAULT 'pending' CHECK(status IN ('pending','leased','done','cancelled')),
+   worker_id TEXT,
+   lease_until_ms INTEGER,
+   attempt INTEGER NOT NULL DEFAULT 0 CHECK(attempt>=0),
+   settled_at_ms INTEGER,
+   PRIMARY KEY(mission_id,event_kind),
+   CHECK((status='leased' AND worker_id IS NOT NULL AND lease_until_ms IS NOT NULL)
+      OR (status<>'leased' AND lease_until_ms IS NULL))
+  );
+  CREATE INDEX IF NOT EXISTS due_event_time_idx
+   ON military_mission_due_events(status,due_at_ms,mission_id,event_kind);
   CREATE TABLE IF NOT EXISTS military_mission_events(
    mission_id TEXT NOT NULL REFERENCES military_missions(mission_id),
    sequence INTEGER NOT NULL CHECK(sequence >= 0),
@@ -251,6 +274,14 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
  const readCityAtTile=db.prepare('SELECT city_id FROM military_cities WHERE world_id=? AND x=? AND y=?');
  const selectClaims=db.prepare('SELECT x,y,owner_player_id,owner_alliance_id FROM military_territory_claims WHERE world_id=? ORDER BY x,y');
  const selectWorldCities=db.prepare('SELECT x,y,owner_player_id FROM military_cities WHERE world_id=? ORDER BY x,y');
+ const storedSnapshot=db.prepare('INSERT INTO military_mission_world_snapshots(mission_id,world_id,world_revision,digest,snapshot_json) VALUES(?,?,?,?,?)');
+ const readStoredSnapshot=db.prepare('SELECT world_id,world_revision,digest,snapshot_json FROM military_mission_world_snapshots WHERE mission_id=?');
+ const insertDueEvent=db.prepare('INSERT INTO military_mission_due_events(mission_id,event_kind,due_at_ms) VALUES(?,?,?)');
+ const markDueDone=db.prepare("UPDATE military_mission_due_events SET status='done',lease_until_ms=NULL,settled_at_ms=? WHERE mission_id=? AND event_kind=? AND status IN ('pending','leased')");
+ const markDueCancelled=db.prepare("UPDATE military_mission_due_events SET status='cancelled',lease_until_ms=NULL,settled_at_ms=NULL WHERE mission_id=? AND event_kind=? AND status IN ('pending','leased')");
+ const readDue=db.prepare('SELECT * FROM military_mission_due_events WHERE mission_id=? AND event_kind=?');
+ const nextDue=db.prepare("SELECT * FROM military_mission_due_events WHERE due_at_ms<=? AND (status='pending' OR (status='leased' AND lease_until_ms<=?)) ORDER BY due_at_ms,mission_id,event_kind LIMIT 1");
+ const leaseDue=db.prepare("UPDATE military_mission_due_events SET status='leased',worker_id=?,lease_until_ms=?,attempt=attempt+1 WHERE mission_id=? AND event_kind=? AND (status='pending' OR (status='leased' AND lease_until_ms<=?))");
  const insertPosting=db.prepare('INSERT INTO hero_city_postings(hero_id,city_id) VALUES(?,?) ON CONFLICT(hero_id) DO UPDATE SET city_id=excluded.city_id');
  const cityOfHero=db.prepare('SELECT c.*,w.world_size FROM hero_city_postings p JOIN military_cities c ON c.city_id=p.city_id JOIN military_worlds w ON w.world_id=c.world_id WHERE p.hero_id=?');
  const saveRoute=db.prepare('INSERT INTO military_mission_routes(mission_id,route_json) VALUES(?,?)');
@@ -259,6 +290,29 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
   cityId:row.city_id,worldId:row.world_id,ownerPlayerId:row.owner_player_id,
   x:row.x,y:row.y,worldSize:row.world_size,
   firstCity:row.is_first_city===1,protectedUntilMs:row.protected_until_ms
+ }:null;
+ const readTerritorySnapshot=(worldId)=>{
+  id(worldId,'world ID');
+  const world=readWorld.get(worldId);
+  if(!world)throw new Error('Unknown military world');
+  return {worldId,worldSize:world.world_size,
+   revision:readWorldRevision.get(worldId)?.revision??0,
+   alliances:selectAlliances.all(worldId).map(r=>r.alliance_id),
+   memberships:selectMemberships.all(worldId).map(r=>({
+    playerId:r.player_id,allianceId:r.alliance_id})),
+   relations:selectRelations.all(worldId).map(r=>({
+    allianceA:r.alliance_a,allianceB:r.alliance_b,relation:r.relation})),
+   claims:selectClaims.all(worldId).map(r=>({x:r.x,y:r.y,
+    ownerPlayerId:r.owner_player_id,ownerAllianceId:r.owner_alliance_id})),
+   cities:selectWorldCities.all(worldId).map(r=>({x:r.x,y:r.y,
+    ownerPlayerId:r.owner_player_id}))};
+ };
+ const worldDigest=snapshot=>createHash('sha256')
+  .update(json(snapshot)).digest('hex');
+ const dueView=row=>row?{
+  missionId:row.mission_id,eventKind:row.event_kind,dueAtMs:row.due_at_ms,
+  status:row.status,workerId:row.worker_id,leaseUntilMs:row.lease_until_ms,
+  attempt:row.attempt,settledAtMs:row.settled_at_ms
  }:null;
  const trustedGeo=(attackerId,defenderId,nowMs)=>{
   const a=placeView(cityOfHero.get(attackerId));
@@ -469,19 +523,7 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
    alive();id(worldId,'world ID');
    db.exec('BEGIN');
    try{
-    const world=readWorld.get(worldId);
-    if(!world)throw new Error('Unknown military world');
-    const result={worldId,worldSize:world.world_size,
-     revision:readWorldRevision.get(worldId)?.revision??0,
-     alliances:selectAlliances.all(worldId).map(r=>r.alliance_id),
-     memberships:selectMemberships.all(worldId).map(r=>({
-      playerId:r.player_id,allianceId:r.alliance_id})),
-     relations:selectRelations.all(worldId).map(r=>({
-      allianceA:r.alliance_a,allianceB:r.alliance_b,relation:r.relation})),
-     claims:selectClaims.all(worldId).map(r=>({x:r.x,y:r.y,
-      ownerPlayerId:r.owner_player_id,ownerAllianceId:r.owner_alliance_id})),
-     cities:selectWorldCities.all(worldId).map(r=>({x:r.x,y:r.y,
-      ownerPlayerId:r.owner_player_id}))};
+    const result=readTerritorySnapshot(worldId);
     db.exec('COMMIT');return result;
    }catch(error){db.exec('ROLLBACK');throw error;}
   },
@@ -500,6 +542,79 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
   },
   getHeroWorldPosition(heroId){
    alive();return placeView(cityOfHero.get(id(heroId,'hero ID')));
+  },
+  /**
+   * INTERNAL ONLY: departure state is frozen atomically with dispatch.
+   * Useful for archaeology/replay, never an approval of diplomacy or ETA.
+   */
+  getFrozenMissionTerritory(missionId){
+   alive();id(missionId,'mission ID');
+   const row=readStoredSnapshot.get(missionId);
+   if(!row)return null;
+   const snapshot=decode(row.snapshot_json);
+   if(worldDigest(snapshot)!==row.digest||
+      snapshot.revision!==row.world_revision||
+      snapshot.worldId!==row.world_id)
+    throw new Error('Persisted departure world snapshot integrity mismatch');
+   return {worldId:row.world_id,worldRevision:row.world_revision,
+    snapshotFingerprint:row.digest,snapshot};
+  },
+  compareFrozenMissionTerritory(missionId){
+   alive();id(missionId,'mission ID');
+   db.exec('BEGIN');
+   try{
+    const original=readStoredSnapshot.get(missionId);
+    if(!original){db.exec('COMMIT');return null;}
+    const current=readTerritorySnapshot(original.world_id);
+    const currentFingerprint=worldDigest(current);
+    const result={missionId,worldId:original.world_id,
+     departedRevision:original.world_revision,currentRevision:current.revision,
+     departedFingerprint:original.digest,currentFingerprint,
+     territoryUnchanged:original.world_revision===current.revision&&
+      original.digest===currentFingerprint,
+     automaticMissionCancellation:false,authoritativeArrivalTime:false};
+    db.exec('COMMIT');return result;
+   }catch(error){db.exec('ROLLBACK');throw error;}
+  },
+  /** Observational only. Does not deliver or resolve a due event. */
+  getMissionDueEvent({missionId,eventKind}){
+   alive();id(missionId,'mission ID');
+   if(!['arrival','return_completion'].includes(eventKind))
+    throw new RangeError('Unsupported due event kind');
+   return dueView(readDue.get(missionId,eventKind));
+  },
+  /**
+   * Multiple workers safely compete using BEGIN IMMEDIATE + a time-bound lease.
+   * Claiming an event NEVER advances mission state or grants battle permission.
+   * Lease expiry yields at-least-once delivery, not exactly-once execution.
+   */
+  claimNextDueMissionEvent({nowMs,workerId,leaseMs=30000}){
+   id(workerId,'due-event worker');
+   requiredTime(nowMs,'claim time');requiredTime(leaseMs,'lease duration');
+   if(leaseMs<1||leaseMs>3600000||!Number.isSafeInteger(nowMs+leaseMs))
+    throw new RangeError('Lease must be 1 ms..1 hour within safe epoch range');
+   return transaction(()=>{
+    const next=nextDue.get(nowMs,nowMs);
+    if(!next)return null;
+    if(leaseDue.run(workerId,nowMs+leaseMs,next.mission_id,
+       next.event_kind,nowMs).changes!==1)
+     throw new Error('Due-event lease contention');
+    return dueView(readDue.get(next.mission_id,next.event_kind));
+   });
+  },
+  /** Acknowledgement only verifies the mission transition already committed. */
+  confirmDueMissionEvent({missionId,eventKind,workerId,attempt}){
+   alive();id(missionId,'mission ID');id(workerId,'due-event worker');
+   if(!['arrival','return_completion'].includes(eventKind))
+    throw new RangeError('Unsupported due event kind');
+   if(!Number.isSafeInteger(attempt)||attempt<1)
+    throw new RangeError('Positive lease attempt required');
+   const due=dueView(readDue.get(missionId,eventKind));
+   if(!due||due.workerId!==workerId||due.attempt!==attempt)
+    throw new Error('Due-event acknowledgement has stale or unknown lease');
+   if(due.status!=='done')
+    throw new Error('Due-event acknowledgement requires completed mission transition');
+   return {...due,confirmed:true};
   },
   getMissionRoute(missionId){
    alive();const row=readRoute.get(id(missionId,'mission ID'));
@@ -658,7 +773,12 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
     const route=trustedGeo(attackerHeroId,defenderHeroId,nowMs);
     insertMission.run(missionId,actorPlayerId,attackerHeroId,
      defenderHeroId,arrivalAtMs,attacker.revision);
-    if(route)saveRoute.run(missionId,json(route));
+    if(route){
+     saveRoute.run(missionId,json(route));
+     const snap=readTerritorySnapshot(route.worldId);
+     storedSnapshot.run(missionId,route.worldId,snap.revision,worldDigest(snap),json(snap));
+    }
+    insertDueEvent.run(missionId,'arrival',arrivalAtMs);
     addMissionEvent(missionId,{phase:'dispatched',timeMs:nowMs,
      arrivalAtMs,attackerRevision:attacker.revision});
     return {...missionView(readMission.get(missionId)),replayed:false};
@@ -692,6 +812,7 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
     verifiedRoute(missionId,m.attacker_hero_id,m.defender_hero_id,nowMs);
     if(arriveMission.run(missionId).changes!==1)
      throw new Error('Arrival state transition failed');
+    markDueDone.run(nowMs,missionId,'arrival');
     addMissionEvent(missionId,{phase:'arrived',timeMs:nowMs,
      defenderRevision:defender.revision});
     return {...missionView(readMission.get(missionId)),replayed:false};
@@ -707,12 +828,15 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
        currentPlayer.get(actorPlayerId)?.enabled!==1)
      throw new Error('Unauthorized or unknown military mission return');
     if(m.status!=='returning')throw new Error('Mission has no committed combat return');
+    if(nowMs<m.arrival_at_ms)
+     throw new Error('Return schedule server time precedes mission arrival');
     if(m.return_at_ms!==null){
      if(m.return_at_ms!==returnAtMs)throw new Error('Mission return schedule conflict');
      return {...missionView(m),replayed:true};
     }
     if(setReturnTime.run(returnAtMs,missionId).changes!==1)
      throw new Error('Mission return schedule failed');
+    insertDueEvent.run(missionId,'return_completion',returnAtMs);
     addMissionEvent(missionId,{phase:'return_scheduled',timeMs:nowMs,returnAtMs});
     return {...missionView(readMission.get(missionId)),replayed:false};
    });
@@ -731,6 +855,7 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
     if(nowMs<m.return_at_ms)throw new Error('Military mission return not yet due');
     if(completeMission.run(missionId).changes!==1)
      throw new Error('Military mission return completion failed');
+    markDueDone.run(nowMs,missionId,'return_completion');
     addMissionEvent(missionId,{phase:'return_completed',timeMs:nowMs});
     return {...missionView(readMission.get(missionId)),replayed:false};
    });
@@ -750,6 +875,7 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
      throw new Error('Cannot cancel an already committed battle mission');
     if(cancelMission.run(missionId).changes!==1)
      throw new Error('Military mission cancellation failed');
+    markDueCancelled.run(missionId,'arrival');
     addMissionEvent(missionId,{phase:'administratively_cancelled'});
     return {...missionView(readMission.get(missionId)),replayed:false};
    });
