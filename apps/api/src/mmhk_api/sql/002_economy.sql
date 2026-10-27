@@ -20,7 +20,7 @@ CREATE TABLE city_mine_rates (
   -- Sum of percentage bonuses, e.g. 0.10 + 0.20 is 0.30.
   additive_bonus numeric(9,6) NOT NULL DEFAULT 0
     CHECK(additive_bonus >= -1 AND additive_bonus <= 100),
-  fractional_units numeric(20,12) NOT NULL DEFAULT 0
+  fractional_units numeric(30,18) NOT NULL DEFAULT 0
     CHECK(fractional_units >= 0 AND fractional_units < 1),
   PRIMARY KEY(city_id, resource),
   FOREIGN KEY(city_id, resource) REFERENCES city_mines(city_id, resource)
