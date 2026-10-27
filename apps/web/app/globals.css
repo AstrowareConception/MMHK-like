@@ -62,3 +62,18 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 .resource-grid article { padding: 18px; border: 1px solid #ffffff24; border-radius: 6px; background: #0d1b2577; }
 .resource-grid strong { color: #efddae; font: 30px/1.4 Georgia,serif; }
 .resource-grid small { display: block; color: #b5c2c9; font: 12px/1.4 system-ui,sans-serif; margin-top: 8px; }
+
+/* Experimental first-city urban construction cards. */
+.construction-panel { margin-top: 34px; border-top: 1px solid #8a825f4f; padding-top: 25px; }
+.construction-panel h2 { margin: 5px 0 16px; }
+.construction-panel p { font: 14px/1.6 system-ui,sans-serif; color: #c5d0d5; }
+.construction-notice { border-left: 3px solid #82cea7; padding: 10px 14px; background: #244d3c88; }
+.build-options { display: grid; grid-template-columns: repeat(auto-fit,minmax(205px,1fr)); gap: 12px; }
+.build-option { display: flex; flex-direction: column; align-items: start; gap: 10px;
+  border: 1px solid #a9915e69; border-radius: 6px; background: #101f2977; padding: 17px; }
+.build-option strong { color: #e9d6a9; }
+.build-option span, .build-option small { font: 13px/1.5 system-ui,sans-serif; color: #c2ccd1; }
+.build-option button { margin-top: auto; }
+.active-project { padding: 18px; border-radius: 6px; border: 1px solid #b6a06b; background: #1b2f3f; }
+.active-project strong { color: #edd7a5; }
+.active-project small { color: #c2ccd1; font: 12px/1.5 system-ui,sans-serif; }
