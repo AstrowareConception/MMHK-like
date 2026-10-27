@@ -241,7 +241,7 @@ def test_enabled_city_with_missing_rate_fails_atomically(city):
             """DELETE FROM city_mine_rates WHERE city_id=%s""",
             (city,),
         )
-        with pytest.raises(RuntimeError, match="configured mines"):
+        with pytest.raises(RuntimeError, match="configured Haven mines"):
             run_economy_batch(db, now_at=START + HOUR)
         assert _stock(db, city, "gold") == 0
         assert db.execute(
