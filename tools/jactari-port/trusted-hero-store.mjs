@@ -311,7 +311,7 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
  const readDue=db.prepare('SELECT * FROM military_mission_due_events WHERE mission_id=? AND event_kind=?');
  const writeIncident=db.prepare('INSERT INTO military_due_event_incidents(mission_id,event_kind,attempt,worker_id,observed_at_ms,reason_code) VALUES(?,?,?,?,?,?)');
  const readIncidents=db.prepare('SELECT mission_id,event_kind,attempt,worker_id,observed_at_ms,reason_code FROM military_due_event_incidents WHERE mission_id=? ORDER BY observed_at_ms,event_kind,attempt');
- const sameArrival=db.prepare("SELECT m.mission_id,m.arrival_at_ms,m.status,r.route_json FROM military_missions m JOIN military_mission_routes r ON m.mission_id=r.mission_id WHERE m.arrival_at_ms=? AND m.status IN ('traveling','arrived') ORDER BY m.mission_id");
+ const sameArrival=db.prepare("SELECT m.mission_id,m.arrival_at_ms,m.status,r.route_json FROM military_missions m JOIN military_mission_routes r ON m.mission_id=r.mission_id JOIN military_mission_due_events e ON e.mission_id=m.mission_id AND e.event_kind='arrival' WHERE m.arrival_at_ms=? AND m.status IN ('traveling','arrived') AND e.status!='cancelled' ORDER BY m.mission_id");
  const insertRecall=db.prepare("INSERT INTO military_mission_recall_requests(mission_id,actor_player_id,requested_at_ms) VALUES(?,?,?)");
  const readRecall=db.prepare("SELECT * FROM military_mission_recall_requests WHERE mission_id=?");
  const insertRecallPlan=db.prepare("INSERT INTO military_mission_recall_plans(mission_id,approved_by,policy_id,approved_at_ms,return_at_ms) VALUES(?,?,?,?,?)");
@@ -361,6 +361,7 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
   * exact world + destination city + scheduled arrival, not arrival order.
   */
  const conflictingArrivals=(missionId,arrivalAtMs)=>{
+  if(readDue.get(missionId,'arrival')?.status==='cancelled')return [];
   const raw=readRoute.get(missionId);
   if(!raw)return [];
   const route=decode(raw.route_json);
