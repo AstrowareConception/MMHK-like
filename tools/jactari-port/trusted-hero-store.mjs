@@ -10,6 +10,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 import {DatabaseSync} from 'node:sqlite';
+import {ensureExplicitRecallMissionStates} from './mission-state-migration.mjs';
 import {createHash} from 'node:crypto';
 import {deriveJactariHeroPageSnapshot} from './hero-page-snapshot.mjs';
 import {calculateJactariCareerBudget} from './hero-career-progression.mjs';
@@ -233,7 +234,7 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
    actor_player_id TEXT NOT NULL REFERENCES players(player_id),
    attacker_hero_id TEXT NOT NULL REFERENCES heroes(hero_id),
    defender_hero_id TEXT NOT NULL REFERENCES heroes(hero_id),
-   status TEXT NOT NULL CHECK(status IN ('traveling','arrived','returning','completed','cancelled')),
+   status TEXT NOT NULL CHECK(status IN ('traveling','arrived','returning','recall_returning','completed','cancelled','recalled')),
    arrival_at_ms INTEGER NOT NULL,
    attacker_revision INTEGER NOT NULL,
    return_at_ms INTEGER,
@@ -242,7 +243,7 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
   );
   CREATE UNIQUE INDEX IF NOT EXISTS one_active_mission_per_attacker
    ON military_missions(attacker_hero_id)
-   WHERE status IN ('traveling','arrived','returning');
+   WHERE status IN ('traveling','arrived','returning','recall_returning');
   CREATE TABLE IF NOT EXISTS battle_audit_events(
    command_id TEXT NOT NULL REFERENCES battle_commands(command_id),
    sequence INTEGER NOT NULL CHECK(sequence >= 0),
@@ -250,6 +251,7 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
    PRIMARY KEY(command_id,sequence)
   );
  `);
+ const missionSchema=ensureExplicitRecallMissionStates(db);
  const addPlayer=db.prepare('INSERT INTO players(player_id,enabled) VALUES(?,1)');
  const setPlayerEnabled=db.prepare('UPDATE players SET enabled=? WHERE player_id=?');
  const currentPlayer=db.prepare('SELECT enabled FROM players WHERE player_id=?');
@@ -264,13 +266,15 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
   writeMissionEvent.run(missionId,sequence,json(event));
  };
  const readMission=db.prepare('SELECT * FROM military_missions WHERE mission_id=?');
- const activeMission=db.prepare("SELECT mission_id FROM military_missions WHERE attacker_hero_id=? AND status IN ('traveling','arrived','returning')");
+ const activeMission=db.prepare("SELECT mission_id FROM military_missions WHERE attacker_hero_id=? AND status IN ('traveling','arrived','returning','recall_returning')");
  const insertMission=db.prepare("INSERT INTO military_missions(mission_id,actor_player_id,attacker_hero_id,defender_hero_id,status,arrival_at_ms,attacker_revision) VALUES(?,?,?,?,'traveling',?,?)");
  const arriveMission=db.prepare("UPDATE military_missions SET status='arrived' WHERE mission_id=? AND status='traveling'");
  const returnMission=db.prepare("UPDATE military_missions SET status='returning',battle_command_id=? WHERE mission_id=? AND status='arrived'");
  const setReturnTime=db.prepare("UPDATE military_missions SET return_at_ms=? WHERE mission_id=? AND status='returning' AND return_at_ms IS NULL");
  const completeMission=db.prepare("UPDATE military_missions SET status='completed' WHERE mission_id=? AND status='returning' AND return_at_ms IS NOT NULL");
  const cancelMission=db.prepare("UPDATE military_missions SET status='cancelled' WHERE mission_id=? AND status IN ('traveling','arrived') AND battle_command_id IS NULL");
+ const beginRecallReturn=db.prepare("UPDATE military_missions SET status='recall_returning',return_at_ms=? WHERE mission_id=? AND status='traveling' AND return_at_ms IS NULL AND battle_command_id IS NULL");
+ const finishRecallReturn=db.prepare("UPDATE military_missions SET status='recalled' WHERE mission_id=? AND status='recall_returning' AND battle_command_id IS NULL AND return_at_ms IS NOT NULL");
  const missionView=row=>row===undefined?null:{
   missionId:row.mission_id,actorPlayerId:row.actor_player_id,
   attackerHeroId:row.attacker_hero_id,defenderHeroId:row.defender_hero_id,
@@ -316,7 +320,6 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
  const readRecall=db.prepare("SELECT * FROM military_mission_recall_requests WHERE mission_id=?");
  const insertRecallPlan=db.prepare("INSERT INTO military_mission_recall_plans(mission_id,approved_by,policy_id,approved_at_ms,return_at_ms) VALUES(?,?,?,?,?)");
  const readRecallPlan=db.prepare("SELECT * FROM military_mission_recall_plans WHERE mission_id=?");
- const setRecallReturnTime=db.prepare("UPDATE military_missions SET return_at_ms=? WHERE mission_id=? AND status='traveling' AND return_at_ms IS NULL");
  const recallPlanView=row=>row?{
   missionId:row.mission_id,approvedBy:row.approved_by,policyId:row.policy_id,
   approvedAtMs:row.approved_at_ms,returnAtMs:row.return_at_ms,
@@ -983,13 +986,13 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
      throw new Error('Unauthorized or unknown military mission');
     const recallPlan=readRecallPlan.get(missionId);
     if(recallPlan){
-     if(m.status==='cancelled')return {...missionView(m),replayed:true};
-     if(m.status!=='traveling'||m.battle_command_id!==null||
+     if(m.status==='recalled')return {...missionView(m),replayed:true};
+     if(m.status!=='recall_returning'||m.battle_command_id!==null||
         m.return_at_ms!==recallPlan.return_at_ms)
       throw new Error('Recall return mission state is inconsistent');
      if(nowMs<recallPlan.return_at_ms)
       throw new Error('Recall return not yet due');
-     if(cancelMission.run(missionId).changes!==1)
+     if(finishRecallReturn.run(missionId).changes!==1)
       throw new Error('Recall return completion failed');
      if(markDueDone.run(nowMs,missionId,'return_completion').changes!==1)
       throw new Error('Recall return event not available for completion');
@@ -1097,7 +1100,7 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
      throw new Error('Recall approval must occur between request and arrival');
     if(!readRoute.get(missionId)||!readStoredSnapshot.get(missionId))
      throw new Error('Recall return requires frozen geographic mission route');
-    if(setRecallReturnTime.run(returnAtMs,missionId).changes!==1)
+    if(beginRecallReturn.run(returnAtMs,missionId).changes!==1)
      throw new Error('Recall return schedule update failed');
     insertRecallPlan.run(missionId,approvedBy,policyId,nowMs,returnAtMs);
     if(markDueCancelled.run(missionId,'arrival').changes!==1)
@@ -1134,6 +1137,7 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
   },
   close(){if(!closed){db.close();closed=true;}},
   storageKind:'sqlite-node22-experimental',
+  militaryMissionSchemaVersion:missionSchema.version,
   productionBattleWritesSupported:false
  };
 }
