@@ -215,6 +215,13 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
       CHECK(disposition IN ('pending')),
    note TEXT NOT NULL DEFAULT 'NO_AUTOMATIC_HISTORICAL_RECALL_RULE'
   );
+  CREATE TABLE IF NOT EXISTS military_mission_recall_plans(
+   mission_id TEXT PRIMARY KEY REFERENCES military_missions(mission_id),
+   approved_by TEXT NOT NULL CHECK(length(approved_by)>0),
+   policy_id TEXT NOT NULL CHECK(length(policy_id)>0),
+   approved_at_ms INTEGER NOT NULL CHECK(approved_at_ms>=0),
+   return_at_ms INTEGER NOT NULL CHECK(return_at_ms>approved_at_ms)
+  );
   CREATE TABLE IF NOT EXISTS military_mission_events(
    mission_id TEXT NOT NULL REFERENCES military_missions(mission_id),
    sequence INTEGER NOT NULL CHECK(sequence >= 0),
@@ -304,9 +311,17 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
  const readDue=db.prepare('SELECT * FROM military_mission_due_events WHERE mission_id=? AND event_kind=?');
  const writeIncident=db.prepare('INSERT INTO military_due_event_incidents(mission_id,event_kind,attempt,worker_id,observed_at_ms,reason_code) VALUES(?,?,?,?,?,?)');
  const readIncidents=db.prepare('SELECT mission_id,event_kind,attempt,worker_id,observed_at_ms,reason_code FROM military_due_event_incidents WHERE mission_id=? ORDER BY observed_at_ms,event_kind,attempt');
- const sameArrival=db.prepare("SELECT m.mission_id,m.arrival_at_ms,m.status,r.route_json FROM military_missions m JOIN military_mission_routes r ON m.mission_id=r.mission_id WHERE m.arrival_at_ms=? AND m.status IN ('traveling','arrived') ORDER BY m.mission_id");
+ const sameArrival=db.prepare("SELECT m.mission_id,m.arrival_at_ms,m.status,r.route_json FROM military_missions m JOIN military_mission_routes r ON m.mission_id=r.mission_id JOIN military_mission_due_events e ON e.mission_id=m.mission_id AND e.event_kind='arrival' WHERE m.arrival_at_ms=? AND m.status IN ('traveling','arrived') AND e.status!='cancelled' ORDER BY m.mission_id");
  const insertRecall=db.prepare("INSERT INTO military_mission_recall_requests(mission_id,actor_player_id,requested_at_ms) VALUES(?,?,?)");
  const readRecall=db.prepare("SELECT * FROM military_mission_recall_requests WHERE mission_id=?");
+ const insertRecallPlan=db.prepare("INSERT INTO military_mission_recall_plans(mission_id,approved_by,policy_id,approved_at_ms,return_at_ms) VALUES(?,?,?,?,?)");
+ const readRecallPlan=db.prepare("SELECT * FROM military_mission_recall_plans WHERE mission_id=?");
+ const setRecallReturnTime=db.prepare("UPDATE military_missions SET return_at_ms=? WHERE mission_id=? AND status='traveling' AND return_at_ms IS NULL");
+ const recallPlanView=row=>row?{
+  missionId:row.mission_id,approvedBy:row.approved_by,policyId:row.policy_id,
+  approvedAtMs:row.approved_at_ms,returnAtMs:row.return_at_ms,
+  historicalCertification:false,officialUbisoftS2Recall:false
+ }:null;
  const recallView=row=>row?{
   missionId:row.mission_id,actorPlayerId:row.actor_player_id,
   requestedAtMs:row.requested_at_ms,disposition:row.disposition,
@@ -346,6 +361,7 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
   * exact world + destination city + scheduled arrival, not arrival order.
   */
  const conflictingArrivals=(missionId,arrivalAtMs)=>{
+  if(readDue.get(missionId,'arrival')?.status==='cancelled')return [];
   const raw=readRoute.get(missionId);
   if(!raw)return [];
   const route=decode(raw.route_json);
@@ -900,6 +916,8 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
     checkDueLease(missionId,'arrival',nowMs,lease);
     const m=readMission.get(missionId);
     if(!m)throw new Error('Unknown military mission');
+    if(readRecallPlan.get(missionId))
+     throw new Error('Arrival forbidden: server-approved recall is returning');
     if(m.actor_player_id!==actorPlayerId||
       currentPlayer.get(actorPlayerId)?.enabled!==1)
      throw new Error('Unauthorized mission arrival');
@@ -963,6 +981,22 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
     if(!m||m.actor_player_id!==actorPlayerId||
        currentPlayer.get(actorPlayerId)?.enabled!==1)
      throw new Error('Unauthorized or unknown military mission');
+    const recallPlan=readRecallPlan.get(missionId);
+    if(recallPlan){
+     if(m.status==='cancelled')return {...missionView(m),replayed:true};
+     if(m.status!=='traveling'||m.battle_command_id!==null||
+        m.return_at_ms!==recallPlan.return_at_ms)
+      throw new Error('Recall return mission state is inconsistent');
+     if(nowMs<recallPlan.return_at_ms)
+      throw new Error('Recall return not yet due');
+     if(cancelMission.run(missionId).changes!==1)
+      throw new Error('Recall return completion failed');
+     if(markDueDone.run(nowMs,missionId,'return_completion').changes!==1)
+      throw new Error('Recall return event not available for completion');
+     addMissionEvent(missionId,{phase:'recall_return_completed',timeMs:nowMs,
+      returnAtMs:recallPlan.return_at_ms,policyId:recallPlan.policy_id});
+     return {...missionView(readMission.get(missionId)),replayed:false};
+    }
     if(m.status==='completed')return {...missionView(m),replayed:true};
     if(m.status!=='returning'||m.return_at_ms===null)
      throw new Error('Military mission return was not scheduled');
@@ -985,6 +1019,8 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
     if(authorizeCancellation(structuredClone(missionView(m)))!==true)
      throw new Error('Military mission cancellation denied');
     if(m.status==='cancelled')return {...missionView(m),replayed:true};
+    if(readRecallPlan.get(missionId))
+     throw new Error('Cannot administratively cancel an active approved recall');
     if(!['traveling','arrived'].includes(m.status)||m.battle_command_id!==null)
      throw new Error('Cannot cancel an already committed battle mission');
     if(cancelMission.run(missionId).changes!==1)
@@ -1019,6 +1055,61 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
      automaticRecall:false});
     return {...recallView(readRecall.get(missionId)),replayed:false};
    });
+  },
+  /**
+   * SERVER-SIDE authorization only: owner already requested recall.
+   * The server, NEVER the client, decides an explicit return timestamp
+   * through a named experiment policy. No historical duration is inferred.
+   */
+  approveMissionRecall({missionId,approvedBy,policyId,nowMs,returnAtMs,
+   authorizeRecall}){
+   id(missionId,'mission ID');
+   id(approvedBy,'recall approving authority');
+   id(policyId,'server recall timing policy');
+   requiredTime(nowMs,'recall approval time');
+   requiredTime(returnAtMs,'recall completion time');
+   if(returnAtMs<=nowMs)
+    throw new RangeError('Recall return must follow server approval');
+   if(typeof authorizeRecall!=='function')
+    throw new Error('Separate server recall approval policy required');
+   return transaction(()=>{
+    const m=readMission.get(missionId);
+    const request=readRecall.get(missionId);
+    if(!m||!request)throw new Error('Recall approval requires an existing request');
+    if(m.actor_player_id!==request.actor_player_id||
+       currentPlayer.get(m.actor_player_id)?.enabled!==1)
+     throw new Error('Recall mission owner invalid');
+    if(authorizeRecall({mission:structuredClone(missionView(m)),
+       request:structuredClone(recallView(request)),approvedBy,policyId,
+       nowMs,returnAtMs})!==true)
+     throw new Error('Server recall approval denied');
+    const prior=readRecallPlan.get(missionId);
+    if(prior){
+     if(prior.approved_by!==approvedBy||prior.policy_id!==policyId||
+        prior.approved_at_ms!==nowMs||prior.return_at_ms!==returnAtMs)
+      throw new Error('Recall approval ID collision with different schedule');
+     return {...recallPlanView(prior),replayed:true};
+    }
+    if(m.status!=='traveling'||m.battle_command_id!==null||
+       m.return_at_ms!==null)
+     throw new Error('Recall approval requires unresolved traveling mission');
+    if(nowMs<request.requested_at_ms||nowMs>=m.arrival_at_ms)
+     throw new Error('Recall approval must occur between request and arrival');
+    if(!readRoute.get(missionId)||!readStoredSnapshot.get(missionId))
+     throw new Error('Recall return requires frozen geographic mission route');
+    if(setRecallReturnTime.run(returnAtMs,missionId).changes!==1)
+     throw new Error('Recall return schedule update failed');
+    insertRecallPlan.run(missionId,approvedBy,policyId,nowMs,returnAtMs);
+    if(markDueCancelled.run(missionId,'arrival').changes!==1)
+     throw new Error('Recall cannot cancel the active arrival event');
+    insertDueEvent.run(missionId,'return_completion',returnAtMs);
+    addMissionEvent(missionId,{phase:'recall_approved',timeMs:nowMs,
+     returnAtMs,policyId,historicalCertification:false});
+    return {...recallPlanView(readRecallPlan.get(missionId)),replayed:false};
+   });
+  },
+  getMissionRecallPlan(missionId){
+   alive();return recallPlanView(readRecallPlan.get(id(missionId,'mission ID')));
   },
   getMissionRecallRequest(missionId){
    alive();return recallView(readRecall.get(id(missionId,'mission ID')));
