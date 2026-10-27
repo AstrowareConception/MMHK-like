@@ -276,6 +276,32 @@ ou priorité de résolution Ubisoft saison 2 n'est inventée.
 `implemented_partial`, C18 `blocked_source`,
 `productionBattleArbiterAllowed=false`.
 
+### V7.0 — Tranche 11 : retour d'un rappel approuvé (27 octobre 2026)
+
+La [tranche 11](50-JACTARI-V70-RAPPEL-APPROUVE-RETOUR.md) permet au
+**serveur**, sous une authentification d'autorité et une politique de validation
+distinctes des demandes des joueurs, d'approuver un rappel avec une
+**date de retour explicitement fournie**. Dans la même transaction SQLite :
+le plan est persisté avec son `policyId`, l'échéance d'attaque est annulée,
+une échéance `return_completion` est créée et `recall_approved` historisé.
+
+Le worker existant peut conclure le retour à cette échéance, sans combat,
+butin, pertes ni XP inventés, en conservant les baux de la tranche 9.
+Le héros redevient disponible après cette complétion. Les attaques rappelées
+et approuvées ne participent plus aux conflits de même ETA et même cité,
+contrairement aux simples demandes `pending`.
+
+**Limite majeure :** aucun paramètre historique d'ETA de rappel n'est
+déduit de MMHK-Plus ou de G05. Pour préserver l'ancien schéma
+`military_missions`, le statut technique reste `traveling` jusqu'à
+la fin du rappel, puis `cancelled`, avec un historique distinct
+`recall_return_completed`. Une migration versionnée vers des statuts
+explicites est requise avant production.
+
+**Conformité inchangée :** V7.0 `in_progress`, C17
+`implemented_partial`, C18 `blocked_source`,
+`productionBattleArbiterAllowed=false`.
+
 ## 7. Utilisation pratique
 
 Pour reprendre dans un autre fil, conserver cette consigne : *« Reprends la roadmap `docs/game-design/32-ROADMAP-CONFORMITE-MOTEUR-COMBAT.md` et le registre JSON, vérifie les derniers commits/CI, puis attaque le premier critère de sortie non satisfait sans changer arbitrairement le statut des exigences. Documente les preuves et mets à jour le registre avant de terminer. »*
