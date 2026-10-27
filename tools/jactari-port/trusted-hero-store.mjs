@@ -828,6 +828,8 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
        currentPlayer.get(actorPlayerId)?.enabled!==1)
      throw new Error('Unauthorized or unknown military mission return');
     if(m.status!=='returning')throw new Error('Mission has no committed combat return');
+    if(nowMs<m.arrival_at_ms)
+     throw new Error('Return schedule server time precedes mission arrival');
     if(m.return_at_ms!==null){
      if(m.return_at_ms!==returnAtMs)throw new Error('Mission return schedule conflict');
      return {...missionView(m),replayed:true};
