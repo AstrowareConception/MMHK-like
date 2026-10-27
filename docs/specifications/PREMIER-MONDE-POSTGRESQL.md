@@ -32,7 +32,7 @@ flowchart TD
 ```
 
 Schéma PostgreSQL créé par
-[`apps/api/sql/001_initial.sql`](../../apps/api/sql/001_initial.sql) :
+[`apps/api/src/mmhk_api/sql/001_initial.sql`](../../apps/api/src/mmhk_api/sql/001_initial.sql) :
 `accounts`, `sessions`, `worlds`, `world_memberships`,
 `cities`, `city_stocks`, `city_mines`, et registre de migration.
 
