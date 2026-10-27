@@ -22,6 +22,11 @@ contient désormais des composants exécutables :
 les tables PostgreSQL (comptes, sessions, mondes, villes et stocks)
 et un premier compte **créé uniquement par l'opérateur**, suivi de
 la sélection d'un monde puis de la consultation de sa première ville.
+La [première économie PostgreSQL](docs/specifications/ECONOMIE-MINES-ACTIVES-POSTGRESQL.md)
+permet à un worker Python de créditer les stocks périodiquement avec
+des fractions conservées, un plafond et un audit transactionnel.
+Les cadences, plafonds et fréquences sont **obligatoirement fournis par
+l'opérateur** : aucun tarif de production Ubisoft S2 n'est inventé.
 
 L'API filtre les villes et leurs réserves par identité du joueur directement
 dans les requêtes SQL ; la session est stockée dans un cookie HTTP-only par
