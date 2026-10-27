@@ -150,8 +150,8 @@ def run_economy_batch(
                    ORDER BY r.resource FOR UPDATE OF r,s""",
                 (city_id,),
             ).fetchall()
-            if not rates:
-                raise RuntimeError("An enabled economy city needs explicitly configured mines")
+            if {r[0] for r in rates} != set(HAVEN_FIRST_MINES):
+                raise RuntimeError("An enabled economy city needs exactly its four configured Haven mines")
             credits: dict[str, int] = {}
             overflow: dict[str, int] = {}
             for resource, base, bonus, carry, amount, cap in rates:
