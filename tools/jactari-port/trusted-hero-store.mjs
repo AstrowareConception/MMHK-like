@@ -282,7 +282,6 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
  const readDue=db.prepare('SELECT * FROM military_mission_due_events WHERE mission_id=? AND event_kind=?');
  const nextDue=db.prepare("SELECT * FROM military_mission_due_events WHERE due_at_ms<=? AND (status='pending' OR (status='leased' AND lease_until_ms<=?)) ORDER BY due_at_ms,mission_id,event_kind LIMIT 1");
  const leaseDue=db.prepare("UPDATE military_mission_due_events SET status='leased',worker_id=?,lease_until_ms=?,attempt=attempt+1 WHERE mission_id=? AND event_kind=? AND (status='pending' OR (status='leased' AND lease_until_ms<=?))");
- const settleDue=db.prepare("UPDATE military_mission_due_events SET status='done',lease_until_ms=NULL,settled_at_ms=? WHERE mission_id=? AND event_kind=? AND status='leased' AND worker_id=? AND attempt=? AND lease_until_ms>?");
  const insertPosting=db.prepare('INSERT INTO hero_city_postings(hero_id,city_id) VALUES(?,?) ON CONFLICT(hero_id) DO UPDATE SET city_id=excluded.city_id');
  const cityOfHero=db.prepare('SELECT c.*,w.world_size FROM hero_city_postings p JOIN military_cities c ON c.city_id=p.city_id JOIN military_worlds w ON w.world_id=c.world_id WHERE p.hero_id=?');
  const saveRoute=db.prepare('INSERT INTO military_mission_routes(mission_id,route_json) VALUES(?,?)');
@@ -543,6 +542,79 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
   },
   getHeroWorldPosition(heroId){
    alive();return placeView(cityOfHero.get(id(heroId,'hero ID')));
+  },
+  /**
+   * INTERNAL ONLY: departure state is frozen atomically with dispatch.
+   * Useful for archaeology/replay, never an approval of diplomacy or ETA.
+   */
+  getFrozenMissionTerritory(missionId){
+   alive();id(missionId,'mission ID');
+   const row=readStoredSnapshot.get(missionId);
+   if(!row)return null;
+   const snapshot=decode(row.snapshot_json);
+   if(worldDigest(snapshot)!==row.digest||
+      snapshot.revision!==row.world_revision||
+      snapshot.worldId!==row.world_id)
+    throw new Error('Persisted departure world snapshot integrity mismatch');
+   return {worldId:row.world_id,worldRevision:row.world_revision,
+    snapshotFingerprint:row.digest,snapshot};
+  },
+  compareFrozenMissionTerritory(missionId){
+   alive();id(missionId,'mission ID');
+   db.exec('BEGIN');
+   try{
+    const original=readStoredSnapshot.get(missionId);
+    if(!original){db.exec('COMMIT');return null;}
+    const current=readTerritorySnapshot(original.world_id);
+    const currentFingerprint=worldDigest(current);
+    const result={missionId,worldId:original.world_id,
+     departedRevision:original.world_revision,currentRevision:current.revision,
+     departedFingerprint:original.digest,currentFingerprint,
+     territoryUnchanged:original.world_revision===current.revision&&
+      original.digest===currentFingerprint,
+     automaticMissionCancellation:false,authoritativeArrivalTime:false};
+    db.exec('COMMIT');return result;
+   }catch(error){db.exec('ROLLBACK');throw error;}
+  },
+  /** Observational only. Does not deliver or resolve a due event. */
+  getMissionDueEvent({missionId,eventKind}){
+   alive();id(missionId,'mission ID');
+   if(!['arrival','return_completion'].includes(eventKind))
+    throw new RangeError('Unsupported due event kind');
+   return dueView(readDue.get(missionId,eventKind));
+  },
+  /**
+   * Multiple workers safely compete using BEGIN IMMEDIATE + a time-bound lease.
+   * Claiming an event NEVER advances mission state or grants battle permission.
+   * Lease expiry yields at-least-once delivery, not exactly-once execution.
+   */
+  claimNextDueMissionEvent({nowMs,workerId,leaseMs=30000}){
+   id(workerId,'due-event worker');
+   requiredTime(nowMs,'claim time');requiredTime(leaseMs,'lease duration');
+   if(leaseMs<1||leaseMs>3600000||!Number.isSafeInteger(nowMs+leaseMs))
+    throw new RangeError('Lease must be 1 ms..1 hour within safe epoch range');
+   return transaction(()=>{
+    const next=nextDue.get(nowMs,nowMs);
+    if(!next)return null;
+    if(leaseDue.run(workerId,nowMs+leaseMs,next.mission_id,
+       next.event_kind,nowMs).changes!==1)
+     throw new Error('Due-event lease contention');
+    return dueView(readDue.get(next.mission_id,next.event_kind));
+   });
+  },
+  /** Acknowledgement only verifies the mission transition already committed. */
+  confirmDueMissionEvent({missionId,eventKind,workerId,attempt}){
+   alive();id(missionId,'mission ID');id(workerId,'due-event worker');
+   if(!['arrival','return_completion'].includes(eventKind))
+    throw new RangeError('Unsupported due event kind');
+   if(!Number.isSafeInteger(attempt)||attempt<1)
+    throw new RangeError('Positive lease attempt required');
+   const due=dueView(readDue.get(missionId,eventKind));
+   if(!due||due.workerId!==workerId||due.attempt!==attempt)
+    throw new Error('Due-event acknowledgement has stale or unknown lease');
+   if(due.status!=='done')
+    throw new Error('Due-event acknowledgement requires completed mission transition');
+   return {...due,confirmed:true};
   },
   getMissionRoute(missionId){
    alive();const row=readRoute.get(id(missionId,'mission ID'));
