@@ -302,6 +302,31 @@ explicites est requise avant production.
 `implemented_partial`, C18 `blocked_source`,
 `productionBattleArbiterAllowed=false`.
 
+### V7.0 — Tranche 12 : états explicites et migration SQLite V11 → V12 (27 octobre 2026)
+
+Le [rapport tranche 12](51-JACTARI-V70-MIGRATION-ETATS-RAPPEL.md) décrit
+la migration transactionnelle et versionnée des statuts de mission. Les
+rappels approuvés passent maintenant de `traveling` à
+`recall_returning`, puis `recalled` après leur retour. Ce changement
+supprime l'ambiguïté entre un rappel conclu et une annulation
+administrative. Le héros demeure réservé pendant `recall_returning`.
+
+Les anciens statuts surchargés de la tranche 11 sont convertis à partir
+du plan de rappel et des événements historiques ; aucun identifiant
+de mission, route, événement, plan ou clé étrangère n'est supprimé.
+La reconstruction s'effectue dans une transaction de maintenance
+avec contrôles d'intégrité et remise en place de
+`PRAGMA foreign_keys=ON`. Une **sauvegarde vérifiée et l'arrêt des
+workers sont obligatoires en exploitation avant toute ouverture V12**.
+
+Les essais couvrent les anciennes données migrées et la réouverture
+sans changement, ainsi que les enregistrements incohérents rejetés
+avec rollback.
+
+**Conformité historique inchangée :** V7.0 `in_progress`, C17
+`implemented_partial`, C18 `blocked_source`,
+`productionBattleArbiterAllowed=false`.
+
 ## 7. Utilisation pratique
 
 Pour reprendre dans un autre fil, conserver cette consigne : *« Reprends la roadmap `docs/game-design/32-ROADMAP-CONFORMITE-MOTEUR-COMBAT.md` et le registre JSON, vérifie les derniers commits/CI, puis attaque le premier critère de sortie non satisfait sans changer arbitrairement le statut des exigences. Documente les preuves et mets à jour le registre avant de terminer. »*
