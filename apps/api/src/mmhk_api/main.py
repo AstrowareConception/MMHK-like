@@ -1,6 +1,7 @@
 """FastAPI public boundary. Only authenticated read-only world gameplay exists."""
 from __future__ import annotations
 
+from datetime import datetime
 from typing import Annotated
 from uuid import UUID
 
@@ -16,7 +17,7 @@ from .worlds import owned_cities, owned_city_detail, owned_worlds
 app = FastAPI(
     title="MMHK-like API",
     version="0.2.0",
-    description="Authenticated experimental world viewer; no public combat or economy writes.",
+    description="Authenticated experimental world viewer; worker-only economic credits, no public combat or economy writes.",
 )
 
 _db = Annotated[psycopg.Connection, Depends(connection)]
@@ -70,6 +71,9 @@ class CityDetail(City):
     stocks: dict[str, int]
     mines: list[str]
     production_active: bool
+    production_per_day: dict[str, str]
+    tick_seconds: int | None
+    next_credit_at: datetime | None
     historical_economy_certified: bool
 
 
