@@ -9,6 +9,8 @@ import argparse
 import getpass
 
 from .db import connect, migrate
+from .economy import configure_haven_mines
+from uuid import UUID
 from .security import create_account, USERNAME
 from .worlds import seed_first_haven_city
 
@@ -27,6 +29,15 @@ def main() -> None:
     world.add_argument("--city-name", required=True)
     world.add_argument("--x", type=int, required=True)
     world.add_argument("--y", type=int, required=True)
+    economic = sub.add_parser(
+        "configure-haven-economy",
+        help="Activate explicitly supplied mine rates and capacity; not historic defaults",
+    )
+    economic.add_argument("--city-id", type=UUID, required=True)
+    economic.add_argument("--tick-seconds", type=int, required=True)
+    economic.add_argument("--capacity", type=int, required=True)
+    for resource in ("gold", "wood", "ore", "crystal"):
+        economic.add_argument(f"--rate-{resource}", required=True)
     args = parser.parse_args()
 
     with connect() as db:
@@ -56,6 +67,19 @@ def main() -> None:
                 amounts={},  # zero is explicit; never invent starter capital
             )
             print(f"Created world {args.world_id}, first Haven city {city_id}")
+        elif args.command == "configure-haven-economy":
+            configure_haven_mines(
+                db, city_id=args.city_id,
+                rates_per_day={
+                    r: getattr(args, f"rate_{r}")
+                    for r in ("gold", "wood", "ore", "crystal")
+                },
+                capacities={
+                    r: args.capacity for r in ("gold", "wood", "ore", "crystal")
+                },
+                tick_seconds=args.tick_seconds,
+            )
+            print(f"Configured first Haven city {args.city_id} with explicit experimental rates")
 
 
 if __name__ == "__main__":
