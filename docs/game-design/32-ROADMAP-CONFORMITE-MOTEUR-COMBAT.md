@@ -218,6 +218,27 @@ Les rayons de contrôle territoriaux réels, changements d'alliance en marche,
 interceptions, ordonnancement retour et heure nocturne historique S2
 restent à déterminer par sources indépendantes.
 
+### V7.0 — Tranche 7 : photographie de départ et traitement des échéances (27 octobre 2026)
+
+La [tranche 7](46-JACTARI-V70-ROUTES-FIGEES-ECHEANCES.md) enregistre
+atomiquement une photographie territoriale du départ d'une mission géolocalisée.
+Le rapprochement entre cette photographie et les versions courantes du monde
+permet de **détecter**, sans décider automatiquement, les retournements
+d'alliance et changements de propriété pendant le trajet. Un lecteur rejoue
+les portions aller et leur inverse sans calculer d'ETA historique de retour.
+
+Les événements `arrival` et `return_completion` sont maintenant planifiés
+dans SQLite ; des workers peuvent les réclamer avec des baux expirables,
+une attribution unique au moment de la réclamation et un ordre déterministe
+pour les échéances identiques. Le mécanisme est **au moins une fois** et
+les transitions existantes conservent l'idempotence. Aucun worker automatique,
+aucun `trustedSchedule` construit par la géométrie, aucun arbitrage PvP
+public n'est autorisé.
+
+**Conformité inchangée :** V7.0 `in_progress`, C17
+`implemented_partial`, C18 `blocked_source`,
+`productionBattleArbiterAllowed=false`.
+
 ## 7. Utilisation pratique
 
 Pour reprendre dans un autre fil, conserver cette consigne : *« Reprends la roadmap `docs/game-design/32-ROADMAP-CONFORMITE-MOTEUR-COMBAT.md` et le registre JSON, vérifie les derniers commits/CI, puis attaque le premier critère de sortie non satisfait sans changer arbitrairement le statut des exigences. Documente les preuves et mets à jour le registre avant de terminer. »*
