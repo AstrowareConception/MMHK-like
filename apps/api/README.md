@@ -77,6 +77,74 @@ GitHub Actions démarre un PostgreSQL jetable, exécute ces tests sur de
 **vraies tables**, puis compile Next.js et effectue les contrôles TypeScript.
 La suite Node du moteur Jactari historique reste indépendante.
 
+## Production des mines : profil expérimental et worker à la demande
+
+L'économie reste **inactive tant que l'opérateur ne définit pas explicitement
+les quatre cadences, les capacités et la fréquence des crédits**. Aucun taux
+de production Ubisoft saison 2 n'est intégré par défaut.
+
+Après la création de la ville, relevez son UUID dans l'API ou en SQL, puis
+configurez un profil, par exemple :
+
+```bash
+python -m mmhk_api.manage configure-haven-economy \
+  --city-id UUID_DE_LA_VILLE \
+  --tick-seconds 900 \
+  --capacity 1000 \
+  --rate-gold 24 --rate-wood 12 --rate-ore 12 --rate-crystal 3
+```
+
+**Toutes les valeurs numériques ci-dessus sont fictives et uniquement
+destinées au laboratoire.** Les 900 secondes (15 minutes) correspondent à
+une hypothèse P0 à confirmer, pas à un paramétrage historique certifié.
+
+Un opérateur peut ensuite exécuter le traitement :
+
+```bash
+python -m mmhk_api.economy_worker --once --max-cities 25 --max-ticks-per-city 96
+```
+
+Le traitement s'arrête après un lot borné. Pour des crédits récurrents,
+il faut installer **explicitement** une planification de confiance côté
+serveur (systemd timer, tâche planifiée ou service worker futur), avec
+journalisation et surveillance. Aucune tâche permanente n'est créée par
+l'installation du projet.
+
+### Sémantique de la production
+
+- Débits saisis en **unités par jour**, avec décimales et bonus additifs
+  appliqués à la base ; les fractions sont conservées en PostgreSQL sous
+  `NUMERIC`, à 18 décimales.
+- Les crédits n'ont lieu que pour des **périodes entières** configurées.
+  Une exécution tardive rattrape les périodes dues, avec limite de sécurité.
+- Chaque ville est verrouillée par `FOR UPDATE SKIP LOCKED` et créditée
+  dans une transaction autonome. Les échéances, révisions et événements
+  d'audit évitent qu'une période soit créditée deux fois.
+- En cas de capacité atteinte, le surplus est perdu et non reporté. Les
+  ressources ne sont jamais négatives et le stock ne dépasse pas son plafond.
+- Les mines initiales sont or, bois, minerai et cristal. Les autres ressources
+  peuvent figurer au stock sans cadence de mine initiale.
+- L'API ne permet **aucune écriture des ressources** par les joueurs :
+  elle lit simplement l'état et affiche le débit du profil expérimental.
+
+Une modification future des cadences/bonus **pendant une production active**
+nécessitera une opération métier spécifique (crédit des périodes passées,
+nouveau profil horodaté, audit). Pour éviter toute réécriture silencieuse
+du passé, la commande initiale actuelle est volontairement à usage unique.
+
+Redis reste disponible localement mais **n'est pas encore un cache des
+ressources**. PostgreSQL demeure la seule source de vérité.
+
+### Validation
+
+```bash
+MMHK_TEST_DATABASE_URL="$MMHK_DATABASE_URL" python -m pytest -q apps/api/tests
+```
+
+Les tests PostgreSQL couvrent fractions persistées, redémarrage, périodes
+rattrapées, saturation, accès par compte et deux workers concurrents.
+Les tests Jactari indépendants doivent continuer à réussir.
+
 ## Limites explicites avant tout déploiement public
 
 - Aucun mécanisme d'inscription publique, réinitialisation de mot de passe,
