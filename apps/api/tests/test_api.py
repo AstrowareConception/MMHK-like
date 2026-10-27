@@ -31,4 +31,13 @@ def test_combat_not_publicly_exposed():
 
 def test_openapi_contains_no_unapproved_game_commands():
     paths = client.get("/openapi.json").json()["paths"]
-    assert set(paths) == {"/api/v1/health", "/api/v1/jactari/status"}
+    assert set(paths) == {
+        "/api/v1/health",
+        "/api/v1/jactari/status",
+        "/api/v1/sessions",
+        "/api/v1/sessions/current",
+        "/api/v1/me/worlds",
+        "/api/v1/me/worlds/{world_id}/cities",
+        "/api/v1/me/cities/{city_id}",
+    }
+    assert not any("battle" in path or "duel" in path for path in paths)
