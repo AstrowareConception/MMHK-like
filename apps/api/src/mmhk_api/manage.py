@@ -1,0 +1,62 @@
+"""Operator-only provisioning for the first account, world and first Haven city.
+
+Never expose these commands through FastAPI. No public self-signup or world
+spawn. Production password provisioning should move to a secrets service.
+"""
+from __future__ import annotations
+
+import argparse
+import getpass
+
+from .db import connect, migrate
+from .security import create_account, USERNAME
+from .worlds import seed_first_haven_city
+
+
+def main() -> None:
+    parser = argparse.ArgumentParser(description="MMHK-like trusted maintenance")
+    sub = parser.add_subparsers(dest="command", required=True)
+    sub.add_parser("migrate", help="Create or update database schema under maintenance")
+    account = sub.add_parser("create-account", help="Create an account via interactive prompt")
+    account.add_argument("--username", required=True)
+    world = sub.add_parser("create-haven-world", help="Provision a first Haven city (no economy)")
+    world.add_argument("--username", required=True)
+    world.add_argument("--world-id", required=True)
+    world.add_argument("--world-name", required=True)
+    world.add_argument("--size", type=int, required=True)
+    world.add_argument("--city-name", required=True)
+    world.add_argument("--x", type=int, required=True)
+    world.add_argument("--y", type=int, required=True)
+    args = parser.parse_args()
+
+    with connect() as db:
+        if args.command == "migrate":
+            applied = migrate(db)
+            print("Applied schema revisions:", applied or "already current")
+        elif args.command == "create-account":
+            if not USERNAME.fullmatch(args.username):
+                parser.error("username must be 3..32 lowercase letters, digits or underscore")
+            password = getpass.getpass("New password (12-128 chars): ")
+            confirm = getpass.getpass("Confirm password: ")
+            if password != confirm:
+                parser.error("passwords do not match")
+            account_id = create_account(db, args.username, password)
+            print(f"Created account {args.username} ({account_id})")
+        elif args.command == "create-haven-world":
+            row = db.execute(
+                "SELECT account_id FROM accounts WHERE username=%s",
+                (args.username,),
+            ).fetchone()
+            if row is None:
+                parser.error("unknown account; create account first")
+            city_id = seed_first_haven_city(
+                db, world_id=args.world_id, world_name=args.world_name,
+                size=args.size, account_id=row[0],
+                city_name=args.city_name, x=args.x, y=args.y,
+                amounts={},  # zero is explicit; never invent starter capital
+            )
+            print(f"Created world {args.world_id}, first Haven city {city_id}")
+
+
+if __name__ == "__main__":
+    main()
