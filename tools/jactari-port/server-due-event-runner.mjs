@@ -63,7 +63,7 @@ export function runOneDueMissionEvent({
   const message=String(error?.message??error);
   const reasonCode=/Stale or expired scheduler lease/.test(message)
    ?'lease_conflict':/authorization denied|target authorization denied/i.test(message)
-   ?'target_denied':/mission|location|not yet|not reached|not arrived/i.test(message)
+   ?'target_denied':/Simultaneous target arrival|mission|location|not yet|not reached|not arrived/i.test(message)
    ?'mission_state':'internal_error';
   let incidentRecorded=false;
   try{
@@ -77,7 +77,8 @@ export function runOneDueMissionEvent({
   }
   return {kind:'blocked',processed:0,event,
    errorName:error?.name??'Error',reason:message,reasonCode,
-   incidentRecorded,retryAfterMs:work.leaseUntilMs,
+   incidentRecorded,requiresArbitration:/Simultaneous target arrival/.test(message),
+   retryAfterMs:work.leaseUntilMs,
    requiresOperatorReview:true};
  }
 }
