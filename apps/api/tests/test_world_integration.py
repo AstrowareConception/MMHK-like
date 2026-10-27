@@ -51,10 +51,15 @@ def scenario(monkeypatch):
         "player": player, "outsider": outsider,
     }
     with psycopg.connect(URL) as db:
-        db.execute("DELETE FROM accounts WHERE account_id IN (%s,%s)",
-                   (player, outsider))
+        # Dependents intentionally use restrictive foreign keys in the game.
+        db.execute("DELETE FROM cities WHERE world_id IN (%s,%s)",
+                   (world_id, other_id))
+        db.execute("DELETE FROM world_memberships WHERE world_id IN (%s,%s)",
+                   (world_id, other_id))
         db.execute("DELETE FROM worlds WHERE world_id IN (%s,%s)",
                    (world_id, other_id))
+        db.execute("DELETE FROM accounts WHERE account_id IN (%s,%s)",
+                   (player, outsider))
 
 
 def _headers(username: str, password: str) -> tuple[str, dict]:
