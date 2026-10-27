@@ -28,6 +28,13 @@ des fractions conservées, un plafond et un audit transactionnel.
 Les cadences, plafonds et fréquences sont **obligatoirement fournis par
 l'opérateur** : aucun tarif de production Ubisoft S2 n'est inventé.
 
+La [première construction urbaine](docs/specifications/CONSTRUCTIONS-URBAINES-POSTGRESQL.md)
+applique les décisions P0 : une seule construction par cité, paiement au
+lancement, absence de file/d'annulation et modes normal, rapide ou économique.
+Les devis et délais sont définis par l'opérateur puis validés côté FastAPI ;
+un worker Python achève les travaux échus sans double exécution.
+Les prix, délais et arrondis expérimentaux ne sont **pas** des données MMHK S2.
+
 L'API filtre les villes et leurs réserves par identité du joueur directement
 dans les requêtes SQL ; la session est stockée dans un cookie HTTP-only par
 Next.js. La première région Havre reçoit les quatre **types** de mines décidés

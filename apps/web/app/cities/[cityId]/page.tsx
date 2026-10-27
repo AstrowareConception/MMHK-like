@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { signOut } from "../../actions";
-import { privateApi, sessionToken, type CityDetail } from "../../../lib/server-api";
+import { signOut, startUrbanConstruction } from "../../actions";
+import { privateApi, sessionToken, type CityDetail, type ConstructionCatalog } from "../../../lib/server-api";
 
 export const dynamic = "force-dynamic";
 
@@ -17,16 +17,24 @@ const RESOURCES = [
 
 export default async function CityPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ cityId: string }>;
+  searchParams: Promise<{ build?: string }>;
 }) {
   const { cityId } = await params;
   const token = await sessionToken();
   if (!token) redirect("/");
   if (!/^[a-f0-9-]{36}$/i.test(cityId)) notFound();
-  const answer = await privateApi<CityDetail>(
-    `/api/v1/me/cities/${encodeURIComponent(cityId)}`, token,
-  );
+  const [answer, buildingAnswer, query] = await Promise.all([
+    privateApi<CityDetail>(
+      `/api/v1/me/cities/${encodeURIComponent(cityId)}`, token,
+    ),
+    privateApi<ConstructionCatalog>(
+      `/api/v1/me/cities/${encodeURIComponent(cityId)}/construction`, token,
+    ),
+    searchParams,
+  ]);
   if (answer.status === 401) redirect("/");
   if (answer.status === 404) notFound();
   if (!answer.ok || !answer.data)
@@ -57,6 +65,58 @@ export default async function CityPage({
               )}
             </article>
           ))}
+        </div>
+        <div className="construction-panel">
+          <span className="eyebrow">CHANTIERS URBAINS · PROFILS EXPÉRIMENTAUX</span>
+          <h2>Construire dans la cité</h2>
+          {query.build === "started" && (
+            <p role="status" className="construction-notice">Chantier enregistré et ressources payées.</p>
+          )}
+          {query.build === "conflict" && (
+            <p role="alert" className="error">Construction impossible : ressources insuffisantes, chantier déjà actif ou profil indisponible.</p>
+          )}
+          {query.build === "unavailable" && (
+            <p role="alert" className="error">Le chantier n'a pas pu être confirmé. Consultez son état avant de réessayer.</p>
+          )}
+          {buildingAnswer.ok && buildingAnswer.data ? (
+            <>
+              {buildingAnswer.data.buildings.length > 0 && (
+                <p>Bâtiments terminés : {buildingAnswer.data.buildings.map(
+                  (b) => `${b.building_code} niveau ${b.level}`,
+                ).join(", ")}.</p>
+              )}
+              {buildingAnswer.data.active ? (
+                <article className="active-project">
+                  <strong>{buildingAnswer.data.active.building_code} — niveau {buildingAnswer.data.active.target_level}</strong>
+                  <p>En construction · fin prévue le {new Date(buildingAnswer.data.active.due_at).toLocaleString(
+                    "fr-FR", {timeZone:"Europe/Paris"}
+                  )}</p>
+                  <small>Chantier payé au lancement. Aucun second chantier ni annulation n'est possible.</small>
+                </article>
+              ) : buildingAnswer.data.options.length ? (
+                <div className="build-options">
+                  {buildingAnswer.data.options.flatMap((o) => o.modes.map((mode) => (
+                    <form action={startUrbanConstruction} key={`${o.building_code}-${mode.mode}`} className="build-option">
+                      <input type="hidden" name="cityId" value={cityId}/>
+                      <input type="hidden" name="buildingCode" value={o.building_code}/>
+                      <input type="hidden" name="mode" value={mode.mode}/>
+                      <strong>{o.building_code} · niveau {o.target_level}</strong>
+                      <span>{mode.mode === "normal" ? "Standard" : mode.mode === "rapid" ? "Rapide" : "Économique"}</span>
+                      <small>Durée : {mode.duration_seconds.toLocaleString("fr-FR")} secondes</small>
+                      <small>Coût : {Object.entries(mode.costs).filter(([,v])=>v>0).map(([k,v])=>`${v} ${k}`).join(", ") || "Gratuit"}</small>
+                      <button type="submit">Lancer ce chantier</button>
+                    </form>
+                  )))}
+                </div>
+              ) : (
+                <p>Aucun bâtiment n'est proposé : l'opérateur n'a pas encore configuré de profil pour le prochain niveau.</p>
+              )}
+            </>
+          ) : (
+            <p>Les offres de construction sont momentanément indisponibles.</p>
+          )}
+          <p className="notice">Une construction active par cité, débit immédiat et achèvement par worker PostgreSQL.
+          La convention d'arrondi à l'entier supérieur est expérimentale, pas une règle historique certifiée.</p>
         </div>
         <p className="notice">
           {city.production_active

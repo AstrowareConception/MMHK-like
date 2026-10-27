@@ -39,5 +39,6 @@ def test_openapi_contains_no_unapproved_game_commands():
         "/api/v1/me/worlds",
         "/api/v1/me/worlds/{world_id}/cities",
         "/api/v1/me/cities/{city_id}",
+        "/api/v1/me/cities/{city_id}/construction",
     }
     assert not any("battle" in path or "duel" in path for path in paths)

@@ -10,6 +10,9 @@ from fastapi import Depends, FastAPI, HTTPException, Response, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, ConfigDict, Field
 
+from .construction import (
+    ConstructionConflict, ConstructionNotFound, catalog_for_city, start_construction,
+)
 from .db import connection
 from .security import get_authenticated_id, revoke_session, start_session
 from .worlds import owned_cities, owned_city_detail, owned_worlds
@@ -151,3 +154,57 @@ def my_city(city_id: UUID, db: _db, player: _player) -> CityDetail:
     if detail is None:
         raise HTTPException(status_code=404, detail="City not found")
     return CityDetail(**detail)
+
+
+class ConstructionRequest(StrictDTO):
+    order_id: UUID
+    building_code: str = Field(pattern=r"^[a-z][a-z0-9_]{1,47}$")
+    mode: str = Field(pattern=r"^(normal|rapid|economic)$")
+
+
+class ConstructionReceipt(StrictDTO):
+    order_id: UUID
+    building_code: str
+    target_level: int
+    mode: str
+    policy_id: str
+    applied_costs: dict[str, int]
+    started_at: datetime
+    due_at: datetime
+    status: str
+    completed_at: datetime | None
+    historically_certified: bool
+    replayed: bool
+
+
+@app.get("/api/v1/me/cities/{city_id}/construction")
+def my_city_construction(city_id: UUID, db: _db, player: _player) -> dict:
+    try:
+        return catalog_for_city(db, player, city_id)
+    except ConstructionNotFound as exc:
+        raise HTTPException(status_code=404, detail="City not found") from exc
+
+
+@app.post(
+    "/api/v1/me/cities/{city_id}/construction",
+    response_model=ConstructionReceipt,
+    status_code=status.HTTP_201_CREATED,
+)
+def start_my_city_construction(
+    city_id: UUID, command: ConstructionRequest, db: _db, player: _player,
+    response: Response,
+) -> ConstructionReceipt:
+    response.headers["Cache-Control"] = "no-store"
+    try:
+        receipt = start_construction(
+            db, account_id=player, city_id=city_id,
+            order_id=command.order_id, building_code=command.building_code,
+            mode=command.mode,
+        )
+        if receipt["replayed"]:
+            response.status_code = 200
+        return ConstructionReceipt(**receipt)
+    except ConstructionNotFound as exc:
+        raise HTTPException(status_code=404, detail="City not found") from exc
+    except ConstructionConflict as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc

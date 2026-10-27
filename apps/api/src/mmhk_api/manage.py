@@ -10,6 +10,7 @@ import getpass
 
 from .db import connect, migrate
 from .economy import configure_haven_mines
+from .construction import configure_building_profile
 from uuid import UUID
 from .security import create_account, USERNAME
 from .worlds import seed_first_haven_city
@@ -38,6 +39,16 @@ def main() -> None:
     economic.add_argument("--capacity", type=int, required=True)
     for resource in ("gold", "wood", "ore", "crystal"):
         economic.add_argument(f"--rate-{resource}", required=True)
+    building = sub.add_parser(
+        "create-building-profile",
+        help="Operator-only experimental urban price/time profile",
+    )
+    building.add_argument("--code",required=True)
+    building.add_argument("--level",required=True,type=int)
+    building.add_argument("--policy-id",required=True)
+    building.add_argument("--duration-seconds",required=True,type=int)
+    for resource in ("gold","wood","ore","crystal","gems","sulfur","mercury"):
+        building.add_argument(f"--cost-{resource}",required=True,type=int)
     args = parser.parse_args()
 
     with connect() as db:
@@ -80,6 +91,16 @@ def main() -> None:
                 tick_seconds=args.tick_seconds,
             )
             print(f"Configured first Haven city {args.city_id} with explicit experimental rates")
+        elif args.command=="create-building-profile":
+            configure_building_profile(
+                db,building_code=args.code,target_level=args.level,
+                policy_id=args.policy_id,base_seconds=args.duration_seconds,
+                base_costs={
+                    resource:getattr(args,f"cost_{resource}")
+                    for resource in ("gold","wood","ore","crystal","gems","sulfur","mercury")
+                },
+            )
+            print(f"Created experimental building profile {args.code} level {args.level}")
 
 
 if __name__ == "__main__":

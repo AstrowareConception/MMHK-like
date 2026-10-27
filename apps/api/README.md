@@ -145,18 +145,57 @@ Les tests PostgreSQL couvrent fractions persistées, redémarrage, périodes
 rattrapées, saturation, accès par compte et deux workers concurrents.
 Les tests Jactari indépendants doivent continuer à réussir.
 
+## Première construction urbaine (profils opérateur)
+
+Les constructions urbaines suivent les décisions P0 : **une seule en cours
+par cité**, sans héros, sans file ni annulation, et **coût payé au démarrage**.
+Les modes rapide/économique utilisent les pourcentages validés (+40/-20 et
+-20/+40), avec **arrondi supérieur expérimental** des coûts et durées.
+
+Aucun bâtiment, coût, niveau et délai n'est défini par défaut. L'opérateur
+peut créer un profil de laboratoire explicite :
+
+```bash
+python -m mmhk_api.manage migrate
+python -m mmhk_api.manage create-building-profile \
+  --code experimental_hall --level 1 --policy-id LAB-V1 \
+  --duration-seconds 120 \
+  --cost-gold 10 --cost-wood 5 --cost-ore 1 --cost-crystal 0 \
+  --cost-gems 0 --cost-sulfur 0 --cost-mercury 0
+```
+
+**Prix/durée fictifs : aucune preuve historique S2.** Avec les stocks à
+zéro de la ville initiale, la première commande de construction sera
+refusée jusqu'à ce que des ressources soient réellement gagnées ou
+approvisionnées via un outillage de développement autorisé.
+
+Dans Next.js, choisissez un devis puis lancez la construction depuis
+la ville. Seul le serveur calcule et valide le paiement, la durée et
+le niveau. La requête utilise une clé idempotente ; deux appels identiques
+ne prélèvent jamais deux fois les ressources.
+
+Un exécuteur ponctuel permet d'achever les ordres échus :
+
+```bash
+python -m mmhk_api.construction_worker --once --max-orders 25
+```
+
+Les transactions PostgreSQL protègent l'ordre, la fin des chantiers et
+l'audit. Aucun service de fond n'est encore installé. La documentation
+détaillée est dans
+[CONSTRUCTIONS-URBAINES-POSTGRESQL.md](../../docs/specifications/CONSTRUCTIONS-URBAINES-POSTGRESQL.md).
+
 ## Limites explicites avant tout déploiement public
 
 - Aucun mécanisme d'inscription publique, réinitialisation de mot de passe,
   limitation de fréquence des logins ni audit d'authentification n'est encore
   en place. **Ne pas exposer cette API à Internet** telle quelle.
-- L'interface montre des réserves persistées, mais aucun véritable système
-  de production, construction, recrutement ni combat.
+- La production expérimentale et la construction urbaine sont intégrées,
+  mais aucun recrutement, combat ou effet automatique des bâtiments n'est livré.
 - Redis est disponible dans Docker Compose **mais n'est pas utilisé** : ne
   jamais y conserver l'état autoritatif d'une ville.
-- Aucun worker opérationnel n'est démarré. L'orchestration des échéances
-  doit être portée du laboratoire JS vers Python/PostgreSQL en conservant
-  ses contrôles de concurrence et les tests différentiels.
+- Les workers économie et construction sont exécutables à la demande, mais
+  aucune planification autonome ni orchestration de combat n'est activée.
 - PostgreSQL a été retenu **provisoirement comme base d'implémentation**,
   dans l'attente d'une confirmation explicite du choix définitif.
 - Les règles de saison 2 non démontrées restent signalées ; le moteur

@@ -1,6 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
+import { randomUUID } from "node:crypto";
 import { redirect } from "next/navigation";
 
 function apiUrl(path: string) {
@@ -61,4 +62,44 @@ export async function signOut() {
   }
   jar.delete("mmhk_session");
   redirect("/");
+}
+
+/**
+ * Construction is a server action, not a browser-owned economic calculation.
+ * Fresh idempotency key per submitted form; API enforces one active job/city.
+ */
+export async function startUrbanConstruction(data: FormData) {
+  const cityId = data.get("cityId");
+  const buildingCode = data.get("buildingCode");
+  const mode = data.get("mode");
+  if (typeof cityId !== "string" || !/^[0-9a-f-]{36}$/i.test(cityId) ||
+      typeof buildingCode !== "string" || !/^[a-z][a-z0-9_]{1,47}$/.test(buildingCode) ||
+      !["normal", "rapid", "economic"].includes(String(mode))) {
+    redirect("/");
+  }
+  const path = `/cities/${cityId}`;
+  const token = (await cookies()).get("mmhk_session")?.value;
+  if (!token) redirect("/");
+  let status = 503;
+  try {
+    const response = await fetch(apiUrl(`/api/v1/me/cities/${cityId}/construction`), {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      cache: "no-store",
+      signal: AbortSignal.timeout(6000),
+      body: JSON.stringify({
+        order_id: randomUUID(), building_code: buildingCode, mode,
+      }),
+    });
+    status = response.status;
+  } catch {
+    status = 503;
+  }
+  if (status === 401) redirect("/");
+  if (status === 201 || status === 200) redirect(`${path}?build=started`);
+  if (status === 409) redirect(`${path}?build=conflict`);
+  redirect(`${path}?build=unavailable`);
 }
