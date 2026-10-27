@@ -35,6 +35,14 @@ Les devis et délais sont définis par l'opérateur puis validés côté FastAPI
 un worker Python achève les travaux échus sans double exécution.
 Les prix, délais et arrondis expérimentaux ne sont **pas** des données MMHK S2.
 
+Les [effets des bâtiments terminés](docs/specifications/EFFETS-BATIMENTS-POSTGRESQL.md)
+sont désormais configurables par profil : bonus additifs de mines,
+capacités de stockage et prérequis entre bâtiments. Une amélioration
+remplace le bonus du niveau précédent. Un prérequis désactivé rend
+les bâtiments qui en dépendent inactifs sans les détruire. L'économie
+emploie des photographies horodatées, pour ne pas créditer rétroactivement
+des périodes antérieures à une amélioration.
+
 L'API filtre les villes et leurs réserves par identité du joueur directement
 dans les requêtes SQL ; la session est stockée dans un cookie HTTP-only par
 Next.js. La première région Havre reçoit les quatre **types** de mines décidés
