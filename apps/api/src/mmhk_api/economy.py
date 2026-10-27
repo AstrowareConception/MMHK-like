@@ -6,7 +6,7 @@ PostgreSQL is the authority; Redis must never own stock balances.
 from __future__ import annotations
 
 from datetime import UTC, datetime, timedelta
-from decimal import Decimal, InvalidOperation, ROUND_DOWN
+from decimal import Decimal, InvalidOperation, ROUND_DOWN, localcontext
 from uuid import UUID
 
 import psycopg
@@ -157,10 +157,16 @@ def run_economy_batch(
             for resource, base, bonus, carry, amount, cap in rates:
                 if cap is None:
                     raise RuntimeError("Every producing mine needs a storage capacity")
-                generated = (base * (Decimal(1) + bonus) *
-                             Decimal(ticks * tick_seconds) / _DAY + carry)
-                whole = int(generated.to_integral_value(rounding=ROUND_DOWN))
-                fractional = (generated - whole).quantize(_PRECISION, rounding=ROUND_DOWN)
+                # Avoid losing the remainder of very large yet valid
+                # rate*duration values under Decimal's default 28-digit context.
+                with localcontext() as context:
+                    context.prec = 60
+                    generated = (base * (Decimal(1) + bonus) *
+                                 Decimal(ticks * tick_seconds) / _DAY + carry)
+                    whole = int(generated.to_integral_value(rounding=ROUND_DOWN))
+                    fractional = (generated - whole).quantize(
+                        _PRECISION, rounding=ROUND_DOWN,
+                    )
                 credited = min(whole, max(0, cap - amount))
                 wasted = whole - credited
                 if amount + credited > _BIGINT:
