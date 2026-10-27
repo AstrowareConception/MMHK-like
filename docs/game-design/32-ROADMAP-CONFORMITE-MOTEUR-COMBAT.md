@@ -258,6 +258,24 @@ de retour/interception saison 2 devront être développés avant production.
 **V7.0 `in_progress`, C17 `implemented_partial`,
 C18 `blocked_source`, `productionBattleArbiterAllowed=false`.**
 
+### V7.0 — Tranche 10 : arrivée concurrente et demandes de rappel (27 octobre 2026)
+
+La [tranche 10](49-JACTARI-V70-ARRIVEES-CONCURRENTES-RAPPELS.md)
+impose dans la transaction d'arrivée la détection des autres missions
+géolocalisées vers la **même ville du même monde et au même instant prévu** :
+dans ce cas, le serveur refuse les transitions tant qu'aucune politique
+d'arbitrage historiquement validée ne les départage. L'ordonnanceur rapporte
+`requiresArbitration:true` et journalise l'incident sous `mission_state`.
+
+Les joueurs peuvent formuler une **demande** de rappel authentifiée et
+idempotente, conservée en SQLite avec `recall_requested`. Celle-ci ne
+modifie **ni l'itinéraire ni le statut militaire** : aucune durée de retour
+ou priorité de résolution Ubisoft saison 2 n'est inventée.
+
+**Conformité inchangée :** V7.0 `in_progress`, C17
+`implemented_partial`, C18 `blocked_source`,
+`productionBattleArbiterAllowed=false`.
+
 ## 7. Utilisation pratique
 
 Pour reprendre dans un autre fil, conserver cette consigne : *« Reprends la roadmap `docs/game-design/32-ROADMAP-CONFORMITE-MOTEUR-COMBAT.md` et le registre JSON, vérifie les derniers commits/CI, puis attaque le premier critère de sortie non satisfait sans changer arbitrairement le statut des exigences. Documente les preuves et mets à jour le registre avant de terminer. »*
