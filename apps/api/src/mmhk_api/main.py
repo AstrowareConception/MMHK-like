@@ -10,7 +10,10 @@ from fastapi import Depends, FastAPI, HTTPException, Response, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, ConfigDict, Field
 
-from .construction import (\n    ConstructionConflict, ConstructionNotFound, catalog_for_city, start_construction,\n)\nfrom .db import connection
+from .construction import (
+    ConstructionConflict, ConstructionNotFound, catalog_for_city, start_construction,
+)
+from .db import connection
 from .security import get_authenticated_id, revoke_session, start_session
 from .worlds import owned_cities, owned_city_detail, owned_worlds
 
