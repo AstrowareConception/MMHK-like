@@ -58,6 +58,8 @@ def site(monkeypatch):
         db.execute("DELETE FROM world_memberships WHERE world_id=%s",(world,))
         db.execute("DELETE FROM worlds WHERE world_id=%s",(world,))
         db.execute("DELETE FROM accounts WHERE account_id=%s",(user,))
+        db.execute("DELETE FROM urban_effect_profiles WHERE building_code IN (%s,%s)",
+                   (base,bonus))
         db.execute("DELETE FROM urban_building_profiles WHERE building_code IN (%s,%s)",
                    (base,bonus))
 
