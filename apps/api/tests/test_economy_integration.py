@@ -209,3 +209,44 @@ def test_authenticated_api_displays_economy_without_leaking_other_city(city):
     assert Decimal(body["production_per_day"]["gold"]) == Decimal("3")
     assert body["next_credit_at"] is not None
     assert client.get(f"/api/v1/me/cities/{uuid4()}", headers=headers).status_code == 404
+
+
+def test_additive_bonus_is_applied_to_base_before_fractions(city):
+    with psycopg.connect(URL, autocommit=True) as db:
+        _config(db, city, rate_gold="8", rate_wood="0", cap=100)
+        # Administrator-supplied experimental bonus: e.g. 0.10 + 0.20.
+        db.execute(
+            """UPDATE city_mine_rates SET additive_bonus=%s
+               WHERE city_id=%s AND resource='gold'""",
+            (Decimal("0.30"), city),
+        )
+        answer = run_economy_batch(
+            db, now_at=START + 3*HOUR, max_cities=1,
+        )
+        # 8/day * 1.30 * (3 hours / 24) = 1.3
+        assert answer[0]["credits"]["gold"] == 1
+        assert _fraction(db, city, "gold") == Decimal("0.3")
+        assert _stock(db, city, "gold") == 1
+        assert db.execute(
+            """SELECT credits->>'gold' FROM city_economy_events
+               WHERE city_id=%s AND revision=1""",
+            (city,),
+        ).fetchone()[0] == "1"
+
+
+def test_enabled_city_with_missing_rate_fails_atomically(city):
+    with psycopg.connect(URL, autocommit=True) as db:
+        _config(db, city)
+        db.execute(
+            """DELETE FROM city_mine_rates WHERE city_id=%s""",
+            (city,),
+        )
+        with pytest.raises(RuntimeError, match="configured mines"):
+            run_economy_batch(db, now_at=START + HOUR)
+        assert _stock(db, city, "gold") == 0
+        assert db.execute(
+            "SELECT revision FROM city_economy_clock WHERE city_id=%s", (city,),
+        ).fetchone()[0] == 0
+        assert db.execute(
+            "SELECT COUNT(*) FROM city_economy_events WHERE city_id=%s", (city,),
+        ).fetchone()[0] == 0
