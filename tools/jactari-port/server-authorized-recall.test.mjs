@@ -64,7 +64,7 @@ test('approved server-only recall cancels attack ETA and schedules separate retu
   assert.equal(plan.historicalCertification,false);
   assert.equal(plan.officialUbisoftS2Recall,false);
   assert.equal(plan.replayed,false);
-  assert.equal(s.getMission('m1').status,'traveling');
+  assert.equal(s.getMission('m1').status,'recall_returning');
   assert.equal(s.getMission('m1').arrivalAtMs,initial.arrivalAtMs);
   assert.equal(s.getMission('m1').returnAtMs,4000);
   assert.equal(s.getMissionDueEvent({missionId:'m1',eventKind:'arrival'}).status,'cancelled');
@@ -84,9 +84,9 @@ test('recalled army completes on explicit server ETA without battle or lost sold
   const event=worker(s,4000);
   assert.equal(event.kind,'processed');
   assert.equal(event.event.eventKind,'return_completion');
-  assert.equal(event.status,'cancelled'); // terminal legacy state: distinct history event
+  assert.equal(event.status,'recalled'); // V12 explicit recall terminal state
   assert.equal(s.getMissionDueEvent({missionId:'m1',eventKind:'return_completion'}).status,'done');
-  assert.equal(s.getMission('m1').status,'cancelled');
+  assert.equal(s.getMission('m1').status,'recalled');
   assert.equal(s.getBattleAuditCounts().commands,0);
   assert.deepEqual(s.getHero('a1'),before);
   assert.deepEqual(s.getMissionEvents('m1').map(x=>x.event.phase),
@@ -163,10 +163,10 @@ test('old worker cannot settle recalled return after its lease is stolen',()=>{
   assert.throws(()=>completeServerHeroReturn({...player(s),
    command:{missionId:'m1'},serverNowMs:4100,
    lease:{workerId:'workerA',attempt:1}}),/Stale or expired/);
-  assert.equal(s.getMission('m1').status,'traveling');
+  assert.equal(s.getMission('m1').status,'recall_returning');
   assert.equal(completeServerHeroReturn({...player(s),
    command:{missionId:'m1'},serverNowMs:4100,
-   lease:{workerId:'workerB',attempt:2}}).status,'cancelled');
+   lease:{workerId:'workerB',attempt:2}}).status,'recalled');
   assert.equal(s.getBattleAuditCounts().commands,0);
  }finally{s.close();}
 });
@@ -186,7 +186,7 @@ test('SQLite restart preserves planned recall, policy and due events',()=>{
   assert.equal(b.getMissionDueEvent({missionId:'m1',eventKind:'arrival'}).status,'cancelled');
   a.close();a=null;
   assert.equal(worker(b,4000,'recoverer').kind,'processed');
-  assert.equal(b.getMission('m1').status,'cancelled');
+  assert.equal(b.getMission('m1').status,'recalled');
   assert.equal(b.getMissionEvents('m1').at(-1).event.phase,'recall_return_completed');
  }finally{a?.close();b?.close();fs.rmSync(dir,{recursive:true,force:true});}
 });
