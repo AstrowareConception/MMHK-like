@@ -1,6 +1,6 @@
 # MMHK-like — dossier de rétroconception
 
-**Objectif : reconstruire le fonctionnement de Might & Magic Heroes Kingdoms avant de développer son successeur jouable par navigateur.** Le présent dépôt contient un référentiel de gameplay, des spécifications fonctionnelles, des données historiques extraites et un plan de validation. Il ne contient pas encore de jeu exécutable.
+**Objectif : reconstruire le fonctionnement de Might & Magic Heroes Kingdoms avant de développer son successeur jouable par navigateur.** Le présent dépôt contient un référentiel de gameplay, des spécifications fonctionnelles, des données historiques extraites et un plan de validation. Il ne contient pas encore de jeu jouable ; une première fondation FastAPI/Next.js est désormais testée séparément du laboratoire.
 
 Version documentaire **0.6 — 23 octobre 2026**. Recherche réalisée à partir des neuf liens fournis, de leurs archives accessibles, de guides communautaires, du code public de MMHK-Plus/Jactari et désormais de fichiers du client Ubisoft archivés. Les mécanismes retrouvés sont distingués des hypothèses et des propositions de reconstruction. **Ce dossier n’est pas une copie certifiée du serveur Ubisoft : plusieurs règles ont changé selon les saisons et certaines informations manquent.**
 
@@ -13,6 +13,10 @@ La révision 0.4 ajoute **[29 images retrouvées sur Internet](data/assets-recov
 La révision 0.5 analyse la [génération du monde, les sites spéciaux, le code ami et la protection débutant](docs/research/GENERATION-MONDE-RELIQUES-ARRIVEE-PROTECTION-2026-10-23.md). Elle ajoute un [outil reproductible de récupération du CDN](tools/recover-wayback-cdn.py) avec reprise et journal de provenance. **Le précédent lot de milliers de téléchargements n'est pas présent dans ce dépôt** ; l'index historique constitue une liste d'archives potentielles, et non un pack local vérifié.
 
 La révision documentaire 0.6 consigne les **84 réponses P0** du porteur de projet : **référence S2, Havre T1–T3, 7 jours de protection, cartes toriques, économie locale et combats Jactari déterministes**. Le référentiel comporte désormais **90 règles métier** ; les décisions de projet sont séparées des preuves historiques encore incomplètes. Voir le [registre de décisions](docs/decisions/DECISIONS-P0-2026-10-23.md).
+
+## Première fondation du jeu navigateur (27 octobre 2026)
+
+Un **squelette fonctionnel** a été ajouté conformément à l'[ADR-001](docs/decisions/ADR-001-STACK-CIBLE-PROPOSITION.md) : [FastAPI](apps/api/src/mmhk_api/main.py) côté serveur, [Next.js/React](apps/web/app/page.tsx) côté navigateur et [Jactari Python](apps/api/src/jactari/duel.py) pour un **seul duel de peloton** confronté par 403 cas déterministes au [moteur JavaScript de référence](tools/jactari-port/core.mjs). Le combat PvP HTTP reste désactivé. Ni authentification, ni monde jouable, ni Redis/worker/PostgreSQL ne sont encore branchés. **[Démarrage et limites de cette première tranche](docs/specifications/STACK-FOUNDATION-FASTAPI-NEXT-JACTARI.md).**
 
 ## Lire le dossier
 
