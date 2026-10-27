@@ -75,6 +75,8 @@ class CityDetail(City):
     mines: list[str]
     production_active: bool
     production_per_day: dict[str, str]
+    stock_capacities: dict[str, int | None]
+    building_effects: dict
     tick_seconds: int | None
     next_credit_at: datetime | None
     historical_economy_certified: bool
