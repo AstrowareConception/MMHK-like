@@ -207,6 +207,14 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
    ON military_due_event_incidents(observed_at_ms,mission_id);
   CREATE INDEX IF NOT EXISTS due_event_time_idx
    ON military_mission_due_events(status,due_at_ms,mission_id,event_kind);
+  CREATE TABLE IF NOT EXISTS military_mission_recall_requests(
+   mission_id TEXT PRIMARY KEY REFERENCES military_missions(mission_id),
+   actor_player_id TEXT NOT NULL REFERENCES players(player_id),
+   requested_at_ms INTEGER NOT NULL CHECK(requested_at_ms>=0),
+   disposition TEXT NOT NULL DEFAULT 'pending'
+      CHECK(disposition IN ('pending')),
+   note TEXT NOT NULL DEFAULT 'NO_AUTOMATIC_HISTORICAL_RECALL_RULE'
+  );
   CREATE TABLE IF NOT EXISTS military_mission_events(
    mission_id TEXT NOT NULL REFERENCES military_missions(mission_id),
    sequence INTEGER NOT NULL CHECK(sequence >= 0),
@@ -297,6 +305,13 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
  const writeIncident=db.prepare('INSERT INTO military_due_event_incidents(mission_id,event_kind,attempt,worker_id,observed_at_ms,reason_code) VALUES(?,?,?,?,?,?)');
  const readIncidents=db.prepare('SELECT mission_id,event_kind,attempt,worker_id,observed_at_ms,reason_code FROM military_due_event_incidents WHERE mission_id=? ORDER BY observed_at_ms,event_kind,attempt');
  const sameArrival=db.prepare("SELECT m.mission_id,m.arrival_at_ms,m.status,r.route_json FROM military_missions m JOIN military_mission_routes r ON m.mission_id=r.mission_id WHERE m.arrival_at_ms=? AND m.status IN ('traveling','arrived') ORDER BY m.mission_id");
+ const insertRecall=db.prepare("INSERT INTO military_mission_recall_requests(mission_id,actor_player_id,requested_at_ms) VALUES(?,?,?)");
+ const readRecall=db.prepare("SELECT * FROM military_mission_recall_requests WHERE mission_id=?");
+ const recallView=row=>row?{
+  missionId:row.mission_id,actorPlayerId:row.actor_player_id,
+  requestedAtMs:row.requested_at_ms,disposition:row.disposition,
+  automaticRecall:false,replayed:false
+ }:null;
  const nextDue=db.prepare("SELECT * FROM military_mission_due_events WHERE due_at_ms<=? AND (status='pending' OR (status='leased' AND lease_until_ms<=?)) ORDER BY due_at_ms,mission_id,event_kind LIMIT 1");
  const leaseDue=db.prepare("UPDATE military_mission_due_events SET status='leased',worker_id=?,lease_until_ms=?,attempt=attempt+1 WHERE mission_id=? AND event_kind=? AND (status='pending' OR (status='leased' AND lease_until_ms<=?))");
  const insertPosting=db.prepare('INSERT INTO hero_city_postings(hero_id,city_id) VALUES(?,?) ON CONFLICT(hero_id) DO UPDATE SET city_id=excluded.city_id');
@@ -326,6 +341,21 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
  };
  const worldDigest=snapshot=>createHash('sha256')
   .update(json(snapshot)).digest('hex');
+ /**
+  * Read solely within an existing transaction. Collision qualification is
+  * exact world + destination city + scheduled arrival, not arrival order.
+  */
+ const conflictingArrivals=(missionId,arrivalAtMs)=>{
+  const raw=readRoute.get(missionId);
+  if(!raw)return [];
+  const route=decode(raw.route_json);
+  return sameArrival.all(arrivalAtMs).filter(row=>{
+   if(row.mission_id===missionId)return false;
+   const candidate=decode(row.route_json);
+   return candidate.worldId===route.worldId&&
+    candidate.destination.cityId===route.destination.cityId;
+  }).map(row=>row.mission_id);
+ };
  const checkDueLease=(missionId,kind,clock,lease)=>{
   if(lease===null)return;
   exact(lease,['workerId','attempt'],'Trusted scheduler lease');
@@ -672,11 +702,7 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
      missionId,hasGeographicRoute:false,candidateMissionIds:[],requiresArbitration:false
     };}
     const anchor=decode(route.route_json);
-    const other=sameArrival.all(mission.arrival_at_ms).filter(row=>{
-     const candidate=decode(row.route_json);
-     return row.mission_id!==missionId&&candidate.worldId===anchor.worldId&&
-      candidate.destination.cityId===anchor.destination.cityId;
-    }).map(row=>row.mission_id);
+    const other=conflictingArrivals(missionId,mission.arrival_at_ms);
     db.exec('COMMIT');
     return {missionId,hasGeographicRoute:true,
      worldId:anchor.worldId,destinationCityId:anchor.destination.cityId,
@@ -893,6 +919,10 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
     if(activeMission.get(m.defender_hero_id))
      throw new Error('Mission defender departed; field interception is unsupported');
     verifiedRoute(missionId,m.attacker_hero_id,m.defender_hero_id,nowMs);
+    // Fail CLOSED within the same SQLite write transaction. Alphabetical
+    // ordering of leases must never determine victory or arrival priority.
+    if(conflictingArrivals(missionId,m.arrival_at_ms).length>0)
+     throw new Error('Simultaneous target arrival requires server arbitration');
     if(arriveMission.run(missionId).changes!==1)
      throw new Error('Arrival state transition failed');
     markDueDone.run(nowMs,missionId,'arrival');
@@ -963,6 +993,35 @@ export function openTrustedHeroStore({filename=':memory:'}={}){
     addMissionEvent(missionId,{phase:'administratively_cancelled'});
     return {...missionView(readMission.get(missionId)),replayed:false};
    });
+  },
+  /**
+   * Owner request only: records intent, NOT a cancellation, repath, teleport,
+   * release of troops or automatic schedule change.
+   */
+  requestMissionRecall({missionId,actorPlayerId,nowMs}){
+   id(missionId,'mission ID');id(actorPlayerId,'actor ID');
+   requiredTime(nowMs,'recall request time');
+   return transaction(()=>{
+    const m=readMission.get(missionId);
+    if(!m||m.actor_player_id!==actorPlayerId||
+       currentPlayer.get(actorPlayerId)?.enabled!==1)
+     throw new Error('Unknown or unauthorized mission recall');
+    const previous=readRecall.get(missionId);
+    if(previous)return {...recallView(previous),replayed:true};
+    if(m.status!=='traveling'||nowMs>=m.arrival_at_ms)
+     throw new Error('Recall requires a mission still traveling before scheduled arrival');
+    const first=missionEvents.all(missionId)[0];
+    if(!first||decode(first.event_json).phase!=='dispatched'||
+       nowMs<decode(first.event_json).timeMs)
+     throw new Error('Recall request cannot precede recorded dispatch');
+    insertRecall.run(missionId,actorPlayerId,nowMs);
+    addMissionEvent(missionId,{phase:'recall_requested',timeMs:nowMs,
+     automaticRecall:false});
+    return {...recallView(readRecall.get(missionId)),replayed:false};
+   });
+  },
+  getMissionRecallRequest(missionId){
+   alive();return recallView(readRecall.get(id(missionId,'mission ID')));
   },
   getMission(missionId){
    alive();return missionView(readMission.get(id(missionId,'mission ID')));
