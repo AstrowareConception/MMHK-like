@@ -17,3 +17,10 @@ apps/web/.turbo/
 *.tsbuildinfo
 .pytest_cache/
 *.egg-info/
+
+# Local stack credentials and PostgreSQL/Redis runtime
+.env
+.env.*
+!.env.example
+apps/api/.coverage
+apps/web/.env.local

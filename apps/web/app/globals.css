@@ -32,3 +32,33 @@ strong { display: block; font: 600 16px/1.4 system-ui,sans-serif; }
 footer { text-align: center; font: 12px/1.6 system-ui,sans-serif;
   color: #8798a4; margin-top: 28px; }
 @media (max-width: 620px) { .tiles {grid-template-columns: 1fr;} .tiles article {min-height: auto;} }
+
+/* First account-isolated vertical slice: navigation, login and inventory. */
+.masthead.compact { margin-bottom: 26px; }
+.masthead.compact h1 { font-size: clamp(36px, 7vw, 64px); }
+.nav { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin: 18px 0 24px;
+  font: 13px/1.5 system-ui, sans-serif; color: #c7d1d8; }
+a { color: #ecd6a0; }
+button { font: 600 14px system-ui, sans-serif; border: 1px solid #a9915e; color: #151c21;
+  background: #d4b97b; padding: 10px 16px; border-radius: 5px; cursor: pointer; }
+button:hover { background: #ecd5a1; }
+button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid #eacb87; outline-offset: 3px; }
+.nav button { background: transparent; color: #e2c78d; padding: 8px 12px; }
+.form-intro { color: #cdd3d5; font: 14px/1.6 system-ui, sans-serif; }
+.login-form { margin: 20px 0; display: grid; gap: 9px; max-width: 420px; font: 13px/1.5 system-ui, sans-serif; }
+.login-form label { color: #e5d9be; font-weight: 600; }
+.login-form input { border: 1px solid #5a6a75; border-radius: 5px; padding: 12px;
+  background: #0f1c26; color: #f6f4ef; margin-bottom: 10px; font: 16px system-ui, sans-serif; }
+.login-form button { margin-top: 4px; }
+.error { border-left: 3px solid #ed9b81; padding: 12px 14px; background: #6c29292f;
+  color: #ffcfbf; font: 14px/1.5 system-ui, sans-serif; }
+.tile-links { display: grid; grid-template-columns: repeat(auto-fit,minmax(220px,1fr)); gap: 14px; }
+.tile-link { display: flex; flex-direction: column; gap: 9px; min-height: 125px;
+  padding: 18px; background: #0d1b2577; border: 1px solid #b2985a61;
+  border-radius: 6px; text-decoration: none; color: #d0d4d7; font: 14px/1.5 system-ui, sans-serif; }
+.tile-link strong { font: 24px/1.4 Georgia, serif; color: #eddbad; }
+.tile-link:hover { border-color: #d4b97b; background: #293d4a; }
+.resource-grid { display: grid; grid-template-columns: repeat(auto-fit,minmax(155px,1fr)); gap: 12px; }
+.resource-grid article { padding: 18px; border: 1px solid #ffffff24; border-radius: 6px; background: #0d1b2577; }
+.resource-grid strong { color: #efddae; font: 30px/1.4 Georgia,serif; }
+.resource-grid small { display: block; color: #b5c2c9; font: 12px/1.4 system-ui,sans-serif; margin-top: 8px; }

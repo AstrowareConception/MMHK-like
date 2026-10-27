@@ -14,9 +14,27 @@ La révision 0.5 analyse la [génération du monde, les sites spéciaux, le code
 
 La révision documentaire 0.6 consigne les **84 réponses P0** du porteur de projet : **référence S2, Havre T1–T3, 7 jours de protection, cartes toriques, économie locale et combats Jactari déterministes**. Le référentiel comporte désormais **90 règles métier** ; les décisions de projet sont séparées des preuves historiques encore incomplètes. Voir le [registre de décisions](docs/decisions/DECISIONS-P0-2026-10-23.md).
 
-## Première fondation du jeu navigateur (27 octobre 2026)
+## Première boucle métier : FastAPI + Next.js + PostgreSQL (27 octobre 2026)
 
-Un **squelette fonctionnel** a été ajouté conformément à l'[ADR-001](docs/decisions/ADR-001-STACK-CIBLE-PROPOSITION.md) : [FastAPI](apps/api/src/mmhk_api/main.py) côté serveur, [Next.js/React](apps/web/app/page.tsx) côté navigateur et [Jactari Python](apps/api/src/jactari/duel.py) pour un **seul duel de peloton** confronté par 403 cas déterministes au [moteur JavaScript de référence](tools/jactari-port/core.mjs). Le combat PvP HTTP reste désactivé. Ni authentification, ni monde jouable, ni Redis/worker/PostgreSQL ne sont encore branchés. **[Démarrage et limites de cette première tranche](docs/specifications/STACK-FOUNDATION-FASTAPI-NEXT-JACTARI.md).**
+La nouvelle architecture, définie par l'[ADR-001](docs/decisions/ADR-001-STACK-CIBLE-PROPOSITION.md),
+contient désormais des composants exécutables :
+[FastAPI](apps/api/src/mmhk_api/main.py), [Next.js](apps/web/app/page.tsx),
+les tables PostgreSQL (comptes, sessions, mondes, villes et stocks)
+et un premier compte **créé uniquement par l'opérateur**, suivi de
+la sélection d'un monde puis de la consultation de sa première ville.
+
+L'API filtre les villes et leurs réserves par identité du joueur directement
+dans les requêtes SQL ; la session est stockée dans un cookie HTTP-only par
+Next.js. La première région Havre reçoit les quatre **types** de mines décidés
+en P0 (or, bois, minerai, cristal), mais aucune quantité historique
+inconnue ni production périodique n'est inventée. Redis est disponible
+en développement mais le cache et les workers restent à raccorder.
+
+Le [guide de démarrage](apps/api/README.md) et le
+[rapport de la tranche](docs/specifications/PREMIER-MONDE-POSTGRESQL.md)
+distinguent clairement la première boucle de consultation d'un vrai jeu
+déjà jouable. La conformité PvP de Jactari est toujours verrouillée ;
+le [laboratoire JavaScript](tools/jactari-port/README.md) et ses tests sont conservés.
 
 ## Lire le dossier
 
