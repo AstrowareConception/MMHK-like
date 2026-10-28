@@ -93,3 +93,39 @@ export type ConstructionCatalog = {
     capacity_bonus: Record<string, number>;
   };
 };
+
+export type WorldOverview = World & {
+  topology: "torus";
+  known_scope: "owned_cities_only";
+  cities: City[];
+  enemy_positions_exposed: boolean;
+  world_terrain_loaded: boolean;
+};
+
+export type RegionView = {
+  city_id: string;
+  world_id: string;
+  city_name: string;
+  world_x: number;
+  world_y: number;
+  world_size: number;
+  region_width: 5;
+  region_height: 5;
+  cell_layout: "illustrative_unmapped";
+  mine_types_unlocated: string[];
+  mine_positions_known: false;
+  cells: {
+    i: number;
+    j: number;
+    kind: "owned_city" | "unmapped";
+    city_id: string | null;
+  }[];
+  surrounding_world_regions: {
+    dx: number;
+    dy: number;
+    x: number;
+    y: number;
+    is_current: boolean;
+  }[];
+  historical_regional_terrain_certified: false;
+};
