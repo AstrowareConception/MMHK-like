@@ -15,6 +15,9 @@ on:
       - '.env.local.example'
       - 'tools/local/**'
       - 'tools/ci/check_local_stack.py'
+      - 'tools/ci/test_quickstart.py'
+      - 'demarrer.bat'
+      - 'demarrer.sh'
       - 'tools/e2e/**'
   pull_request:
     paths:
@@ -31,6 +34,9 @@ on:
       - '.env.local.example'
       - 'tools/local/**'
       - 'tools/ci/check_local_stack.py'
+      - 'tools/ci/test_quickstart.py'
+      - 'demarrer.bat'
+      - 'demarrer.sh'
       - 'tools/e2e/**'
   workflow_dispatch:
 permissions:
@@ -134,6 +140,10 @@ jobs:
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
+      - name: Test portable quickstart without starting containers
+        run: |
+          python3 -m unittest discover -s tools/ci -p 'test_quickstart.py' -v
+          sh -n demarrer.sh
       - name: Assert local-only network and automatic migrations
         run: python3 tools/ci/check_local_stack.py
       - name: Start all local services with generated ephemeral secrets
