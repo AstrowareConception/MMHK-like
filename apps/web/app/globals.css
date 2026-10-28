@@ -605,3 +605,40 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
 .region-launch button:disabled{opacity:.5;cursor:not-allowed;}
 .region-launch small{display:block;margin-top:8px;font:11px/1.5 system-ui,sans-serif;color:#d1cfc0;}
 @media(prefers-reduced-motion:reduce){.region-mission-map{filter:none;}}
+
+
+/* US-CIT: owner-scoped interactive inspection and real construction history. */
+.haven-plot.selected-plot rect{stroke:#ffedba;stroke-width:2.5;fill:#3b574eee;}
+.haven-plot.selected-plot{filter:drop-shadow(0 0 9px #f8dd91);}
+.city-building-inspector{margin:14px 0 24px;padding:16px 18px;border:2px ridge #bca16c;
+  background:linear-gradient(135deg,#2b4146,#152a33 70%);box-shadow:inset 0 0 22px #0007;}
+.city-building-inspector>strong{color:#edd8a7;font:small-caps 19px Georgia,serif;}
+.city-building-inspector p{font:13px/1.6 Georgia,serif;color:#c9d1c8;}
+.city-building-inspector a{color:#edd4a1;}
+.city-inspector-heading{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  border-bottom:1px solid #a18c626e;padding-bottom:10px;}
+.city-inspector-heading h3{font:small-caps 28px Georgia,serif;color:#f2dbab;margin:2px 0;}
+.city-inspector-heading p{margin:0;}
+.city-inspector-heading>a,.building-inspect-link{display:inline-block;padding:6px 10px;
+  border:1px solid #a98f62;border-radius:3px;font:700 12px system-ui,sans-serif;text-decoration:none;}
+.city-building-inspector h4{font:small-caps 19px Georgia,serif;color:#ead7aa;margin:16px 0 7px;}
+.city-inspector-progress,.city-inspector-blocked{border-left:3px solid #d0b37d;
+  padding:9px 12px;background:#112831;}
+.city-inspector-blocked{border-left-color:#de8f70;}
+.city-inspector-quotes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:13px 0;}
+.city-inspector-quote{display:flex;flex-direction:column;gap:8px;min-width:0;padding:12px;
+  border:1px solid #988458;background:#112630;}
+.city-inspector-quote strong{font:small-caps 19px Georgia,serif;color:#ecd5a6;}
+.city-inspector-quote small,.city-inspector-quote li{font:12px/1.55 system-ui,sans-serif;color:#d4dad1;}
+.city-inspector-quote ul{padding-left:15px;margin:0 0 6px;flex:1;}
+.city-inspector-quote li.resource-shortage{color:#f3b195;}
+.city-inspector-quote button:disabled{cursor:not-allowed;opacity:.53;filter:grayscale(.7);}
+.city-inspector-disclaimer{font-size:11px!important;color:#adbfbd!important;}
+.city-inspector-past{border-top:1px solid #a08b6a70;}
+.city-inspector-past li{font:12px/1.6 system-ui,sans-serif;color:#c2c9c6;}
+.construction-history-list{list-style:none;padding:0;margin:12px 0;display:grid;gap:8px;}
+.construction-history-entry{display:grid;grid-template-columns:1fr auto;gap:5px 12px;padding:11px;
+  border:1px solid #98805d;background:#162b34;color:#e2d6bc;}
+.construction-history-entry strong{color:#f0dbb0;}
+.construction-history-entry small{grid-column:1/-1;color:#bfcbc5;font:11px/1.55 system-ui,sans-serif;}
+@media(max-width:760px){.city-inspector-quotes{grid-template-columns:1fr;}}

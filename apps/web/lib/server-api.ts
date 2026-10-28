@@ -66,6 +66,7 @@ export type ConstructionOrder = {
   replayed?: boolean;
 };
 export type ConstructionCatalog = {
+  history: ConstructionOrder[];
   buildings: {
     building_code: string;
     level: number;

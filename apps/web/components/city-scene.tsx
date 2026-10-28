@@ -82,7 +82,9 @@ function OriginalSprite({style,level,disabled}:{
   </g>;
 }
 
-export function CityScene({city,catalog}:{city:CityDetail;catalog?:ConstructionCatalog}){
+export function CityScene({city,catalog,selectedBuilding}:{
+  city:CityDetail;catalog?:ConstructionCatalog;selectedBuilding?:string;
+}){
   const buildings=catalog?.buildings??[];
   const options=catalog?.options??[];
   const active=catalog?.active;
@@ -123,10 +125,13 @@ export function CityScene({city,catalog}:{city:CityDetail;catalog?:ConstructionC
           const done=spot.done;
           const status=done?(done.active?"construit et actif":"construit, inactif"):
             spot.building?"en chantier":spot.option?.available?"disponible":"verrouillé";
-          return <a href="#urban-construction" key={spot.code}
-            className={"haven-plot "+(done?"has-building":"empty-plot")}
+          return <a href={"/cities/"+city.city_id+"?inspect="+spot.code+"#city-inspector"}
+            key={spot.code}
+            className={"haven-plot "+(done?"has-building":"empty-plot")+
+              (selectedBuilding===spot.code?" selected-plot":"")}
             data-building-code={spot.code}
-            aria-label={spot.label+" — "+status}
+            aria-current={selectedBuilding===spot.code?"location":undefined}
+            aria-label={"Examiner "+spot.label+" — "+status}
             tabIndex={0}>
             <title>{spot.label+" · "+status+(done?" · niveau "+done.level:"")}</title>
             <g transform={"translate("+spot.x+" "+spot.y+")"}>

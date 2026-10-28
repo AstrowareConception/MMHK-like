@@ -125,14 +125,23 @@ def main() -> int:
 
             expect(page.get_by_text("Actualisation automatique", exact=False)).to_be_visible()
 
-            # The actual first townhall can be built from the demo fixture.
-            rapid = page.locator(
-                "form.build-option:has(input[name='buildingCode'][value='village_hall'])"
+            # Select a verified Haven building: inspect actual server quotes,
+            # then submit the construction order from its contextual inspector.
+            page.locator(".haven-plot[data-building-code='village_hall']").click()
+            inspector=page.locator("#city-inspector")
+            expect(inspector).to_have_attribute("data-selected-building","village_hall")
+            expect(inspector.get_by_role("heading",name="Hôtel du village")).to_be_visible()
+            expect(inspector.get_by_text("Projet proposé : niveau 1")).to_be_visible()
+            expect(inspector.locator(".city-inspector-quote")).to_have_count(3)
+            rapid = inspector.locator(
+                "form.city-inspector-quote:has(input[name='buildingCode'][value='village_hall'])"
                 ":has(input[name='mode'][value='rapid'])"
             )
             expect(rapid.get_by_role("button", name="Lancer ce chantier")).to_be_enabled()
             rapid.get_by_role("button", name="Lancer ce chantier").click()
             expect(page.get_by_text("Chantier enregistré et ressources payées.")).to_be_visible(timeout=20000)
+            expect(page.locator("#city-history .construction-history-entry")).to_have_count(1)
+            expect(page.locator("#city-history .construction-history-entry").first).to_contain_text("Hôtel du village")
             snap = page.request.get(root + "/api/game-timeline?hours=12")
             payload = snap.json() if snap.ok else {}
             print("Timeline construction diagnostics:",
@@ -157,6 +166,7 @@ def main() -> int:
             expect(finished.first).to_be_visible(timeout=5000)
             expect(page.locator(".timeline-event")).to_have_count(0, timeout=45000)
             expect(page.get_by_text("Bonus de mine actifs", exact=False)).to_be_visible()
+            expect(page.locator("#city-history .construction-history-entry").first).to_contain_text("Terminé")
             # Progression: after village hall completion, the first dwelling
             # becomes available; recruitment itself requires that building to finish.
             tier_one = page.locator(

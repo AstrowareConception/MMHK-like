@@ -137,8 +137,16 @@ def catalog_for_city(db: psycopg.Connection, account_id: UUID, city_id: UUID) ->
         """SELECT building_code,level FROM urban_city_buildings
            WHERE city_id=%s ORDER BY building_code""",(city_id,),
     ).fetchall()
+    recent = db.execute(
+        """SELECT order_id,building_code,target_level,mode,policy_id,
+                  applied_costs,started_at,due_at,status,completed_at
+           FROM urban_construction_orders
+           WHERE city_id=%s ORDER BY started_at DESC,order_id DESC LIMIT 12""",
+        (city_id,),
+    ).fetchall()
     return {
         "buildings":effect_state["buildings"],
+        "history":[_order_view(row) for row in recent],
         "active":_order_view(current) if current else None,
         "options":options,
         "effects":{
