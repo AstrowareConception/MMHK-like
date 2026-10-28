@@ -357,3 +357,23 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
 .region-selected-details strong {color:#f5daa4;font:700 14px Georgia,serif;}
 .region-selected-details a {margin-left:auto;}
 @media(max-width:760px){.map-jump-form{margin-left:0}.map-controls{gap:9px}.map-coordinate-status{gap:8px}}
+
+/* Historic map: hide duplicate overlay by default; make painted corner arrows active. */
+.map-edge-control {cursor:pointer;outline:none;filter:drop-shadow(0 2px 5px #000a);}
+.map-edge-control circle {transition:fill .17s ease,stroke .17s ease;}
+.map-edge-control:hover circle,.map-edge-control:focus-visible circle {
+  fill:#936b38ee;stroke:#fff0b9;stroke-width:3;
+}
+.map-edge-control:focus-visible {filter:drop-shadow(0 0 9px #efcf83);}
+.map-grid-switch {display:flex;align-items:center;gap:6px;color:#ecd7a8;font:12px Georgia,serif;
+  cursor:pointer;white-space:nowrap;}
+.map-grid-switch input {accent-color:#c4a46f;cursor:pointer;width:15px;height:15px;}
+.map-selected-info {display:flex;align-items:center;gap:13px;flex-wrap:wrap;
+  padding:10px 12px;border:1px solid #a48b5f;background:#14242c;color:#bfc5c1;
+  font:13px/1.5 Georgia,serif;}
+.map-selected-info strong {color:#ecd8a2;font:700 15px/1.4 Georgia,serif;}
+.map-selected-info a {margin-left:auto;color:#efdbac;font-weight:700;}
+.world-atlas-interactive {outline-offset:3px;}
+.world-atlas-interactive:focus-visible {outline:2px solid #f4d78a;}
+.world-atlas-interactive text {user-select:none;}
+@media (prefers-reduced-motion: reduce) {.map-edge-control circle {transition:none;}}
