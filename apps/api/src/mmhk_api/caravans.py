@@ -352,8 +352,8 @@ def run_caravan_batch(db:psycopg.Connection,*,now_at:datetime|None=None,
             ).fetchone()
             if due is None:
                 break
-            sid,world,owner,source,target,policy,cargo,weights,weight,capacity,
-            distance,travel,depart,arrives,return_due,retry,finished,status,back = due
+            (sid,world,owner,source,target,policy,cargo,weights,weight,capacity,
+             distance,travel,depart,arrives,return_due,retry,finished,status,back) = due
             # Lock cities in fixed order, also matching player order acquisition.
             # Operator deletion of a city is RESTRICTED while cargo is in flight.
             for cid in sorted((source,target),key=str):
