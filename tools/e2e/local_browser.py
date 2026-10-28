@@ -40,7 +40,7 @@ def main() -> int:
             # The region is explicitly a 25-cell schematic, not made-up mine positions.
             expect(page.get_by_text("25 emplacements schématiques")).to_be_visible()
             page.get_by_role("link", name="Entrer en ville").first.click()
-            expect(page.get_by_role("heading", name="Premier Havre", exact=True)).to_be_visible()
+            expect(page.get_by_role("heading", level=1, name="Premier Havre", exact=True)).to_be_visible()
             expect(page.get_by_role("heading", name="Réserves de la ville")).to_be_visible()
             expect(page.get_by_text("Actualisation automatique", exact=False)).to_be_visible()
 
