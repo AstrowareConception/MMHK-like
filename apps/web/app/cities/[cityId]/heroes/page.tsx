@@ -117,6 +117,13 @@ export default async function HeroesPage({params,searchParams}:{
         </div>
       </aside>
       <div className="hero-workspace">
+        <nav className="hero-subnav" aria-label="Sections de la fiche du héros">
+          <a href="#hero-equipment">Équipement</a>
+          <a href="#hero-bag">Sac</a>
+          <a href="#hero-reserve">Réserve</a>
+          <a href="#hero-formation">Formation à sept positions</a>
+          <a href="#hero-army">Armée</a>
+        </nav>
         <div className="hero-workspace-header">
           <div><span className="eyebrow">FICHE DU HÉROS</span><h2>{selected.name}</h2>
             <p>{selected.archetype==="magic"?"Voie de la Magie":"Voie de la Force"}
@@ -128,7 +135,7 @@ export default async function HeroesPage({params,searchParams}:{
           <span>{spent} / {selected.level} niveaux</span>
           <meter min="0" max={Math.max(1,selected.level)} value={Math.min(selected.level,spent)}/>
         </div>
-        <h3>Équipement — huit emplacements</h3>
+        <h3 id="hero-equipment">Équipement — huit emplacements</h3>
         <div className="equipment-slots">
           {slots.map(slot=>{
             const item=equipment.find(a=>a.equipped_slot===slot);
@@ -139,13 +146,13 @@ export default async function HeroesPage({params,searchParams}:{
             </div>;
           })}
         </div>
-        <h3>Sac de {selected.name} <small>{bag.length} objet(s)</small></h3>
+        <h3 id="hero-bag">Sac de {selected.name} <small>{bag.length} objet(s)</small></h3>
         <div className="artifact-list">
           {bag.length?bag.map(item=><ArtifactCard key={item.artifact_id} item={item}
             cityId={cityId} hero={selected} heroes={forces.heroes}/>):
             <p className="military-muted">Le sac de ce héros est vide.</p>}
         </div>
-        <h3>Réserve de la cité <small>{reserve.length} objet(s)</small></h3>
+        <h3 id="hero-reserve">Réserve de la cité <small>{reserve.length} objet(s)</small></h3>
         <div className="artifact-list">
           {reserve.length?reserve.map(item=><ArtifactCard key={item.artifact_id} item={item}
             cityId={cityId} hero={selected} heroes={forces.heroes}/>):
@@ -159,7 +166,7 @@ export default async function HeroesPage({params,searchParams}:{
         {formationAnswer?.ok&&formationAnswer.data&&
           <HeroFormationEditor key={selected.hero_id} cityId={cityId}
             formation={formationAnswer.data}/>}
-        <div className="hero-army-summary">
+        <div className="hero-army-summary" id="hero-army">
           <h3>Armée portée</h3>
           {forces.hero_armies.filter(u=>u.hero_id===selected.hero_id).map(u=>
             <p key={u.unit_code}>{u.name} : {u.quantity}</p>)}

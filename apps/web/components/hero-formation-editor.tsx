@@ -57,7 +57,7 @@ export function HeroFormationEditor({cityId,formation}:{
       i===other?empty():r));
   };
   const available=formation.available_units;
-  return <section className="formation-editor" aria-label="Formation de combat du héros">
+  return <section id="hero-formation" className="formation-editor" aria-label="Formation de combat du héros">
     <header>
       <div><span className="eyebrow">US-ARM-009 À 012 · PRÉPARATION DES PELOTONS</span>
         <h3>Les sept positions de l'armée</h3>

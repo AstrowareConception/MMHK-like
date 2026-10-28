@@ -653,3 +653,12 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
  .mission-report-formation{grid-template-columns:repeat(2,minmax(0,1fr));}}
 @media(max-width:460px){.formation-slot{grid-template-columns:40px 1fr;}
  .formation-slot label:nth-child(3),.formation-slot-actions{grid-column:2;}}
+
+/* Hero workspace navigation keeps long inventory pages usable. */
+.hero-subnav{position:sticky;top:0;z-index:10;display:flex;gap:4px;flex-wrap:wrap;
+  background:#122831eb;border:1px solid #9d8962;padding:7px;margin-bottom:10px;
+  box-shadow:0 5px 18px #0008;}
+.hero-subnav a{padding:8px 10px;color:#ead6a8;background:#263d44;
+  border:1px solid #8b876b;font:700 12px Georgia,serif;text-decoration:none;}
+.hero-subnav a:hover,.hero-subnav a:focus-visible{border-color:#f1d7a1;background:#45585b;}
+#hero-equipment,#hero-bag,#hero-reserve,#hero-formation,#hero-army{scroll-margin-top:68px;}
