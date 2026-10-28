@@ -25,7 +25,7 @@ export default async function CityPage({
   searchParams,
 }: {
   params: Promise<{ cityId: string }>;
-  searchParams: Promise<{ build?: string; recruit?:string; hero?:string }>;
+  searchParams: Promise<{ build?: string; recruit?:string; hero?:string;transfer?:string }>;
 }) {
   const { cityId } = await params;
   const token = await sessionToken();
@@ -74,7 +74,7 @@ export default async function CityPage({
           ))}
         </div>
         <CityForcesPanel cityId={cityId} forces={forcesAnswer.ok?forcesAnswer.data??null:null}
-          message={{hero:query.hero,recruit:query.recruit}} />
+          message={{hero:query.hero,recruit:query.recruit,transfer:query.transfer}} />
         <div className="construction-panel" id="urban-construction">
           <span className="eyebrow">CHANTIERS URBAINS · PROFILS EXPÉRIMENTAUX</span>
           <h2>Construire dans la cité</h2>

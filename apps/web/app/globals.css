@@ -476,3 +476,17 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
 .unit-emblem img {width:100%;height:100%;object-fit:contain;}
 .unit-recruit-title {display:flex;gap:8px;align-items:center;}
 .unit-recruit-title img {border:1px solid #b5a275;border-radius:3px;flex:none;}
+
+
+/* Owned hero army management — reversible, server-authoritative transfers. */
+.hero-army-line {color:#ead5a0!important;font-weight:700!important;}
+.hero-transfer-box {margin:12px 0;border:1px solid #a18e68;padding:10px;background:#142932;}
+.hero-transfer-box summary {font:700 14px Georgia,serif;color:#f2dbb3;cursor:pointer;}
+.hero-transfer-box>p {font:12px/1.5 system-ui,sans-serif;color:#b7c4c1;}
+.hero-transfer-group {display:grid;gap:8px;margin:11px 0;padding:10px;background:#1b3038;}
+.hero-transfer-group>strong {color:#ead4a6;font:700 14px Georgia,serif;}
+.hero-transfer-row {display:flex;justify-content:space-between;gap:9px;align-items:end;}
+.hero-transfer-row label {color:#d4d1ba;font:12px/1.4 Georgia,serif;
+  display:flex;align-items:center;flex-wrap:wrap;gap:8px;}
+.hero-transfer-row input {width:66px;padding:7px;border:1px solid #9c855e;background:#12212a;color:#f7e9ca;}
+.hero-transfer-row button {padding:8px;font:700 11px system-ui,sans-serif;}

@@ -150,3 +150,32 @@ export async function hireCityHero(data:FormData) {
   if(status===401)redirect("/");
   redirect("/cities/"+cityId+"?hero="+(status===200||status===201?"ok":status===409?"conflict":"unavailable")+"#military-panel");
 }
+
+
+export async function transferHeroUnits(data:FormData) {
+  const cityId=data.get("cityId"),heroId=data.get("heroId"),unitCode=data.get("unitCode");
+  const amount=data.get("quantity"),direction=data.get("direction");
+  if(typeof cityId!=="string"||!/^[0-9a-f-]{36}$/i.test(cityId)||
+     typeof heroId!=="string"||!/^[0-9a-f-]{36}$/i.test(heroId)||
+     typeof unitCode!=="string"||!/^[a-z][a-z0-9_]{1,47}$/.test(unitCode)||
+     typeof amount!=="string"||!/^\d{1,4}$/.test(amount)||
+     (direction!=="to_hero"&&direction!=="to_garrison"))redirect("/");
+  const quantity=Number(amount);
+  if(!Number.isInteger(quantity)||quantity<1||quantity>1000)
+    redirect("/cities/"+cityId+"?transfer=conflict#military-panel");
+  const token=(await cookies()).get("mmhk_session")?.value;
+  if(!token)redirect("/");
+  let status=503;
+  try{
+    const response=await fetch(apiUrl("/api/v1/me/cities/"+cityId+"/forces/transfer"),{
+      method:"POST",headers:{"Authorization":"Bearer "+token,"Content-Type":"application/json"},
+      body:JSON.stringify({order_id:randomUUID(),hero_id:heroId,unit_code:unitCode,
+        quantity,direction}),
+      cache:"no-store",signal:AbortSignal.timeout(6000),
+    });
+    status=response.status;
+  }catch {/* An uncertain order must not be silently resubmitted. */}
+  if(status===401)redirect("/");
+  redirect("/cities/"+cityId+"?transfer="+(status===200||status===201?"ok":
+    status===409?"conflict":"unavailable")+"#military-panel");
+}

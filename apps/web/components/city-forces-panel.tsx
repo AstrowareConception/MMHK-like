@@ -1,11 +1,11 @@
-import {hireCityHero,recruitCityUnits} from "../app/actions";
+import {hireCityHero,recruitCityUnits,transferHeroUnits} from "../app/actions";
 import type {CityForces} from "../lib/server-api";
 
 const money=(value:number)=>value.toLocaleString("fr-FR");
 const UNIT_ART:Record<string,string>={militia:"/themes/public-safe/haven-militia.svg",archers:"/themes/public-safe/haven-archer.svg"};
 const translations:Record<string,string>={idle:"À la cité",on_mission:"En mission",wounded:"Convalescence"};
 export function CityForcesPanel({cityId,forces,message}:{cityId:string;
-  forces:CityForces|null;message:{hero?:string;recruit?:string}}) {
+  forces:CityForces|null;message:{hero?:string;recruit?:string;transfer?:string}}) {
   const state=(kind:"hero"|"recruit",status?:string)=>{
     if(!status)return null;
     const success=status==="ok";
@@ -26,6 +26,11 @@ export function CityForcesPanel({cityId,forces,message}:{cityId:string;
       <span className="military-side-tag">HAVRE · ÉTAPE EXPÉRIMENTALE</span>
     </div>
     {!forces?<p className="error">Le registre des héros et de la garnison est inaccessible.</p>:<>
+      {message.transfer&&<p className={message.transfer==="ok"?"construction-notice":"error"}
+        role={message.transfer==="ok"?"status":"alert"}>{
+          message.transfer==="ok"?"Transfert confirmé : les effectifs restent conservés.":
+          "Transfert non confirmé : effectifs insuffisants, héros indisponible ou erreur serveur."
+        }</p>}
       {state("hero",message.hero)}
       {state("recruit",message.recruit)}
       <div className="military-columns">
@@ -50,10 +55,45 @@ export function CityForcesPanel({cityId,forces,message}:{cityId:string;
                 <strong>{hero.name}</strong>
                 <small>{hero.archetype==="might"?"Voie de la Force":"Voie de la Magie"} · Niveau {hero.level}</small>
                 <span>{translations[hero.status]??hero.status} · {money(hero.experience)} expérience</span>
+                {forces.hero_armies.filter(unit=>unit.hero_id===hero.hero_id).map(unit=>
+                  <span key={unit.unit_code} className="hero-army-line">{unit.name} : {money(unit.quantity)}</span>)}
               </div>
             </article>)}
             {!forces.heroes.length&&<p className="military-muted">Aucun héros n'est encore affecté à cette cité.</p>}
           </div>
+          <details className="hero-transfer-box">
+            <summary>Affecter des soldats aux héros ou les rapatrier</summary>
+            <p>Déplacez uniquement des unités déjà recrutées. Aucun combattant n'est créé.</p>
+            {forces.heroes.filter(hero=>hero.status==="idle").map(hero=>
+              <div key={hero.hero_id} className="hero-transfer-group">
+                <strong>{hero.name}</strong>
+                {forces.garrison.filter(unit=>unit.quantity>0).map(unit=>
+                  <form key={"to-"+unit.unit_code} action={transferHeroUnits} className="hero-transfer-row">
+                    <input type="hidden" name="cityId" value={cityId}/>
+                    <input type="hidden" name="heroId" value={hero.hero_id}/>
+                    <input type="hidden" name="unitCode" value={unit.unit_code}/>
+                    <input type="hidden" name="direction" value="to_hero"/>
+                    <label>{unit.name} (garnison : {unit.quantity})
+                      <input type="number" name="quantity" min="1"
+                        max={Math.min(1000,unit.quantity)} defaultValue="1" required/>
+                    </label>
+                    <button type="submit">Affecter</button>
+                  </form>)}
+                {forces.hero_armies.filter(unit=>unit.hero_id===hero.hero_id && unit.quantity>0)
+                  .map(unit=><form key={"back-"+unit.unit_code} action={transferHeroUnits}
+                    className="hero-transfer-row">
+                    <input type="hidden" name="cityId" value={cityId}/>
+                    <input type="hidden" name="heroId" value={hero.hero_id}/>
+                    <input type="hidden" name="unitCode" value={unit.unit_code}/>
+                    <input type="hidden" name="direction" value="to_garrison"/>
+                    <label>{unit.name} (héros : {unit.quantity})
+                      <input type="number" name="quantity" min="1"
+                        max={Math.min(1000,unit.quantity)} defaultValue="1" required/>
+                    </label>
+                    <button type="submit">Rapatrier</button>
+                  </form>)}
+              </div>)}
+          </details>
           <h3>Taverne <small>{forces.tavern_unlocked?"Ouverte":"Fermée"}</small></h3>
           {!forces.tavern_unlocked&&<p className="military-muted">
             Construisez la taverne pour comparer et engager les héros proposés.</p>}
