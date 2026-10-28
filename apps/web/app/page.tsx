@@ -35,7 +35,7 @@ export default async function Home({
   const connected = health?.status === "ok" && engine?.engine === "Jactari";
   const loggedIn = !!token && worlds?.ok;
   if (loggedIn && token) {
-    return <GameShell token={token} title="Mes mondes" eyebrow="PORTAIL · GUERRE DES LARMES"
+    return <GameShell token={token} title="Mes royaumes" eyebrow="PORTAIL · GUERRE DES LARMES"
       description="Votre domaine, vos cités et les chroniques du royaume.">
       <div className="panel-title"><span className="eyebrow">LES ROYAUMES</span>
         <h2>Mes mondes</h2></div>
