@@ -176,7 +176,8 @@ export default async function CityPage({
               buildingAnswer.data!.effects.mine_additive_bonus,
             ).map(([resource,value]) => `${resource} +${Number(value)*100} %`).join(", ")}.</p>
           )}
-          <h3 id="city-history">Historique des chantiers</h3>
+          <section id="city-history" aria-labelledby="city-history-heading">
+          <h3 id="city-history-heading">Historique des chantiers</h3>
           {buildingAnswer.data?.history?.length ? (
             <ol className="construction-history-list">
               {buildingAnswer.data.history.map(order=>(
@@ -196,6 +197,7 @@ export default async function CityPage({
           <p className="notice">Une construction active par cité, débit immédiat et achèvement par worker PostgreSQL.
           La convention d'arrondi à l'entier supérieur est expérimentale, pas une règle historique certifiée.
           Le journal conserve les douze derniers ordres et leurs coûts réels.</p>
+          </section>
         </div>
         <p className="notice">
           {city.production_active
