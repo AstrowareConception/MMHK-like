@@ -1,6 +1,10 @@
 -- V013: Seven ordinary army positions, preserving the aggregated owned unit counts.
 -- Positions 1..7 map to historic Jactari ordinary indices 2..8.
 -- No battle effects are implied by editing an army formation.
+-- PostgreSQL requires an exact unique key for a composite foreign key:
+-- the PK(hero_id) alone does NOT authorize REFERENCES(city_id,hero_id).
+CREATE UNIQUE INDEX city_heroes_city_hero_unique
+  ON city_heroes(city_id,hero_id);
 CREATE TABLE hero_formation_slots (
   city_id uuid NOT NULL,
   hero_id uuid NOT NULL,
