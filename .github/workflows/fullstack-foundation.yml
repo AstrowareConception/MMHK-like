@@ -129,7 +129,8 @@ jobs:
 
   local-six-service-smoke:
     name: Build and start six-service localhost stack with a real demo
-    runs-on: ubuntu-latest
+    # Playwright 1.56 Chromium supports Noble, not the runner's newer Ubuntu 26.04.
+    runs-on: ubuntu-24.04
     timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
