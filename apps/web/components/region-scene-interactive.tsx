@@ -1,19 +1,20 @@
 "use client";
 import {useState,type KeyboardEvent} from "react";
 import type {RegionView} from "../lib/server-api";
-const MINE_LABELS:Record<string,string>={
-  gold:"Or",wood:"Bois",ore:"Minerai",crystal:"Cristal",
-  gems:"Gemmes",sulfur:"Soufre",mercury:"Mercure"
-};
-type Cell={i:number;j:number};
-const cellLabel=(c:Cell|null)=>c?"("+c.i+", "+c.j+")":"—";
-export function RegionSceneInteractive({region,background}:{region:RegionView;background:string|null}) {
-  const [hover,setHover]=useState<Cell|null>(null);
-  const [selected,setSelected]=useState<Cell>({i:2,j:2});
+import {REGION_VIEW,regionCellCenter,regionPolygon,type RegionCell} from "../lib/region-geometry";
+
+const MINE_LABELS:Record<string,string>={gold:"Or",wood:"Bois",ore:"Minerai",crystal:"Cristal",
+  gems:"Gemmes",sulfur:"Soufre",mercury:"Mercure"};
+const cellLabel=(c:RegionCell|null)=>c?"("+c.i+", "+c.j+")":"—";
+
+export function RegionSceneInteractive({region,background}:{region:RegionView;background:string|null}){
+  const [hover,setHover]=useState<RegionCell|null>(null);
+  const [selected,setSelected]=useState<RegionCell>({i:2,j:2});
+  const [showGuide,setShowGuide]=useState(!background);
   const known=region.cells.find(c=>c.i===selected.i&&c.j===selected.j);
-  const activate=(c:Cell)=>setSelected({i:c.i,j:c.j});
-  const key=(e:KeyboardEvent<SVGGElement>,c:Cell)=>{
-    if(e.key==="Enter"||e.key===" "){e.preventDefault();activate(c);}
+  const activate=(cell:RegionCell)=>setSelected({i:cell.i,j:cell.j});
+  const key=(e:KeyboardEvent<SVGGElement>,cell:RegionCell)=>{
+    if(e.key==="Enter"||e.key===" "){e.preventDefault();activate(cell);}
   };
   return <section className="region-scene-container" aria-labelledby="region-view-title">
     <div className="map-section-heading">
@@ -25,60 +26,55 @@ export function RegionSceneInteractive({region,background}:{region:RegionView;ba
       <span>Région du monde : <strong>({region.world_x}, {region.world_y})</strong></span>
       <span>Survol local : <strong data-testid="region-hover">{cellLabel(hover)}</strong></span>
       <span>Sélection locale : <strong data-testid="region-selection">{cellLabel(selected)}</strong></span>
+      <label className="map-grid-switch"><input type="checkbox" checked={showGuide}
+        onChange={e=>setShowGuide(e.target.checked)}/>Afficher le quadrillage</label>
     </div>
-    <svg className="region-scene" viewBox="0 0 680 500" role="group"
-      aria-label="25 emplacements régionaux interactifs, sans terrains ni mines fictifs"
-      onMouseLeave={()=>setHover(null)}>
-      <defs>
-        <linearGradient id="region-ground" x1="0" y1="0" x2="1" y2="1">
-          <stop offset="0%" stopColor="#56765f"/><stop offset="100%" stopColor="#304f49"/>
-        </linearGradient>
-      </defs>
-      <rect width="680" height="500" rx="9" fill="#203a42"/>
-      {background&&<image href={background} x="0" y="0" width="680" height="500"
-        preserveAspectRatio="xMidYMid slice"/>}
-      {!background && <path d="M0 220 L200 90 L400 150 L680 65 L680 500 L0 500 Z"
-        fill="#496b67" opacity=".24" pointerEvents="none"/>}
+    <svg className="region-scene" viewBox={"0 0 "+REGION_VIEW.width+" "+REGION_VIEW.height}
+      aria-label="25 cases régionales : survol, sélection et ville centrale"
+      role="group" onMouseLeave={()=>setHover(null)}>
+      <rect width="680" height="562" fill="#203a42"/>
+      {background?<image href={background} x="0" y="0" width="680" height="562"
+        preserveAspectRatio="xMidYMid meet" pointerEvents="none"/>:
+        <path d="M0 230 L200 100 L400 185 L680 72 L680 562 L0 562Z" fill="#426f56" pointerEvents="none"/>}
       {region.cells.map(cell=>{
-        // One logical tile occupies one isometric diamond, anchored to the floor.
-        const cx=340+(cell.i-cell.j)*57,cy=116+(cell.i+cell.j)*36;
-        const polygon=String(cx)+","+String(cy-35)+" "+String(cx+57)+","+String(cy)+" "+
-          String(cx)+","+String(cy+35)+" "+String(cx-57)+","+String(cy);
+        const {x:cx,y:cy}=regionCellCenter(cell.i,cell.j);
         const owned=cell.kind==="owned_city";
         const chosen=cell.i===selected.i&&cell.j===selected.j;
         const hovered=cell.i===hover?.i&&cell.j===hover?.j;
         return <g key={cell.i+":"+cell.j} data-region-i={cell.i} data-region-j={cell.j}
+          className="region-selectable-cell"
           role="button" tabIndex={0}
           aria-label={"Sélectionner la case régionale ("+cell.i+", "+cell.j+")"+
-            (owned?" : ville "+region.city_name:" : contenu non cartographié")}
-          onClick={()=>activate(cell)}
-          onKeyDown={event=>key(event,cell)}
+            (owned?" : ville "+region.city_name:" : non cartographiée")}
           onMouseEnter={()=>setHover({i:cell.i,j:cell.j})}
-          className="region-selectable-cell">
-          <title>{"Case régionale ("+cell.i+", "+cell.j+") — "+
-            (owned?"Votre cité":"Occupation et terrain non cartographiés")}</title>
-          <polygon points={polygon} strokeWidth={chosen?3:hovered?2:1}
-            fill={chosen?"#b99456":hovered?"#eedba0":owned?"#a48b60":"url(#region-ground)"}
-            fillOpacity={chosen?.55:hovered?.3:owned?.82:background?.065:.82}
-            stroke={chosen?"#fff0bc":hovered?"#f3dba1":"#a4b5a0"}
-            strokeOpacity={chosen||hovered||owned?1:background?.22:.85} />
-          {owned?<a href={"/cities/"+region.city_id}
+          onClick={()=>activate(cell)} onKeyDown={e=>key(e,cell)}>
+          <title>{"Case ("+cell.i+", "+cell.j+") · "+(owned?"Ville du joueur":"Terrain inconnu")}</title>
+          <polygon points={regionPolygon(cell.i,cell.j)}
+            data-testid={"region-tile-"+cell.i+"-"+cell.j}
+            fill={chosen?"#c79c4f":owned?"#a48b60":"#7da18a"}
+            fillOpacity={chosen?.32:owned?.22:background?.005:.23}
+            stroke={chosen?"#ffe7a3":hovered?"#fff4c8":"#c0d0c2"}
+            strokeWidth={chosen?3:hovered?3:1}
+            strokeOpacity={chosen||hovered?1:showGuide?.6:0}
+            vectorEffect="non-scaling-stroke"/>
+          {owned&&<a href={"/cities/"+region.city_id}
             aria-label={"Entrer dans la ville "+region.city_name}>
-            <path d={"M"+(cx-22)+" "+(cy+8)+" L"+(cx-22)+" "+(cy-30)+
-              " L"+cx+" "+(cy-51)+" L"+(cx+22)+" "+(cy-30)+" L"+(cx+22)+" "+(cy+8)+"Z"}
+            <path d={"M"+(cx-18)+" "+(cy+6)+"L"+(cx-18)+" "+(cy-27)+"L"+cx+" "+(cy-43)+
+              "L"+(cx+18)+" "+(cy-27)+"L"+(cx+18)+" "+(cy+6)+"Z"}
               fill="#dfc388" stroke="#253c42" strokeWidth="2"/>
-            <path d={"M"+(cx-12)+" "+(cy-30)+" L"+cx+" "+(cy-55)+" L"+(cx+12)+" "+(cy-30)+"Z"}
+            <path d={"M"+(cx-10)+" "+(cy-27)+"L"+cx+" "+(cy-49)+"L"+(cx+10)+" "+(cy-27)+"Z"}
               fill="#725d4b" stroke="#253c42" strokeWidth="1.5"/>
-            <rect x={cx-6} y={cy-11} width="12" height="20" fill="#435358"/>
-            <text x={cx} y={cy+31} textAnchor="middle" fill="#fff3d1"
-              fontSize="12" stroke="#172e36" strokeWidth="3" paintOrder="stroke">Ville</text>
-          </a>:(!background||chosen||hovered) ? <text x={cx} y={cy+4} textAnchor="middle" fill="#d1d9c9"
-            fontSize="12" pointerEvents="none">?</text> : null}
+            <rect x={cx-5} y={cy-11} width="10" height="17" fill="#435358"/>
+            <text x={cx} y={cy+26} textAnchor="middle" fontSize="12"
+              fill="#fff3d1" stroke="#172e36" strokeWidth="3" paintOrder="stroke">Ville</text>
+          </a>}
+          {!owned&&(hovered||chosen||!background)&&<text x={cx} y={cy+4} textAnchor="middle"
+            fill="#fff3cf" fontSize="12" pointerEvents="none">?</text>}
         </g>;
       })}
-      <rect x="10" y="455" width="406" height="32" rx="4" fill="#10232ccc" pointerEvents="none"/>
-      <text x="22" y="475" fill="#e5d8b2" fontSize="11" pointerEvents="none">
-        Décor historique · occupations non cartographiées
+      <rect x="8" y="523" width="430" height="28" rx="3" fill="#10232cdd" pointerEvents="none"/>
+      <text x="20" y="542" fontSize="11" fill="#f1dfb8" pointerEvents="none">
+        Décor historique · cases encore non cartographiées
       </text>
     </svg>
     <div className="region-selected-details" role="status">
@@ -90,17 +86,15 @@ export function RegionSceneInteractive({region,background}:{region:RegionView;ba
     <div className="region-legend">
       <div><strong>Mines rattachées à cette cité</strong>
         <p>{region.mine_types_unlocated.map(k=>MINE_LABELS[k]??k).join(" · ")||"Aucune mine enregistrée"}</p>
-        <small>Types connus dans PostgreSQL, emplacements non définis sur les 25 cases.</small>
-      </div>
+        <small>Types connus en base, emplacements non déterminés.</small></div>
       <div><strong>Régions voisines (monde torique)</strong>
         <div className="region-neighbors">
           {region.surrounding_world_regions.map(c=><span key={c.dx+":"+c.dy}
             className={c.is_current?"current":""}
-            title={c.is_current?"Région actuelle":"Coordonnées seules ; contenu non découvert"}>
+            title={c.is_current?"Région actuelle":"Coordonnées seulement, aucune reconnaissance"}>
             {c.x},{c.y}</span>)}
         </div>
-        <small>Coordonnées du monde, distinctes des cases locales (i,j).</small>
-      </div>
+        <small>Coordonnées mondiales distinctes des cases locales (i,j).</small></div>
     </div>
   </section>;
 }

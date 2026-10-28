@@ -377,3 +377,10 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
 .world-atlas-interactive:focus-visible {outline:2px solid #f4d78a;}
 .world-atlas-interactive text {user-select:none;}
 @media (prefers-reduced-motion: reduce) {.map-edge-control circle {transition:none;}}
+
+/* Region raster is 680 × 562, and every hit polygon shares its visible geometry. */
+.region-scene {aspect-ratio:680 / 562;}
+.region-selectable-cell {cursor:pointer;outline:none;}
+.region-selectable-cell:focus-visible polygon {stroke:#fff1b5;stroke-width:3;stroke-opacity:1;}
+.region-selectable-cell polygon {transition:fill-opacity .14s ease,stroke-opacity .14s ease;}
+@media(prefers-reduced-motion:reduce){.region-selectable-cell polygon {transition:none;}}

@@ -93,6 +93,8 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+      - name: Validate native region projection and hitboxes (REG-001 / UIX-003)
+        run: node --experimental-strip-types --test ../../tools/tests/region-geometry.test.mjs
       - name: Validate toroidal camera and diamond hit testing (existing US)
         run: node --experimental-strip-types --test ../../tools/tests/map-geometry.test.mjs
       - name: Install pinned top-level dependencies
