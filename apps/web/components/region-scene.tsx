@@ -41,7 +41,7 @@ export function RegionScene({ region }: { region: RegionView }) {
               <polygon points={polygon}
                 fill={owned ? "#a48b60" : "url(#region-ground)"}
                 stroke={owned ? "#f4dba0" : "#8aa28b"} strokeWidth={owned ? 3 : 1}
-                fillOpacity={owned ? 1 : .9}/>
+                fillOpacity={owned ? 1 : historicRegion ? .32 : .9}/>
               {owned ? (
                 <a href={`/cities/${region.city_id}`} aria-label={`Entrer dans la ville ${region.city_name}`}>
                   <title>{region.city_name} · entrer en ville</title>

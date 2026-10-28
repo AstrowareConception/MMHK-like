@@ -313,3 +313,17 @@ body { background: radial-gradient(ellipse at 50% -15%,#655a44 0%,#28343a 27%,#1
   .timeline-event,.timeline-cluster{transition:none;}
   .kingdom-screen-content .tile-link:hover{transform:none;}
 }
+
+/* Login uses the same metal and parchment palette without exposing private files. */
+body:has(.shell:not(.kingdom-shell)) .masthead {
+  padding:35px 10px;margin-bottom:10px;border-bottom:3px ridge #c4a879;
+  background:radial-gradient(ellipse at center,#5e5f4a66,#16242e22 70%);
+}
+body:has(.shell:not(.kingdom-shell)) .masthead h1 {font:small-caps clamp(52px,8vw,88px) Georgia,serif;
+  letter-spacing:.025em;color:#f4e6bc;text-shadow:0 4px 12px #000c;}
+body:has(.shell:not(.kingdom-shell)) .shell {max-width:970px;padding-top:24px;}
+body:has(.shell:not(.kingdom-shell)) .panel {border:4px ridge #af9765;border-radius:1px;
+  background:linear-gradient(135deg,#3b4a4c,#1a2832 43%,#202c31);
+  box-shadow:inset 0 0 28px #0008,0 19px 50px #000a;}
+body:has(.shell:not(.kingdom-shell)) .login-form button {
+  border:2px ridge #d4bb85;color:#182229;background:linear-gradient(#f0d7a5,#ba9d68);}
