@@ -60,6 +60,22 @@ function category(path) {
   if (path.includes('/themes/public-safe/')) return 'public_safe';
   return 'other';
 }
+const cdxFile=resolve(root,'data/analysis/wayback-mmhk-cdx-2026-10-23.json');
+const archives=new Map();
+if(existsSync(cdxFile)){
+  const rows=JSON.parse(readFileSync(cdxFile,'utf8'));
+  for(const record of rows.slice(1)){
+    if(!Array.isArray(record)||record.length<4) continue;
+    const [original,mime,timestamp,digest]=record;
+    const marker='mightandmagicheroeskingdoms.ubi.com/';
+    const offset=original.indexOf(marker);
+    if(offset<0) continue;
+    const logical=original.slice(offset+marker.length).split('?')[0];
+    archives.set(logical,{original_url:original,
+      archive_url:'https://web.archive.org/web/'+timestamp+'id_/'+original,
+      archived_at:timestamp,archive_digest:digest,archived_mime:mime});
+  }
+}
 const assets=[];
 for (const dir of roots) for (const full of walk(resolve(root,dir))) {
   const path=relative(root,full).split(sep).join('/');
@@ -70,6 +86,8 @@ for (const dir of roots) for (const full of walk(resolve(root,dir))) {
   const source=path.includes('/cdn-bulk/')||path.includes('/ubisoft-archive/')?'ubisoft_cdn':
     path.includes('/acidcave/')?'acidcave':path.includes('/Jactari/')?'jactari':
     path.includes('/Screenshots/')?'capture':path.includes('/themes/public-safe/')?'project_original':'unknown';
+  const archiveKey=path.split('/cdn-bulk/')[1] || path.split('/ubisoft-archive/')[1];
+  const archive=archiveKey ? archives.get(archiveKey) : null;
   const privateSource=source!=='project_original';
   const image=['png','gif','jpg','jpeg','webp','svg'].includes(ext);
   assets.push({
@@ -77,9 +95,14 @@ for (const dir of roots) for (const full of walk(resolve(root,dir))) {
     faction:path.match(/\/(HAVEN|ACADEMY|INFERNO|NECROPOLIS|SYLVAN|DUNGEON)\//i)?.[1]?.toUpperCase()??null,
     format:ext, kind:image?'image':'related_source', ...meta(bytes,ext),
     bytes:bytes.length, sha256:createHash('sha256').update(bytes).digest('hex'),
-    source_exact:'repository:'+path,
-    original_url_inferred:match?'http://static5.cdn.ubi.com/u/HOMMK/mightandmagicheroeskingdoms.ubi.com/'+match[1]:null,
-    provenance:source, provenance_confidence:'path_based',
+    source_exact:archive?.archive_url || 'repository:'+path,
+    archive_url:archive?.archive_url || null, archive_timestamp:archive?.archived_at || null,
+    archive_digest:archive?.archive_digest || null,
+    original_url:archive?.original_url || null,
+    original_url_inferred:archive?null:(match?'http://static5.cdn.ubi.com/u/HOMMK/mightandmagicheroeskingdoms.ubi.com/'+match[1]:null),
+    provenance:source, provenance_confidence:archive?'cdx_indexed': 'path_based',
+    historical_fidelity_confidence:source==='project_original'?'original_project_art':
+      archive?'archived_url_matched_file_path_not_authenticity_proof':'unverified',
     availability:'on_disk', redistribution:privateSource?'restricted_or_unverified':'project_owned',
     needs_reconstruction:false
   });
@@ -101,7 +124,8 @@ const missing=expected.filter(e=>!assets.some(a=>a.path.endsWith('/'+e.relative_
 const categories={};
 for(const a of assets)categories[a.category]=(categories[a.category]||0)+1;
 const summary={schema_version:1,generated_at:new Date().toISOString(),roots,
-  found:assets.length,unique_sha256:hashes.size,duplicate_groups:duplicates.length,
+  found:assets.length,archive_index_matches:assets.filter(a=>a.provenance_confidence==='cdx_indexed').length,
+  unique_sha256:hashes.size,duplicate_groups:duplicates.length,
   duplicate_excess:assets.length-hashes.size,expected_city_files:expected.length,
   missing_city_files:missing.length,categories,visual_similarity_tested:false};
 if(!check){
