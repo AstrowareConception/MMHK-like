@@ -249,6 +249,27 @@ schématique et non d'un rendu fidèle achevé.
 Lire [la documentation technique](../../docs/specifications/WORKERS-SUPERVISES-VILLE-VISUELLE.md)
 pour les garanties, tests, limites de supervision et commandes d'arrêt.
 
+## Navigation privée monde → région → ville
+
+Deux endpoints en lecture seule complètent l'API :
+
+| Méthode | Endpoint | Règle |
+| --- | --- | --- |
+| GET | `/api/v1/me/worlds/{world_id}/overview` | Monde du compte et ses **propres** villes |
+| GET | `/api/v1/me/cities/{city_id}/region` | 25 cases régionales schématiques, centre urbain, types de mines non positionnés et coordonnées toriques voisines |
+
+Depuis `/worlds/{worldId}`, la carte permet d'ouvrir
+`/cities/{cityId}/region`, puis `/cities/{cityId}`. La ville
+renvoie également vers sa région et vers le monde.
+
+Aucune ville étrangère, donnée de terrain non vérifiée, répartition de mines,
+PNJ ou donnée de reconnaissance ne sont exposés. Les tests PostgreSQL
+vérifient aussi le cas de **deux comptes membres du même monde**.
+Les fonds et cartes sont des SVG/CSS originaux, sans images Ubisoft
+servies depuis les archives.
+
+Voir [NAVIGATION-MONDE-REGION-VILLE.md](../../docs/specifications/NAVIGATION-MONDE-REGION-VILLE.md).
+
 ## Limites explicites avant tout déploiement public
 
 - Aucun mécanisme d'inscription publique, réinitialisation de mot de passe,
