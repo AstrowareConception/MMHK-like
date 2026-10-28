@@ -53,6 +53,8 @@ services:
     environment:
       MMHK_API_INTERNAL_URL: http://api:8000
       NODE_ENV: production
+      # HTTP is allowed only inside an authenticated SSH tunnel to localhost.
+      MMHK_PREVIEW_LOOPBACK_ONLY: "true"
     ports:
       - "127.0.0.1:${MMHK_PREVIEW_PORT:-3001}:3000"
     depends_on: [api]
