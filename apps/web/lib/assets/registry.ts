@@ -2,6 +2,10 @@
 export const ASSETS = {
   "ui.header.background": { publicPath: "/themes/public-safe/header.svg" },
   "ui.panel.main": { publicPath: null },
+  "ui.page.background": { publicPath: null },
+  "world.background": { publicPath: null },
+  "region.background": { publicPath: null },
+  "timeline.background": { publicPath: null },
   "resource.gold": { publicPath: "/themes/public-safe/gold.svg" },
   "resource.wood": { publicPath: "/themes/public-safe/wood.svg" },
   "resource.ore": { publicPath: "/themes/public-safe/ore.svg" },
