@@ -962,3 +962,23 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   .colony-preparation,.colony-orders{padding:12px;}
   .kingdom-city-switcher{padding:8px;}}
 @media(prefers-reduced-motion:reduce){.kingdom-city-switcher a{scroll-behavior:auto;}}
+
+
+/* Real local treasuries — totals are intentionally NOT pooled between cities. */
+.realm-treasury-summary{margin:18px 0;padding:16px;
+  border:2px ridge #ad9469;background:linear-gradient(130deg,#213841,#102831);}
+.realm-treasury-summary h2{font:small-caps 25px Georgia,serif;color:#f0dcad;margin:0 0 10px;}
+.realm-treasury-summary p{font:12px/1.7 system-ui,sans-serif;color:#c9d1cb;}
+.realm-stock-scroll{overflow-x:auto;max-width:100%;border:1px solid #9d8863;}
+.realm-treasury-summary table{width:100%;min-width:790px;border-collapse:collapse;
+  font:12px/1.5 system-ui,sans-serif;font-variant-numeric:tabular-nums;color:#e9e0c7;}
+.realm-treasury-summary th,.realm-treasury-summary td{
+  padding:11px 10px;text-align:right;border-bottom:1px solid #8d846659;}
+.realm-treasury-summary th:first-child{text-align:left;white-space:nowrap;}
+.realm-treasury-summary thead th{background:#344a4e;color:#f3d8a8;}
+.realm-treasury-summary tbody tr:nth-child(odd){background:#1e333b;}
+.realm-treasury-summary a{color:#f4d99d;text-decoration:underline;}
+.colony-event-history{list-style:none!important;margin:8px 0!important;padding:4px 0 4px 12px!important;
+  border-left:2px solid #b9a16b;display:grid;gap:4px!important;}
+.colony-event-history li{padding:3px 5px;border-bottom:1px solid #816d4c4f;
+  font:11px/1.6 system-ui,sans-serif;color:#ddcba8;}
