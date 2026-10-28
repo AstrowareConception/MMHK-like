@@ -54,6 +54,10 @@ jobs:
         env:
           MMHK_POSTGRES_PASSWORD: ci_only_password
         run: docker compose -f compose.dev.yaml -f compose.workers.yaml --profile workers config --quiet
+      - name: Build unprivileged worker container
+        run: docker build -f apps/api/Dockerfile.worker -t mmhk-worker-ci .
+      - name: Verify worker CLI boots without database
+        run: docker run --rm mmhk-worker-ci python -m mmhk_api.supervised_worker --help
 
   next-build:
     name: Next.js production build and strict TypeScript
