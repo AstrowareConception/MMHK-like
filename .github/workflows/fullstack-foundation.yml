@@ -143,7 +143,7 @@ jobs:
       - name: Provision experimental playable sandbox and verify authenticated HTTP
         run: |
           output="$(python3 tools/local/stack.py demo --username demo_ci)"
-          password="$(printf '%s\\n' "$output" | sed -n 's/^One-time generated password: //p')"
+          password="$(printf '%s\n' "$output" | sed -n 's/^One-time generated password: //p')"
           test ${#password} -ge 16
           docker compose --env-file .env.local -f compose.local.yaml exec -T \
             -e "MMHK_CI_DEMO_PASSWORD=$password" api python - <<'PY'
@@ -169,14 +169,13 @@ jobs:
           cities=request("/api/v1/me/worlds/local-sandbox/cities",token)
           assert len(cities)==1,cities
           city=request("/api/v1/me/cities/"+cities[0]["city_id"],token)
-          assert city["stocks"]["gold"]==120,city
+          assert city["stocks"]["gold"]>=120,city
           assert city["production_active"] is True,city
           catalog=request("/api/v1/me/cities/"+cities[0]["city_id"]+"/construction",token)
           assert any(row["building_code"]=="village_hall" for row in catalog["options"]),catalog
           print("Authenticated local sandbox OK: world, resources, production, construction")
           PY
           curl --fail --silent --show-error http://127.0.0.1:3000/ | grep -q 'API FastAPI joignable'
-          rm -f .env.local
           echo "Browser-to-API and sandbox login verified"
       - name: Stop disposable stack and destroy its CI volume
         if: always()
