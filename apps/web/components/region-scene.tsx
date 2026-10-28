@@ -1,4 +1,5 @@
 import type { RegionView } from "../lib/server-api";
+import { resolveAssetUrl } from "../lib/assets/runtime";
 
 const MINE_LABELS: Record<string,string> = {
   gold: "Or", wood: "Bois", ore: "Minerai", crystal: "Cristal",
@@ -6,6 +7,7 @@ const MINE_LABELS: Record<string,string> = {
 };
 export function RegionScene({ region }: { region: RegionView }) {
   const topological = region.surrounding_world_regions;
+  const historicRegion=resolveAssetUrl("region.background");
   return (
     <section className="region-scene-container" aria-labelledby="region-view-title">
       <div className="map-section-heading">
@@ -24,6 +26,7 @@ export function RegionScene({ region }: { region: RegionView }) {
           </linearGradient>
         </defs>
         <rect width="680" height="500" rx="9" fill="#203a42"/>
+        {historicRegion && <image href={historicRegion} x="0" y="0" width="680" height="500" preserveAspectRatio="xMidYMid slice" /> }
         <path d="M0 220 L200 90 L400 150 L680 65 L680 500 L0 500 Z"
           fill="#496b67" opacity=".62"/>
         {region.cells.map((cell) => {

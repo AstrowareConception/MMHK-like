@@ -7,7 +7,7 @@ import {timeRemaining,timelinePercent,type TimelineEvent,type TimelineResponse} 
 function dueLabel(at:string):string {
   return new Date(at).toLocaleString("fr-FR",{day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit"});
 }
-export function TopTimelineBar({initial}:{initial:TimelineResponse|null}) {
+export function TopTimelineBar({initial,backgroundUrl}:{initial:TimelineResponse|null;backgroundUrl:string|null}) {
   const router=useRouter();
   const [state,setState]=useState<TimelineResponse|null>(initial);
   const [clock,setClock]=useState(0);
@@ -56,7 +56,8 @@ export function TopTimelineBar({initial}:{initial:TimelineResponse|null}) {
     return [...buckets.values()];
   },[state,now,hours]);
   return (
-    <section role="region" aria-label="Frise temporelle du royaume" className="kingdom-timeline">
+    <section role="region" aria-label="Frise temporelle du royaume" className="kingdom-timeline"
+      style={backgroundUrl?{backgroundImage:"linear-gradient(90deg,#141e23e8,#253038ba),url("+JSON.stringify(backgroundUrl)+")"}:undefined}>
       <div className="timeline-title">
         <span className="timeline-crest" aria-hidden="true">⌛</span>
         <div><strong>Chronique du royaume</strong><small>Échéances des {hours} prochaines heures</small></div>

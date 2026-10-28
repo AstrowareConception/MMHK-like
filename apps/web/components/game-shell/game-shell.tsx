@@ -20,7 +20,8 @@ export async function GameShell({token,title,eyebrow,description,worldId,cityId,
   return <main className="shell kingdom-shell"
     style={backdrop?{backgroundImage:"linear-gradient(180deg,#101a21a8,#101820e8),url("+JSON.stringify(backdrop)+")"}:undefined}>
     <div className="kingdom-frame">
-      <TopTimelineBar initial={response.ok?response.data??null:null}/>
+      <TopTimelineBar initial={response.ok?response.data??null:null}
+        backgroundUrl={resolveAssetUrl("timeline.background")}/>
       <header className="kingdom-masthead">
         <div className="kingdom-emblem" aria-hidden="true">✦</div>
         <div className="kingdom-brand"><span>MIGHT &amp; MAGIC · HEROES KINGDOMS</span>

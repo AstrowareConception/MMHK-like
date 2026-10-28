@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { signOut } from "../../../actions";
+import { GameShell } from "../../../../components/game-shell/game-shell";
 import { RegionScene } from "../../../../components/region-scene";
-import { privateApi, sessionToken, type RegionView } from "../../../../lib/server-api";
+import { privateApi, sessionToken, type RegionView, type CityDetail } from "../../../../lib/server-api";
 
 export const dynamic = "force-dynamic";
 
@@ -25,24 +25,13 @@ export default async function RegionPage({
       <Link href="/">Retour aux mondes</Link></main>;
   }
   const region = response.data;
+  const ownCity=await privateApi<CityDetail>("/api/v1/me/cities/"+encodeURIComponent(cityId),token);
   return (
-    <main className="shell">
-      <header className="masthead compact">
-        <span className="eyebrow">GUERRE DES LARMES · RÉGION</span>
-        <h1>{region.city_name}</h1>
-        <p className="intro">
-          Région ({region.world_x}, {region.world_y}) · Monde {region.world_id}
-        </p>
-      </header>
-      <section className="panel">
-        <nav className="nav" aria-label="Navigation du royaume">
-          <Link href="/">Mes mondes</Link>
-          <Link href={`/worlds/${encodeURIComponent(region.world_id)}`}>
-            Carte du monde
-          </Link>
-          <Link href={`/cities/${region.city_id}`}>Entrer en ville</Link>
-          <form action={signOut}><button type="submit">Déconnexion</button></form>
-        </nav>
+    <GameShell token={token} title={region.city_name}
+      eyebrow="ROYAUME · VUE RÉGIONALE"
+      description={"Région ("+region.world_x+", "+region.world_y+") · "+region.world_id}
+      worldId={region.world_id} cityId={region.city_id}
+      stocks={ownCity.ok?ownCity.data?.stocks:undefined}>
         <RegionScene region={region}/>
         <div className="region-actions">
           <Link className="scene-action" href={`/cities/${region.city_id}`}>
@@ -57,7 +46,6 @@ export default async function RegionPage({
           enregistrés, sans localiser artificiellement les mines, les PNJ
           ni les bâtiments régionaux. Aucune action militaire n'est possible ici.
         </p>
-      </section>
-    </main>
+    </GameShell>
   );
 }

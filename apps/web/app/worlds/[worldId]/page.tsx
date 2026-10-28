@@ -1,8 +1,8 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
-import { signOut } from "../../actions";
+import { GameShell } from "../../../components/game-shell/game-shell";
 import { WorldAtlas } from "../../../components/world-atlas";
-import { privateApi, sessionToken, type WorldOverview } from "../../../lib/server-api";
+import { privateApi, sessionToken, type WorldOverview, type CityDetail } from "../../../lib/server-api";
 
 export const dynamic = "force-dynamic";
 
@@ -24,19 +24,16 @@ export default async function WorldPage({
       <Link href="/">Retour aux mondes</Link></main>;
   }
   const world = result.data;
+  const currentCity=world.cities[0];
+  const cityDetail=currentCity
+    ?await privateApi<CityDetail>("/api/v1/me/cities/"+encodeURIComponent(currentCity.city_id),token)
+    :null;
   return (
-    <main className="shell">
-      <header className="masthead compact">
-        <span className="eyebrow">GUERRE DES LARMES · MONDE PERSISTANT</span>
-        <h1>{world.name}</h1>
-        <p className="intro">Atlas de vos territoires — {world.world_size} × {world.world_size} régions toriques.</p>
-      </header>
-      <section className="panel">
-        <nav className="nav" aria-label="Navigation du royaume">
-          <Link href="/">Mes mondes</Link>
-          <span className="nav-current">Monde : {world.name}</span>
-          <form action={signOut}><button type="submit">Déconnexion</button></form>
-        </nav>
+    <GameShell token={token} title={world.name}
+      eyebrow="ROYAUME · CARTE DU MONDE"
+      description={"Carte torique de "+world.world_size+" × "+world.world_size+" régions"}
+      worldId={world.world_id} cityId={currentCity?.city_id}
+      stocks={cityDetail?.ok?cityDetail.data?.stocks:undefined}>
         <WorldAtlas world={world} cities={world.cities}/>
         <h2>Mes cités</h2>
         <div className="tile-links">
@@ -59,7 +56,6 @@ export default async function WorldPage({
           Cette carte n'affiche que vos propres villes. Les autres positions,
           le terrain et la reconnaissance ne sont pas disponibles dans cette tranche.
         </p>
-      </section>
-    </main>
+    </GameShell>
   );
 }
