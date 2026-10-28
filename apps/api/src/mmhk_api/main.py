@@ -6,7 +6,7 @@ from typing import Annotated
 from uuid import UUID
 
 import psycopg
-from fastapi import Depends, FastAPI, HTTPException, Response, status
+from fastapi import Depends, FastAPI, HTTPException, Request, Response, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -14,6 +14,10 @@ from .construction import (
     ConstructionConflict, ConstructionNotFound, catalog_for_city, start_construction,
 )
 from .map_views import MapNotFound, own_region, world_overview
+from .login_limits import (
+    RateLimitConfigurationError, reserve_login_attempt, audit_login,
+    reset_account_limit_after_login,
+)
 from .db import connection
 from .security import get_authenticated_id, revoke_session, start_session
 from .worlds import owned_cities, owned_city_detail, owned_worlds
@@ -117,11 +121,36 @@ def jactari_status() -> JactariStatus:
 
 
 @app.post("/api/v1/sessions", response_model=Token)
-def login(payload: Login, db: _db, response: Response) -> Token:
+def login(payload: Login, db: _db, response: Response, request: Request) -> Token:
     response.headers["Cache-Control"] = "no-store"
+    # Only the trusted ASGI peer address. No unverified X-Forwarded-For.
+    remote = request.client.host if request.client is not None else "unknown"
+    try:
+        retry_after = reserve_login_attempt(
+            db, username=payload.username, source_ip=remote,
+        )
+    except RateLimitConfigurationError as exc:
+        raise HTTPException(status_code=503, detail="Authentication unavailable") from exc
+    if retry_after:
+        audit_login(db, username=payload.username, kind="limited")
+        db.commit()  # Keep the audit event despite the HTTPException.
+        raise HTTPException(
+            status_code=429, detail="Too many login attempts",
+            headers={"Retry-After": str(retry_after), "Cache-Control": "no-store"},
+        )
     token = start_session(db, payload.username, payload.password)
+    audit_login(db, username=payload.username,
+                kind="accepted" if token is not None else "rejected")
+    if token is not None:
+        reset_account_limit_after_login(db, username=payload.username)
+    # Rate limit / audit data must remain durable after a 401. The current
+    # generator connection otherwise rolls back on raised HTTPException.
+    db.commit()
     if token is None:
-        raise HTTPException(status_code=401, detail="Invalid credentials")
+        raise HTTPException(
+            status_code=401, detail="Invalid credentials",
+            headers={"Cache-Control": "no-store"},
+        )
     return Token(access_token=token)
 
 
@@ -229,3 +258,14 @@ def my_region(city_id: UUID, db: _db, player: _player) -> dict:
         return own_region(db, player, city_id)
     except MapNotFound as exc:
         raise HTTPException(status_code=404, detail="City not found") from exc
+
+
+@app.middleware("http")
+async def prevent_sensitive_response_caching(request: Request, call_next):
+    response = await call_next(request)
+    response.headers.setdefault("X-Content-Type-Options", "nosniff")
+    response.headers.setdefault("Referrer-Policy", "no-referrer")
+    response.headers.setdefault("X-Frame-Options", "DENY")
+    if request.url.path.startswith("/api/v1/me/") or request.url.path.startswith("/api/v1/sessions"):
+        response.headers["Cache-Control"] = "no-store"
+    return response
