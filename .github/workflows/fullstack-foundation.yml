@@ -8,6 +8,9 @@ on:
       - '.github/workflows/fullstack-foundation.yml'
       - 'compose.dev.yaml'
       - 'compose.workers.yaml'
+      - 'compose.preview.yaml'
+      - '.dockerignore'
+      - 'tools/ci/check_private_preview.py'
   pull_request:
     paths:
       - 'apps/**'
@@ -16,6 +19,9 @@ on:
       - '.github/workflows/fullstack-foundation.yml'
       - 'compose.dev.yaml'
       - 'compose.workers.yaml'
+      - 'compose.preview.yaml'
+      - '.dockerignore'
+      - 'tools/ci/check_private_preview.py'
   workflow_dispatch:
 permissions:
   contents: read
@@ -38,6 +44,7 @@ jobs:
     env:
       MMHK_DATABASE_URL: postgresql://mmhk:mmhk_ci_only@localhost:5432/mmhk_test
       MMHK_TEST_DATABASE_URL: postgresql://mmhk:mmhk_ci_only@localhost:5432/mmhk_test
+      MMHK_LOGIN_RATE_KEY: this-is-a-ci-only-random-like-32-character-test-secret-123
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
@@ -76,3 +83,36 @@ jobs:
         run: npm run build
       - name: Check frontend types
         run: npm run typecheck
+
+  private-preview-build:
+    name: Check SSH-only preview ports and build API/Next images
+    runs-on: ubuntu-latest
+    env:
+      MMHK_PREVIEW_POSTGRES_PASSWORD: ci-only-preview-database-password
+      MMHK_LOGIN_RATE_KEY: ci-only-preview-hmac-key-0123456789abcdef
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assert preview services are never exposed beyond localhost
+        run: python tools/ci/check_private_preview.py
+      - name: Build private FastAPI and Next.js preview images
+        run: docker compose -f compose.preview.yaml build api web
+      - name: Start isolated PostgreSQL and apply actual migrations
+        run: |
+          docker compose -f compose.preview.yaml up -d postgres redis
+          docker compose -f compose.preview.yaml run --rm api python -m mmhk_api.manage migrate
+      - name: Smoke test private Next.js to internal FastAPI connection
+        run: |
+          docker compose -f compose.preview.yaml up -d api web
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error http://127.0.0.1:3001/ 2>/dev/null | grep -q 'API FastAPI joignable'; then
+              echo "Private end-to-end app reachable on localhost only"
+              exit 0
+            fi
+            sleep 2
+          done
+          docker compose -f compose.preview.yaml ps
+          docker compose -f compose.preview.yaml logs --tail=60 api web
+          exit 1
+      - name: Remove disposable CI preview database and containers
+        if: always()
+        run: docker compose -f compose.preview.yaml down --volumes --remove-orphans

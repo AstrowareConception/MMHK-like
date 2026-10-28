@@ -88,6 +88,24 @@ La [spécification complète](docs/specifications/NAVIGATION-MONDE-REGION-VILLE.
 documente les données vérifiées, les inconnues historiques et les limites
 de reconnaissance.
 
+## Connexion renforcée et préproduction privée (28 octobre 2026)
+
+La nouvelle couche de sécurité ajoute un contrôle des tentatives de
+connexion **partagé dans PostgreSQL** (8 par identifiant et 40 par source
+sur 15 minutes), un journal sans identifiant ni IP en clair et une
+gestion du refus temporaire côté Next.js. L'authentification refuse
+de fonctionner lorsqu'une clé de HMAC obligatoire manque.
+
+Une [configuration de préproduction isolée](compose.preview.yaml)
+permet désormais de construire l'API FastAPI et le frontend Next.js,
+sans exposer PostgreSQL, Redis ni l'API, et en publiant le navigateur
+uniquement sur **127.0.0.1:3001**. L'accès distant est prévu par tunnel
+SSH. Le [guide de sécurité et d'exploitation](docs/specifications/SECURITE-AUTH-PREPROD-PRIVEE.md)
+détaille les secrets, migrations et limites restantes.
+
+**La préproduction n'a pas été déployée sur le VPS ;** il s'agit
+d'une configuration versionnée et vérifiée par CI.
+
 ## Lire le dossier
 
 | Besoin | Document |

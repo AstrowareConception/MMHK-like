@@ -270,11 +270,41 @@ servies depuis les archives.
 
 Voir [NAVIGATION-MONDE-REGION-VILLE.md](../../docs/specifications/NAVIGATION-MONDE-REGION-VILLE.md).
 
+## Connexion protégée et preview privé
+
+La migration V006 ajoute des compteurs atomiques de tentatives
+d'authentification : 8 par identifiant et 40 par source en 15 minutes,
+avec refus `429 Retry-After` et audit HMAC non identifiable en clair.
+Une clé secrète `MMHK_LOGIN_RATE_KEY` d'au moins 32 caractères est
+désormais **obligatoire** pour l'API de connexion :
+
+```bash
+export MMHK_LOGIN_RATE_KEY="$(openssl rand -hex 32)"
+python -m mmhk_api.manage migrate
+```
+
+Ne pas régénérer cette clé à chaque redémarrage. Les compteurs et le
+journal restent stockés dans PostgreSQL, sans rendre Redis autoritatif.
+Une purge administrateur est proposée :
+
+```bash
+python -m mmhk_api.manage prune-auth-history --retention-days 30
+```
+
+Une préproduction accessible exclusivement par tunnel SSH est définie
+dans `compose.preview.yaml`, avec API, PostgreSQL et Redis en réseau
+interne et **Next.js publié uniquement sur `127.0.0.1`**.
+Les images conteneurisées et les ports sont vérifiés dans GitHub Actions.
+
+Voir [le guide d'exploitation de la preview](../../docs/specifications/SECURITE-AUTH-PREPROD-PRIVEE.md).
+**Ce code n'a pas été déployé ni rendu public.**
+
 ## Limites explicites avant tout déploiement public
 
 - Aucun mécanisme d'inscription publique, réinitialisation de mot de passe,
-  limitation de fréquence des logins ni audit d'authentification n'est encore
-  en place. **Ne pas exposer cette API à Internet** telle quelle.
+  contrôle de cadence de connexion au niveau du proxy public ni audit de sécurité
+  externe n'est encore en place. Le rate limiting applicatif est partiel.
+  **Ne pas exposer cette API à Internet** telle quelle.
 - La production expérimentale et la construction urbaine sont intégrées,
   mais aucun recrutement, combat ou effet automatique des bâtiments n'est livré.
 - Redis est disponible dans Docker Compose **mais n'est pas utilisé** : ne

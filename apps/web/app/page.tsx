@@ -74,6 +74,8 @@ export default async function Home({
           <>
             <p className="form-intro">Connectez-vous avec un compte provisionné
               par l'administrateur de ce laboratoire.</p>
+            {error === "limited" && <p className="error" role="alert">
+              Trop de tentatives de connexion. Réessayez dans quelques minutes.</p>}
             {error === "credentials" && <p className="error" role="alert">
               Identifiants invalides ou connexion refusée.</p>}
             {error === "unavailable" && <p className="error" role="alert">

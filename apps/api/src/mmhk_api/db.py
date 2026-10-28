@@ -13,9 +13,21 @@ _MIGRATIONS = Path(__file__).resolve().parent / "sql"
 
 def connect() -> psycopg.Connection:
     url = os.environ.get("MMHK_DATABASE_URL")
-    if not url:
-        raise RuntimeError("MMHK_DATABASE_URL is required for world services")
-    return psycopg.connect(url, connect_timeout=4)
+    if url:
+        return psycopg.connect(url, connect_timeout=4)
+    # Libpq parameters avoid constructing a password-bearing URL; a random
+    # password can contain %, @, :, / etc. without manual URL escaping.
+    required = ("PGHOST", "PGDATABASE", "PGUSER", "PGPASSWORD")
+    if all(os.environ.get(key) for key in required):
+        return psycopg.connect(
+            host=os.environ["PGHOST"],
+            dbname=os.environ["PGDATABASE"],
+            user=os.environ["PGUSER"],
+            password=os.environ["PGPASSWORD"],
+            port=int(os.environ.get("PGPORT", "5432")),
+            connect_timeout=4,
+        )
+    raise RuntimeError("MMHK_DATABASE_URL or PGHOST/PGDATABASE/PGUSER/PGPASSWORD required")
 
 
 def connection() -> Iterator[psycopg.Connection]:

@@ -10,6 +10,7 @@ import getpass
 import json
 
 from .db import connect, migrate
+from .login_limits import prune_login_history
 from .economy import configure_haven_mines
 from .construction import configure_building_profile
 from .building_effects import configure_effect_profile, set_building_operational
@@ -69,6 +70,11 @@ def main() -> None:
     switch.add_argument("--city-id",type=UUID,required=True)
     switch.add_argument("--code",required=True)
     switch.add_argument("--enabled",choices=("yes","no"),required=True)
+    prune = sub.add_parser(
+        "prune-auth-history",
+        help="Delete expired authentication buckets and old anonymous events",
+    )
+    prune.add_argument("--retention-days", type=int, default=30)
     args = parser.parse_args()
 
     with connect() as db:
@@ -121,6 +127,11 @@ def main() -> None:
                 },
             )
             print(f"Created experimental building profile {args.code} level {args.level}")
+        elif args.command == "prune-auth-history":
+            buckets, events = prune_login_history(
+                db, retention_days=args.retention_days,
+            )
+            print(f"Pruned {buckets} expired login buckets and {events} old audit events")
         elif args.command=="create-building-effects":
             configure_effect_profile(
                 db,building_code=args.code,target_level=args.level,
