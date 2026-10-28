@@ -15,7 +15,7 @@ export function RegionScene({ region }: { region: RegionView }) {
         </div>
         <span className="map-section-legend">25 emplacements schématiques</span>
       </div>
-      <svg className="region-scene" viewBox="0 0 680 500"
+      <svg className="region-scene" viewBox="0 0 680 500" role="group"
         aria-label="Projection provisoire de 25 emplacements régionaux dont la ville est au centre">
         <defs>
           <linearGradient id="region-ground" x1="0" y1="0" x2="1" y2="1">
