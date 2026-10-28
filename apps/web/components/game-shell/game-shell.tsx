@@ -34,6 +34,8 @@ export async function GameShell({token,title,eyebrow,description,worldId,cityId,
         {cityId&&<>
           <Link href={"/cities/"+encodeURIComponent(cityId)+"/region"}>◆ Ma région</Link>
           <Link href={"/cities/"+encodeURIComponent(cityId)}>⌂ Entrer en ville</Link>
+          <Link href={"/cities/"+encodeURIComponent(cityId)+"/heroes"}>♞ Héros</Link>
+          <Link href={"/cities/"+encodeURIComponent(cityId)+"/forces"}>⚔ Armées</Link>
         </>}
         <form action={signOut}><button type="submit">Déconnexion</button></form>
       </nav>

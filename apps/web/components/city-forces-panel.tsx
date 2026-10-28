@@ -1,5 +1,6 @@
 import {hireCityHero,recruitCityUnits,transferHeroUnits} from "../app/actions";
 import type {CityForces} from "../lib/server-api";
+import Link from "next/link";
 
 const money=(value:number)=>value.toLocaleString("fr-FR");
 const UNIT_ART:Record<string,string>={militia:"/themes/public-safe/haven-militia.svg",archers:"/themes/public-safe/haven-archer.svg"};
@@ -22,6 +23,7 @@ export function CityForcesPanel({cityId,forces,message}:{cityId:string;
     <div className="military-panel-heading">
       <div><span className="eyebrow">FORCES DU ROYAUME · GARNISON &amp; TAVERNE</span>
         <h2>Armées et héros</h2>
+        <Link href={"/cities/"+cityId+"/heroes"} className="scene-action">Gérer les artefacts et fiches de héros</Link>
         <p>Vos recrues, garnisons et compagnons sont enregistrés dans PostgreSQL.</p></div>
       <span className="military-side-tag">HAVRE · ÉTAPE EXPÉRIMENTALE</span>
     </div>
@@ -55,6 +57,7 @@ export function CityForcesPanel({cityId,forces,message}:{cityId:string;
                 <strong>{hero.name}</strong>
                 <small>{hero.archetype==="might"?"Voie de la Force":"Voie de la Magie"} · Niveau {hero.level}</small>
                 <span>{translations[hero.status]??hero.status} · {money(hero.experience)} expérience</span>
+                <Link href={"/cities/"+cityId+"/heroes?hero="+hero.hero_id}>Ouvrir sa fiche et son équipement</Link>
                 {forces.hero_armies.filter(unit=>unit.hero_id===hero.hero_id).map(unit=>
                   <span key={unit.unit_code} className="hero-army-line">{unit.name} : {money(unit.quantity)}</span>)}
               </div>
