@@ -161,6 +161,21 @@ l'économie : seul PostgreSQL fait autorité. Les workers ne résolvent
 aucun combat militaire. Ce Compose n'est pas conçu pour une exploitation
 publique.
 
+## Tests réels du navigateur
+
+Pour vérifier que les opérations fonctionnent jusqu'à l'interface,
+GitHub Actions installe Chromium/Playwright sur un runner Ubuntu 24.04.
+Le test enchaîne connexion, monde, région, ville, construction et
+attente de son achèvement par le worker **sans recharge manuelle**.
+La vue ville utilise une actualisation serveur toutes les 10 secondes
+quand l'onglet est visible. Ce mécanisme n'est pas encore un flux temps
+réel Redis/WebSocket.
+
+Le test de construction a un effet sur les stocks et l'état du monde :
+il doit être lancé sur une **base jetable**. Consultez
+[TEST-NAVIGATEUR-BOUT-EN-BOUT.md](TEST-NAVIGATEUR-BOUT-EN-BOUT.md)
+pour le mode manuel et les limites de ce contrôle.
+
 ## 6. Validation automatisée
 
 GitHub Actions construit les images, lance les six services dans un
