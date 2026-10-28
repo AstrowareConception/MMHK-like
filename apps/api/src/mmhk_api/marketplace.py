@@ -317,6 +317,14 @@ def buy_offer(db: psycopg.Connection, *, owner: UUID, city_id: UUID,
         if offer[3]==owner:
             raise MarketplaceConflict("You cannot buy your own lot")
         _lock_cities(db,[city_id,offer[2]])
+        # A future city transfer must not settle escrow into an unrelated
+        # player's inventory. Verify seller ownership under the city lock.
+        seller_identity=db.execute(
+            "SELECT world_id,owner_account_id FROM cities WHERE city_id=%s",
+            (offer[2],),
+        ).fetchone()
+        if seller_identity!=(world_id,offer[3]):
+            raise MarketplaceConflict("Seller no longer controls the source city")
         now=db.execute("SELECT clock_timestamp()").fetchone()[0]
         if offer[11]!="active" or offer[10]<=now:
             raise MarketplaceConflict("Offer is no longer available")

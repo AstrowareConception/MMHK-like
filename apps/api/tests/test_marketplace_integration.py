@@ -12,7 +12,7 @@ import pytest
 from test_construction_integration import city, client, headers, URL
 from mmhk_api.security import create_account
 from mmhk_api.marketplace import (
-    configure_marketplace_policy, buy_offer, MarketplaceConflict,
+    configure_marketplace_policy, buy_offer, withdraw_offer, MarketplaceConflict,
 )
 
 pytestmark=pytest.mark.skipif(not URL,reason="PostgreSQL test URL required")
@@ -351,3 +351,47 @@ def test_competing_buyers_exactly_one_wins(neighbors):
     assert sorted(buyer_wood)==[20,30]
     assert len(client.get(path(neighbors["seller_city"]),
                           headers=s).json()["my_offers"])==1
+
+
+
+def test_purchase_and_withdrawal_race_never_settle_the_same_escrow_twice(neighbors):
+    """US-ECH-008 CA03: seller cancellation vs last-moment purchase."""
+    created,_=publish(neighbors,headers(neighbors["seller_name"]))
+    offer_id=__import__("uuid").UUID(created.json()["offer_id"])
+    first_order=uuid4()
+    second_order=uuid4()
+    gate=Barrier(2)
+    def try_buy():
+        with psycopg.connect(URL) as db:
+            gate.wait(timeout=10)
+            try:
+                return buy_offer(db,owner=neighbors["buyer"],
+                    city_id=neighbors["buyer_city"],offer_id=offer_id,
+                    order_id=first_order,expected_resource="wood",
+                    expected_quantity=10,expected_price_resource="gold",
+                    expected_price_amount=25)["status"]
+            except MarketplaceConflict:
+                return "blocked"
+    def try_withdraw():
+        with psycopg.connect(URL) as db:
+            gate.wait(timeout=10)
+            try:
+                return withdraw_offer(db,owner=neighbors["seller"],
+                    city_id=neighbors["seller_city"],offer_id=offer_id,
+                    order_id=second_order)["status"]
+            except MarketplaceConflict:
+                return "blocked"
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        a=pool.submit(try_buy)
+        b=pool.submit(try_withdraw)
+        result=[a.result(timeout=30),b.result(timeout=30)]
+    assert "blocked" in result
+    assert ("sold" in result) != ("cancelled" in result)
+    seller_goods=stock(neighbors["seller_city"],"wood")
+    seller_gold=stock(neighbors["seller_city"],"gold")
+    buyer_goods=stock(neighbors["buyer_city"],"wood")
+    buyer_gold=stock(neighbors["buyer_city"],"gold")
+    if "sold" in result:
+        assert (seller_goods,seller_gold,buyer_goods,buyer_gold)==(90,225,30,225)
+    else:
+        assert (seller_goods,seller_gold,buyer_goods,buyer_gold)==(100,200,20,250)
