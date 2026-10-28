@@ -1,14 +1,17 @@
 """Real PostgreSQL integration tests for atomic, versioned merchant trades."""
 from __future__ import annotations
 
-from datetime import datetime
+from concurrent.futures import ThreadPoolExecutor
+from threading import Barrier
 from uuid import uuid4
 
 import psycopg
 import pytest
 
 from test_construction_integration import city, headers, client, URL
-from mmhk_api.merchant import configure_merchant_rate
+from mmhk_api.merchant import (
+    configure_merchant_rate, execute_merchant, MerchantConflict,
+)
 from mmhk_api.building_effects import set_building_operational
 
 
@@ -23,12 +26,15 @@ def setup_market(city, *, built=True):
             receive_resource="wood",policy_id="TEST-TRADER-G",
             numerator=3,denominator=2)
         if built:
-            db.execute(
-                """INSERT INTO urban_city_buildings
-                   (city_id,building_code,level,completed_at)
-                   VALUES(%s,'marketplace',1,clock_timestamp())""",
-                (city["city"],),
-            )
+            # Also satisfy the global demo's marketplace prerequisite when
+            # that operator profile is present in a reused test database.
+            for code in ("village_hall","marketplace"):
+                db.execute(
+                    """INSERT INTO urban_city_buildings
+                       (city_id,building_code,level,completed_at)
+                       VALUES(%s,%s,1,clock_timestamp())""",
+                    (city["city"],code),
+                )
 
 
 def uri(city):
@@ -51,6 +57,8 @@ def request_for(quote, *, order=None):
         "pay_amount":quote["pay_amount"],
         "expected_policy_id":quote["policy_id"],
         "expected_receive_amount":quote["receive_amount"],
+        "expected_numerator":quote["numerator"],
+        "expected_denominator":quote["denominator"],
     }
 
 
@@ -75,7 +83,8 @@ def test_market_locked_until_marketplace_operational(city):
     assert client.get(quote_url(city),headers=outsider).status_code==404
     payload={"order_id":str(uuid4()),"pay_resource":"wood","receive_resource":"ore",
              "pay_amount":6,"expected_receive_amount":3,
-             "expected_policy_id":"TEST-TRADER-1"}
+             "expected_policy_id":"TEST-TRADER-1",
+             "expected_numerator":1,"expected_denominator":2}
     assert client.post(path,headers=owner,json=payload).status_code==409
     assert client.post(path,headers=outsider,json=payload).status_code==404
     assert balances(city,"wood","ore")=={"wood":100,"ore":100}
@@ -134,6 +143,10 @@ def test_invalid_rates_stale_quote_and_insufficient_stock_are_rejected(city):
     }).status_code==409
     assert client.post(uri(city),headers=h,json={
         **request_for(q),"expected_receive_amount":4,
+    }).status_code==409
+    # Changed ratio with identical rounded payout still needs new approval.
+    assert client.post(uri(city),headers=h,json={
+        **request_for(q),"expected_numerator":2,
     }).status_code==409
     assert client.post(uri(city),headers=h,json={
         **request_for(q),"pay_amount":0,
@@ -208,3 +221,34 @@ def test_quote_read_is_side_effect_free_and_cross_city_state_private(city):
     assert client.get(uri(city).replace(str(city["city"]),str(city["other"])),
                       headers=h).status_code==404
     assert balances(city,"gold","wood","ore")==before
+
+
+def test_concurrent_market_orders_cannot_spend_the_same_stock_twice(city):
+    """Two UUIDs at once: only the first can buy against a shared 100-stock."""
+    setup_market(city)
+    assert client.get(uri(city),headers=headers(city["username"])).status_code==200
+    with psycopg.connect(URL) as db:
+        owner_id=db.execute("SELECT owner_account_id FROM cities WHERE city_id=%s",
+                            (city["city"],)).fetchone()[0]
+    q=client.get(quote_url(city,amount=60),headers=headers(city["username"])).json()
+    gate=Barrier(2)
+    def attempt():
+        with psycopg.connect(URL) as db:
+            gate.wait(timeout=8)
+            try:
+                execute_merchant(db,owner=owner_id,city_id=city["city"],
+                                 order_id=uuid4(),pay_resource="wood",
+                                 receive_resource="ore",pay_amount=60,
+                                 expected_policy_id=q["policy_id"],
+                                 expected_receive_amount=q["receive_amount"],
+                                 expected_numerator=q["numerator"],
+                                 expected_denominator=q["denominator"])
+                return "accepted"
+            except MerchantConflict:
+                return "rejected"
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        futures=[pool.submit(attempt) for _ in range(2)]
+        results=[future.result(timeout=20) for future in futures]
+    assert sorted(results)==["accepted","rejected"]
+    assert balances(city,"wood","ore")=={"wood":40,"ore":130}
+    assert len(client.get(uri(city),headers=headers(city["username"])).json()["history"])==1

@@ -30,6 +30,8 @@ CREATE TABLE city_merchant_orders (
   pay_amount bigint NOT NULL CHECK(pay_amount BETWEEN 1 AND 1000000),
   receive_amount bigint NOT NULL CHECK(receive_amount BETWEEN 1 AND 1000000000000),
   rate_policy_id text NOT NULL,
+  rate_numerator bigint NOT NULL CHECK(rate_numerator BETWEEN 1 AND 1000000),
+  rate_denominator bigint NOT NULL CHECK(rate_denominator BETWEEN 1 AND 1000000),
   completed_at timestamptz NOT NULL DEFAULT clock_timestamp(),
   CHECK(pay_resource <> receive_resource)
 );

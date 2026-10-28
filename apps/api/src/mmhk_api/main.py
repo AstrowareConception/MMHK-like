@@ -294,6 +294,8 @@ class MerchantExchangeRequest(StrictDTO):
     pay_amount: int = Field(ge=1, le=1000000)
     expected_policy_id: str = Field(min_length=3, max_length=100)
     expected_receive_amount: int = Field(ge=1, le=1000000000000)
+    expected_numerator: int = Field(ge=1, le=1000000)
+    expected_denominator: int = Field(ge=1, le=1000000)
 
 
 @app.get("/api/v1/me/cities/{city_id}/market")
@@ -334,7 +336,9 @@ def my_city_market_exchange(
             receive_resource=command.receive_resource,
             pay_amount=command.pay_amount,
             expected_policy_id=command.expected_policy_id,
-            expected_receive_amount=command.expected_receive_amount)
+            expected_receive_amount=command.expected_receive_amount,
+            expected_numerator=command.expected_numerator,
+            expected_denominator=command.expected_denominator)
         if receipt["replayed"]:
             response.status_code=200
         return receipt

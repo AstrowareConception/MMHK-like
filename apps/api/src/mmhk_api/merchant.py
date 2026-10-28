@@ -84,12 +84,13 @@ def configure_merchant_rate(db: psycopg.Connection, *, world_id: str,
 
 
 def _active_rate(db: psycopg.Connection, *, world_id: str,
-                 pay_resource: str, receive_resource: str) -> tuple:
+                 pay_resource: str, receive_resource: str,
+                 lock: bool = False) -> tuple:
     rate = db.execute(
         """SELECT policy_id,numerator,denominator
            FROM merchant_rate_policies
            WHERE world_id=%s AND pay_resource=%s AND receive_resource=%s
-             AND enabled""",
+             AND enabled""" + (" FOR SHARE" if lock else ""),
         (world_id,pay_resource,receive_resource),
     ).fetchone()
     if rate is None:
@@ -116,7 +117,8 @@ def market_for_city(db: psycopg.Connection, *, owner: UUID, city_id: UUID) -> di
     ).fetchall() if unlocked else []
     entries = db.execute(
         """SELECT order_id,pay_resource,receive_resource,pay_amount,
-                  receive_amount,rate_policy_id,completed_at
+                  receive_amount,rate_policy_id,rate_numerator,
+                  rate_denominator,completed_at
            FROM city_merchant_orders WHERE city_id=%s
            ORDER BY completed_at DESC,order_id DESC LIMIT 12""",
         (city_id,),
@@ -135,16 +137,17 @@ def market_for_city(db: psycopg.Connection, *, owner: UUID, city_id: UUID) -> di
         "history":[{
             "order_id":str(oid),"pay_resource":pay,"receive_resource":receive,
             "pay_amount":int(paid),"receive_amount":int(gained),
-            "policy_id":policy,"completed_at":completed.isoformat()
-        } for oid,pay,receive,paid,gained,policy,completed in entries],
+            "policy_id":policy,"numerator":int(num),"denominator":int(den),
+            "completed_at":completed.isoformat()
+        } for oid,pay,receive,paid,gained,policy,num,den,completed in entries],
     }
 
 
 def quote_merchant(db: psycopg.Connection, *, owner: UUID, city_id: UUID,
                    pay_resource: str, receive_resource: str, pay_amount: int) -> dict:
+    world_id = _city_world(db,owner=owner,city_id=city_id)
     _validate_trade(pay_resource=pay_resource,receive_resource=receive_resource,
                     pay_amount=pay_amount)
-    world_id = _city_world(db,owner=owner,city_id=city_id)
     unlocked,effects=_market_active(db,city_id=city_id)
     if not unlocked:
         raise MerchantConflict("An operational marketplace is required")
@@ -182,12 +185,17 @@ def quote_merchant(db: psycopg.Connection, *, owner: UUID, city_id: UUID,
 def execute_merchant(db: psycopg.Connection, *, owner: UUID, city_id: UUID,
                      order_id: UUID, pay_resource: str, receive_resource: str,
                      pay_amount: int, expected_policy_id: str,
-                     expected_receive_amount: int) -> dict:
+                     expected_receive_amount: int, expected_numerator: int,
+                     expected_denominator: int) -> dict:
     _validate_trade(pay_resource=pay_resource,receive_resource=receive_resource,
                     pay_amount=pay_amount)
     if (not isinstance(expected_policy_id,str) or not 3<=len(expected_policy_id)<=100 or
         type(expected_receive_amount) is not int or
-        not 1<=expected_receive_amount<=BIGINT):
+        not 1<=expected_receive_amount<=BIGINT or
+        type(expected_numerator) is not int or
+        not 1<=expected_numerator<=MAX_RATIO or
+        type(expected_denominator) is not int or
+        not 1<=expected_denominator<=MAX_RATIO):
         raise MerchantConflict("Invalid quote confirmation")
     with db.transaction():
         world_id=_city_world(db,owner=owner,city_id=city_id,lock=True)
@@ -195,24 +203,28 @@ def execute_merchant(db: psycopg.Connection, *, owner: UUID, city_id: UUID,
         # building changed; an altered request using that UUID is rejected.
         past=db.execute(
             """SELECT city_id,actor_account_id,pay_resource,receive_resource,
-                      pay_amount,receive_amount,rate_policy_id,completed_at
+                      pay_amount,receive_amount,rate_policy_id,rate_numerator,
+                      rate_denominator,completed_at
                FROM city_merchant_orders WHERE order_id=%s""",
             (order_id,),
         ).fetchone()
         if past:
-            if past[:7] != (city_id,owner,pay_resource,receive_resource,
-                           pay_amount,expected_receive_amount,expected_policy_id):
+            if past[:9] != (city_id,owner,pay_resource,receive_resource,
+                           pay_amount,expected_receive_amount,expected_policy_id,
+                           expected_numerator,expected_denominator):
                 raise MerchantConflict("Order identifier already used")
             return _receipt(order_id,pay_resource,receive_resource,
-                            pay_amount,past[5],past[6],past[7],replayed=True)
+                            pay_amount,past[5],past[6],past[7],past[8],
+                            past[9],replayed=True)
         unlocked,effects=_market_active(db,city_id=city_id)
         if not unlocked:
             raise MerchantConflict("An operational marketplace is required")
         policy,num,den=_active_rate(
             db,world_id=world_id,pay_resource=pay_resource,
-            receive_resource=receive_resource)
+            receive_resource=receive_resource,lock=True)
         received=_amount(num,den,pay_amount)
-        if policy!=expected_policy_id or received!=expected_receive_amount:
+        if (policy!=expected_policy_id or received!=expected_receive_amount or
+            num!=expected_numerator or den!=expected_denominator):
             raise MerchantConflict("Merchant quote has changed; request a new quote")
         # City lock serializes with builds and recruitment. Lock both
         # stock rows in a deterministic order for economy-worker compatibility.
@@ -251,22 +263,25 @@ def execute_merchant(db: psycopg.Connection, *, owner: UUID, city_id: UUID,
         db.execute(
             """INSERT INTO city_merchant_orders
                (order_id,city_id,actor_account_id,pay_resource,
-                receive_resource,pay_amount,receive_amount,rate_policy_id,completed_at)
-               VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
+                receive_resource,pay_amount,receive_amount,rate_policy_id,
+                rate_numerator,rate_denominator,completed_at)
+               VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
             (order_id,city_id,owner,pay_resource,receive_resource,
-             pay_amount,received,policy,now),
+             pay_amount,received,policy,num,den,now),
         )
         return _receipt(order_id,pay_resource,receive_resource,
-                        pay_amount,received,policy,now,replayed=False)
+                        pay_amount,received,policy,num,den,now,replayed=False)
 
 
 def _receipt(order_id: UUID, pay_resource: str, receive_resource: str,
              pay_amount: int, received: int, policy: str,
+             numerator: int, denominator: int,
              completed, *, replayed: bool) -> dict:
     return {
         "order_id":str(order_id),"pay_resource":pay_resource,
         "receive_resource":receive_resource,"pay_amount":pay_amount,
         "receive_amount":received,"policy_id":policy,
+        "numerator":int(numerator),"denominator":int(denominator),
         "completed_at":completed.isoformat(),
         "replayed":replayed,"historically_certified":False,
     }
