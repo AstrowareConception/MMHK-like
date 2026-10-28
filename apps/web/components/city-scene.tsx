@@ -87,7 +87,13 @@ export function CityScene({city,catalog}:{city:CityDetail;catalog?:ConstructionC
   const options=catalog?.options??[];
   const active=catalog?.active;
   const tavern=resolveAssetUrl("building.haven.tavern.1");
-  const points=SPOTS.map(spot=>{
+  // A Town Hall visually upgrades the Village Hall, not a second building
+  // standing on top of it. One centre survives at a time.
+  const hallUpgraded=buildings.some(b=>b.building_code==="town_hall"&&b.active);
+  const points=SPOTS.filter(spot=>
+    (spot.code!=="town_hall"||hallUpgraded) &&
+    (spot.code!=="village_hall"||!hallUpgraded)
+  ).map(spot=>{
     const done=buildings.find(b=>b.building_code===spot.code);
     const option=options.find(o=>o.building_code===spot.code);
     return {...spot,done,option,building:active?.building_code===spot.code};
