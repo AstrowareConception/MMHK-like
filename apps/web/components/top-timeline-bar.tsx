@@ -44,7 +44,7 @@ export function TopTimelineBar({initial,backgroundUrl}:{initial:TimelineResponse
     document.addEventListener("visibilitychange",visible);
     return ()=>{alive=false;window.clearInterval(interval);document.removeEventListener("visibilitychange",visible);};
   },[router]);
-  const now=clock+offset;
+  const now=clock?clock+offset:Date.parse(state?.server_now??'')||0;
   const hours=state?.horizon_hours??12;
   const clusters=useMemo(()=>{
     const buckets=new Map<number,{event:TimelineEvent;position:number}[]>();
