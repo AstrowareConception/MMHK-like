@@ -47,6 +47,11 @@ def formation_for_hero(db:psycopg.Connection,*,owner:UUID,city_id:UUID,hero_id:U
     _owned_city(db,owner,city_id)
     status=_hero(db,owner,city_id,hero_id)
     troops=_troops(db,hero_id)
+    names=dict(db.execute(
+        """SELECT p.unit_code,p.display_name FROM city_unit_profiles p
+           JOIN hero_army_units a ON a.unit_code=p.unit_code
+           WHERE a.hero_id=%s AND a.quantity>0""",(hero_id,),
+    ).fetchall())
     stored=_positions(db,hero_id)
     # A stable suggestion is not saved until the owner explicitly confirms it.
     proposed=[{"position":index,"jactari_index":index+1,
@@ -56,7 +61,7 @@ def formation_for_hero(db:psycopg.Connection,*,owner:UUID,city_id:UUID,hero_id:U
     return {"city_id":str(city_id),"hero_id":str(hero_id),"status":status,
             "slots_count":7,"historically_certified_s2":False,
             "positions":planned,"saved":bool(stored),
-            "available_units":[{"unit_code":code,"quantity":int(count)}
+            "available_units":[{"unit_code":code,"name":names.get(code,code),"quantity":int(count)}
                                for code,count in sorted(troops.items())],
             "needs_configuration":len(troops)>7 and not stored,
             "jactari_scope":"ordinary indices 2–8; not yet a full combat order"}

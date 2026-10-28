@@ -194,7 +194,7 @@ export type HeroFormation={
   historically_certified_s2:false;positions:{
     position:number;jactari_index:number;unit_code:string;quantity:number
   }[];saved:boolean;needs_configuration:boolean;
-  available_units:{unit_code:string;quantity:number}[];jactari_scope:string;
+  available_units:{unit_code:string;name:string;quantity:number}[];jactari_scope:string;
 };
 export type MissionReport={
   mission_id:string;city_id:string;hero_id:string;hero_name:string;

@@ -84,7 +84,7 @@ export function HeroFormationEditor({cityId,formation}:{
                 quantity:event.target.value?(r.quantity||1):0})}>
               <option value="">Emplacement libre</option>
               {available.map(unit=><option key={unit.unit_code} value={unit.unit_code}>
-                {unit.unit_code} ({unit.quantity})</option>)}
+                {unit.name} ({unit.quantity})</option>)}
             </select>
           </label>
           <label>Effectif
