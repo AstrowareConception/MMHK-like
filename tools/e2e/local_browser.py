@@ -205,7 +205,7 @@ def main() -> int:
 
 
             # The user can navigate back and log out via the real server action.
-            page.get_by_role("link", name="Carte du monde").click()
+            page.get_by_role("link", name="Revenir à la carte du monde").click()
             expect(page.get_by_role("heading", name="Mes positions dans le monde")).to_be_visible()
             page.get_by_role("button", name="Déconnexion").click()
             expect(page.get_by_role("heading", name="Accéder au royaume")).to_be_visible()
