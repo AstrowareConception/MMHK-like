@@ -51,7 +51,9 @@ export default async function CityPage({
       </header>
       <section className="panel">
         <nav className="nav">
-          <Link href={`/worlds/${encodeURIComponent(city.world_id)}`}>Mes villes</Link>
+          <Link href="/">Mes mondes</Link>
+          <Link href={`/worlds/${encodeURIComponent(city.world_id)}`}>Carte du monde</Link>
+          <Link href={`/cities/${cityId}/region`}>Ma région</Link>
           <form action={signOut}><button type="submit">Déconnexion</button></form>
         </nav>
         <CityScene city={city} catalog={buildingAnswer.data} />
