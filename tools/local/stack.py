@@ -132,6 +132,11 @@ def main() -> int:
     logs.add_argument("--follow", action="store_true")
     demo = sub.add_parser("demo", help="Create ONE local demo account, world and city")
     demo.add_argument("--username", default="joueurdemo")
+    convoy_demo = sub.add_parser(
+        "convoy-demo",help="Opt-in LAB-only second owned city for caravan end-to-end tests"
+    )
+    convoy_demo.add_argument("--username",default="joueurdemo")
+    convoy_demo.add_argument("--enable-second-city",action="store_true")
     sub.add_parser("stop", help="Stop containers without destroying persistent data")
     sub.add_parser("down", help="Remove containers but retain PostgreSQL volume")
     reset = sub.add_parser("reset", help="DANGER: delete all LOCAL PostgreSQL data")
@@ -205,6 +210,11 @@ def main() -> int:
         # No default password in the repository, environment or process list.
         # The trusted Python CLI prints a newly generated password ONCE.
         provision_demo(args.username)
+    elif args.command == "convoy-demo":
+        if not args.enable_second_city:
+            parser.error("convoy-demo requires --enable-second-city")
+        run("exec","-T","api","python","-m","mmhk_api.caravan_demo",
+            "--username",args.username,"--enable-second-city")
     elif args.command == "stop":
         run("stop")
     elif args.command == "down":
