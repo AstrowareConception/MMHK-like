@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { AssetImage } from "./asset-image";
+import { resolveAssetUrl } from "../lib/assets/runtime";
 import type { ConstructionCatalog, CityDetail } from "../lib/server-api";
 
 // These few anchor points come from the archived HAVEN CITYVIEW_CONF
@@ -60,7 +62,11 @@ export function CityScene({
               aria-label={`${spot.label}, niveau ${spot.level}, ${spot.active ? "actif" : "inactif"}`}
               title={`${spot.label} · niveau ${spot.level}`}
             >
-              <span className="city-marker-spire" aria-hidden="true"/>
+              {spot.code === "tavern" && spot.active && resolveAssetUrl("building.haven.tavern.1") ? (
+                <AssetImage id="building.haven.tavern.1" className="city-building-sprite" />
+              ) : (
+                <span className="city-marker-spire" aria-hidden="true"/>
+              )}
               <span className="city-marker-name">{spot.label} · niv. {spot.level}</span>
             </a>
           ))}
@@ -74,8 +80,9 @@ export function CityScene({
       </div>
       <p className="city-scene-disclaimer">
         Décor original de substitution. Seuls certains points d'ancrage proviennent
-        des configurations archivées du client MMHK. Aucun sprite Ubisoft
-        n'est intégré à cette page sans validation préalable des droits.
+        des configurations archivées du client MMHK. Le seul calque historique
+        éventuellement visible (taverne) provient du pack privé local activé
+        explicitement ; sa compatibilité avec les ancres reste à vérifier.
       </p>
       {unmatched.length > 0 && (
         <p className="city-scene-unmapped">

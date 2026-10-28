@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - 'tools/audit-graphic-assets.mjs'
+      - 'tools/prepare-private-historical.mjs'
       - 'tools/perceptual-duplicates.py'
       - 'tools/tests/**'
       - 'tools/ci/check_asset_boundaries.py'
@@ -32,6 +33,8 @@ jobs:
           node-version: '22'
       - name: Unit test with temporary fake corpus
         run: node --test tools/tests/asset-audit.test.mjs
+      - name: Validate opt-in local pack preparation with synthetic fixtures
+        run: node --test tools/tests/prepare-private-historical.test.mjs
       - name: Audit real tracked corpus in ignored workspace only
         run: node tools/audit-graphic-assets.mjs
       - name: Scan visual near-duplicates (metadata only)

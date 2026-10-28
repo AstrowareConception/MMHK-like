@@ -175,3 +175,6 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
 /* First asset-registry integration: original public-safe resource miniatures. */
 .resource-heading { display:flex; align-items:center; gap:9px; }
 .resource-asset { display:inline-block; width:28px; height:28px; flex:none; object-fit:contain; }
+
+/* Historical city sprite is visible only with an explicit local private manifest. */
+.city-building-sprite { display:block; width:80px; height:75px; max-width:none; object-fit:contain; pointer-events:none; filter:drop-shadow(0 5px 3px #0006); }
