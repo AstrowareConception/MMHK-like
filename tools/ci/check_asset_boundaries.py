@@ -20,7 +20,8 @@ def main():
         assert p.suffix == ".svg", f"unexpected media in public theme: {path}"
         text = p.read_text(encoding="utf-8")
         assert "<svg" in text and "<script" not in text and "<foreignObject" not in text
-        assert "http://" not in text and "https://" not in text.replace("http://www.w3.org/2000/svg", ""), path
+        safe_text = text.replace("http://www.w3.org/2000/svg", "")
+        assert "http://" not in safe_text and "https://" not in safe_text, path
     print("Public-safe assets isolated; private data excluded from Docker context")
 
 if __name__ == "__main__":
