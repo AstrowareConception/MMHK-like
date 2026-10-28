@@ -224,6 +224,7 @@ export async function launchRegionalPveMission(form:FormData) {
   const token=(await cookies()).get("mmhk_session")?.value;
   if(!token)redirect("/");
   let status=503;
+  let selectedTile="";
   try{
     const response=await fetch(apiUrl("/api/v1/me/cities/"+cityId+"/missions"),{
       method:"POST",headers:{"Authorization":"Bearer "+token,"Content-Type":"application/json"},
@@ -231,8 +232,15 @@ export async function launchRegionalPveMission(form:FormData) {
         unit_code:unitCode}),cache:"no-store",signal:AbortSignal.timeout(7000)
     });
     status=response.status;
+    if(response.ok){
+      const receipt=(await response.json()) as {target_i?:number;target_j?:number};
+      if(Number.isInteger(receipt.target_i)&&Number.isInteger(receipt.target_j)&&
+        (receipt.target_i??-1)>=0&&(receipt.target_i??5)<=4&&
+        (receipt.target_j??-1)>=0&&(receipt.target_j??5)<=4)
+        selectedTile="&tile="+receipt.target_i+"-"+receipt.target_j;
+    }
   }catch { /* Unknown result is not automatically retried with a new UUID. */ }
   if(status===401)redirect("/");
   redirect("/cities/"+cityId+"/region?mission="+(status===200||status===201?"ok":
-    status===409?"conflict":"unavailable"));
+    status===409?"conflict":"unavailable")+selectedTile);
 }
