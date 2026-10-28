@@ -61,6 +61,14 @@ def city_forces(db: psycopg.Connection, *, owner: UUID, city_id: UUID) -> dict:
            FROM city_heroes WHERE city_id=%s AND owner_account_id=%s
            ORDER BY hired_at,hero_id""", (city_id,owner),
     ).fetchall()
+    armies = db.execute(
+        """SELECT h.hero_id,a.unit_code,p.display_name,a.quantity,p.tier
+           FROM city_heroes h
+           JOIN hero_army_units a ON a.hero_id=h.hero_id
+           JOIN city_unit_profiles p ON p.unit_code=a.unit_code
+           WHERE h.city_id=%s AND h.owner_account_id=%s AND a.quantity>0
+           ORDER BY h.hero_id,p.tier,a.unit_code""",(city_id,owner),
+    ).fetchall()
     offers = db.execute(
         """SELECT offer_id,hero_name,archetype,gold_cost,policy_id
            FROM city_hero_offers WHERE city_id=%s AND available
@@ -76,6 +84,10 @@ def city_forces(db: psycopg.Connection, *, owner: UUID, city_id: UUID) -> dict:
              "unit_costs":costs,"policy_id":policy,
              "available":available,"unlocked":dwelling in buildings}
             for code,name,dwelling,tier,costs,policy,available in recruits
+        ],
+        "hero_armies": [
+            {"hero_id":str(hid),"unit_code":unit,"name":name,"quantity":qty,"tier":tier}
+            for hid,unit,name,qty,tier in armies
         ],
         "heroes": [
             {"hero_id":str(hid),"name":name,"archetype":arc,"level":level,
@@ -213,3 +225,75 @@ def hire_hero(db: psycopg.Connection, *, owner: UUID, city_id: UUID,
         )
         return {"order_id":str(order_id),"hero_id":str(hero_id),
                 "gold_paid":offer[2],"completed_at":now.isoformat(),"replayed":False}
+
+
+def transfer_units(db: psycopg.Connection, *, owner: UUID, city_id: UUID, order_id: UUID,
+                   hero_id: UUID, unit_code: str, quantity: int, direction: str) -> dict:
+    """Atomic, replay-safe transfer. Garrison + hero counts remain conserved."""
+    if type(quantity) is not int or not 1 <= quantity <= 1000:
+        raise RecruitmentConflict("Invalid quantity")
+    if direction not in ("to_hero","to_garrison"):
+        raise RecruitmentConflict("Invalid transfer direction")
+    with db.transaction():
+        _owned_city(db,owner,city_id,lock=True)
+        prior=db.execute(
+            """SELECT city_id,actor_account_id,hero_id,unit_code,quantity,direction,completed_at
+               FROM hero_unit_transfer_orders WHERE order_id=%s""",(order_id,),
+        ).fetchone()
+        if prior:
+            if prior[:6] != (city_id,owner,hero_id,unit_code,quantity,direction):
+                raise RecruitmentConflict("Order ID already used")
+            return {"order_id":str(order_id),"hero_id":str(hero_id),
+                    "unit_code":unit_code,"quantity":quantity,"direction":direction,
+                    "completed_at":prior[6].isoformat(),"replayed":True}
+        hero=db.execute(
+            """SELECT status FROM city_heroes
+               WHERE hero_id=%s AND city_id=%s AND owner_account_id=%s FOR UPDATE""",
+            (hero_id,city_id,owner),
+        ).fetchone()
+        if hero is None:
+            raise RecruitmentNotFound
+        if hero[0]!="idle":
+            raise RecruitmentConflict("Hero is unavailable")
+        if direction=="to_hero":
+            src="city_garrison_units"
+            dest="hero_army_units"
+            source_pk="city_id"
+            destination_pk="hero_id"
+            source_id=city_id
+            destination_id=hero_id
+        else:
+            src="hero_army_units"
+            dest="city_garrison_units"
+            source_pk="hero_id"
+            destination_pk="city_id"
+            source_id=hero_id
+            destination_id=city_id
+        # Table names here are hard-coded by the two trusted direction branches.
+        previous=db.execute(
+            f"SELECT quantity FROM {src} WHERE {source_pk}=%s AND unit_code=%s FOR UPDATE",
+            (source_id,unit_code),
+        ).fetchone()
+        if previous is None or previous[0]<quantity:
+            raise RecruitmentConflict("Not enough units at the source")
+        db.execute(
+            f"UPDATE {src} SET quantity=quantity-%s WHERE {source_pk}=%s AND unit_code=%s",
+            (quantity,source_id,unit_code),
+        )
+        db.execute(
+            f"""INSERT INTO {dest}({destination_pk},unit_code,quantity)
+                VALUES(%s,%s,%s)
+                ON CONFLICT({destination_pk},unit_code)
+                DO UPDATE SET quantity={dest}.quantity+EXCLUDED.quantity""",
+            (destination_id,unit_code,quantity),
+        )
+        now=db.execute("SELECT clock_timestamp()").fetchone()[0]
+        db.execute(
+            """INSERT INTO hero_unit_transfer_orders(order_id,city_id,actor_account_id,
+                 hero_id,unit_code,quantity,direction,completed_at)
+               VALUES(%s,%s,%s,%s,%s,%s,%s,%s)""",
+            (order_id,city_id,owner,hero_id,unit_code,quantity,direction,now),
+        )
+        return {"order_id":str(order_id),"hero_id":str(hero_id),"unit_code":unit_code,
+                "quantity":quantity,"direction":direction,"completed_at":now.isoformat(),
+                "replayed":False}

@@ -138,6 +138,7 @@ export type CityForces = {
   garrison: {unit_code:string;name:string;quantity:number;tier:number}[];
   recruitment: {unit_code:string;name:string;dwelling_code:string;tier:number;
     unit_costs:Record<string,number>;policy_id:string;available:number;unlocked:boolean}[];
+  hero_armies:{hero_id:string;unit_code:string;name:string;quantity:number;tier:number}[];
   heroes: {hero_id:string;name:string;archetype:"might"|"magic";
     level:number;experience:number;status:string;hired_at:string}[];
   hero_offers:{offer_id:string;name:string;archetype:"might"|"magic";

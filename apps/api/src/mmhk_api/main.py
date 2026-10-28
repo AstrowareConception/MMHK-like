@@ -15,7 +15,7 @@ from .construction import (
 )
 from .map_views import MapNotFound, own_region, world_overview
 from .timeline import timeline_for_player
-from .forces import city_forces, recruit_units, hire_hero, RecruitmentNotFound, RecruitmentConflict
+from .forces import city_forces, recruit_units, hire_hero, RecruitmentNotFound, RecruitmentConflict, transfer_units
 from .login_limits import (
     RateLimitConfigurationError, reserve_login_attempt, audit_login,
     reset_account_limit_after_login,
@@ -325,6 +325,31 @@ def my_city_hero_hire(city_id: UUID, data: HeroHireRequest, db: _db,
         raise HTTPException(status_code=404, detail="City not found") from exc
     except RecruitmentConflict as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+
+class UnitTransferRequest(StrictDTO):
+    order_id: UUID
+    hero_id: UUID
+    unit_code: str = Field(pattern=r"^[a-z][a-z0-9_]{1,47}$")
+    quantity: int = Field(ge=1, le=1000)
+    direction: str = Field(pattern=r"^(to_hero|to_garrison)$")
+
+
+@app.post("/api/v1/me/cities/{city_id}/forces/transfer", status_code=201)
+def my_city_transfer(city_id: UUID, data: UnitTransferRequest, db: _db,
+                     player: _player, response: Response) -> dict:
+    response.headers["Cache-Control"] = "no-store"
+    try:
+        result=transfer_units(db,owner=player,city_id=city_id,order_id=data.order_id,
+            hero_id=data.hero_id,unit_code=data.unit_code,quantity=data.quantity,
+            direction=data.direction)
+        if result["replayed"]:
+            response.status_code=200
+        return result
+    except RecruitmentNotFound as exc:
+        raise HTTPException(status_code=404,detail="City or hero not found") from exc
+    except RecruitmentConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
 
 
 # Read-only map prototypes. No foreign city, fog-of-war intelligence or
