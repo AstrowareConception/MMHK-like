@@ -2,6 +2,33 @@
 
 **Objectif : reconstruire le fonctionnement de Might & Magic Heroes Kingdoms avant de développer son successeur jouable par navigateur.** Le présent dépôt contient un référentiel de gameplay, des spécifications fonctionnelles, des données historiques extraites et un plan de validation. Il ne contient pas encore de jeu jouable ; une première fondation FastAPI/Next.js est désormais testée séparément du laboratoire.
 
+## Démarrer la version locale complète avec Docker
+
+Le prototype applicatif s'exécute désormais avec **PostgreSQL, Redis,
+FastAPI, Next.js et un worker Python**, grâce à Docker Compose. Les
+migrations sont automatiques ; une deuxième commande crée un monde et
+un compte de démonstration à mot de passe aléatoire.
+
+```bash
+python3 tools/local/stack.py up
+python3 tools/local/stack.py demo
+```
+
+Ouvrez ensuite **http://localhost:3000** et utilisez les identifiants
+affichés une seule fois par la seconde commande.
+
+Tout fonctionne **en local, sans ouverture de port public**. Les
+ressources, rendements, constructions et avantages du bac à sable sont
+des données fictives de test, pas des règles MMHK saison 2 certifiées.
+Le moteur de combat Jactari reste séparé du prototype et le PvP public
+n'est pas activé.
+
+Consultez le [guide Docker complet](docs/specifications/DOCKER-COMPLET-LOCAL.md)
+pour l'installation, les prérequis, les logs, sauvegardes,
+mises à jour, sauvegarde des secrets et suppression des volumes.
+
+---
+
 Version documentaire **0.6 — 23 octobre 2026**. Recherche réalisée à partir des neuf liens fournis, de leurs archives accessibles, de guides communautaires, du code public de MMHK-Plus/Jactari et désormais de fichiers du client Ubisoft archivés. Les mécanismes retrouvés sont distingués des hypothèses et des propositions de reconstruction. **Ce dossier n’est pas une copie certifiée du serveur Ubisoft : plusieurs règles ont changé selon les saisons et certaines informations manquent.**
 
 La révision 0.2 intègre **57 captures (53 distinctes)** et les **153 fichiers Jactari, dont 96 images**, fournis dans le dépôt. Elle confirme le périmètre **PvP classique avec Guerre des Larmes**, détaille les interfaces et relie les objets aux planches graphiques.
