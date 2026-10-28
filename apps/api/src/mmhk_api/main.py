@@ -14,6 +14,7 @@ from .construction import (
     ConstructionConflict, ConstructionNotFound, catalog_for_city, start_construction,
 )
 from .map_views import MapNotFound, own_region, world_overview
+from .timeline import timeline_for_player
 from .login_limits import (
     RateLimitConfigurationError, reserve_login_attempt, audit_login,
     reset_account_limit_after_login,
@@ -166,6 +167,36 @@ def logout(
         raise HTTPException(status_code=401, detail="Invalid or expired session")
     revoke_session(db, credentials.credentials)
     return Response(status_code=204, headers={"Cache-Control": "no-store"})
+
+
+class TimelineEvent(StrictDTO):
+    id: str
+    type: str
+    title: str
+    occurs_at: datetime
+    world_id: str
+    city_id: UUID
+    city_name: str
+    target_url: str
+    icon: str
+    priority: str
+
+
+class TimelineResponse(StrictDTO):
+    server_now: datetime
+    horizon_hours: int
+    truncated: bool
+    events: list[TimelineEvent]
+
+
+@app.get("/api/v1/me/timeline", response_model=TimelineResponse)
+def my_timeline(
+    db: _db, player: _player,
+    hours: int = 12,
+) -> TimelineResponse:
+    if not 1 <= hours <= 48:
+        raise HTTPException(status_code=422, detail="hours must be between 1 and 48")
+    return TimelineResponse(**timeline_for_player(db, player, hours=hours))
 
 
 @app.get("/api/v1/me/worlds", response_model=list[World])
