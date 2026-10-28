@@ -187,7 +187,7 @@ def _site_clear(db:psycopg.Connection,*,world_id:str,x:int,y:int)->bool:
         or db.execute(
             """SELECT 1 FROM colonization_orders
                WHERE world_id=%s AND x=%s AND y=%s
-                 AND status IN ('traveling','blocked')""",
+                 AND status='traveling'""",
             (world_id,x,y),
         ).fetchone()
     )
@@ -206,7 +206,7 @@ def _counts(db:psycopg.Connection,world_id:str,owner:UUID)->tuple[int,int]:
     pending=db.execute(
         """SELECT count(*) FROM colonization_orders
            WHERE world_id=%s AND owner_account_id=%s
-             AND status IN ('traveling','blocked')""",
+             AND status='traveling'""",
         (world_id,owner),
     ).fetchone()[0]
     return int(cities),int(pending)

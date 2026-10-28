@@ -30,7 +30,10 @@ configuration de jeu.
 - La protection est réévaluée au **départ** de toute nouvelle expédition,
   sous verrou PostgreSQL de l'adhésion au monde. Un entrant tardif ne
   bénéficie d'aucune exemption spéciale.
-- Les expéditions en cours ou bloquées comptent pour le plafond de villes.
+- Les expéditions **en cours** comptent pour le plafond de villes.
+  Une expédition **bloquée** libère immédiatement la réservation du site et
+  son droit à une cité supplémentaire ; son dépôt demeure réclamable une fois
+  l'espace de stockage disponible.
 - Le plafond de cités (2–10) relève d'une **politique expérimentale** ; le
   calcul historique sur trois classements et Graals reste U16.
 

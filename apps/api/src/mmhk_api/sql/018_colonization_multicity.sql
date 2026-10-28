@@ -79,7 +79,7 @@ CREATE TABLE colonization_orders (
 );
 CREATE UNIQUE INDEX colonization_reserve_site_world
   ON colonization_orders(world_id,x,y)
-  WHERE status IN ('traveling','blocked');
+  WHERE status='traveling';
 CREATE UNIQUE INDEX colonization_one_expedition_per_hero
   ON colonization_orders(hero_id) WHERE status='traveling';
 CREATE INDEX colonization_due_worker
