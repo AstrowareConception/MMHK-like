@@ -106,7 +106,7 @@ def main() -> int:
             expect(page.get_by_role("heading", level=1, name="Premier Havre", exact=True)).to_be_visible()
             expect(page.get_by_role("heading", name="Réserves de la ville")).to_be_visible()
             expect(page.get_by_role("heading", name="Armées et héros")).to_be_visible()
-            expect(page.get_by_text("Aldric du Havre")).to_be_visible()
+            expect(page.locator(".hero-profile-info").get_by_text("Aldric du Havre")).to_be_visible()
             assert page.locator(".building-plan").count() >= 8, "Expanded Haven catalogue not provisioned"
             assert page.locator(".unit-recruit-offer").count() == 2
             expect(page.get_by_text("Demeure des miliciens", exact=True)).to_be_visible()
