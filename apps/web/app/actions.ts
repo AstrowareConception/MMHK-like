@@ -117,7 +117,7 @@ export async function recruitCityUnits(data:FormData) {
      typeof unitCode!=="string"||!/^[a-z][a-z0-9_]{1,47}$/.test(unitCode)||
      typeof raw!=="string"||!/^\d{1,4}$/.test(raw))redirect("/");
   const quantity=Number(raw);
-  if(!Number.isInteger(quantity)||quantity<1||quantity>1000)redirect("/cities/"+cityId+"?recruit=conflict#military-panel");
+  if(!Number.isInteger(quantity)||quantity<1||quantity>1000)redirect("/cities/"+cityId+"/forces?recruit=conflict#military-panel");
   const token=(await cookies()).get("mmhk_session")?.value;
   if(!token)redirect("/");
   let status=503;
@@ -130,7 +130,7 @@ export async function recruitCityUnits(data:FormData) {
     status=response.status;
   }catch {/* server down: show an explicit error without retrying a non-idempotent order */}
   if(status===401)redirect("/");
-  redirect("/cities/"+cityId+"?recruit="+(status===200||status===201?"ok":status===409?"conflict":"unavailable")+"#military-panel");
+  redirect("/cities/"+cityId+"/forces?recruit="+(status===200||status===201?"ok":status===409?"conflict":"unavailable")+"#military-panel");
 }
 export async function hireCityHero(data:FormData) {
   const cityId=data.get("cityId"),offerId=data.get("offerId");
@@ -148,7 +148,7 @@ export async function hireCityHero(data:FormData) {
     status=response.status;
   }catch {/* Do not automatically retry an order without preserving its UUID. */}
   if(status===401)redirect("/");
-  redirect("/cities/"+cityId+"?hero="+(status===200||status===201?"ok":status===409?"conflict":"unavailable")+"#military-panel");
+  redirect("/cities/"+cityId+"/forces?hero="+(status===200||status===201?"ok":status===409?"conflict":"unavailable")+"#military-panel");
 }
 
 
@@ -162,7 +162,7 @@ export async function transferHeroUnits(data:FormData) {
      (direction!=="to_hero"&&direction!=="to_garrison"))redirect("/");
   const quantity=Number(amount);
   if(!Number.isInteger(quantity)||quantity<1||quantity>1000)
-    redirect("/cities/"+cityId+"?transfer=conflict#military-panel");
+    redirect("/cities/"+cityId+"/forces?transfer=conflict#military-panel");
   const token=(await cookies()).get("mmhk_session")?.value;
   if(!token)redirect("/");
   let status=503;
@@ -176,6 +176,37 @@ export async function transferHeroUnits(data:FormData) {
     status=response.status;
   }catch {/* An uncertain order must not be silently resubmitted. */}
   if(status===401)redirect("/");
-  redirect("/cities/"+cityId+"?transfer="+(status===200||status===201?"ok":
+  redirect("/cities/"+cityId+"/forces?transfer="+(status===200||status===201?"ok":
     status===409?"conflict":"unavailable")+"#military-panel");
+}
+
+
+/** Unique artifact move: never trust browser-side ownership or slot attributes. */
+export async function moveCityArtifact(data:FormData) {
+  const cityId=data.get("cityId"),artifactId=data.get("artifactId");
+  const operation=data.get("operation"),target=data.get("targetHeroId");
+  const originHero=data.get("returnHeroId");
+  const uuid=/^[0-9a-f-]{36}$/i;
+  if(typeof cityId!=="string"||!uuid.test(cityId)||
+    typeof artifactId!=="string"||!uuid.test(artifactId)||
+    typeof operation!=="string"||
+    !["equip","unequip","to_reserve","to_bag","to_hero"].includes(operation)||
+    (target!==null&&target!==""&&(typeof target!=="string"||!uuid.test(target))))redirect("/");
+  const selected=(typeof originHero==="string"&&uuid.test(originHero))?originHero:"";
+  const back="/cities/"+cityId+"/heroes?hero="+selected;
+  const token=(await cookies()).get("mmhk_session")?.value;
+  if(!token)redirect("/");
+  let status=503;
+  try{
+    const response=await fetch(apiUrl("/api/v1/me/cities/"+cityId+"/artifacts/move"),{
+      method:"POST",headers:{"Authorization":"Bearer "+token,"Content-Type":"application/json"},
+      body:JSON.stringify({order_id:randomUUID(),artifact_id:artifactId,
+        operation,target_hero_id:target||null}),
+      cache:"no-store",signal:AbortSignal.timeout(6000)
+    });
+    status=response.status;
+  }catch {/* Uncertain command: never silently replay with a new UUID. */}
+  if(status===401)redirect("/");
+  redirect(back+"&artifact="+(status===200||status===201?"ok":status===409?"conflict":
+    status===404?"missing":"unavailable"));
 }

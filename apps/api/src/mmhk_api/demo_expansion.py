@@ -77,6 +77,26 @@ def expand_demo(db:psycopg.Connection)->dict:
                    ON CONFLICT(unit_code) DO NOTHING""",
                 (code,label,dwelling,tier,Jsonb(price),POLICY),
             )
+        # Fully local test policies. Effects are descriptive and never
+        # inserted as actual battle modifiers before verified integration.
+        for code,name,slot,level,description in [
+            ("bronze_helm","Heaume de bronze","head",1,"Protection légère, effet de combat non implémenté"),
+            ("runic_sigil","Sceau des anciens","ring",1,"Inscription arcanique, bonus non appliqué"),
+            ("warden_blade","Lame du veilleur","weapon",1,"Épée de garde, bonus non appliqué")
+        ]:
+            db.execute(
+                """INSERT INTO artifact_profiles
+                   (artifact_code,name,slot,required_level,effects,policy_id)
+                   VALUES(%s,%s,%s,%s,%s,'LOCAL-DEMO-ARTIFACT-V1')
+                   ON CONFLICT(artifact_code) DO NOTHING""",
+                (code,name,slot,level,Jsonb({"description":description})),
+            )
+        for unit_code,lab_power in (("militia","2.000"),("archers","2.700")):
+            db.execute(
+                """UPDATE city_unit_profiles SET lab_duel_power=%s
+                   WHERE unit_code=%s AND policy_id=%s AND lab_duel_power IS NULL""",
+                (lab_power,unit_code,POLICY),
+            )
         for (city_id,) in cities:
             for code,amount in (("militia",18),("archers",8)):
                 db.execute(
@@ -102,6 +122,37 @@ def expand_demo(db:psycopg.Connection)->dict:
                            (offer_id,city_id,hero_name,archetype,gold_cost,policy_id)
                            VALUES(%s,%s,%s,%s,%s,%s)""",
                         (uuid4(),city_id,name,archetype,price,POLICY),
+                    )
+            # Populate the existing world only with declared laboratory opponents,
+            # never with invented historic/production world placements.
+            for i,j,name,unit,count,power in [
+                (1,3,"Loups des bois","wolves",3,"1.100"),
+                (3,1,"Brigands de la lisière","brigands",4,"1.400"),
+            ]:
+                db.execute(
+                    """INSERT INTO region_encounters
+                       (encounter_id,city_id,cell_i,cell_j,name,unit_code,
+                        unit_count,unit_power,source_ref)
+                       VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)
+                       ON CONFLICT(city_id,cell_i,cell_j) DO NOTHING""",
+                    (uuid4(),city_id,i,j,name,unit,count,power,"LOCAL-DEMO-PVE-V1"),
+                )
+            first_hero=db.execute(
+                """SELECT hero_id FROM city_heroes WHERE city_id=%s
+                   ORDER BY hired_at,hero_id LIMIT 1""",(city_id,),
+            ).fetchone()
+            if first_hero:
+                for code,kind,hero in [
+                    ("bronze_helm","bag",first_hero[0]),
+                    ("runic_sigil","reserve",None),
+                    ("warden_blade","reserve",None),
+                ]:
+                    seed_key=str(city_id)+":starter:"+code
+                    db.execute(
+                        """INSERT INTO city_artifacts
+                           (artifact_id,city_id,artifact_code,location,hero_id,seed_key)
+                           VALUES(%s,%s,%s,%s,%s,%s) ON CONFLICT(seed_key) DO NOTHING""",
+                        (uuid4(),city_id,code,kind,hero,seed_key),
                     )
     return {"expanded":True,"cities":len(cities),"policy":POLICY}
 

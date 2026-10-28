@@ -2,11 +2,10 @@ import Link from "next/link";
 import { CityScene } from "../../../components/city-scene";
 import { AssetImage } from "../../../components/asset-image";
 import { LiveRefresh } from "../../../components/live-refresh";
-import { CityForcesPanel } from "../../../components/city-forces-panel";
 import { notFound, redirect } from "next/navigation";
 import { startUrbanConstruction } from "../../actions";
 import { GameShell } from "../../../components/game-shell/game-shell";
-import { privateApi, sessionToken, type CityDetail, type ConstructionCatalog, type CityForces } from "../../../lib/server-api";
+import { privateApi, sessionToken, type CityDetail, type ConstructionCatalog } from "../../../lib/server-api";
 
 export const dynamic = "force-dynamic";
 
@@ -25,20 +24,19 @@ export default async function CityPage({
   searchParams,
 }: {
   params: Promise<{ cityId: string }>;
-  searchParams: Promise<{ build?: string; recruit?:string; hero?:string;transfer?:string }>;
+  searchParams: Promise<{ build?: string }>;
 }) {
   const { cityId } = await params;
   const token = await sessionToken();
   if (!token) redirect("/");
   if (!/^[a-f0-9-]{36}$/i.test(cityId)) notFound();
-  const [answer, buildingAnswer, forcesAnswer, query] = await Promise.all([
+  const [answer, buildingAnswer, query] = await Promise.all([
     privateApi<CityDetail>(
       `/api/v1/me/cities/${encodeURIComponent(cityId)}`, token,
     ),
     privateApi<ConstructionCatalog>(
       `/api/v1/me/cities/${encodeURIComponent(cityId)}/construction`, token,
     ),
-    privateApi<CityForces>(`/api/v1/me/cities/${encodeURIComponent(cityId)}/forces`, token),
     searchParams,
   ]);
   if (answer.status === 401) redirect("/");
@@ -54,7 +52,8 @@ export default async function CityPage({
       worldId={city.world_id} cityId={cityId} stocks={city.stocks}>
         <nav className="city-shortcuts" aria-label="Accès rapide à la cité">
           <a href="#city-scene">Panorama</a><a href="#city-resources">Ressources</a>
-          <a href="#urban-construction">Chantiers</a><a href="#military-panel">Héros et armée</a>
+          <a href="#urban-construction">Chantiers</a><Link href={`/cities/${cityId}/heroes`}>Héros et artefacts</Link>
+          <Link href={`/cities/${cityId}/forces`}>Armée et recrutements</Link>
         </nav>
         <CityScene city={city} catalog={buildingAnswer.data} />
         {(city.production_active || !!buildingAnswer.data?.active) && <LiveRefresh intervalSeconds={10} />}
@@ -73,8 +72,20 @@ export default async function CityPage({
             </article>
           ))}
         </div>
-        <CityForcesPanel cityId={cityId} forces={forcesAnswer.ok?forcesAnswer.data??null:null}
-          message={{hero:query.hero,recruit:query.recruit,transfer:query.transfer}} />
+        <div className="city-module-cards" aria-label="Gestion du royaume">
+          <Link href={`/cities/${cityId}/heroes`} className="city-module-card">
+            <span aria-hidden="true" className="city-module-icon">♞</span>
+            <span><strong>Héros et artefacts</strong>
+              <small>Fiches individuelles, équipements, sacs et réserve de la cité</small></span>
+            <span aria-hidden="true">›</span>
+          </Link>
+          <Link href={`/cities/${cityId}/forces`} className="city-module-card">
+            <span aria-hidden="true" className="city-module-icon">⚔</span>
+            <span><strong>Garnison et recrutement</strong>
+              <small>Miliciens, archers, embauche de héros et transferts d'unités</small></span>
+            <span aria-hidden="true">›</span>
+          </Link>
+        </div>
         <div className="construction-panel" id="urban-construction">
           <span className="eyebrow">CHANTIERS URBAINS · PROFILS EXPÉRIMENTAUX</span>
           <h2>Construire dans la cité</h2>

@@ -10,6 +10,7 @@ from uuid import UUID
 import psycopg
 
 from .worlds import owned_cities, owned_worlds, HAVEN_FIRST_MINES
+from .region_pve import region_encounters
 
 
 class MapNotFound(Exception):
@@ -151,4 +152,5 @@ def own_region(db: psycopg.Connection, account_id: UUID, city_id: UUID) -> dict:
         "cells": cells,
         "surrounding_world_regions": surrounding_world_regions,
         "historical_regional_terrain_certified": False,
+        "encounters": region_encounters(db,account_id,city_id),
     }
