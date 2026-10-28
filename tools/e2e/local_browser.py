@@ -137,8 +137,8 @@ def main() -> int:
                 "form.city-inspector-quote:has(input[name='buildingCode'][value='village_hall'])"
                 ":has(input[name='mode'][value='rapid'])"
             )
-            expect(rapid.get_by_role("button", name="Lancer ce chantier")).to_be_enabled()
-            rapid.get_by_role("button", name="Lancer ce chantier").click()
+            expect(rapid.get_by_role("button", name="Lancer le chantier")).to_be_enabled()
+            rapid.get_by_role("button", name="Lancer le chantier").click()
             expect(page.get_by_text("Chantier enregistré et ressources payées.")).to_be_visible(timeout=20000)
             expect(page.locator("#city-history .construction-history-entry")).to_have_count(1)
             expect(page.locator("#city-history .construction-history-entry").first).to_contain_text("Hôtel du village")
