@@ -15,6 +15,7 @@ on:
       - '.env.local.example'
       - 'tools/local/**'
       - 'tools/ci/check_local_stack.py'
+      - 'tools/e2e/**'
   pull_request:
     paths:
       - 'apps/**'
@@ -30,6 +31,7 @@ on:
       - '.env.local.example'
       - 'tools/local/**'
       - 'tools/ci/check_local_stack.py'
+      - 'tools/e2e/**'
   workflow_dispatch:
 permissions:
   contents: read
@@ -140,6 +142,10 @@ jobs:
           docker compose --env-file .env.local -f compose.local.yaml ps --all
           docker compose --env-file .env.local -f compose.local.yaml exec -T worker \
             python -m mmhk_api.supervised_worker --check-health
+      - name: Install headless Chromium for real user-journey testing
+        run: |
+          python3 -m pip install --quiet playwright==1.56.0
+          python3 -m playwright install --with-deps chromium
       - name: Provision experimental playable sandbox and verify authenticated HTTP
         run: |
           output="$(python3 tools/local/stack.py demo --username demo_ci)"
@@ -177,6 +183,10 @@ jobs:
           PY
           curl --fail --silent --show-error http://127.0.0.1:3000/ | grep -q 'API FastAPI joignable'
           echo "Browser-to-API and sandbox login verified"
+          MMHK_E2E_URL="http://127.0.0.1:3000" \
+          MMHK_E2E_USERNAME="demo_ci" \
+          MMHK_E2E_PASSWORD="$password" \
+          python3 tools/e2e/local_browser.py
       - name: Verify local PostgreSQL backup is readable
         run: |
           python3 tools/local/stack.py backup
