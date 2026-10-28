@@ -50,6 +50,23 @@ def main() -> int:
             expect(page.get_by_test_id("world-center")).to_have_text("(18, 23)")
             page.get_by_role("button", name="Recentrer sur Premier Havre").click()
             expect(page.get_by_test_id("world-center")).to_have_text("(17, 23)")
+            # The four arrows are painted in the historic JPEG; their real
+            # overlay controls must move the authoritative camera.
+            page.get_by_role("button", name="Flèche de carte : nord-est").click()
+            expect(page.get_by_test_id("world-center")).to_have_text("(18, 22)")
+            page.get_by_role("button", name="Recentrer sur Premier Havre").click()
+            # The decorative grid must not be enabled by default.
+            expect(page.get_by_label("Grille indicative")).not_to_be_checked()
+            page.get_by_label("Grille indicative").check()
+            expect(page.get_by_label("Grille indicative")).to_be_checked()
+            page.get_by_label("Grille indicative").uncheck()
+            # Keyboard navigation is available without mouse.
+            map_surface = page.get_by_role("group", name=re.compile("Monde .* déplacement"))
+            map_surface.focus()
+            page.keyboard.press("ArrowRight")
+            expect(page.get_by_test_id("world-center")).to_have_text("(18, 23)")
+            page.get_by_role("button", name="Recentrer sur Premier Havre").click()
+
             page.get_by_role("button", name="Zoom arrière").click()
             expect(page.get_by_text("Vue éloignée", exact=True)).to_be_visible()
             page.get_by_role("button", name="Zoom avant").click()

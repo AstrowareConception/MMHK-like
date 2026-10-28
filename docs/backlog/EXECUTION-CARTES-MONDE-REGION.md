@@ -36,3 +36,15 @@
 - C1, C2, C3 : initialement à réaliser. Ne jamais marquer les US **terminées** sans valider leurs cinq critères d'acceptation. Un composant de navigation peut constituer seulement une **sous-partie** d'une US.
 
 Liens source : [MON](categories/12-MON.md), [UIX](categories/23-UIX.md), [REG](categories/05-REG.md), [REL](categories/06-REL.md), [MOV](categories/13-MOV.md), [Story map L1/L2](STORY-MAP.md), [spécification isométrique](../specifications/INTERFACE-ET-RENDU-ISOMETRIQUE.md), [limites d'observation](../specifications/NAVIGATION-MONDE-REGION-VILLE.md).
+
+## Correctif cartographique — grille et navigation (28 octobre 2026)
+
+Les flèches rouge et blanc visibles dans les fonds JPEG du jeu sont **peintes dans le fichier**, donc elles n'ont jamais été des éléments HTML cliquables. La superposition précédente traçait également un second quadrillage blanc, dont la projection simplifiée ne coïncidait pas avec le quadrillage peint.
+
+Cette révision apporte les contrôles de caméra au-dessus des quatre zones fléchées, accessibles au clic et au clavier ; la molette sans scroll parasite ; navigation clavier ; hit-testing exact des losanges et conversion SVG prenant en compte la mise à l'échelle CSS ; interface allégée.
+
+**Les quadrillages dessinés par le jeu historique ne sont plus recouverts d'une grille générée**, sauf si le joueur active volontairement « Grille indicative » (calibrage/debug). En l'absence d'assets historiques, un quadrillage de substitution demeure pour permettre la navigation.
+
+Le fond historique est un JPEG **statique**, pas une mosaïque géoréférencée qui se recompose quand on change les coordonnées. La vue illustre le cadre MMHK ; seules les positions des villes détenues sont authentifiées par le serveur. Les hitboxes actuelles constituent une approximation d'interface, et ne peuvent être déclarées pixel-perfect sans les données géométriques originales.
+
+**Références aux US du backlog inchangées :** US-MON-001 (déplacer), US-MON-002 (zoom), US-MON-004 (coordonnées torique), US-MON-008 (villes), US-UIX-002 (niveaux de carte), US-UIX-003 (sélection précise), US-UIX-006 (asset de repli). Aucune US créée, aucune mine, forêt ou relique générée arbitrairement.
