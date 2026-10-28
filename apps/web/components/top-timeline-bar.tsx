@@ -13,6 +13,9 @@ export function TopTimelineBar({initial,backgroundUrl}:{initial:TimelineResponse
   const [clock,setClock]=useState(0);
   const [offset,setOffset]=useState(0);
   useEffect(()=>{
+    // A Next.js Server Action may navigate to the same screen with new events.
+    // Keep client state aligned with the fresh authenticated RSC projection.
+    setState(initial);
     setClock(Date.now());
     if(initial)setOffset(Date.parse(initial.server_now)-Date.now());
   },[initial]);
