@@ -14,11 +14,13 @@ du laboratoire historique Jactari pour les requêtes ordinaires :
 | `web` | Next.js 16 / React 19, interface utilisateur | **127.0.0.1:3000 seulement** |
 | `worker` | Worker Python supervisé, mines + constructions | Non |
 
-Les services se parlent dans le réseau Docker `backend` marqué
-`internal: true`. Aucune API, base de données ou instance Redis
-n'est publiée sur le réseau. Le frontend n'expose que le **loopback** ;
-l'environnement ne peut pas être rendu accessible à d'autres
-ordinateurs sans changer volontairement cette politique.
+Les services métier communiquent sur un réseau Docker `backend`
+marqué `internal: true`. Seul **Next.js** rejoint également un deuxième
+pont réseau `edge`, indispensable à la publication d'un port sur
+l'hôte Docker. La publication reste restreinte à **127.0.0.1:3000**.
+Aucune API, base de données ni instance Redis ne publie de port ;
+les services métier ne sont jamais connectés au pont `edge`.
+Le script CI vérifie ces deux conditions.
 
 ## 1. Prérequis
 
