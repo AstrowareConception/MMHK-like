@@ -393,3 +393,15 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   background:#1b2d34;border:1px solid #998259;color:#d8d0b7;font:12px Georgia,serif;}
 .world-map-site,.world-discovered-city {cursor:pointer;outline:none;}
 .world-map-site:focus-visible circle,.world-discovered-city:focus-visible circle {stroke:#fff2bd;stroke-width:4;}
+
+/* Illustrated Haven scene: true state-dependent, interactive vector buildings. */
+.haven-city-frame {border:4px ridge #b99b66;overflow:hidden;background:#193937;aspect-ratio:680/552;}
+.haven-city-svg {display:block;width:100%;height:100%;max-height:none;}
+.haven-plot {cursor:pointer;outline:0;}
+.haven-plot:hover rect,.haven-plot:focus-visible rect {stroke:#fff4c8;stroke-width:2.3;fill:#3c4d45ee;}
+.haven-plot:hover .haven-lot,.haven-plot:focus-visible .haven-lot {stroke:#ffe5a4;}
+.haven-plot:focus-visible {filter:drop-shadow(0 0 8px #fce6a7);}
+.haven-scene-key {display:flex;flex-wrap:wrap;gap:10px 18px;margin-top:8px;padding:10px 13px;
+  border:1px solid #9b845b;background:#1a2b33;color:#e3d2ab;font:12px/1.45 Georgia,serif;}
+.haven-scene-key b {color:#e4c483;}
+@media(max-width:600px){.haven-scene-key{font-size:10px;gap:4px 10px;}}
