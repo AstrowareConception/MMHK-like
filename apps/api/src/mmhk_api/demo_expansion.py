@@ -104,6 +104,20 @@ def expand_demo(db:psycopg.Connection)->dict:
                VALUES('local-sandbox',25,'LAB-REGIONAL-TILE-STEPS-V1')
                ON CONFLICT(world_id) DO NOTHING"""
         )
+        # Explicitly fictitious merchant rates, versioned and local-only.
+        # Running the expansion again never changes a player's past purchases.
+        for pay,receive,numerator,denominator in [
+            ("wood","ore",1,2),("ore","wood",1,2),
+            ("wood","crystal",1,4),("gold","ore",2,1),
+        ]:
+            db.execute(
+                """INSERT INTO merchant_rate_policies
+                   (world_id,pay_resource,receive_resource,policy_id,
+                    numerator,denominator,enabled)
+                   VALUES('local-sandbox',%s,%s,'LOCAL-DEMO-MERCHANT-V1',%s,%s,true)
+                   ON CONFLICT DO NOTHING""",
+                (pay,receive,numerator,denominator),
+            )
         for (city_id,) in cities:
             for code,amount in (("militia",18),("archers",8)):
                 db.execute(

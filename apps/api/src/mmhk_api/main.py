@@ -6,12 +6,16 @@ from typing import Annotated
 from uuid import UUID
 
 import psycopg
-from fastapi import Depends, FastAPI, HTTPException, Request, Response, status
+from fastapi import Depends, FastAPI, HTTPException, Query, Request, Response, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, ConfigDict, Field
 
 from .construction import (
     ConstructionConflict, ConstructionNotFound, catalog_for_city, start_construction,
+)
+from .merchant import (
+    MerchantConflict, MerchantNotFound, market_for_city, quote_merchant,
+    execute_merchant,
 )
 from .map_views import MapNotFound, own_region, world_overview
 from .timeline import timeline_for_player
@@ -275,6 +279,69 @@ def start_my_city_construction(
         raise HTTPException(status_code=404, detail="City not found") from exc
     except ConstructionConflict as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+
+
+# US-ECH-001/002/003: versioned, strictly owner-scoped market laboratory.
+# No direct browser price/capacity or historical tariff is ever accepted.
+_MARKET_RESOURCE = r"^(gold|wood|ore|crystal|gems|sulfur|mercury)$"
+
+
+class MerchantExchangeRequest(StrictDTO):
+    order_id: UUID
+    pay_resource: str = Field(pattern=_MARKET_RESOURCE)
+    receive_resource: str = Field(pattern=_MARKET_RESOURCE)
+    pay_amount: int = Field(ge=1, le=1000000)
+    expected_policy_id: str = Field(min_length=3, max_length=100)
+    expected_receive_amount: int = Field(ge=1, le=1000000000000)
+
+
+@app.get("/api/v1/me/cities/{city_id}/market")
+def my_city_market(city_id: UUID, db: _db, player: _player) -> dict:
+    try:
+        return market_for_city(db,owner=player,city_id=city_id)
+    except MerchantNotFound as exc:
+        raise HTTPException(status_code=404,detail="City not found") from exc
+
+
+@app.get("/api/v1/me/cities/{city_id}/market/quote")
+def my_city_market_quote(
+    city_id: UUID, db: _db, player: _player,
+    pay_resource: str = Query(pattern=_MARKET_RESOURCE),
+    receive_resource: str = Query(pattern=_MARKET_RESOURCE),
+    pay_amount: int = Query(ge=1, le=1000000),
+) -> dict:
+    try:
+        return quote_merchant(db,owner=player,city_id=city_id,
+            pay_resource=pay_resource,receive_resource=receive_resource,
+            pay_amount=pay_amount)
+    except MerchantNotFound as exc:
+        raise HTTPException(status_code=404,detail="City not found") from exc
+    except MerchantConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+@app.post("/api/v1/me/cities/{city_id}/market", status_code=201)
+def my_city_market_exchange(
+    city_id: UUID, command: MerchantExchangeRequest,
+    db: _db, player: _player, response: Response,
+) -> dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        receipt=execute_merchant(
+            db,owner=player,city_id=city_id,order_id=command.order_id,
+            pay_resource=command.pay_resource,
+            receive_resource=command.receive_resource,
+            pay_amount=command.pay_amount,
+            expected_policy_id=command.expected_policy_id,
+            expected_receive_amount=command.expected_receive_amount)
+        if receipt["replayed"]:
+            response.status_code=200
+        return receipt
+    except MerchantNotFound as exc:
+        raise HTTPException(status_code=404,detail="City not found") from exc
+    except MerchantConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
 
 
 # First urban military vertical slice; all costs, pools and hero offers are
