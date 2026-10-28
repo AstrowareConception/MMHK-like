@@ -49,6 +49,32 @@ def timeline_for_player(
            ORDER BY m.started_at,m.mission_id LIMIT %s""",
         (account_id,account_id,account_id,horizon,horizon,limit+1),
     ).fetchall()
+    # Only truly dispatched, owner-scoped departures are shown. Retried
+    # storage checks are not promised as successful arrival times.
+    caravan_rows=db.execute(
+        """SELECT s.shipment_id,s.status,s.next_attempt_at,
+                  src.city_id,src.name,src.world_id,dst.name
+           FROM caravan_shipments s
+           JOIN cities src ON src.city_id=s.source_city_id
+           LEFT JOIN cities dst ON dst.city_id=s.destination_city_id
+             AND dst.owner_account_id=%s
+           JOIN world_memberships m ON m.world_id=src.world_id AND m.account_id=%s
+           WHERE src.owner_account_id=%s AND s.owner_account_id=%s
+             AND s.status IN ('in_transit','returning')
+             AND s.next_attempt_at<=%s
+           ORDER BY s.next_attempt_at,s.shipment_id LIMIT %s""",
+        (account_id,account_id,account_id,account_id,horizon,limit+1),
+    ).fetchall()
+    caravan_events=[{
+        "id":"caravan-"+("return-" if status=="returning" else "arrival-")+str(sid),
+        "type":"caravan_return" if status=="returning" else "caravan_arrival",
+        "title":("Retour du convoi" if status=="returning"
+                 else "Convoi vers "+(dst_name or "une destination devenue inaccessible")),
+        "occurs_at":due,"world_id":world_id,
+        "city_id":str(origin_id),"city_name":origin_name,
+        "target_url":"/cities/"+str(origin_id)+"/market#caravans",
+        "icon":"timeline.hero_return","priority":"normal",
+    } for sid,status,due,origin_id,origin_name,world_id,dst_name in caravan_rows]
     construction_events=[{
         "id":"construction-"+str(order_id),
         "type":"construction_complete",
@@ -76,10 +102,12 @@ def timeline_for_player(
             "city_name":city_name,"target_url":"/cities/"+str(city_id)+"/region",
             "icon":"timeline.hero_return","priority":"normal"
         })
-    events=sorted(construction_events+movement_events,key=lambda e:(e["occurs_at"],e["id"]))
+    events=sorted(construction_events+movement_events+caravan_events,
+                  key=lambda e:(e["occurs_at"],e["id"]))
     return {
         "server_now": now,
         "horizon_hours": hours,
-        "truncated": len(events)>limit or len(rows)>limit or len(missions)>limit,
+        "truncated": (len(events)>limit or len(rows)>limit or
+                      len(missions)>limit or len(caravan_rows)>limit),
         "events": events[:limit],
     }

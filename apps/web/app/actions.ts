@@ -410,3 +410,47 @@ export async function saveHeroFormation(data:FormData){
   redirect(target+"&formation="+(status===201||status===200?"ok":
     status===409?"conflict":"unavailable"));
 }
+
+
+/** Real seven-resource convoy, with one stable UUID from the quoted form.
+ * No browser payload can choose the weight, tariff, travel time or destination owner.
+ */
+export async function sendCityCaravan(form:FormData){
+  const cityId=form.get("cityId"),destination=form.get("destinationId");
+  const shipmentId=form.get("shipmentId"),policy=form.get("policyId");
+  const uuid=/^[0-9a-f-]{36}$/i;
+  if(typeof cityId!=="string"||!uuid.test(cityId)||
+     typeof destination!=="string"||!uuid.test(destination)||
+     typeof shipmentId!=="string"||!uuid.test(shipmentId)||
+     typeof policy!=="string"||policy.length<3||policy.length>100)
+    redirect("/");
+  const resources=["gold","wood","ore","crystal","gems","sulfur","mercury"] as const;
+  const cargo:Record<string,number>={};
+  for(const resource of resources){
+    const amount=form.get("cargo_"+resource);
+    if(typeof amount!=="string"||!/^[0-9]{1,7}$/.test(amount)){
+      redirect("/cities/"+cityId+"/market?convoy=invalid#caravans");
+    }
+    const number=Number(amount);
+    if(!Number.isSafeInteger(number)||number<0||number>1000000)
+      redirect("/cities/"+cityId+"/market?convoy=invalid#caravans");
+    cargo[resource]=number;
+  }
+  if(!resources.some(k=>cargo[k]>0)||cityId===destination)
+    redirect("/cities/"+cityId+"/market?convoy=invalid#caravans");
+  const token=(await cookies()).get("mmhk_session")?.value;
+  if(!token)redirect("/");
+  let status=503;
+  try{
+    const response=await fetch(apiUrl("/api/v1/me/cities/"+cityId+"/caravans"),{
+      method:"POST",headers:{"Authorization":"Bearer "+token,"Content-Type":"application/json"},
+      body:JSON.stringify({shipment_id:shipmentId,destination_city_id:destination,
+        cargo,expected_policy_id:policy}),
+      cache:"no-store",signal:AbortSignal.timeout(7000),
+    });
+    status=response.status;
+  }catch { /* Unknown result must never be replayed with a new shipment UUID. */}
+  if(status===401)redirect("/");
+  redirect("/cities/"+cityId+"/market?convoy="+
+    (status===200||status===201?"sent":status===409?"conflict":"unavailable")+"#caravans");
+}

@@ -800,3 +800,47 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   border:1px solid #8b876b;font:700 12px Georgia,serif;text-decoration:none;}
 .hero-subnav a:hover,.hero-subnav a:focus-visible{border-color:#f1d7a1;background:#45585b;}
 #hero-equipment,#hero-bag,#hero-reserve,#hero-formation,#hero-army{scroll-margin-top:68px;}
+
+
+/* LAB caravans: seven-resource quote, real departure and worker-confirmed storage. */
+.caravan-panel{margin:22px 0;padding:19px;border:3px ridge #ab9468;
+  background:linear-gradient(125deg,#263f43,#122a32 55%,#1b3338);}
+.caravan-heading{border-bottom:1px solid #a794686b;padding-bottom:10px;}
+.caravan-heading h3{font:small-caps clamp(23px,3vw,30px) Georgia,serif;
+  color:#f1dfb1;margin:4px 0 7px;}
+.caravan-panel p{font:12px/1.7 system-ui,sans-serif;color:#c8cfca;}
+.caravan-limits{padding:10px 12px;border:1px solid #8f825f;
+  background:#10242c;color:#f0dbb2!important;}
+.caravan-blocked{border-left:3px solid #cfa364;padding:11px 12px;background:#263437;}
+.caravan-layout{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(260px,1fr);
+  gap:13px;margin:16px 0;}
+.caravan-plan,.caravan-quote-result{border:1px solid #a38b63;
+  padding:14px;background:#142b34;min-width:0;}
+.caravan-panel h4{color:#ebd4a2;font:small-caps 22px Georgia,serif;margin:1px 0 12px;}
+.caravan-plan>label{display:grid;gap:6px;color:#e0d0ab;
+  font:13px Georgia,serif;}
+.caravan-plan select,.caravan-plan input{padding:8px;background:#0d2530;color:#f2dbad;
+  border:1px solid #a48e63;min-width:0;width:100%;}
+.caravan-cargo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:10px;margin:12px 0;}
+.caravan-cargo-grid label{display:grid;gap:5px;min-width:0;
+  color:#d9c7a1;font:13px Georgia,serif;}
+.caravan-cargo-grid label>span{display:flex;justify-content:space-between;gap:6px;flex-wrap:wrap;}
+.caravan-cargo-grid small{font:10px system-ui,sans-serif;color:#b4c2c0;}
+.caravan-quote-result strong{color:#f2d89c;}
+.caravan-quote-result small{color:#b9c9c2;font:11px/1.6 system-ui,sans-serif;}
+.caravan-quote-result .error{color:#ffd0be;}
+.caravan-plan button,.caravan-confirm button{padding:10px 14px;min-height:39px;}
+.caravan-confirm button:disabled{opacity:.5;cursor:not-allowed;}
+.caravan-records{margin-top:19px;}
+.caravan-records ol{list-style:none;margin:10px 0;padding:0;display:grid;gap:9px;}
+.caravan-record{display:flex;align-items:start;justify-content:space-between;
+  flex-wrap:wrap;gap:11px;border:1px solid #978661;background:#142a33;padding:13px;}
+.caravan-record>div:first-child{flex:1;min-width:210px;}
+.caravan-record strong{display:block;color:#ead2a3;font:small-caps 17px Georgia,serif;}
+.caravan-record small{display:block;color:#c1cecb;
+  font:11px/1.6 system-ui,sans-serif;margin:3px 0;}
+.caravan-record-status{border-left:2px solid #d8be7c;padding-left:10px;max-width:300px;}
+.caravan-record-status strong{font:700 12px system-ui,sans-serif;}
+@media(max-width:900px){.caravan-layout{grid-template-columns:1fr;}}
+@media(max-width:540px){.caravan-cargo-grid{grid-template-columns:1fr;}}

@@ -127,6 +127,17 @@ def expand_demo(db:psycopg.Connection)->dict:
                VALUES('local-sandbox','LOCAL-FIXED-MARKET-V1',true,200,1000,60,86400)
                ON CONFLICT DO NOTHING"""
         )
+        # Caravan load model is a conscious laboratory convention: single
+        # shared 30k-unit budget, never the sum of historic per-resource maxima.
+        db.execute(
+            """INSERT INTO caravan_transport_policies(
+               world_id,policy_id,capacity_units,resource_weights,
+               seconds_per_tile,enabled)
+               VALUES('local-sandbox','LOCAL-CARAVAN-MIXED-V1',30000,%s,20,true)
+               ON CONFLICT DO NOTHING""",
+            (Jsonb({"gold":1,"wood":2000,"ore":2000,"crystal":5000,
+                    "gems":5000,"sulfur":5000,"mercury":5000}),),
+        )
         for (city_id,) in cities:
             for code,amount in (("militia",18),("archers",8)):
                 db.execute(

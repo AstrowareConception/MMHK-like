@@ -4,8 +4,10 @@ import { notFound, redirect } from "next/navigation";
 import { tradeCityResources } from "../../../actions";
 import { GameShell } from "../../../../components/game-shell/game-shell";
 import { MarketplacePanel } from "../../../../components/marketplace-panel";
+import { CaravanPanel } from "../../../../components/caravan-panel";
 import { privateApi, sessionToken, type CityDetail,
-  type MerchantCatalog, type MerchantQuote, type MarketplaceCatalog } from "../../../../lib/server-api";
+  type MerchantCatalog, type MerchantQuote, type MarketplaceCatalog,
+  type CaravanCatalog } from "../../../../lib/server-api";
 
 export const dynamic="force-dynamic";
 
@@ -20,21 +22,27 @@ export default async function MarketPage({params,searchParams}:{
   params:Promise<{cityId:string}>;
   searchParams:Promise<{
     pay_resource?:string;receive_resource?:string;pay_amount?:string;
-    trade?:string;offer?:string;
+    trade?:string;offer?:string;convoy?:string;
+    caravan_quote?:string;destination_city_id?:string;
+    load_gold?:string;load_wood?:string;load_ore?:string;
+    load_crystal?:string;load_gems?:string;load_sulfur?:string;load_mercury?:string;
   }>;
 }){
   const {cityId}=await params;
   if(!/^[a-f0-9-]{36}$/i.test(cityId))notFound();
   const token=await sessionToken();
   if(!token)redirect("/");
-  const [cityResponse,marketResponse,offerResponse,query]=await Promise.all([
+  const [cityResponse,marketResponse,offerResponse,caravanResponse,query]=await Promise.all([
     privateApi<CityDetail>("/api/v1/me/cities/"+cityId,token),
     privateApi<MerchantCatalog>("/api/v1/me/cities/"+cityId+"/market",token),
     privateApi<MarketplaceCatalog>("/api/v1/me/cities/"+cityId+"/market/offers",token),
+    privateApi<CaravanCatalog>("/api/v1/me/cities/"+cityId+"/caravans",token),
     searchParams,
   ]);
-  if(cityResponse.status===401||marketResponse.status===401||offerResponse.status===401)redirect("/");
-  if(cityResponse.status===404||marketResponse.status===404||offerResponse.status===404)notFound();
+  if(cityResponse.status===401||marketResponse.status===401||offerResponse.status===401||
+     caravanResponse.status===401)redirect("/");
+  if(cityResponse.status===404||marketResponse.status===404||offerResponse.status===404||
+     caravanResponse.status===404)notFound();
   if(!cityResponse.ok||!cityResponse.data)
     return <main className="shell"><p>La cité est momentanément inaccessible.</p>
       <Link href="/">Retour aux mondes</Link></main>;
@@ -102,10 +110,14 @@ export default async function MarketPage({params,searchParams}:{
             Les enchères historiques ne sont pas encore reproduites.</p>
           <a href="#marketplace">Consulter les offres</a>
         </article>
-        <article className="market-service locked">
+        <article className={"market-service "+(caravanResponse.data?.marketplace_active&&
+          caravanResponse.data?.transport_policy?"open":"locked")}>
           <span aria-hidden="true">♞</span>
-          <h3>Caravanes</h3><strong>Non disponible</strong>
-          <p>Le transport entre villes n'est pas encore actif ; aucune expédition fictive.</p>
+          <h3>Caravanes</h3>
+          <strong>{caravanResponse.data?.marketplace_active&&caravanResponse.data?.transport_policy?
+            "Transport autorisé":"Transport verrouillé"}</strong>
+          <p>Convois réels entre vos cités, chargement mixte et livraison par worker PostgreSQL.</p>
+          <a href="#caravans">Préparer un convoi</a>
         </article>
       </div>
       {!market.merchant_unlocked?(
@@ -190,6 +202,9 @@ export default async function MarketPage({params,searchParams}:{
       </>}
       <MarketplacePanel cityId={cityId} catalog={offerResponse.ok?offerResponse.data:undefined}
         stocks={city.stocks} notice={query.offer}/>
+      <CaravanPanel cityId={cityId} token={token}
+        catalog={caravanResponse.ok?caravanResponse.data:undefined}
+        stocks={city.stocks} query={query}/>
       <section className="merchant-ledger" id="market-ledger" aria-label="Registre des échanges">
         <h3>Transactions enregistrées</h3>
         {market.history.length?(
@@ -209,7 +224,7 @@ export default async function MarketPage({params,searchParams}:{
     <p className="notice">
       Marchand local opérationnel uniquement lorsque le bâtiment est actif.
       Offres à prix fixe expérimentales disponibles selon les droits du monde ;
-      enchères historiques et caravanes ne sont pas encore actives.
+      enchères historiques et caravanes alliées ou répétées ne sont pas encore actives.
       <Link href={"/cities/"+cityId}> Retourner dans la cité.</Link>
     </p>
   </GameShell>;

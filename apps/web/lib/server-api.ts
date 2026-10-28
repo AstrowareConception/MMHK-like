@@ -253,3 +253,40 @@ export type MissionReport={
   duel_report:(PveMission["duel_report"]&{no_losses_applied?:boolean;no_rewards?:boolean})|null;
   events:{phase:"departed"|"arrived"|"returned";occurred_at:string}[];
 };
+
+
+export type CaravanPolicy={
+  policy_id:string;capacity_units:number;
+  resource_weights:Record<string,number>;seconds_per_tile:number;
+};
+export type CaravanShipment={
+  shipment_id:string;world_id:string;
+  source_city_id:string;destination_city_id:string;
+  source_name:string;destination_name:string;
+  policy_id:string;cargo:Record<string,number>;
+  resource_weights:Record<string,number>;
+  load_units:number;capacity_units:number;
+  distance_steps:number;travel_seconds:number;
+  dispatched_at:string;arrival_due_at:string;
+  return_due_at:string|null;next_attempt_at:string|null;
+  completed_at:string|null;
+  status:"in_transit"|"returning"|"awaiting_storage"|"delivered"|"returned";
+  return_leg:boolean;replayed:boolean;historically_certified:false;
+};
+export type CaravanCatalog={
+  city_id:string;marketplace_active:boolean;
+  transport_policy:CaravanPolicy|null;
+  destinations:{city_id:string;name:string;x:number;y:number}[];
+  shipments:CaravanShipment[];
+  repetition_enabled:false;ally_destinations_enabled:false;
+  historically_certified:false;
+};
+export type CaravanQuote={
+  city_id:string;destination_city_id:string;destination_name:string;
+  cargo:Record<string,number>;
+  load_units:number;capacity_units:number;
+  distance_steps:number;travel_seconds:number;
+  policy_id:string;resource_weights:Record<string,number>;
+  marketplace_active:boolean;missing_stocks:Record<string,number>;
+  can_send:boolean;historically_certified:false;
+};
