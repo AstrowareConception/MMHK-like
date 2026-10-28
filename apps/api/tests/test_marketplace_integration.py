@@ -74,6 +74,10 @@ def neighbors(city):
         "other_buyer_name":extra_name,
     }
     with psycopg.connect(URL) as db:
+        # Real settlement history references buyer_city_id. The fixture must
+        # remove its isolated market offers before dropping either buyer city.
+        db.execute("DELETE FROM marketplace_offers WHERE seller_city_id=%s",
+                   (seller_city,))
         db.execute("DELETE FROM cities WHERE city_id IN (%s,%s)",
                    (first_buy_city,second_buy_city))
         db.execute(
