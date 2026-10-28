@@ -46,7 +46,9 @@ configuration de jeu.
 - Carte torique, distance Manhattan sur le tore ; maximum issu du profil
   versionné, sans interprétation comme vitesse historique.
 - Une case de cité occupée, un site remarquable enregistré, ou une
-  réservation de colonisation en cours / bloquée **ne peut pas** être reprise.
+  réservation de colonisation **en cours** ne peut pas être reprise.
+  Une tentative devenue **bloquée** libère cette réservation foncière ;
+  seul le dépôt de ressources reste à restituer.
   Le serveur renvoie un refus générique : l'identité ni le nom d'une
   cité adverse cachée ne sont divulgués.
 - Seul l'opérateur qualifie les **3 ou 4 types de mines** du site,
@@ -68,6 +70,8 @@ configuration de jeu.
   admissible ; il insère la cité, ses sept stocks à **zéro**, ses mines
   et ses cadences de production déclarées et son journal d'événements,
   puis rend le héros disponible dans sa ville d'origine.
+  Le voyage de retour du héros n'est **pas** simulé à ce stade : libération
+  à l'arrivée dans le laboratoire seulement, sans déplacement inventé.
 - **Le héros, son armée et ses artefacts ne sont ni téléportés ni
   dupliqués.** Les nouvelles cités n'obtiennent pas de bâtiment gratuit,
   de soldats ou d'artéfacts. Elles doivent reconstruire leurs services
