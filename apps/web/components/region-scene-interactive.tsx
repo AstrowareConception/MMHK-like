@@ -8,7 +8,7 @@ const MINE_LABELS:Record<string,string>={gold:"Or",wood:"Bois",ore:"Minerai",cry
   gems:"Gemmes",sulfur:"Soufre",mercury:"Mercure"};
 const cellLabel=(c:RegionCell|null)=>c?"("+c.i+", "+c.j+")":"—";
 
-export function RegionSceneInteractive({region,background}:{region:RegionView;background:string|null}){
+export function RegionSceneInteractive({region,background,forces}:{region:RegionView;background:string|null;forces:CityForces|null}){
   const [hover,setHover]=useState<RegionCell|null>(null);
   const [selected,setSelected]=useState<RegionCell>({i:2,j:2});
   const [showGuide,setShowGuide]=useState(!background);
