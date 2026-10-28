@@ -177,6 +177,14 @@ jobs:
           PY
           curl --fail --silent --show-error http://127.0.0.1:3000/ | grep -q 'API FastAPI joignable'
           echo "Browser-to-API and sandbox login verified"
+      - name: Verify local PostgreSQL backup is readable
+        run: |
+          python3 tools/local/stack.py backup
+          file="$(find backups -maxdepth 1 -type f -name 'mmhk-local-*.dump' -print -quit)"
+          test -s "$file"
+          docker compose --env-file .env.local -f compose.local.yaml exec -T \
+            postgres pg_restore --list < "$file" > /dev/null
+          echo "Local pg_dump backup archive verified"
       - name: Stop disposable stack and destroy its CI volume
         if: always()
         run: |
