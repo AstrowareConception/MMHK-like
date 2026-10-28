@@ -104,23 +104,46 @@ export default async function CityPage({
                 </article>
               ) : buildingAnswer.data.options.length ? (
                 <div className="build-options">
-                  {buildingAnswer.data.options.flatMap((o) => o.modes.map((mode) => (
-                    <form action={startUrbanConstruction} key={`${o.building_code}-${mode.mode}`} className="build-option">
-                      <input type="hidden" name="cityId" value={cityId}/>
-                      <input type="hidden" name="buildingCode" value={o.building_code}/>
-                      <input type="hidden" name="mode" value={mode.mode}/>
-                      <strong>{o.building_code} · niveau {o.target_level}</strong>
-                      <span>{mode.mode === "normal" ? "Standard" : mode.mode === "rapid" ? "Rapide" : "Économique"}</span>
-                      <small>Durée : {mode.duration_seconds.toLocaleString("fr-FR")} secondes</small>
-                      <small>Coût : {Object.entries(mode.costs).filter(([,v])=>v>0).map(([k,v])=>`${v} ${k}`).join(", ") || "Gratuit"}</small>
-                      {!o.available && (
-                        <small>Prérequises indisponibles : {o.missing_prerequisites.join(", ")}</small>
-                      )}
-                      <button disabled={!o.available} type="submit">
-                        {o.available ? "Lancer ce chantier" : "Construction verrouillée"}
-                      </button>
-                    </form>
-                  )))}
+                  {buildingAnswer.data.options.slice()
+                    .sort((a,b)=>Number(b.available)-Number(a.available) ||
+                      a.building_code.localeCompare(b.building_code))
+                    .map(o=>(
+                      <article className={"building-plan "+(o.available?"can-build":"locked-build")}
+                        key={o.building_code}>
+                        <div className="building-plan-header">
+                          <div>
+                            <span className="eyebrow">{o.available?"PROJET DISPONIBLE":"PRÉREQUIS MANQUANTS"}</span>
+                            <h3>{({
+                              village_hall:"Hôtel du village",town_hall:"Hôtel de ville",
+                              marketplace:"Marché",resource_silo:"Silos",tavern:"Taverne",
+                              recruit_t1:"Demeure des miliciens",recruit_t2:"Demeure des archers",
+                              fort:"Fortifications",blacksmith:"Forge",mage_guild:"Guilde des mages",
+                              stables:"Écuries",watchtower:"Tour de guet",
+                            } as Record<string,string>)[o.building_code]??o.building_code}</h3>
+                            <small>Niveau {o.target_level} · Contrat {o.policy_id}</small>
+                          </div>
+                          <span className="building-plan-rank">NIV. {o.target_level}</span>
+                        </div>
+                        {!o.available&&<p className="building-blockers">
+                          Nécessite : {o.missing_prerequisites.join(", ")}</p>}
+                        <div className="building-plan-modes">
+                          {o.modes.map(mode=><form action={startUrbanConstruction}
+                            key={o.building_code+"-"+mode.mode} className="build-option">
+                            <input type="hidden" name="cityId" value={cityId}/>
+                            <input type="hidden" name="buildingCode" value={o.building_code}/>
+                            <input type="hidden" name="mode" value={mode.mode}/>
+                            <strong>{mode.mode==="normal"?"Standard":mode.mode==="rapid"?"Rapide":"Économique"}</strong>
+                            <small>⏳ {Math.ceil(mode.duration_seconds/60)} min</small>
+                            <small>Coût : {Object.entries(mode.costs)
+                              .filter(([,value])=>value>0)
+                              .map(([name,value])=>value.toLocaleString("fr-FR")+" "+name).join(" · ")||"Aucun"}</small>
+                            <button type="submit" disabled={!o.available}>
+                              {o.available?"Lancer ce chantier":"Construction verrouillée"}
+                            </button>
+                          </form>)}
+                        </div>
+                      </article>
+                    ))}
                 </div>
               ) : (
                 <p>Aucun bâtiment n'est proposé : l'opérateur n'a pas encore configuré de profil pour le prochain niveau.</p>

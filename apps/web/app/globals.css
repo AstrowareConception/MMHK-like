@@ -450,3 +450,24 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
 @media(max-width:850px){.military-columns{grid-template-columns:1fr;}
   .military-panel-heading{align-items:flex-start;flex-direction:column;}}
 @media(max-width:550px){.hero-offer,.unit-recruit-offer{flex-wrap:wrap;}}
+
+
+/* Build catalogue condensed into one family card with three real quote modes. */
+.build-options {display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:15px;}
+.building-plan {background:linear-gradient(#253c43,#142833);border:2px ridge #a58e65;
+  padding:13px;border-radius:2px;display:flex;flex-direction:column;gap:12px;}
+.building-plan.locked-build {opacity:.73;}
+.building-plan-header {display:flex;justify-content:space-between;gap:10px;align-items:flex-start;}
+.building-plan-header h3 {margin:4px 0;color:#eddbb4;font:small-caps 23px Georgia,serif;}
+.building-plan-header small {color:#b9c9ca;font:10px system-ui,sans-serif;}
+.building-plan-rank {color:#f2dfb0;font:700 11px Georgia,serif;background:#21333e;
+  padding:7px;border:1px solid #94835b;white-space:nowrap;}
+.building-blockers {margin:0!important;color:#e4caa3!important;font-size:12px!important;}
+.building-plan-modes {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-top:auto;}
+.building-plan-modes .build-option {display:flex;flex-direction:column;gap:5px;min-width:0;
+  padding:8px;background:#101f29;border:1px solid #8f855d;border-radius:2px;}
+.building-plan-modes .build-option strong {color:#e6d6aa;font:700 12px Georgia,serif;}
+.building-plan-modes .build-option small {font:10px/1.35 system-ui,sans-serif;overflow-wrap:anywhere;}
+.building-plan-modes .build-option button {margin-top:auto;padding:7px 4px;font:700 10px/1.25 system-ui,sans-serif;}
+@media(max-width:530px){.build-options{grid-template-columns:1fr;}.building-plan-modes{grid-template-columns:1fr;}
+  .building-plan-modes .build-option{display:grid;grid-template-columns:1fr 1fr;}}
