@@ -844,3 +844,34 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
 .caravan-record-status strong{font:700 12px system-ui,sans-serif;}
 @media(max-width:900px){.caravan-layout{grid-template-columns:1fr;}}
 @media(max-width:540px){.caravan-cargo-grid{grid-template-columns:1fr;}}
+
+
+/* US-ECH-014..017: bounded lab convoy programs, separate from each dispatched leg. */
+.caravan-program-offer{margin:16px 0 0;padding:13px;
+  border:1px solid #b4a077;background:#203740;}
+.caravan-program-offer h4{margin:0 0 7px;}
+.caravan-program-offer>p{font-size:12px!important;}
+.caravan-program-offer form{display:grid;gap:11px;margin:11px 0;}
+.caravan-program-offer form label{display:grid;gap:5px;
+  color:#e6d5ad;font:13px/1.4 Georgia,serif;}
+.caravan-program-offer select{width:100%;min-width:0;max-width:100%;
+  background:#102731;color:#edddbb;border:1px solid #b6a072;padding:9px;
+  font:12px/1.5 system-ui,sans-serif;}
+.caravan-program-offer form button{min-height:39px;padding:10px;
+  justify-self:start;}
+.caravan-program-offer form button:disabled{opacity:.5;cursor:not-allowed;}
+.caravan-programs{border-top:1px solid #aa906451;margin:21px 0 0;padding-top:15px;}
+.caravan-programs ol{list-style:none;padding:0;margin:10px 0;
+  display:grid;gap:9px;}
+.caravan-program{display:flex;gap:14px;align-items:start;
+  justify-content:space-between;flex-wrap:wrap;padding:13px;
+  background:#1b343c;border:1px solid #ab9568;color:#e2d4b5;}
+.caravan-program>div:first-child{flex:1;min-width:200px;}
+.caravan-program strong{display:block;color:#f2d8a2;
+  font:small-caps 19px Georgia,serif;}
+.caravan-program small{display:block;color:#bfcbc4;
+  font:11px/1.6 system-ui,sans-serif;}
+.caravan-program-state{max-width:290px;display:grid;gap:9px;}
+.caravan-program-state strong{font:700 12px system-ui,sans-serif;}
+.caravan-program-state button{font:700 12px system-ui,sans-serif;
+  padding:9px 12px;}
