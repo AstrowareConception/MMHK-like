@@ -58,6 +58,8 @@ services:
     environment:
       <<: *pg_connection
       MMHK_LOGIN_RATE_KEY: ${MMHK_LOGIN_RATE_KEY:?Run python3 tools/local/stack.py init}
+      # Only the locally bound API management container may seed a sandbox.
+      MMHK_LOCAL_DEMO_ENABLED: "true"
     depends_on:
       migrate:
         condition: service_completed_successfully
