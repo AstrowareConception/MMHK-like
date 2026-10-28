@@ -210,3 +210,37 @@ export async function moveCityArtifact(data:FormData) {
   redirect(back+"&artifact="+(status===200||status===201?"ok":status===409?"conflict":
     status===404?"missing":"unavailable"));
 }
+
+
+/** Confirm a real timed laboratory march; never start a battle from client state. */
+export async function launchRegionalPveMission(form:FormData) {
+  const cityId=form.get("cityId"),heroId=form.get("heroId");
+  const encounterId=form.get("encounterId"),unitCode=form.get("unitCode");
+  const uuid=/^[0-9a-f-]{36}$/i;
+  if(typeof cityId!=="string"||!uuid.test(cityId)||
+     typeof heroId!=="string"||!uuid.test(heroId)||
+     typeof encounterId!=="string"||!uuid.test(encounterId)||
+     typeof unitCode!=="string"||!/^[a-z][a-z0-9_]{1,47}$/.test(unitCode))redirect("/");
+  const token=(await cookies()).get("mmhk_session")?.value;
+  if(!token)redirect("/");
+  let status=503;
+  let selectedTile="";
+  try{
+    const response=await fetch(apiUrl("/api/v1/me/cities/"+cityId+"/missions"),{
+      method:"POST",headers:{"Authorization":"Bearer "+token,"Content-Type":"application/json"},
+      body:JSON.stringify({mission_id:randomUUID(),hero_id:heroId,encounter_id:encounterId,
+        unit_code:unitCode}),cache:"no-store",signal:AbortSignal.timeout(7000)
+    });
+    status=response.status;
+    if(response.ok){
+      const receipt=(await response.json()) as {target_i?:number;target_j?:number};
+      if(Number.isInteger(receipt.target_i)&&Number.isInteger(receipt.target_j)&&
+        (receipt.target_i??-1)>=0&&(receipt.target_i??5)<=4&&
+        (receipt.target_j??-1)>=0&&(receipt.target_j??5)<=4)
+        selectedTile="&tile="+receipt.target_i+"-"+receipt.target_j;
+    }
+  }catch { /* Unknown result is not automatically retried with a new UUID. */ }
+  if(status===401)redirect("/");
+  redirect("/cities/"+cityId+"/region?mission="+(status===200||status===201?"ok":
+    status===409?"conflict":"unavailable")+selectedTile);
+}

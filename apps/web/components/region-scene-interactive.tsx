@@ -1,16 +1,17 @@
 "use client";
 import {useState,type KeyboardEvent} from "react";
-import type {RegionView,CityForces} from "../lib/server-api";
+import type {RegionView,CityForces,PveMissionsResponse} from "../lib/server-api";
 import {RegionEncounterPanel} from "./region-encounter-panel";
+import {RegionJourneyLayer,RegionMissionsPanel} from "./region-missions";
 import {REGION_VIEW,regionCellCenter,regionPolygon,type RegionCell} from "../lib/region-geometry";
 
 const MINE_LABELS:Record<string,string>={gold:"Or",wood:"Bois",ore:"Minerai",crystal:"Cristal",
   gems:"Gemmes",sulfur:"Soufre",mercury:"Mercure"};
 const cellLabel=(c:RegionCell|null)=>c?"("+c.i+", "+c.j+")":"—";
 
-export function RegionSceneInteractive({region,background,forces}:{region:RegionView;background:string|null;forces:CityForces|null}){
+export function RegionSceneInteractive({region,background,forces,missions,initialSelection}:{region:RegionView;background:string|null;forces:CityForces|null;missions:PveMissionsResponse|null;initialSelection?:RegionCell}){
   const [hover,setHover]=useState<RegionCell|null>(null);
-  const [selected,setSelected]=useState<RegionCell>({i:2,j:2});
+  const [selected,setSelected]=useState<RegionCell>(initialSelection??{i:2,j:2});
   const [showGuide,setShowGuide]=useState(!background);
   const known=region.cells.find(c=>c.i===selected.i&&c.j===selected.j);
   const currentEncounter=region.encounters?.find(e=>e.i===selected.i&&e.j===selected.j)??null;
@@ -78,6 +79,7 @@ export function RegionSceneInteractive({region,background,forces}:{region:Region
             fill="#fff3cf" fontSize="12" pointerEvents="none">?</text>}
         </g>;
       })}
+      <RegionJourneyLayer missions={missions}/>
       <rect x="8" y="523" width="430" height="28" rx="3" fill="#10232cdd" pointerEvents="none"/>
       <text x="20" y="542" fontSize="11" fill="#f1dfb8" pointerEvents="none">
         Décor historique · cases encore non cartographiées
@@ -90,7 +92,8 @@ export function RegionSceneInteractive({region,background,forces}:{region:Region
         "Terrain, forêt, mine, site ou PNJ : non cartographié"}</span>
       {known?.kind==="owned_city"&&<a href={"/cities/"+region.city_id}>Entrer dans la cité</a>}
     </div>
-    <RegionEncounterPanel encounter={currentEncounter} forces={forces} cityId={region.city_id}/>
+    <RegionMissionsPanel missions={missions}/>
+    <RegionEncounterPanel encounter={currentEncounter} forces={forces} cityId={region.city_id} missions={missions}/>
     <div className="region-legend">
       <div><strong>Mines rattachées à cette cité</strong>
         <p>{region.mine_types_unlocated.map(k=>MINE_LABELS[k]??k).join(" · ")||"Aucune mine enregistrée"}</p>

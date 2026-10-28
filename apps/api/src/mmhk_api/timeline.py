@@ -1,7 +1,7 @@
-"""Read-only prediction of authorized construction completions.
+"""Read-only prediction of authorized construction and hero travel milestones.
 
-PostgreSQL and the construction worker remain the only sources of truth.
-No synthetic military movements, rediscovery of enemy positions, or client time.
+PostgreSQL and the workers remain the only sources of truth.
+Only explicitly launched timed PvE missions are shown; no client-clock authority.
 """
 from __future__ import annotations
 
@@ -33,24 +33,53 @@ def timeline_for_player(
            LIMIT %s""",
         (account_id, account_id, horizon, limit + 1),
     ).fetchall()
+    # Departure and return are independent, server-scheduled events.
+    # The 12h strip never fabricates arrivals from the browser clock.
+    missions=db.execute(
+        """SELECT m.mission_id,m.stage,m.arrival_due_at,m.return_due_at,
+                  h.name,c.city_id,c.name,c.world_id,e.name
+           FROM pve_missions m
+           JOIN city_heroes h ON h.hero_id=m.hero_id
+           JOIN cities c ON c.city_id=m.city_id
+           JOIN world_memberships w ON w.world_id=c.world_id AND w.account_id=%s
+           JOIN region_encounters e ON e.encounter_id=m.encounter_id
+           WHERE m.actor_account_id=%s AND c.owner_account_id=%s
+             AND m.stage<>'completed'
+             AND (m.arrival_due_at <= %s OR m.return_due_at <= %s)
+           ORDER BY m.started_at,m.mission_id LIMIT %s""",
+        (account_id,account_id,account_id,horizon,horizon,limit+1),
+    ).fetchall()
+    construction_events=[{
+        "id":"construction-"+str(order_id),
+        "type":"construction_complete",
+        "title":f"{code.replace('_', ' ').capitalize()} — niveau {level}",
+        "occurs_at":due,
+        "world_id":world_id,
+        "city_id":str(city_id),"city_name":city_name,
+        "target_url":"/cities/"+str(city_id),
+        "icon":"timeline.construction","priority":"normal"
+    } for order_id,code,level,due,city_id,city_name,world_id in rows]
+    movement_events=[]
+    for mid,stage,arrival,return_due,hname,city_id,city_name,world_id,enemy in missions:
+        if stage=="outbound" and arrival<=horizon:
+            movement_events.append({
+                "id":"hero-arrival-"+str(mid),"type":"hero_arrival",
+                "title":f"{hname} arrive près de {enemy}",
+                "occurs_at":arrival,"world_id":world_id,"city_id":str(city_id),
+                "city_name":city_name,"target_url":"/cities/"+str(city_id)+"/region",
+                "icon":"timeline.hero_arrival","priority":"normal"
+            })
+        if return_due<=horizon: movement_events.append({
+            "id":"hero-return-"+str(mid),"type":"hero_return",
+            "title":f"Retour de {hname}",
+            "occurs_at":return_due,"world_id":world_id,"city_id":str(city_id),
+            "city_name":city_name,"target_url":"/cities/"+str(city_id)+"/region",
+            "icon":"timeline.hero_return","priority":"normal"
+        })
+    events=sorted(construction_events+movement_events,key=lambda e:(e["occurs_at"],e["id"]))
     return {
         "server_now": now,
         "horizon_hours": hours,
-        "truncated": len(rows) > limit,
-        "events": [
-            {
-                "id": "construction-" + str(order_id),
-                "type": "construction_complete",
-                "title": f"{code.replace('_', ' ').capitalize()} — niveau {level}",
-                "occurs_at": due,
-                "world_id": world_id,
-                "city_id": str(city_id),
-                "city_name": city_name,
-                "target_url": "/cities/" + str(city_id),
-                "icon": "timeline.construction",
-                "priority": "normal",
-            }
-            for order_id, code, level, due, city_id, city_name, world_id
-            in rows[:limit]
-        ],
+        "truncated": len(events)>limit or len(rows)>limit or len(missions)>limit,
+        "events": events[:limit],
     }

@@ -17,6 +17,7 @@ from .map_views import MapNotFound, own_region, world_overview
 from .timeline import timeline_for_player
 from .artifacts import artifact_inventory, move_artifact
 from .region_pve import preview_duel
+from .pve_missions import start_pve_mission,missions_for_city
 from .forces import city_forces, recruit_units, hire_hero, RecruitmentNotFound, RecruitmentConflict, transfer_units
 from .login_limits import (
     RateLimitConfigurationError, reserve_login_attempt, audit_login,
@@ -399,6 +400,37 @@ def my_pve_preview(city_id:UUID,encounter_id:UUID,command:PreviewBattleCommand,
             encounter_id=encounter_id,hero_id=command.hero_id,unit_code=command.unit_code)
     except RecruitmentNotFound as exc:
         raise HTTPException(status_code=404,detail="Encounter, city or hero not found") from exc
+    except RecruitmentConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+class PveMissionRequest(StrictDTO):
+    mission_id: UUID
+    hero_id: UUID
+    encounter_id: UUID
+    unit_code: str = Field(pattern=r"^[a-z][a-z0-9_]{1,47}$")
+
+
+@app.get("/api/v1/me/cities/{city_id}/missions")
+def my_region_missions(city_id:UUID,db:_db,player:_player)->dict:
+    try:
+        return missions_for_city(db,player,city_id)
+    except RecruitmentNotFound as exc:
+        raise HTTPException(status_code=404,detail="City not found") from exc
+
+
+@app.post("/api/v1/me/cities/{city_id}/missions",status_code=201)
+def start_region_mission(city_id:UUID,command:PveMissionRequest,db:_db,player:_player,
+                         response:Response)->dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        receipt=start_pve_mission(db,owner=player,city_id=city_id,
+            mission_id=command.mission_id,hero_id=command.hero_id,
+            encounter_id=command.encounter_id,unit_code=command.unit_code)
+        if receipt["replayed"]:response.status_code=200
+        return receipt
+    except RecruitmentNotFound as exc:
+        raise HTTPException(status_code=404,detail="City, hero or encounter not found") from exc
     except RecruitmentConflict as exc:
         raise HTTPException(status_code=409,detail=str(exc)) from exc
 

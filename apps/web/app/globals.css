@@ -587,3 +587,21 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   padding:7px;border-bottom:1px solid #8a8e7566;font:13px Georgia,serif;}
 .encounter-report b {color:#efcd88;}
 .encounter-report small {display:block;margin-top:11px;color:#c8cfc9;font:11px/1.6 system-ui,sans-serif;}
+
+/* Server-clocked 2-leg hero march; UI is visual interpolation, not authority. */
+.region-mission-map {filter:drop-shadow(0 3px 5px #000b);}
+.regional-mission-status {margin:15px 0;padding:15px;background:linear-gradient(130deg,#283e43,#142c35);
+  border:1px solid #b8a171;}
+.regional-mission-status h3{margin:0 0 10px;color:#f1dca9;font:small-caps 22px Georgia,serif;}
+.regional-mission-status p,.regional-mission-status small{font:12px/1.65 system-ui,sans-serif;color:#c8cfca;}
+.regional-mission-row{display:flex;flex-wrap:wrap;gap:9px 15px;padding:11px;margin:7px 0;
+  border:1px solid #91835f;background:#172c34;align-items:center;color:#d0d8d1;font:12px Georgia,serif;}
+.regional-mission-row strong{color:#efd39b;font-size:15px;}
+.regional-mission-row small{width:100%;}
+.journey-countdown{margin-left:auto;font-variant-numeric:tabular-nums;}
+.region-launch{padding:14px;margin-top:13px;background:#192e36;border:1px solid #a18d69;}
+.region-launch h4{margin:0 0 6px;color:#eddaad;font:small-caps 20px Georgia,serif;}
+.region-launch p{font-size:12px;line-height:1.7;}
+.region-launch button:disabled{opacity:.5;cursor:not-allowed;}
+.region-launch small{display:block;margin-top:8px;font:11px/1.5 system-ui,sans-serif;color:#d1cfc0;}
+@media(prefers-reduced-motion:reduce){.region-mission-map{filter:none;}}

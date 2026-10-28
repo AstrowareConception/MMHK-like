@@ -81,10 +81,10 @@ export function TopTimelineBar({initial,backgroundUrl}:{initial:TimelineResponse
             const event=first.event;
             const details=event.title+" · "+event.city_name+" · "+dueLabel(event.occurs_at)+" · "+timeRemaining(event.occurs_at,now);
             return <Link key={event.id} href={event.target_url} className="timeline-event" style={location}
-              title={details} aria-label={details} data-timeline-type={event.type}>⚒</Link>;
+              title={details} aria-label={details} data-timeline-type={event.type}>{event.type==="construction_complete"?"⚒":event.type==="hero_arrival"?"⚔":"♞"}</Link>;
           }
           return <details key={group.map(x=>x.event.id).join(":")} className="timeline-cluster" style={location}>
-            <summary aria-label={String(group.length)+" événements proches"}>⚒ {group.length}</summary>
+            <summary aria-label={String(group.length)+" événements proches"}>⌛ {group.length}</summary>
             <div className="timeline-cluster-content">
               {group.map(({event})=><Link key={event.id} href={event.target_url}>
                 {event.title} · {event.city_name}<small>{timeRemaining(event.occurs_at,now)}</small>
@@ -92,7 +92,7 @@ export function TopTimelineBar({initial,backgroundUrl}:{initial:TimelineResponse
             </div>
           </details>;
         })}
-        {state?.events.length===0&&<p className="timeline-empty">Aucun chantier annoncé · Le royaume est paisible.</p>}
+        {state?.events.length===0&&<p className="timeline-empty">Aucune échéance annoncée · Le royaume est paisible.</p>}
         {!state&&<p className="timeline-empty">Frise momentanément indisponible.</p>}
       </div>
       <div className="timeline-footer"><span>Présent</span>
