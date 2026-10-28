@@ -48,3 +48,21 @@ Cette révision apporte les contrôles de caméra au-dessus des quatre zones fl�
 Le fond historique est un JPEG **statique**, pas une mosaïque géoréférencée qui se recompose quand on change les coordonnées. La vue illustre le cadre MMHK ; seules les positions des villes détenues sont authentifiées par le serveur. Les hitboxes actuelles constituent une approximation d'interface, et ne peuvent être déclarées pixel-perfect sans les données géométriques originales.
 
 **Références aux US du backlog inchangées :** US-MON-001 (déplacer), US-MON-002 (zoom), US-MON-004 (coordonnées torique), US-MON-008 (villes), US-UIX-002 (niveaux de carte), US-UIX-003 (sélection précise), US-UIX-006 (asset de repli). Aucune US créée, aucune mine, forêt ou relique générée arbitrairement.
+
+## Tranche C : rendu des 25 cases et renseignements mondiaux
+
+**US existantes :** US-REG-001, US-UIX-003, US-MON-003/005 et US-REL-001/008/009.
+
+### Géométrie de la région
+
+Le module region-geometry.ts centralise les vingt-cinq centres et polygones isométriques pour l'affichage et le clic. Le fond historique retrouve sa taille native de 680 × 562 pixels. Une seule case est remplie ; le survol est signalé par son contour. La grille est facultative lorsqu'un fond historique existe, de façon à ne pas contredire visuellement son quadrillage peint. La photo ne constitue pas une source de terrain ni d'emplacements de mines.
+
+### Renseignements monde (migration 007)
+
+Une ville adverse demeure masquée jusqu'à découverte explicite. Les nouveaux sites du monde (sphinx, obélisque, dolmen, portail, relique et site remarquable) portent un identifiant, des coordonnées validées et une provenance. Leur visibilité est attribuée à un compte membre du monde. Les influences sont conservées par cellule et contrôleur avec la date du constat, puis montrées au propriétaire ou à un joueur disposant d'une révélation explicite. Aucune formule d'influence ni règle de combat n'est ajoutée.
+
+Les fonctions d'écriture sont exclusivement internes au serveur et sans route HTTP publique. Le endpoint world_overview retourne les listes filtrées discovered_cities, visible_sites et visible_influence. La carte distingue les villes possédées, les autres villes découvertes, les sites et l'influence connue, avec des filtres d'affichage.
+
+Le monde local de démonstration ne contient pas de reliques, sphinx, obélisques ou emplacements de terrain artificiels. Des tests PostgreSQL vérifient les découvertes, le cloisonnement entre comptes, la révocation, les coordonnées invalides et les droits de lecture. Le parcours navigateur contrôle le format natif régional et les couches vides du monde.
+
+**Travail restant sous les US existantes :** moteur de génération des sites, reconnaissance, calcul vérifié d'influence et utilisation des reliques. L'intégration de sprites privés demeure soumise à l'existence de coordonnées et à la validation des droits.

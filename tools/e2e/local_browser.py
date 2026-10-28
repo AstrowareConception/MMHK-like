@@ -43,6 +43,12 @@ def main() -> int:
             page.get_by_role("link", name=re.compile("Royaume de démonstration")).click()
             expect(page.get_by_role("heading", name="Mes positions dans le monde")).to_be_visible()
             assert "local-sandbox" in page.url
+            # Server-side scoped world intel: sandbox has no registered sites.
+            expect(page.get_by_text("Cités découvertes : 0")).to_be_visible()
+            expect(page.get_by_text("Sites découverts : 0")).to_be_visible()
+            expect(page.get_by_text("Cases d'influence connues : 0")).to_be_visible()
+            page.get_by_label("Sites", exact=True).uncheck()
+            page.get_by_label("Sites", exact=True).check()
             # Existing US-MON-001/004 and US-UIX-002/003: navigate and zoom
             # without exposing hidden cities or creating a military order.
             expect(page.get_by_test_id("world-center")).to_have_text("(17, 23)")
@@ -83,6 +89,9 @@ def main() -> int:
             page.get_by_role("button", name="Recentrer sur Premier Havre").click()
             page.get_by_role("link", name="Voir la région").click()
             expect(page.get_by_role("heading", name="Autour de Premier Havre")).to_be_visible()
+            # Native resolution matches original historical region imagery.
+            expect(page.locator("svg.region-scene")).to_have_attribute("viewBox", "0 0 680 562")
+            expect(page.locator(".region-selectable-cell")).to_have_count(25)
             # The region is explicitly a 25-cell schematic, not made-up mine positions.
             expect(page.get_by_text("25 emplacements schématiques")).to_be_visible()
             # US-REG-001 + US-UIX-003: a genuine local 5x5 tile,
