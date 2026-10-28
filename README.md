@@ -1,6 +1,6 @@
 # MMHK-like — dossier de rétroconception
 
-**Objectif : reconstruire le fonctionnement de Might & Magic Heroes Kingdoms avant de développer son successeur jouable par navigateur.** Le présent dépôt contient un référentiel de gameplay, des spécifications fonctionnelles, des données historiques extraites et un plan de validation. Il ne contient pas encore de jeu jouable ; une première fondation FastAPI/Next.js est désormais testée séparément du laboratoire.
+**Objectif : reconstruire le fonctionnement de Might & Magic Heroes Kingdoms avant de développer son successeur jouable par navigateur.** Le présent dépôt contient un référentiel de gameplay, des spécifications fonctionnelles, des données historiques extraites et un plan de validation. Il inclut désormais un **prototype local interactif** sous FastAPI/Next.js : connexion, navigation monde → région → ville, production de ressources, construction et bonus de bâtiments. Le combat PvP et les mécaniques historiques complètes ne sont pas encore intégrés au jeu navigateur.
 
 ## Démarrer la version locale complète avec Docker
 
@@ -26,6 +26,17 @@ n'est pas activé.
 Consultez le [guide Docker complet](docs/specifications/DOCKER-COMPLET-LOCAL.md)
 pour l'installation, les prérequis, les logs, sauvegardes,
 mises à jour, sauvegarde des secrets et suppression des volumes.
+
+**Validation du prototype local — 28 octobre 2026.** La chaîne de test
+GitHub Actions réalise un parcours Chromium/Playwright sur une stack
+Docker jetable : connexion, carte du monde, région 5 × 5, cité, paiement
+d'un chantier, achèvement par le worker PostgreSQL, affichage du bonus
+après actualisation automatique et déconnexion. Les autres jobs vérifient
+les tests FastAPI/PostgreSQL, le build Next.js et l'isolation de la
+préproduction privée. Voir le [workflow CI](https://github.com/AstrowareConception/MMHK-like/actions/workflows/fullstack-foundation.yml)
+et le [protocole de test navigateur](docs/specifications/TEST-NAVIGATEUR-BOUT-EN-BOUT.md).
+**Cette validation locale ne constitue pas un déploiement public ni une
+certification de conformité au jeu Ubisoft d'origine.**
 
 ---
 
