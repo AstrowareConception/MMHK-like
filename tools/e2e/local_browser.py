@@ -105,6 +105,12 @@ def main() -> int:
             page.get_by_role("link", name="Entrer en ville").first.click()
             expect(page.get_by_role("heading", level=1, name="Premier Havre", exact=True)).to_be_visible()
             expect(page.get_by_role("heading", name="Réserves de la ville")).to_be_visible()
+            expect(page.get_by_role("heading", name="Armées et héros")).to_be_visible()
+            expect(page.get_by_text("Aldric du Havre")).to_be_visible()
+            assert page.locator(".building-plan").count() >= 8, "Expanded Haven catalogue not provisioned"
+            assert page.locator(".unit-recruit-offer").count() == 2
+            expect(page.get_by_text("Demeure des miliciens", exact=True)).to_be_visible()
+
             expect(page.get_by_text("Actualisation automatique", exact=False)).to_be_visible()
 
             # The actual first townhall can be built from the demo fixture.
@@ -139,6 +145,14 @@ def main() -> int:
             expect(finished.first).to_be_visible(timeout=5000)
             expect(page.locator(".timeline-event")).to_have_count(0, timeout=45000)
             expect(page.get_by_text("Bonus de mine actifs", exact=False)).to_be_visible()
+            # Progression: after village hall completion, the first dwelling
+            # becomes available; recruitment itself requires that building to finish.
+            tier_one = page.locator(
+                "form.build-option:has(input[name='buildingCode'][value='recruit_t1'])"
+                ":has(input[name='mode'][value='rapid'])"
+            )
+            expect(tier_one.get_by_role("button", name="Lancer ce chantier")).to_be_enabled()
+
             # The user can navigate back and log out via the real server action.
             page.get_by_role("link", name="Carte du monde").click()
             expect(page.get_by_role("heading", name="Mes positions dans le monde")).to_be_visible()
