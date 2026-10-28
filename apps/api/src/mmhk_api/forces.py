@@ -134,9 +134,11 @@ def recruit_units(db: psycopg.Connection, *, owner: UUID, city_id: UUID, order_i
         if pool is None or pool[0] < quantity:
             raise RecruitmentConflict("Not enough recruits available")
         costs = profile[1]
-        if set(costs) != set(RESOURCE_NAMES):
-            raise RecruitmentConflict("Unit policy invalid")
-        total = {k:int(value)*quantity for k,value in costs.items()}
+        if (not isinstance(costs,dict) or set(costs) != set(RESOURCE_NAMES)
+            or any(type(value) is not int or value < 0
+                   or value > (2**63-1)//quantity for value in costs.values())):
+            raise RecruitmentConflict("Unit cost policy invalid")
+        total = {k:value*quantity for k,value in costs.items()}
         stocks = dict(db.execute(
             "SELECT resource,amount FROM city_stocks WHERE city_id=%s FOR UPDATE",
             (city_id,),
