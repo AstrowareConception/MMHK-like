@@ -9,9 +9,9 @@ const MINE_LABELS:Record<string,string>={gold:"Or",wood:"Bois",ore:"Minerai",cry
   gems:"Gemmes",sulfur:"Soufre",mercury:"Mercure"};
 const cellLabel=(c:RegionCell|null)=>c?"("+c.i+", "+c.j+")":"—";
 
-export function RegionSceneInteractive({region,background,forces,missions}:{region:RegionView;background:string|null;forces:CityForces|null;missions:PveMissionsResponse|null}){
+export function RegionSceneInteractive({region,background,forces,missions,initialSelection}:{region:RegionView;background:string|null;forces:CityForces|null;missions:PveMissionsResponse|null;initialSelection?:RegionCell}){
   const [hover,setHover]=useState<RegionCell|null>(null);
-  const [selected,setSelected]=useState<RegionCell>({i:2,j:2});
+  const [selected,setSelected]=useState<RegionCell>(initialSelection??{i:2,j:2});
   const [showGuide,setShowGuide]=useState(!background);
   const known=region.cells.find(c=>c.i===selected.i&&c.j===selected.j);
   const currentEncounter=region.encounters?.find(e=>e.i===selected.i&&e.j===selected.j)??null;

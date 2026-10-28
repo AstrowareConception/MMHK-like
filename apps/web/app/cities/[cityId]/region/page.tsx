@@ -11,9 +11,12 @@ export default async function RegionPage({
   params, searchParams,
 }: {
   params: Promise<{ cityId: string }>;
-  searchParams:Promise<{mission?:string}>;
+  searchParams:Promise<{mission?:string;tile?:string}>;
 }) {
   const { cityId } = await params;
+  const requested=(await searchParams).tile??"";
+  const tile=/^[0-4]-[0-4]$/.test(requested)
+    ? {i:Number(requested[0]),j:Number(requested[2])} : undefined;
   const token = await sessionToken();
   if (!token) redirect("/");
   if (!/^[0-9a-f-]{36}$/i.test(cityId)) notFound();
@@ -45,7 +48,7 @@ export default async function RegionPage({
             "Départ refusé : héros occupé, rencontre déjà ciblée ou trajet indisponible."}
         </p>}
         <RegionScene region={region} forces={forces.ok?forces.data??null:null}
-          missions={missions.ok?missions.data??null:null}/>
+          missions={missions.ok?missions.data??null:null} initialSelection={tile}/>
         <div className="region-actions">
           <Link className="scene-action" href={`/cities/${region.city_id}`}>
             Ouvrir la cité {region.city_name}
