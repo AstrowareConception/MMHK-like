@@ -56,6 +56,21 @@ distinguent clairement la première boucle de consultation d'un vrai jeu
 déjà jouable. La conformité PvP de Jactari est toujours verrouillée ;
 le [laboratoire JavaScript](tools/jactari-port/README.md) et ses tests sont conservés.
 
+## Workers supervisés et vue de ville (28 octobre 2026)
+
+Le [nouveau superviseur Python](apps/api/src/mmhk_api/supervised_worker.py)
+peut exécuter en continu les cycles de production et de construction,
+avec transactions PostgreSQL indépendantes, reprise, état de santé
+persisté et redémarrage Docker **uniquement après activation explicite**.
+Il n'exécute aucun combat PvP.
+
+Une [scène de ville DOM/CSS](apps/web/components/city-scene.tsx) apporte
+un premier rendu au format 680×552 issu du client Havre archivé,
+avec ancres vérifiées pour certains bâtiments. Le décor est une
+**illustration CSS originale de substitution** : les images Ubisoft,
+sans licence de redistribution identifiée, ne sont pas diffusées.
+Voir le [rapport de livraison](docs/specifications/WORKERS-SUPERVISES-VILLE-VISUELLE.md).
+
 ## Lire le dossier
 
 | Besoin | Document |
