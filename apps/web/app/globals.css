@@ -699,3 +699,48 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   .market-service{min-height:0;}
   .merchant-quote-figures>span{display:none;}
 }
+
+
+/* Hôtel des ventes: fixed-price lab lots, escrow states and accessible forms. */
+.marketplace-panel{margin:21px 0;padding:18px;
+  background:linear-gradient(120deg,#2c4349,#142a33 55%,#1c3435);
+  border:3px ridge #b5a077;box-shadow:inset 0 0 22px #0008;}
+.marketplace-heading{display:flex;justify-content:space-between;align-items:start;
+  gap:12px;flex-wrap:wrap;border-bottom:1px solid #ab91675e;padding-bottom:11px;}
+.marketplace-heading h3{font:small-caps clamp(23px,3vw,29px) Georgia,serif;
+  color:#f2deb2;margin:4px 0;}
+.marketplace-panel a{color:#f2d9a6;}
+.marketplace-panel p{font:12px/1.65 system-ui,sans-serif;color:#c8d0ca;}
+.marketplace-panel .market-disclaimer{padding:9px 11px;background:#11242d;}
+.marketplace-locked{border-left:4px solid #d2a768;background:#162d35;padding:11px;}
+.marketplace-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:17px 0;}
+.marketplace-wing{background:#0f252edb;border:1px solid #897755;padding:15px;min-width:0;}
+.marketplace-wing h4,.marketplace-my-offers h4{margin:2px 0 13px;
+  font:small-caps 23px Georgia,serif;color:#eed8a9;}
+.marketplace-offer{display:grid;gap:7px;border:1px solid #a68a5b;
+  padding:12px;background:#213841;margin:9px 0;}
+.marketplace-offer strong{font:small-caps 19px Georgia,serif;color:#f3e0b4;}
+.marketplace-offer span{font:13px Georgia,serif;color:#ded4bd;}
+.marketplace-offer span b{color:#f2d492;}
+.marketplace-offer small,.marketplace-own-offer small{display:block;
+  font:11px/1.55 system-ui,sans-serif;color:#c1c9c3;}
+.marketplace-offer form button{min-height:35px;}
+.marketplace-publish{display:grid;gap:10px;}
+.marketplace-publish label{display:grid;gap:5px;color:#d7c5a2;
+  font:13px/1.45 Georgia,serif;}
+.marketplace-publish select,.marketplace-publish input{
+  padding:9px;border:1px solid #a89765;background:#122832;
+  color:#f0dfb9;font:13px system-ui,sans-serif;width:100%;max-width:100%;}
+.marketplace-publish button{margin-top:4px;min-height:39px;}
+.marketplace-publish small{font:11px/1.6 system-ui,sans-serif;color:#bdcac6;}
+.marketplace-publish button:disabled,.marketplace-offer button:disabled{
+  opacity:.5;cursor:not-allowed;}
+.marketplace-my-offers{margin-top:14px;border-top:1px solid #ac916267;
+  padding-top:17px;}
+.marketplace-own-offer{display:flex;justify-content:space-between;align-items:center;
+  gap:13px;flex-wrap:wrap;padding:12px;border:1px solid #907e60;
+  background:#152b35;margin:8px 0;color:#dfdbcd;font:13px Georgia,serif;}
+.marketplace-own-offer strong{color:#f3ddb0;}
+.marketplace-own-offer button{font:700 12px system-ui,sans-serif;padding:9px 12px;}
+.marketplace-empty{font-style:italic!important;color:#adbebc!important;}
+@media(max-width:870px){.marketplace-columns{grid-template-columns:1fr;}}

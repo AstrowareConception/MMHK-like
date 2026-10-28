@@ -202,6 +202,21 @@ def main() -> int:
             expect(page.get_by_text("Échange confirmé :",exact=False)).to_be_visible(timeout=20000)
             expect(page.get_by_test_id("market-history-row")).to_have_count(1)
             expect(page.get_by_test_id("market-history-row").first).to_contain_text("6 bois vers 3 minerai")
+            # US-ECH-004/005/008: actually reserve a lot outside spendable stock,
+            # display its state and withdraw it to the same city.
+            publish=page.get_by_test_id("marketplace-publish")
+            expect(publish.get_by_role("button",name="Publier et réserver le lot")).to_be_enabled()
+            publish.locator('input[name="quantity"]').fill("4")
+            publish.locator('input[name="priceAmount"]').fill("6")
+            publish.get_by_role("button",name="Publier et réserver le lot").click()
+            expect(page.get_by_text("Offre publiée :",exact=False)).to_be_visible(timeout=20000)
+            expect(page.get_by_test_id("marketplace-my-offer")).to_have_count(1)
+            own_lot=page.get_by_test_id("marketplace-my-offer").first
+            expect(own_lot).to_contain_text("4 Bois")
+            expect(own_lot).to_contain_text("En vente")
+            own_lot.get_by_role("button",name="Retirer l'offre").click()
+            expect(page.get_by_text("Lot retiré et remis",exact=False)).to_be_visible(timeout=20000)
+            expect(page.get_by_test_id("marketplace-my-offer").first).to_contain_text("Retiré")
             page.get_by_role("link",name="Retourner dans la cité.").click()
             expect(page.get_by_role("heading",level=1,name="Premier Havre")).to_be_visible()
             # Progression: after exchanging resources, build the first dwelling
