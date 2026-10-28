@@ -530,3 +530,74 @@ export async function stopCityCaravanProgram(form:FormData){
   redirect("/cities/"+city+"/market?program="+
     (status===200||status===201?"stopped":status===409?"conflict":"unavailable")+"#caravans");
 }
+
+
+/** Server-issued quote accepted with one immutable UUID. The API, not this
+ * action or the map UI, decides rookie protection, permitted plots and costs.
+ */
+export async function dispatchFoundingExpedition(form:FormData){
+  const world=form.get("worldId"),source=form.get("sourceCityId");
+  const hero=form.get("heroId"),order=form.get("orderId");
+  const price=form.get("policyId"),name=form.get("colonyName");
+  const rawX=form.get("x"),rawY=form.get("y");
+  const uuid=/^[0-9a-f-]{36}$/i;
+  if(typeof world!=="string"||!/^[a-z0-9_-]{1,64}$/.test(world)||
+     typeof source!=="string"||!uuid.test(source)||
+     typeof hero!=="string"||!uuid.test(hero)||
+     typeof order!=="string"||!uuid.test(order)||
+     typeof price!=="string"||price.length<3||price.length>100||
+     typeof name!=="string"||name.trim().length<2||name.trim().length>80||
+     typeof rawX!=="string"||!/^\d{1,6}$/.test(rawX)||
+     typeof rawY!=="string"||!/^\d{1,6}$/.test(rawY))
+    redirect("/");
+  const x=Number(rawX),y=Number(rawY);
+  if(!Number.isInteger(x)||!Number.isInteger(y)||x<1||y<1||x>100000||y>100000)
+    redirect("/worlds/"+world+"/colonize?colony=invalid#colony-form");
+  const token=(await cookies()).get("mmhk_session")?.value;
+  if(!token)redirect("/");
+  let status=503;
+  try{
+    const res=await fetch(apiUrl("/api/v1/me/worlds/"+world+"/colonization"),{
+      method:"POST",
+      headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
+      cache:"no-store",signal:AbortSignal.timeout(7000),
+      body:JSON.stringify({
+        order_id:order,source_city_id:source,hero_id:hero,
+        x,y,colony_name:name.trim(),expected_policy_id:price,
+      }),
+    });
+    status=res.status;
+  }catch{
+    // No new UUID is generated on ambiguous result. Review the journal.
+  }
+  if(status===401)redirect("/");
+  redirect("/worlds/"+world+"/colonize?colony="+
+    (status===201||status===200?"started":status===409?"conflict":"unavailable")+
+    "#colony-orders");
+}
+
+/** Restitution possible ONLY after a failed expedition, without double credit. */
+export async function reclaimFailedFounding(form:FormData){
+  const world=form.get("worldId"),order=form.get("orderId");
+  const refund=form.get("refundOrderId"),uuid=/^[0-9a-f-]{36}$/i;
+  if(typeof world!=="string"||!/^[a-z0-9_-]{1,64}$/.test(world)||
+     typeof order!=="string"||!uuid.test(order)||
+     typeof refund!=="string"||!uuid.test(refund))redirect("/");
+  const token=(await cookies()).get("mmhk_session")?.value;
+  if(!token)redirect("/");
+  let status=503;
+  try{
+    const res=await fetch(apiUrl("/api/v1/me/worlds/"+world+
+      "/colonization/"+order+"/reclaim"),{
+      method:"POST",
+      headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
+      body:JSON.stringify({refund_order_id:refund}),
+      cache:"no-store",signal:AbortSignal.timeout(7000),
+    });
+    status=res.status;
+  }catch{/* Unknown refund result: consult the journal before another attempt. */}
+  if(status===401)redirect("/");
+  redirect("/worlds/"+world+"/colonize?colony="+
+    (status===201||status===200?"refunded":
+      status===409?"storage":"unavailable")+"#colony-orders");
+}
