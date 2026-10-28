@@ -1,0 +1,3 @@
+# Keep Windows launcher native and POSIX launcher portable.
+/demarrer.bat text eol=crlf
+/demarrer.sh text eol=lf
