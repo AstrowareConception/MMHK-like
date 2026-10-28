@@ -24,6 +24,10 @@ from .caravans import (
 from .caravan_programs import (
     CaravanProgramConflict, create_program, stop_program,
 )
+from .colonization import (
+    ColonizationNotFound, ColonizationConflict, colonies_for_world,
+    quote_colony, start_colonization, reclaim_blocked_colony,
+)
 from .marketplace import (
     MarketplaceNotFound, MarketplaceConflict, offers_for_city,
     publish_offer, buy_offer, withdraw_offer,
@@ -568,6 +572,83 @@ def my_stop_caravan_program(
     except CaravanNotFound as exc:
         raise HTTPException(status_code=404,detail="City or program not found") from exc
     except CaravanConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+
+# P0 multi-city vertical: precomputed own influence, 7-day beginner guard,
+# immutable site profiles and timed hero founding. No public world generator.
+class ColonizationStartRequest(StrictDTO):
+    order_id: UUID
+    source_city_id: UUID
+    hero_id: UUID
+    x: int = Field(ge=1,le=100000)
+    y: int = Field(ge=1,le=100000)
+    colony_name: str = Field(min_length=2,max_length=80)
+    expected_policy_id: str = Field(min_length=3,max_length=100)
+
+
+class ColonizationRefundRequest(StrictDTO):
+    refund_order_id: UUID
+
+
+@app.get("/api/v1/me/worlds/{world_id}/colonization")
+def my_world_colonization(world_id:str,db:_db,player:_player,
+                          response:Response)->dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        return colonies_for_world(db,owner=player,world_id=world_id)
+    except ColonizationNotFound as exc:
+        raise HTTPException(status_code=404,detail="World not found") from exc
+
+
+@app.get("/api/v1/me/worlds/{world_id}/colonization/quote")
+def my_colonization_quote(world_id:str,db:_db,player:_player,
+                          response:Response,source_city_id:UUID,hero_id:UUID,
+                          x:int=Query(ge=1,le=100000),y:int=Query(ge=1,le=100000))->dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        return quote_colony(db,owner=player,world_id=world_id,
+            source_city_id=source_city_id,hero_id=hero_id,x=x,y=y)
+    except ColonizationNotFound as exc:
+        raise HTTPException(status_code=404,detail="World or city not found") from exc
+    except ColonizationConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+@app.post("/api/v1/me/worlds/{world_id}/colonization",status_code=201)
+def my_start_colonization(world_id:str,command:ColonizationStartRequest,
+                          db:_db,player:_player,response:Response)->dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        result=start_colonization(db,owner=player,world_id=world_id,
+             order_id=command.order_id,source_city_id=command.source_city_id,
+             hero_id=command.hero_id,x=command.x,y=command.y,
+             colony_name=command.colony_name,
+             expected_policy_id=command.expected_policy_id)
+        if result["replayed"]:response.status_code=200
+        return result
+    except ColonizationNotFound as exc:
+        raise HTTPException(status_code=404,detail="World or source city not found") from exc
+    except ColonizationConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+@app.post("/api/v1/me/worlds/{world_id}/colonization/{order_id}/reclaim",
+          status_code=201)
+def my_reclaim_colony(world_id:str,order_id:UUID,
+                      command:ColonizationRefundRequest,
+                      db:_db,player:_player,response:Response)->dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        result=reclaim_blocked_colony(
+            db,owner=player,world_id=world_id,
+            order_id=order_id,refund_order_id=command.refund_order_id)
+        if result["replayed"]:response.status_code=200
+        return result
+    except ColonizationNotFound as exc:
+        raise HTTPException(status_code=404,detail="World or order not found") from exc
+    except ColonizationConflict as exc:
         raise HTTPException(status_code=409,detail=str(exc)) from exc
 
 
