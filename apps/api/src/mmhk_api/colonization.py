@@ -23,7 +23,8 @@ MAX_COST = 1_000_000_000
 ORDER_COLUMNS = """order_id,world_id,source_city_id,owner_account_id,hero_id,
   new_city_id,colony_name,x,y,policy_id,applied_costs,mine_types,rates_per_day,
   stock_capacities,tick_seconds,site_source_ref,travel_seconds,started_at,
-  due_at,status,completed_at,blocked_at,blocked_reason,refunded_at,refund_order_id"""
+  due_at,status,completed_at,blocked_at,blocked_reason,refunded_at,refund_order_id,
+  city_recruitment,city_hero_offers"""
 
 
 class ColonizationNotFound(Exception):
@@ -58,10 +59,45 @@ def _validate_site(mines:list[str],rates:dict,caps:dict)->tuple[list[str],dict,d
     return sorted(mines),{k:rates[k] for k in sorted(rates)},{k:caps[k] for k in RESOURCE_NAMES}
 
 
+
+
+def _validate_recruitment(data:dict)->dict[str,int]:
+    """Recruitment *availability*, not free troops. Dwelling unlock is separate."""
+    import re
+    if (not isinstance(data,dict) or len(data)>20
+        or any(not isinstance(code,str) or not re.fullmatch(
+            r"[a-z][a-z0-9_]{1,47}",code) or
+            type(qty) is not int or not 0<=qty<=1000000
+            for code,qty in data.items())):
+        raise ValueError("Invalid city initial recruitment configuration")
+    return dict(sorted(data.items()))
+
+
+def _validate_offers(data:list)->list[dict]:
+    """Optional PAID tavern offers, not automatically created owned heroes."""
+    if not isinstance(data,list) or len(data)>4:
+        raise ValueError("Invalid number of initial tavern offers")
+    result=[]
+    for row in data:
+        if (not isinstance(row,dict) or set(row)!={"name","archetype","gold_cost"}
+            or not isinstance(row["name"],str)
+            or not 2<=len(row["name"].strip())<=80
+            or any(ord(c)<32 or ord(c)==127 for c in row["name"])
+            or row["archetype"] not in ("might","magic")
+            or type(row["gold_cost"]) is not int
+            or not 0<=row["gold_cost"]<=1000000):
+            raise ValueError("Invalid paid hero offer configuration")
+        result.append({
+            "name":row["name"].strip(),"archetype":row["archetype"],
+            "gold_cost":row["gold_cost"],
+        })
+    return result
+
 def configure_colonization_policy(
     db:psycopg.Connection,*,world_id:str,policy_id:str,costs:dict,
     max_owned_cities:int,max_distance_steps:int,seconds_per_step:int,
-    enabled:bool=True,
+    enabled:bool=True,city_recruitment:dict|None=None,
+    city_hero_offers:list[dict]|None=None,
 )->None:
     """Trusted insert-only operator configuration, never a public HTTP call."""
     if (not isinstance(world_id,str) or not 1<=len(world_id)<=64
@@ -72,14 +108,22 @@ def configure_colonization_policy(
         or type(enabled) is not bool):
         raise ValueError("Invalid versioned colonization policy")
     clean=_validate_costs(costs)
+    recruit=_validate_recruitment(city_recruitment or {})
+    offers=_validate_offers(city_hero_offers or [])
     with db.transaction():
+        for unit_code in recruit:
+            if not db.execute(
+                """SELECT 1 FROM city_unit_profiles
+                   WHERE unit_code=%s AND enabled""",(unit_code,),
+            ).fetchone():
+                raise ValueError("Starting recruit pool uses an unknown/disabled unit profile")
         db.execute(
             """INSERT INTO colonization_world_policies
                (world_id,policy_id,costs,max_owned_cities,max_distance_steps,
-                seconds_per_step,enabled)
-               VALUES(%s,%s,%s,%s,%s,%s,%s)""",
+                seconds_per_step,city_recruitment,city_hero_offers,enabled)
+               VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)""",
             (world_id,policy_id,Jsonb(clean),max_owned_cities,
-             max_distance_steps,seconds_per_step,enabled),
+             max_distance_steps,seconds_per_step,Jsonb(recruit),Jsonb(offers),enabled),
         )
 
 
@@ -148,7 +192,7 @@ def _source(db:psycopg.Connection,*,world_id:str,owner:UUID,city_id:UUID,
 def _active_policy(db:psycopg.Connection,world_id:str,*,lock:bool=False)->dict|None:
     row=db.execute(
         """SELECT policy_id,costs,max_owned_cities,max_distance_steps,
-                  seconds_per_step
+                  seconds_per_step,city_recruitment,city_hero_offers
            FROM colonization_world_policies
            WHERE world_id=%s AND enabled""" + (" FOR SHARE" if lock else ""),
         (world_id,),
@@ -156,7 +200,7 @@ def _active_policy(db:psycopg.Connection,world_id:str,*,lock:bool=False)->dict|N
     if not row:
         return None
     return dict(zip(("policy_id","costs","max_owned_cities","max_distance_steps",
-                     "seconds_per_step"),row))
+                     "seconds_per_step","city_recruitment","city_hero_offers"),row))
 
 
 def _approved_site(db:psycopg.Connection,*,world_id:str,owner:UUID,
@@ -254,13 +298,14 @@ def _order(db:psycopg.Connection,order_id:UUID,*,lock:bool=False)->tuple|None:
 def _receipt(row:tuple,*,replayed:bool=False)->dict:
     (oid,world,source,owner,hero,new_id,name,x,y,policy,costs,mines,rates,caps,
      tick,source_ref,travel,started,due,status,finished,blocked,reason,
-     refunded,refund_id)=row
+     refunded,refund_id,recruitment,offers)=row
     return {
         "order_id":str(oid),"world_id":world,
         "source_city_id":str(source),"hero_id":str(hero),
         "new_city_id":str(new_id) if status=="founded" else None,
         "colony_name":name,"x":x,"y":y,"policy_id":policy,
         "applied_costs":costs,"mine_types":mines,"travel_seconds":travel,
+        "available_recruitment":recruitment,"paid_hero_offers":offers,
         "started_at":started.isoformat(),"due_at":due.isoformat(),
         "status":status,"completed_at":finished.isoformat() if finished else None,
         "blocked_at":blocked.isoformat() if blocked else None,
@@ -467,12 +512,14 @@ def start_colonization(db:psycopg.Connection,*,owner:UUID,world_id:str,
               order_id,world_id,source_city_id,owner_account_id,hero_id,
               new_city_id,colony_name,x,y,policy_id,applied_costs,
               mine_types,rates_per_day,stock_capacities,tick_seconds,
-              site_source_ref,travel_seconds,started_at,due_at,status)
+              site_source_ref,travel_seconds,started_at,due_at,status,
+              city_recruitment,city_hero_offers)
               VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
-                     'traveling')""",
+                     'traveling',%s,%s)""",
             (order_id,world_id,source_city_id,owner,hero_id,next_id,name,x,y,
              policy["policy_id"],Jsonb(costs),Jsonb(mines),Jsonb(rates),
-             Jsonb(caps),tick,site_ref,duration,now,due),
+             Jsonb(caps),tick,site_ref,duration,now,due,
+             Jsonb(policy["city_recruitment"]),Jsonb(policy["city_hero_offers"])),
         )
         db.execute(
             """UPDATE city_heroes SET status='colonizing'
@@ -537,7 +584,8 @@ def run_colonization_batch(
                 break
             (oid,world,source,owner,hero,new_city_id,name,x,y,policy,costs,
              mines,rates,caps,tick,site_ref,seconds,started,due,status,
-             completed,blocked,blocked_reason,refunded,refund_order)=row
+             completed,blocked,blocked_reason,refunded,refund_order,
+             recruitment,offers)=row
             db.execute("SELECT world_id FROM worlds WHERE world_id=%s FOR UPDATE",
                        (world,)).fetchone()
             # Lock both sources; cross-world / operator ownership changes must
@@ -612,6 +660,22 @@ def run_colonization_batch(
                                (city_id,resource,base_units_per_day)
                                VALUES(%s,%s,%s)""",
                             (new_city_id,kind,rates[kind]),
+                        )
+                    # These rows permit future paid recruitment/hiring only:
+                    # no garrison, hero, barracks or artifact is granted.
+                    for unit_code,available in recruitment.items():
+                        db.execute(
+                            """INSERT INTO city_recruit_pools
+                               (city_id,unit_code,available) VALUES(%s,%s,%s)""",
+                            (new_city_id,unit_code,available),
+                        )
+                    for entry in offers:
+                        db.execute(
+                            """INSERT INTO city_hero_offers
+                               (offer_id,city_id,hero_name,archetype,gold_cost,policy_id)
+                               VALUES(%s,%s,%s,%s,%s,%s)""",
+                            (uuid4(),new_city_id,entry["name"],entry["archetype"],
+                             entry["gold_cost"],policy),
                         )
             except psycopg.errors.UniqueViolation:
                 result.append(_block(db,row,now,"founding_destination_occupied"))

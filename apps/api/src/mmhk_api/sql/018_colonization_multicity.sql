@@ -8,6 +8,10 @@ CREATE TABLE colonization_world_policies (
   max_owned_cities smallint NOT NULL CHECK (max_owned_cities BETWEEN 2 AND 10),
   max_distance_steps smallint NOT NULL CHECK (max_distance_steps BETWEEN 1 AND 20),
   seconds_per_step integer NOT NULL CHECK (seconds_per_step BETWEEN 5 AND 86400),
+  city_recruitment jsonb NOT NULL DEFAULT '{}'::jsonb
+    CHECK(jsonb_typeof(city_recruitment)='object'),
+  city_hero_offers jsonb NOT NULL DEFAULT '[]'::jsonb
+    CHECK(jsonb_typeof(city_hero_offers)='array'),
   enabled boolean NOT NULL DEFAULT false,
   PRIMARY KEY (world_id,policy_id)
 );
@@ -63,6 +67,10 @@ CREATE TABLE colonization_orders (
   blocked_reason text,
   refunded_at timestamptz,
   refund_order_id uuid UNIQUE,
+  city_recruitment jsonb NOT NULL DEFAULT '{}'::jsonb
+    CHECK(jsonb_typeof(city_recruitment)='object'),
+  city_hero_offers jsonb NOT NULL DEFAULT '[]'::jsonb
+    CHECK(jsonb_typeof(city_hero_offers)='array'),
   FOREIGN KEY(world_id,policy_id)
     REFERENCES colonization_world_policies(world_id,policy_id),
   CHECK(

@@ -47,6 +47,11 @@ def prepare(db,*,username:str,age_membership:bool)->dict:
                 db,world_id=WORLD,policy_id=POLICY,costs=COSTS,
                 max_owned_cities=4,max_distance_steps=3,
                 seconds_per_step=15,enabled=True,
+                city_recruitment={"militia":18,"archers":8},
+                city_hero_offers=[
+                    {"name":"Éléonore de l'Aube","archetype":"magic","gold_cost":35},
+                    {"name":"Gauvain des Remparts","archetype":"might","gold_cost":28},
+                ],
             )
         positions=[]
         for step in (1,2):
