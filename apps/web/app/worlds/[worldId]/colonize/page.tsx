@@ -38,7 +38,7 @@ const stage:Record<string,string>={
 
 export default async function ColonizePage({params,searchParams}:{
   params:Promise<{worldId:string}>;
-  searchParams:Promise<{x?:string;y?:string;source?:string;hero?:string;colony?:string}>;
+  searchParams:Promise<{x?:string;y?:string;plot?:string;source?:string;hero?:string;colony?:string}>;
 }){
   const {worldId}=await params;
   if(!/^[a-z0-9_-]{1,64}$/.test(worldId))notFound();
@@ -56,7 +56,8 @@ export default async function ColonizePage({params,searchParams}:{
       <Link href={"/worlds/"+worldId}>Revenir au monde</Link></main>;
   const colony=catalogResponse.data;
   const selectedSite=colony.qualified_sites.find(s=>
-    String(s.x)===query.x&&String(s.y)===query.y
+    (String(s.x)===query.x&&String(s.y)===query.y) ||
+    query.plot===String(s.x)+":"+String(s.y)
   )??colony.qualified_sites[0];
   const sourceCity=colony.cities.find(c=>c.city_id===query.source)??colony.cities[0];
   const founder=colony.heroes.find(h=>h.hero_id===query.hero&&
@@ -135,13 +136,13 @@ export default async function ColonizePage({params,searchParams}:{
       <form method="get" className="colony-selector"
         action={"/worlds/"+worldId+"/colonize"}>
         <label>Région admissible
-          <select name="x" defaultValue={String(selectedSite?.x)}>
-            {colony.qualified_sites.map(p=><option key={p.x+":"+p.y} value={p.x}>
+          <select name="plot" defaultValue={selectedSite?.x+":"+selectedSite?.y}>
+            {colony.qualified_sites.map(p=><option key={p.x+":"+p.y} value={p.x+":"+p.y}>
               Région ({p.x}, {p.y}) · mines déclarées : {p.mine_types.join(", ")}
             </option>)}
           </select>
         </label>
-        <input type="hidden" name="y" value={selectedSite?.y??""}/>
+
         <label>Cité d'origine
           <select name="source" defaultValue={sourceCity?.city_id}>
             {colony.cities.map(c=><option key={c.city_id} value={c.city_id}>
