@@ -214,3 +214,23 @@ export type MerchantQuote = {
   affordable:boolean;capacity_sufficient:boolean;can_execute:boolean;
   rounding_policy:string;historically_certified:false;
 };
+
+
+export type MarketplaceOffer = {
+  offer_id:string;resource:string;quantity:number;
+  price_resource:string;price_amount:number;
+  policy_id:string;status:"active"|"sold"|"expired"|"cancelled";
+  created_at:string;expires_at:string;
+  escrow_claimed?:boolean;can_withdraw?:boolean;closed_at?:string|null;
+};
+export type MarketplacePolicy = {
+  policy_id:string;max_quantity:number;max_price:number;
+  min_duration_seconds:number;max_duration_seconds:number;
+  delivery_mode:"instant_lab";
+};
+export type MarketplaceCatalog = {
+  city_id:string;marketplace_unlocked:boolean;
+  marketplace_policy:MarketplacePolicy|null;
+  historically_certified:false;delivery_mode:"instant_lab"|null;
+  offers:MarketplaceOffer[];my_offers:MarketplaceOffer[];
+};
