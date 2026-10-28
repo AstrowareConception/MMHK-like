@@ -204,6 +204,20 @@ def main() -> int:
 
 
 
+
+            # Real two-legged journey is controlled by the worker, not the UI.
+            page.get_by_role("button", name="Lancer la marche et préparer le retour").click()
+            expect(page.get_by_text("Le héros est parti. Son trajet est désormais suivi par le worker.")).to_be_visible(timeout=20000)
+            expect(page.locator(".region-mission-map [data-mission-stage='outbound']")).to_have_count(1)
+            expect(page.get_by_text("En marche vers", exact=False)).to_be_visible()
+            expect(page.get_by_text("Aller", exact=False)).to_be_visible()
+            expect(page.locator(".region-mission-map [data-mission-stage='returning']")).to_have_count(1,timeout=100000)
+            expect(page.get_by_text("Sur le chemin du retour", exact=False)).to_be_visible()
+            expect(page.locator(".region-mission-map [data-mission-stage='outbound']")).to_have_count(0)
+            expect(page.locator(".region-mission-map [data-mission-stage='returning']")).to_have_count(0,timeout=100000)
+            expect(page.get_by_text("Aucun héros actuellement en déplacement.")).to_be_visible()
+            expect(page.get_by_role("heading", name="Loups des bois")).to_be_visible()
+
             # The user can navigate back and log out via the real server action.
             page.get_by_role("link", name="Revenir à la carte du monde").click()
             expect(page.get_by_role("heading", name="Mes positions dans le monde")).to_be_visible()
