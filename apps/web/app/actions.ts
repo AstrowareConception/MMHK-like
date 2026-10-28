@@ -18,6 +18,7 @@ export async function signIn(data: FormData) {
     redirect("/?error=credentials");
   }
   let bearer: string | undefined;
+  let limited = false;
   try {
     const response = await fetch(apiUrl("/api/v1/sessions"), {
       method: "POST",
@@ -26,6 +27,7 @@ export async function signIn(data: FormData) {
       cache: "no-store",
       signal: AbortSignal.timeout(4000),
     });
+    if (response.status === 429) limited = true;
     if (response.ok) {
       const payload = (await response.json()) as { access_token?: string };
       bearer = payload.access_token;
@@ -33,10 +35,13 @@ export async function signIn(data: FormData) {
   } catch {
     redirect("/?error=unavailable");
   }
+  if (limited) redirect("/?error=limited");
   if (!bearer) redirect("/?error=credentials");
   (await cookies()).set("mmhk_session", bearer, {
     httpOnly: true,
-    secure: process.env.NODE_ENV === "production",
+    // Private SSH preview uses HTTP *only on browser localhost*, never public.
+    secure: process.env.NODE_ENV === "production" &&
+      process.env.MMHK_PREVIEW_LOOPBACK_ONLY !== "true",
     sameSite: "lax",
     path: "/",
     maxAge: 8 * 60 * 60,
