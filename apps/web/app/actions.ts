@@ -179,3 +179,34 @@ export async function transferHeroUnits(data:FormData) {
   redirect("/cities/"+cityId+"?transfer="+(status===200||status===201?"ok":
     status===409?"conflict":"unavailable")+"#military-panel");
 }
+
+
+/** Unique artifact move: never trust browser-side ownership or slot attributes. */
+export async function moveCityArtifact(data:FormData) {
+  const cityId=data.get("cityId"),artifactId=data.get("artifactId");
+  const operation=data.get("operation"),target=data.get("targetHeroId");
+  const originHero=data.get("returnHeroId");
+  const uuid=/^[0-9a-f-]{36}$/i;
+  if(typeof cityId!=="string"||!uuid.test(cityId)||
+    typeof artifactId!=="string"||!uuid.test(artifactId)||
+    typeof operation!=="string"||
+    !["equip","unequip","to_reserve","to_bag","to_hero"].includes(operation)||
+    (target!==null&&target!==""&&(typeof target!=="string"||!uuid.test(target))))redirect("/");
+  const selected=(typeof originHero==="string"&&uuid.test(originHero))?originHero:"";
+  const back="/cities/"+cityId+"/heroes?hero="+selected;
+  const token=(await cookies()).get("mmhk_session")?.value;
+  if(!token)redirect("/");
+  let status=503;
+  try{
+    const response=await fetch(apiUrl("/api/v1/me/cities/"+cityId+"/artifacts/move"),{
+      method:"POST",headers:{"Authorization":"Bearer "+token,"Content-Type":"application/json"},
+      body:JSON.stringify({order_id:randomUUID(),artifact_id:artifactId,
+        operation,target_hero_id:target||null}),
+      cache:"no-store",signal:AbortSignal.timeout(6000)
+    });
+    status=response.status;
+  }catch {/* Uncertain command: never silently replay with a new UUID. */}
+  if(status===401)redirect("/");
+  redirect(back+"&artifact="+(status===200||status===201?"ok":status===409?"conflict":
+    status===404?"missing":"unavailable"));
+}
