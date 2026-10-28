@@ -13,6 +13,7 @@ from pydantic import BaseModel, ConfigDict, Field
 from .construction import (
     ConstructionConflict, ConstructionNotFound, catalog_for_city, start_construction,
 )
+from .map_views import MapNotFound, own_region, world_overview
 from .db import connection
 from .security import get_authenticated_id, revoke_session, start_session
 from .worlds import owned_cities, owned_city_detail, owned_worlds
@@ -210,3 +211,21 @@ def start_my_city_construction(
         raise HTTPException(status_code=404, detail="City not found") from exc
     except ConstructionConflict as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+
+# Read-only map prototypes. No foreign city, fog-of-war intelligence or
+# unverified regional resource placements can be requested through these.
+@app.get("/api/v1/me/worlds/{world_id}/overview")
+def my_world_overview(world_id: str, db: _db, player: _player) -> dict:
+    try:
+        return world_overview(db, player, world_id)
+    except MapNotFound as exc:
+        raise HTTPException(status_code=404, detail="World not found") from exc
+
+
+@app.get("/api/v1/me/cities/{city_id}/region")
+def my_region(city_id: UUID, db: _db, player: _player) -> dict:
+    try:
+        return own_region(db, player, city_id)
+    except MapNotFound as exc:
+        raise HTTPException(status_code=404, detail="City not found") from exc
