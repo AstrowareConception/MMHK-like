@@ -45,7 +45,7 @@ def timeline_for_player(
            JOIN region_encounters e ON e.encounter_id=m.encounter_id
            WHERE m.actor_account_id=%s AND c.owner_account_id=%s
              AND m.stage<>'completed'
-             AND m.return_due_at <= %s
+             AND (m.arrival_due_at <= %s OR m.return_due_at <= %s)
            ORDER BY m.started_at,m.mission_id LIMIT %s""",
         (account_id,account_id,account_id,horizon,limit+1),
     ).fetchall()
@@ -69,7 +69,7 @@ def timeline_for_player(
                 "city_name":city_name,"target_url":"/cities/"+str(city_id)+"/region",
                 "icon":"timeline.hero_arrival","priority":"normal"
             })
-        movement_events.append({
+        if return_due<=horizon: movement_events.append({
             "id":"hero-return-"+str(mid),"type":"hero_return",
             "title":f"Retour de {hname}",
             "occurs_at":return_due,"world_id":world_id,"city_id":str(city_id),
