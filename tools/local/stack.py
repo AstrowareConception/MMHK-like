@@ -10,6 +10,8 @@ import argparse
 import os
 from pathlib import Path
 import secrets
+import shutil
+import webbrowser
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -48,6 +50,65 @@ def run(*command: str, check: bool = True, output=None) -> subprocess.CompletedP
     )
 
 
+def prerequisites() -> None:
+    """Explain missing local tooling before attempting to start containers."""
+    if sys.version_info < (3, 10):
+        raise RuntimeError("Python 3.10 or newer is required.")
+    if not shutil.which("docker"):
+        raise RuntimeError(
+            "Docker was not found. Install Docker Desktop (Windows/macOS) "
+            "or Docker Engine + Compose v2 (Linux)."
+        )
+    for command, description in (
+        (("docker", "compose", "version"), "Docker Compose v2"),
+        (("docker", "info", "--format", "{{.ServerVersion}}"), "Docker engine"),
+    ):
+        check = subprocess.run(
+            command, cwd=ROOT, stdout=subprocess.DEVNULL,
+            stderr=subprocess.DEVNULL, check=False,
+        )
+        if check.returncode:
+            raise RuntimeError(
+                f"{description} is not available. Start Docker Desktop "
+                "and check that Docker Compose v2 works."
+            )
+
+
+def demo_exists() -> bool:
+    """Read the actual local database; a marker file can become stale."""
+    query = (
+        "from mmhk_api.db import connect; "
+        "db = connect(); "
+        "found = db.execute("
+        "'SELECT EXISTS (SELECT 1 FROM worlds WHERE world_id = %s)', "
+        "('local-sandbox',)).fetchone()[0]; "
+        "print('present' if found else 'absent'); db.close()"
+    )
+    output = subprocess.check_output(
+        (*PROJECT, "exec", "-T", "api", "python", "-c", query),
+        cwd=ROOT, text=True,
+    ).strip()
+    if output not in ("present", "absent"):
+        raise RuntimeError("Unable to verify whether the local demo exists.")
+    return output == "present"
+
+
+def local_url() -> str:
+    """Read the configured localhost port, keeping the service private."""
+    for line in ENV.read_text(encoding="utf-8").splitlines():
+        if line.startswith("MMHK_LOCAL_PORT="):
+            port = line.partition("=")[2].strip()
+            if port.isdigit() and 1 <= int(port) <= 65535:
+                return f"http://localhost:{int(port)}"
+            raise RuntimeError("Invalid MMHK_LOCAL_PORT in .env.local")
+    return "http://localhost:3000"
+
+
+def provision_demo(username: str) -> None:
+    run("run", "--rm", "-T", "api", "python", "-m", "mmhk_api.local_demo",
+        "--username", username)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(
         description="MMHK-like all-in-one local Docker stack: localhost only"
@@ -55,6 +116,13 @@ def main() -> int:
     sub = parser.add_subparsers(dest="command", required=True)
     sub.add_parser("init", help="Generate ignored .env.local secrets once")
     sub.add_parser("up", help="Build and start all six services including migrations")
+    start = sub.add_parser(
+        "start", help="One command: check Docker, boot stack, seed demo once and open browser"
+    )
+    start.add_argument("--username", default="joueurdemo")
+    start.add_argument("--no-browser", action="store_true")
+    start.add_argument("--no-build", action="store_true",
+                       help="Reuse local images instead of rebuilding")
     sub.add_parser("ps", help="Show service state and health")
     logs = sub.add_parser("logs", help="View service logs")
     logs.add_argument("--follow", action="store_true")
@@ -69,6 +137,29 @@ def main() -> int:
 
     if args.command == "init":
         init()
+        return 0
+    if args.command == "start":
+        prerequisites()
+        init()
+        print("\n[1/3] Starting the isolated Docker stack...", flush=True)
+        command = ("up", "-d", "--wait") if args.no_build else (
+            "up", "-d", "--build", "--wait"
+        )
+        run(*command)
+        print("[2/3] Checking the persistent demo world...", flush=True)
+        if demo_exists():
+            print("Existing demo preserved. No account, world or password reset.")
+            print("Use the password saved when this world was first created.")
+        else:
+            print("Creating your first demo account. SAVE THE PASSWORD BELOW.",
+                  flush=True)
+            provision_demo(args.username)
+        url = local_url()
+        print(f"\n[3/3] Ready: {url}", flush=True)
+        print("Close this terminal only after saving the generated password.")
+        print("Use 'python tools/local/stack.py stop' to stop the stack.")
+        if not args.no_browser:
+            webbrowser.open(url)
         return 0
     if args.command == "reset":
         if not args.yes_delete_local_data:
@@ -96,8 +187,7 @@ def main() -> int:
     elif args.command == "demo":
         # No default password in the repository, environment or process list.
         # The trusted Python CLI prints a newly generated password ONCE.
-        run("run", "--rm", "-T", "api", "python", "-m", "mmhk_api.local_demo",
-            "--username", args.username)
+        provision_demo(args.username)
     elif args.command == "stop":
         run("stop")
     elif args.command == "down":
@@ -124,6 +214,6 @@ def main() -> int:
 if __name__ == "__main__":
     try:
         raise SystemExit(main())
-    except (OSError, subprocess.CalledProcessError) as exc:
+    except (OSError, subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"Docker stack operation failed: {exc}", file=sys.stderr)
         raise SystemExit(1)
