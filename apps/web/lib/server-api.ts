@@ -201,7 +201,8 @@ export type MerchantCatalog = {
   rates:{pay_resource:string;receive_resource:string;policy_id:string;
     numerator:number;denominator:number}[];
   history:{order_id:string;pay_resource:string;receive_resource:string;
-    pay_amount:number;receive_amount:number;policy_id:string;completed_at:string}[];
+    pay_amount:number;receive_amount:number;policy_id:string;
+    numerator:number;denominator:number;completed_at:string}[];
 };
 
 export type MerchantQuote = {

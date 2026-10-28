@@ -16,7 +16,8 @@ calcul global de balance commerciale (US-ECH-018) restent hors périmètre.
   inférieur, stocks avant/après, capacité réelle et état. Un devis modifié
   doit être explicitement confirmé de nouveau.
 - La confirmation envoie un **UUID généré une fois par formulaire** :
-  le serveur verrouille la cité, revalide le tarif/version, les deux stocks et
+  le serveur verrouille la cité et le taux actif, revalide la version,
+  le numérateur, le dénominateur, le montant reçu, les deux stocks et
   la capacité après bonus, puis débite, crédite et journalise atomiquement.
   Rejouer exactement le même UUID renvoie le même reçu sans deuxième débit.
 - Le registre renvoie les douze derniers ordres de la cité, uniquement pour

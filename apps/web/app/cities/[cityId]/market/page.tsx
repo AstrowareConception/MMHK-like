@@ -167,6 +167,8 @@ export default async function MarketPage({params,searchParams}:{
               <input type="hidden" name="receiveResource" value={quote.receive_resource}/>
               <input type="hidden" name="payAmount" value={quote.pay_amount}/>
               <input type="hidden" name="expectedReceive" value={quote.receive_amount}/>
+              <input type="hidden" name="expectedNumerator" value={quote.numerator}/>
+              <input type="hidden" name="expectedDenominator" value={quote.denominator}/>
               <input type="hidden" name="policyId" value={quote.policy_id}/>
               <button type="submit" disabled={!quote.can_execute}>
                 {quote.can_execute?"Confirmer cet échange":!quote.affordable?
@@ -189,7 +191,8 @@ export default async function MarketPage({params,searchParams}:{
                 {" "}{amount(row.receive_amount)} {name(row.receive_resource)}</strong>
               <span>{new Date(row.completed_at).toLocaleString("fr-FR",
                 {timeZone:"Europe/Paris"})}</span>
-              <small>Contrat : {row.policy_id}</small>
+              <small>Contrat : {row.policy_id} · taux conservé :
+                {" "}{row.numerator} / {row.denominator}</small>
             </li>
           ))}</ol>
         ):<p>Aucune transaction n'a été enregistrée pour cette cité.</p>}

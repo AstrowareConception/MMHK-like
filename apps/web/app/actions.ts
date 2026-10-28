@@ -255,6 +255,7 @@ export async function tradeCityResources(form:FormData) {
   const pay=form.get("payResource"),receive=form.get("receiveResource");
   const amount=form.get("payAmount"),expected=form.get("expectedReceive");
   const policy=form.get("policyId");
+  const numerator=form.get("expectedNumerator"),denominator=form.get("expectedDenominator");
   const uuid=/^[a-f0-9-]{36}$/i;
   const isResource=(x:FormDataEntryValue|null):x is string=>
     typeof x==="string" && /^(gold|wood|ore|crystal|gems|sulfur|mercury)$/.test(x);
@@ -263,11 +264,16 @@ export async function tradeCityResources(form:FormData) {
      !isResource(pay)||!isResource(receive)||pay===receive||
      typeof amount!=="string"||!/^[0-9]{1,7}$/.test(amount)||
      typeof expected!=="string"||!/^[0-9]{1,13}$/.test(expected)||
+     typeof numerator!=="string"||!/^[0-9]{1,7}$/.test(numerator)||
+     typeof denominator!=="string"||!/^[0-9]{1,7}$/.test(denominator)||
      typeof policy!=="string"||policy.length<3||policy.length>100)
     redirect("/");
   const paid=Number(amount),given=Number(expected);
+  const num=Number(numerator),den=Number(denominator);
   if(!Number.isSafeInteger(paid)||paid<1||paid>1000000||
-     !Number.isSafeInteger(given)||given<1||given>1000000000000)
+     !Number.isSafeInteger(given)||given<1||given>1000000000000||
+     !Number.isSafeInteger(num)||num<1||num>1000000||
+     !Number.isSafeInteger(den)||den<1||den>1000000)
     redirect("/cities/"+cityId+"/market?trade=invalid");
   const token=(await cookies()).get("mmhk_session")?.value;
   if(!token)redirect("/");
@@ -278,7 +284,8 @@ export async function tradeCityResources(form:FormData) {
       headers:{"Authorization":"Bearer "+token,"Content-Type":"application/json"},
       body:JSON.stringify({order_id:orderId,pay_resource:pay,
         receive_resource:receive,pay_amount:paid,
-        expected_policy_id:policy,expected_receive_amount:given}),
+        expected_policy_id:policy,expected_receive_amount:given,
+        expected_numerator:num,expected_denominator:den}),
       cache:"no-store",signal:AbortSignal.timeout(7000),
     });
     status=response.status;
