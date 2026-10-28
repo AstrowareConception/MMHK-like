@@ -97,6 +97,13 @@ def expand_demo(db:psycopg.Connection)->dict:
                    WHERE unit_code=%s AND policy_id=%s AND lab_duel_power IS NULL""",
                 (lab_power,unit_code,POLICY),
             )
+        # Local-only route speed. 25 seconds per logical tile step, each leg
+        # separately; NO assumption about Ubisoft travel, truce or rest rules.
+        db.execute(
+            """INSERT INTO pve_travel_policies(world_id,seconds_per_step,policy_id)
+               VALUES('local-sandbox',25,'LAB-REGIONAL-TILE-STEPS-V1')
+               ON CONFLICT(world_id) DO NOTHING"""
+        )
         for (city_id,) in cities:
             for code,amount in (("militia",18),("archers",8)):
                 db.execute(

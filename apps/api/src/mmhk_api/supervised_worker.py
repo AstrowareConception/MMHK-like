@@ -21,6 +21,7 @@ from typing import Callable
 import psycopg
 
 from .construction import run_construction_batch
+from .pve_missions import advance_pve_missions
 from .db import connect
 from .economy import run_economy_batch
 
@@ -77,6 +78,7 @@ def iteration(
     max_cities: int, max_orders: int, max_ticks_per_city: int,
     economy_fn: Callable=run_economy_batch,
     construction_fn: Callable=run_construction_batch,
+    mission_fn: Callable=advance_pve_missions,
 ) -> dict:
     """Isolate failure of the economic engine from construction processing.
 
@@ -97,6 +99,11 @@ def iteration(
         counts["construction"]=len(construction_fn(db,max_orders=max_orders))
     except Exception:
         errors.append("construction")
+    try:
+        mission_count=len(mission_fn(db,max_orders=max_orders))
+    except Exception:
+        mission_count=0
+        errors.append("missions")
     # On an invalid/closed connection, the heartbeat fails and the outer
     # supervisor will reopen it. Fail closed, don't report healthy.
     update_heartbeat(
@@ -108,7 +115,7 @@ def iteration(
     )
     return {"kind":"worker_cycle","iteration":number,"worker_id":worker_id,
             "counts":counts,"state":"degraded" if errors else "healthy",
-            "error_kinds":errors}
+            "error_kinds":errors,"mission_transitions":mission_count}
 
 
 def _log(item: dict) -> None:
