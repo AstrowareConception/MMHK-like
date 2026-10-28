@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CityScene } from "../../../components/city-scene";
+import { AssetImage } from "../../../components/asset-image";
 import { LiveRefresh } from "../../../components/live-refresh";
 import { notFound, redirect } from "next/navigation";
 import { signOut, startUrbanConstruction } from "../../actions";
@@ -63,7 +64,7 @@ export default async function CityPage({
         <div className="resource-grid">
           {RESOURCES.map(([key, label]) => (
             <article key={key}>
-              <span className="tile-title">{label}</span>
+              <span className="tile-title resource-heading"><AssetImage id={`resource.${key}`} className="resource-asset" />{label}</span>
               <strong>{(city.stocks[key] ?? 0).toLocaleString("fr-FR")}</strong>
               {city.stock_capacities[key] != null &&
                 <small>Capacité effective : {city.stock_capacities[key]?.toLocaleString("fr-FR")}</small>}

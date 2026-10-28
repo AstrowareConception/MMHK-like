@@ -171,3 +171,7 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
   .region-legend { grid-template-columns:1fr; }
   .region-actions { justify-content:flex-start; }
 }
+
+/* First asset-registry integration: original public-safe resource miniatures. */
+.resource-heading { display:flex; align-items:center; gap:9px; }
+.resource-asset { display:inline-block; width:28px; height:28px; flex:none; object-fit:contain; }
