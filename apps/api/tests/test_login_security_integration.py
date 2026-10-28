@@ -30,6 +30,10 @@ def subject(monkeypatch):
         username="login"+uuid4().hex[:15]
         player=create_account(db,username,"valid-password-for-lab-123")
     yield username
+    # A test may deliberately remove the rate-limit key; restore it before
+    # HMAC-keyed fixture cleanup.
+    monkeypatch.setenv("MMHK_LOGIN_RATE_KEY",
+                       "test-only-hmac-key-for-login-limits-0123456789abcdef")
     with psycopg.connect(URL) as db:
         db.execute("DELETE FROM accounts WHERE username=%s",(username,))
         db.execute("DELETE FROM auth_login_events WHERE username_digest=%s",
@@ -146,3 +150,29 @@ def test_pruning_is_operator_only_and_bounded(subject):
     with psycopg.connect(URL) as db:
         _buckets,deleted=prune_login_history(db,retention_days=30)
         assert deleted>=1
+
+
+def test_source_wide_budget_cannot_be_bypassed_by_rotating_usernames(subject):
+    from uuid import uuid4
+    source = "synthetic-source-" + uuid4().hex
+    with psycopg.connect(URL) as db:
+        for number in range(40):
+            retry=reserve_login_attempt(
+                db,username="nonexistent-"+str(number),source_ip=source,
+            )
+            assert retry==0
+        assert reserve_login_attempt(
+            db,username="last-account",source_ip=source,
+        )>0
+        count=db.execute(
+            "SELECT attempts FROM auth_login_buckets WHERE bucket_digest=%s",
+            (digest_identifier("source",source),),
+        ).fetchone()[0]
+        assert count==41
+        db.execute("DELETE FROM auth_login_buckets WHERE bucket_digest=%s",
+                   (digest_identifier("source",source),))
+        for number in range(40):
+            db.execute("DELETE FROM auth_login_buckets WHERE bucket_digest=%s",
+                       (digest_identifier("username","nonexistent-"+str(number)),))
+        db.execute("DELETE FROM auth_login_buckets WHERE bucket_digest=%s",
+                   (digest_identifier("username","last-account"),))
