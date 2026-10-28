@@ -8,6 +8,9 @@ on:
       - '.github/workflows/fullstack-foundation.yml'
       - 'compose.dev.yaml'
       - 'compose.workers.yaml'
+      - 'compose.preview.yaml'
+      - '.dockerignore'
+      - 'tools/ci/check_private_preview.py'
   pull_request:
     paths:
       - 'apps/**'
@@ -16,6 +19,9 @@ on:
       - '.github/workflows/fullstack-foundation.yml'
       - 'compose.dev.yaml'
       - 'compose.workers.yaml'
+      - 'compose.preview.yaml'
+      - '.dockerignore'
+      - 'tools/ci/check_private_preview.py'
   workflow_dispatch:
 permissions:
   contents: read
@@ -77,3 +83,16 @@ jobs:
         run: npm run build
       - name: Check frontend types
         run: npm run typecheck
+
+  private-preview-build:
+    name: Check SSH-only preview ports and build API/Next images
+    runs-on: ubuntu-latest
+    env:
+      MMHK_PREVIEW_POSTGRES_PASSWORD: ci-only-preview-database-password
+      MMHK_LOGIN_RATE_KEY: ci-only-preview-hmac-key-0123456789abcdef
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assert preview services are never exposed beyond localhost
+        run: python tools/ci/check_private_preview.py
+      - name: Build private FastAPI and Next.js preview images
+        run: docker compose -f compose.preview.yaml build api web
