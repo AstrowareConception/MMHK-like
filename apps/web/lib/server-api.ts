@@ -66,6 +66,7 @@ export type ConstructionOrder = {
   replayed?: boolean;
 };
 export type ConstructionCatalog = {
+  history: ConstructionOrder[];
   buildings: {
     building_code: string;
     level: number;
@@ -187,4 +188,68 @@ export type PveMissionsResponse={
   city_id:string;server_now:string;historically_certified:false;
   travel_policy:{seconds_per_step:number;policy_id:string}|null;
   missions:PveMission[];
+};
+
+
+export type MerchantCatalog = {
+  city_id:string;
+  merchant_unlocked:boolean;
+  auctions_available:false;
+  caravans_available:false;
+  rounding_policy:string;
+  historically_certified:false;
+  rates:{pay_resource:string;receive_resource:string;policy_id:string;
+    numerator:number;denominator:number}[];
+  history:{order_id:string;pay_resource:string;receive_resource:string;
+    pay_amount:number;receive_amount:number;policy_id:string;
+    numerator:number;denominator:number;completed_at:string}[];
+};
+
+export type MerchantQuote = {
+  city_id:string;pay_resource:string;receive_resource:string;
+  pay_amount:number;receive_amount:number;policy_id:string;
+  numerator:number;denominator:number;
+  current_pay_stock:number;current_receive_stock:number;
+  expected_pay_balance:number|null;expected_receive_balance:number|null;
+  affordable:boolean;capacity_sufficient:boolean;can_execute:boolean;
+  rounding_policy:string;historically_certified:false;
+};
+
+
+export type MarketplaceOffer = {
+  offer_id:string;resource:string;quantity:number;
+  price_resource:string;price_amount:number;
+  policy_id:string;status:"active"|"sold"|"expired"|"cancelled";
+  created_at:string;expires_at:string;
+  escrow_claimed?:boolean;can_withdraw?:boolean;closed_at?:string|null;
+};
+export type MarketplacePolicy = {
+  policy_id:string;max_quantity:number;max_price:number;
+  min_duration_seconds:number;max_duration_seconds:number;
+  delivery_mode:"instant_lab";
+};
+export type MarketplaceCatalog = {
+  city_id:string;marketplace_unlocked:boolean;
+  marketplace_policy:MarketplacePolicy|null;
+  historically_certified:false;delivery_mode:"instant_lab"|null;
+  offers:MarketplaceOffer[];my_offers:MarketplaceOffer[];
+};
+
+export type HeroFormation={
+  city_id:string;hero_id:string;status:string;slots_count:7;
+  historically_certified_s2:false;positions:{
+    position:number;jactari_index:number;unit_code:string;quantity:number
+  }[];saved:boolean;needs_configuration:boolean;
+  available_units:{unit_code:string;name:string;quantity:number}[];jactari_scope:string;
+};
+export type MissionReport={
+  mission_id:string;city_id:string;hero_id:string;hero_name:string;
+  encounter_name:string;target_i:number;target_j:number;stage:PveMission["stage"];
+  unit_code:string;stack_count:number;travel_policy_id:string;
+  started_at:string;arrival_due_at:string;return_due_at:string;
+  arrived_at:string|null;returned_at:string|null;
+  historically_certified:false;
+  formation_snapshot:{position:number;jactari_index:number;unit_code:string;quantity:number}[];
+  duel_report:(PveMission["duel_report"]&{no_losses_applied?:boolean;no_rewards?:boolean})|null;
+  events:{phase:"departed"|"arrived"|"returned";occurred_at:string}[];
 };

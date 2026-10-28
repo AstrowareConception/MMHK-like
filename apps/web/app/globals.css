@@ -605,3 +605,198 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
 .region-launch button:disabled{opacity:.5;cursor:not-allowed;}
 .region-launch small{display:block;margin-top:8px;font:11px/1.5 system-ui,sans-serif;color:#d1cfc0;}
 @media(prefers-reduced-motion:reduce){.region-mission-map{filter:none;}}
+
+
+/* US-CIT: owner-scoped interactive inspection and real construction history. */
+.haven-plot.selected-plot rect{stroke:#ffedba;stroke-width:2.5;fill:#3b574eee;}
+.haven-plot.selected-plot{filter:drop-shadow(0 0 9px #f8dd91);}
+.city-building-inspector{margin:14px 0 24px;padding:16px 18px;border:2px ridge #bca16c;
+  background:linear-gradient(135deg,#2b4146,#152a33 70%);box-shadow:inset 0 0 22px #0007;}
+.city-building-inspector>strong{color:#edd8a7;font:small-caps 19px Georgia,serif;}
+.city-building-inspector p{font:13px/1.6 Georgia,serif;color:#c9d1c8;}
+.city-building-inspector a{color:#edd4a1;}
+.city-inspector-heading{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;
+  border-bottom:1px solid #a18c626e;padding-bottom:10px;}
+.city-inspector-heading h3{font:small-caps 28px Georgia,serif;color:#f2dbab;margin:2px 0;}
+.city-inspector-heading p{margin:0;}
+.city-inspector-heading>a,.building-inspect-link{display:inline-block;padding:6px 10px;
+  border:1px solid #a98f62;border-radius:3px;font:700 12px system-ui,sans-serif;text-decoration:none;}
+.city-building-inspector h4{font:small-caps 19px Georgia,serif;color:#ead7aa;margin:16px 0 7px;}
+.city-inspector-progress,.city-inspector-blocked{border-left:3px solid #d0b37d;
+  padding:9px 12px;background:#112831;}
+.city-inspector-blocked{border-left-color:#de8f70;}
+.city-inspector-quotes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:11px;margin:13px 0;}
+.city-inspector-quote{display:flex;flex-direction:column;gap:8px;min-width:0;padding:12px;
+  border:1px solid #988458;background:#112630;}
+.city-inspector-quote strong{font:small-caps 19px Georgia,serif;color:#ecd5a6;}
+.city-inspector-quote small,.city-inspector-quote li{font:12px/1.55 system-ui,sans-serif;color:#d4dad1;}
+.city-inspector-quote ul{padding-left:15px;margin:0 0 6px;flex:1;}
+.city-inspector-quote li.resource-shortage{color:#f3b195;}
+.city-inspector-quote button:disabled{cursor:not-allowed;opacity:.53;filter:grayscale(.7);}
+.city-inspector-disclaimer{font-size:11px!important;color:#adbfbd!important;}
+.city-inspector-past{border-top:1px solid #a08b6a70;}
+.city-inspector-past li{font:12px/1.6 system-ui,sans-serif;color:#c2c9c6;}
+.construction-history-list{list-style:none;padding:0;margin:12px 0;display:grid;gap:8px;}
+.construction-history-entry{display:grid;grid-template-columns:1fr auto;gap:5px 12px;padding:11px;
+  border:1px solid #98805d;background:#162b34;color:#e2d6bc;}
+.construction-history-entry strong{color:#f0dbb0;}
+.construction-history-entry small{grid-column:1/-1;color:#bfcbc5;font:11px/1.55 system-ui,sans-serif;}
+@media(max-width:760px){.city-inspector-quotes{grid-template-columns:1fr;}}
+
+
+/* US-ECH-001/002/003: separate merchant, auctions and caravans. */
+.market-headline{display:flex;align-items:start;justify-content:space-between;
+  gap:18px;margin:3px 0 20px;flex-wrap:wrap;}
+.market-headline h2{font:small-caps clamp(27px,4vw,36px) Georgia,serif;
+  margin:4px 0 9px;color:#eed9aa;}
+.market-headline p{max-width:640px;color:#c7cfc5;font:13px/1.7 Georgia,serif;}
+.market-service-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+.market-service{padding:16px;border:2px ridge #ac9265;
+  background:linear-gradient(145deg,#284048,#122832);min-height:190px;}
+.market-service>span{display:block;font-size:27px;color:#edcc82;}
+.market-service h3{font:small-caps 23px Georgia,serif;color:#e9d7aa;margin:5px 0;}
+.market-service strong{display:block;color:#d2ba88;font:700 12px system-ui,sans-serif;}
+.market-service p{color:#c7ceca;font:12px/1.6 system-ui,sans-serif;}
+.market-service.locked{border-color:#706b5a;background:#18272e;opacity:.85;}
+.market-locked,.merchant-offers,.merchant-quote,.merchant-ledger{border:1px solid #a18c65;
+  background:linear-gradient(140deg,#223841,#112630);padding:16px 18px;margin:18px 0;}
+.market-locked h3,.merchant-offers h3,.merchant-quote h3,.merchant-ledger h3{
+  font:small-caps 25px Georgia,serif;color:#eed8a7;margin:0 0 10px;}
+.market-locked p,.merchant-offers p,.merchant-quote p,.merchant-ledger p{
+  color:#c4cdc9;font:12px/1.7 system-ui,sans-serif;}
+.market-locked a{color:#f2dca7;}
+.market-disclaimer{color:#b6c4c3!important;font-size:11px!important;}
+.merchant-rate-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+.merchant-rate{display:flex;flex-direction:column;gap:9px;
+  padding:15px;background:#152b34;border:1px solid #99855b;}
+.merchant-rate strong{color:#eed8a8;font:small-caps 20px Georgia,serif;}
+.merchant-rate small{font:11px/1.6 system-ui,sans-serif;color:#b8c3bf;}
+.merchant-rate label{display:grid;gap:6px;color:#e5d3b0;font:12px Georgia,serif;}
+.merchant-rate input{max-width:240px;background:#11242e;color:#eddfbb;
+  border:1px solid #b29a69;padding:9px;}
+.merchant-rate button{align-self:start;min-height:37px;}
+.merchant-quote{border:2px ridge #dbb879;scroll-margin-top:18px;}
+.merchant-quote-figures{display:flex;justify-content:space-between;gap:15px;
+  align-items:center;flex-wrap:wrap;margin:12px 0;}
+.merchant-quote-figures>div{flex:1;min-width:170px;padding:13px;
+  border:1px solid #ad9567;background:#102832;}
+.merchant-quote-figures>div span,.merchant-quote-figures>div small{
+  display:block;color:#c2c7c0;font:11px/1.5 system-ui,sans-serif;}
+.merchant-quote-figures strong{display:block;font:small-caps 23px Georgia,serif;
+  color:#f2dea9;margin:5px 0;}
+.merchant-quote-figures>span{font:27px Georgia,serif;color:#e1bd78;}
+.merchant-confirm-form button{padding:11px 18px;}
+.merchant-confirm-form button:disabled{opacity:.5;cursor:not-allowed;}
+.merchant-ledger ol{padding:0;list-style:none;display:grid;gap:8px;}
+.merchant-ledger-row{display:grid;grid-template-columns:1fr auto;gap:6px;
+  padding:12px;border:1px solid #806f52;background:#142b34;}
+.merchant-ledger-row strong{color:#ead6ac;font:14px Georgia,serif;}
+.merchant-ledger-row span,.merchant-ledger-row small{color:#bbc8c5;
+  font:11px/1.6 system-ui,sans-serif;}
+.merchant-ledger-row small{grid-column:1/-1;}
+@media(max-width:780px){.market-service-grid{grid-template-columns:1fr;}
+  .merchant-rate-grid{grid-template-columns:1fr;}
+  .market-service{min-height:0;}
+  .merchant-quote-figures>span{display:none;}
+}
+
+
+/* Hôtel des ventes: fixed-price lab lots, escrow states and accessible forms. */
+.marketplace-panel{margin:21px 0;padding:18px;
+  background:linear-gradient(120deg,#2c4349,#142a33 55%,#1c3435);
+  border:3px ridge #b5a077;box-shadow:inset 0 0 22px #0008;}
+.marketplace-heading{display:flex;justify-content:space-between;align-items:start;
+  gap:12px;flex-wrap:wrap;border-bottom:1px solid #ab91675e;padding-bottom:11px;}
+.marketplace-heading h3{font:small-caps clamp(23px,3vw,29px) Georgia,serif;
+  color:#f2deb2;margin:4px 0;}
+.marketplace-panel a{color:#f2d9a6;}
+.marketplace-panel p{font:12px/1.65 system-ui,sans-serif;color:#c8d0ca;}
+.marketplace-panel .market-disclaimer{padding:9px 11px;background:#11242d;}
+.marketplace-locked{border-left:4px solid #d2a768;background:#162d35;padding:11px;}
+.marketplace-columns{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:17px 0;}
+.marketplace-wing{background:#0f252edb;border:1px solid #897755;padding:15px;min-width:0;}
+.marketplace-wing h4,.marketplace-my-offers h4{margin:2px 0 13px;
+  font:small-caps 23px Georgia,serif;color:#eed8a9;}
+.marketplace-offer{display:grid;gap:7px;border:1px solid #a68a5b;
+  padding:12px;background:#213841;margin:9px 0;}
+.marketplace-offer strong{font:small-caps 19px Georgia,serif;color:#f3e0b4;}
+.marketplace-offer span{font:13px Georgia,serif;color:#ded4bd;}
+.marketplace-offer span b{color:#f2d492;}
+.marketplace-offer small,.marketplace-own-offer small{display:block;
+  font:11px/1.55 system-ui,sans-serif;color:#c1c9c3;}
+.marketplace-offer form button{min-height:35px;}
+.marketplace-publish{display:grid;gap:10px;}
+.marketplace-publish label{display:grid;gap:5px;color:#d7c5a2;
+  font:13px/1.45 Georgia,serif;}
+.marketplace-publish select,.marketplace-publish input{
+  padding:9px;border:1px solid #a89765;background:#122832;
+  color:#f0dfb9;font:13px system-ui,sans-serif;width:100%;max-width:100%;}
+.marketplace-publish button{margin-top:4px;min-height:39px;}
+.marketplace-publish small{font:11px/1.6 system-ui,sans-serif;color:#bdcac6;}
+.marketplace-publish button:disabled,.marketplace-offer button:disabled{
+  opacity:.5;cursor:not-allowed;}
+.marketplace-my-offers{margin-top:14px;border-top:1px solid #ac916267;
+  padding-top:17px;}
+.marketplace-own-offer{display:flex;justify-content:space-between;align-items:center;
+  gap:13px;flex-wrap:wrap;padding:12px;border:1px solid #907e60;
+  background:#152b35;margin:8px 0;color:#dfdbcd;font:13px Georgia,serif;}
+.marketplace-own-offer strong{color:#f3ddb0;}
+.marketplace-own-offer button{font:700 12px system-ui,sans-serif;padding:9px 12px;}
+.marketplace-empty{font-style:italic!important;color:#adbebc!important;}
+@media(max-width:870px){.marketplace-columns{grid-template-columns:1fr;}}
+
+/* Seven ordered army positions (ordinary Jactari slots 2–8). */
+.formation-editor,.mission-duel-results{padding:18px;margin:18px 0;border:2px ridge #ae9464;background:linear-gradient(#263e43,#132a34);}
+.formation-editor header,.formation-footer,.mission-report-header{display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap;}
+.formation-editor h3,.mission-report-header h2{font:small-caps 27px Georgia,serif;color:#f3ddac;margin:4px 0;}
+.formation-editor p,.formation-footer small,.mission-duel-results p{font:12px/1.6 system-ui,sans-serif;color:#c6cfcb;}
+.formation-state,.mission-report-header>strong{padding:9px;border:1px solid #b89b68;color:#f4dcaa;}
+.formation-warning{border-left:3px solid #e6b56a;padding:12px;background:#604c3055;color:#f6dcab;}
+.formation-slots{display:grid;gap:7px;margin:14px 0;}
+.formation-slot{display:grid;grid-template-columns:55px minmax(135px,1.5fr) minmax(80px,.7fr) auto;gap:10px;align-items:center;border:1px solid #7c8b7d;background:#182e36;padding:9px;}
+.formation-slot:nth-child(even){background:#203840;}
+.formation-slot-number{display:grid;place-items:center;color:#edcd8c;}
+.formation-slot-number strong{font:small-caps 26px Georgia,serif;}
+.formation-slot label{display:grid;gap:5px;font:11px Georgia,serif;color:#d7c8a7;}
+.formation-slot select,.formation-slot input{width:100%;min-width:0;border:1px solid #ac946b;background:#0f242d;color:#f3ddb6;padding:8px;}
+.formation-slot-actions{display:flex;align-items:center;gap:4px;flex-wrap:wrap;}
+.formation-slot-actions button{padding:7px;font:700 11px system-ui,sans-serif;}
+.formation-slot-actions button:disabled,.formation-footer button:disabled{opacity:.4;cursor:not-allowed;}
+.formation-totals{display:flex;gap:7px;flex-wrap:wrap;margin:13px 0;}
+.formation-totals span{border:1px solid #748b7f;color:#d1e0d0;padding:7px;font:12px Georgia,serif;}
+.formation-totals .unbalanced{border-color:#c98571;color:#f1b8a6;}
+.formation-footer{border-top:1px solid #a28b6655;padding-top:13px;}
+.formation-footer small{flex:1;max-width:600px;}
+.mission-report-header{padding:19px;border:2px ridge #b5a06d;background:#243a41;}
+.mission-report-header h2{margin:4px 0;}
+.mission-report-legs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:15px 0;}
+.mission-report-legs article{display:grid;gap:8px;padding:15px;border:1px solid #a68d61;background:#1a323b;}
+.mission-report-legs article strong{font:17px Georgia,serif;color:#ead2a0;}
+.mission-report-legs article span:not(.eyebrow){font:12px/1.5 system-ui,sans-serif;color:#c4cdc7;}
+.mission-report-events{list-style:none;padding:0;margin:14px 0 24px;border-left:2px solid #b19a6a;}
+.mission-report-events li{display:flex;justify-content:space-between;flex-wrap:wrap;gap:10px;padding:12px 20px;border-bottom:1px solid #81785b80;color:#f2dcab;}
+.mission-report-events time{font-variant-numeric:tabular-nums;color:#c8d0c8;}
+.mission-report-formation{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px;margin:14px 0;}
+.mission-report-formation>div{display:grid;gap:5px;min-width:0;padding:10px;border:1px solid #a68d62;background:#1c343a;}
+.mission-report-formation .empty{opacity:.55;border-style:dashed;}
+.mission-report-formation strong{color:#f2dba6;font:700 12px Georgia,serif;}
+.mission-report-formation span,.mission-report-formation small{font:11px/1.5 system-ui,sans-serif;overflow-wrap:anywhere;color:#cbd4ca;}
+.mission-duel-results div{display:flex;justify-content:space-between;gap:10px;border-top:1px solid #998c6755;padding:9px;}
+.mission-duel-results strong{color:#f0d79e;}
+.mission-report-link{color:#f1d79b;white-space:nowrap;font-weight:700;}
+@media(max-width:1050px){.mission-report-formation{grid-template-columns:repeat(4,minmax(0,1fr));}}
+@media(max-width:790px){.mission-report-legs{grid-template-columns:1fr;}
+ .formation-slot{grid-template-columns:40px 1fr 95px;}
+ .formation-slot-actions{grid-column:2/-1;}
+ .mission-report-formation{grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:460px){.formation-slot{grid-template-columns:40px 1fr;}
+ .formation-slot label:nth-child(3),.formation-slot-actions{grid-column:2;}}
+
+/* Hero workspace navigation keeps long inventory pages usable. */
+.hero-subnav{position:sticky;top:0;z-index:10;display:flex;gap:4px;flex-wrap:wrap;
+  background:#122831eb;border:1px solid #9d8962;padding:7px;margin-bottom:10px;
+  box-shadow:0 5px 18px #0008;}
+.hero-subnav a{padding:8px 10px;color:#ead6a8;background:#263d44;
+  border:1px solid #8b876b;font:700 12px Georgia,serif;text-decoration:none;}
+.hero-subnav a:hover,.hero-subnav a:focus-visible{border-color:#f1d7a1;background:#45585b;}
+#hero-equipment,#hero-bag,#hero-reserve,#hero-formation,#hero-army{scroll-margin-top:68px;}

@@ -125,14 +125,23 @@ def main() -> int:
 
             expect(page.get_by_text("Actualisation automatique", exact=False)).to_be_visible()
 
-            # The actual first townhall can be built from the demo fixture.
-            rapid = page.locator(
-                "form.build-option:has(input[name='buildingCode'][value='village_hall'])"
+            # Select a verified Haven building: inspect actual server quotes,
+            # then submit the construction order from its contextual inspector.
+            page.locator(".haven-plot[data-building-code='village_hall']").click()
+            inspector=page.locator("#city-inspector")
+            expect(inspector).to_have_attribute("data-selected-building","village_hall")
+            expect(inspector.get_by_role("heading",name="Hôtel du village")).to_be_visible()
+            expect(inspector.get_by_text("Projet proposé : niveau 1")).to_be_visible()
+            expect(inspector.locator(".city-inspector-quote")).to_have_count(3)
+            rapid = inspector.locator(
+                "form.city-inspector-quote:has(input[name='buildingCode'][value='village_hall'])"
                 ":has(input[name='mode'][value='rapid'])"
             )
-            expect(rapid.get_by_role("button", name="Lancer ce chantier")).to_be_enabled()
-            rapid.get_by_role("button", name="Lancer ce chantier").click()
+            expect(rapid.get_by_role("button", name="Lancer le chantier")).to_be_enabled()
+            rapid.get_by_role("button", name="Lancer le chantier").click()
             expect(page.get_by_text("Chantier enregistré et ressources payées.")).to_be_visible(timeout=20000)
+            expect(page.locator("#city-history .construction-history-entry")).to_have_count(1)
+            expect(page.locator("#city-history .construction-history-entry").first).to_contain_text("Hôtel du village")
             snap = page.request.get(root + "/api/game-timeline?hours=12")
             payload = snap.json() if snap.ok else {}
             print("Timeline construction diagnostics:",
@@ -157,8 +166,61 @@ def main() -> int:
             expect(finished.first).to_be_visible(timeout=5000)
             expect(page.locator(".timeline-event")).to_have_count(0, timeout=45000)
             expect(page.get_by_text("Bonus de mine actifs", exact=False)).to_be_visible()
-            # Progression: after village hall completion, the first dwelling
-            # becomes available; recruitment itself requires that building to finish.
+            expect(page.locator("#city-history .construction-history-entry").first).to_contain_text("Terminé")
+            # US-ECH: local test rate policies are not enough on their own:
+            # the real marketplace must be constructed and completed first.
+            page.get_by_role("link", name="Marché", exact=True).click()
+            expect(page.get_by_role("heading", name="Marché de Premier Havre")).to_be_visible()
+            expect(page.get_by_role("heading", name="Le marché attend son ouverture")).to_be_visible()
+            page.get_by_role("link", name="Voir le bâtiment Marché").click()
+            expect(page.locator("#city-inspector")).to_have_attribute(
+                "data-selected-building", "marketplace")
+            market_job=page.locator(
+                "form.city-inspector-quote:has(input[name='buildingCode'][value='marketplace'])"
+                ":has(input[name='mode'][value='rapid'])"
+            )
+            expect(market_job.get_by_role("button",name="Lancer le chantier")).to_be_enabled()
+            market_job.get_by_role("button",name="Lancer le chantier").click()
+            expect(page.get_by_text("Chantier enregistré et ressources payées.")).to_be_visible(timeout=20000)
+            market_ready=page.get_by_text("marketplace niveau 1",exact=False)
+            deadline=time.monotonic()+115
+            while time.monotonic()<deadline:
+                if market_ready.count() and market_ready.first.is_visible():
+                    break
+                page.wait_for_timeout(2500)
+            expect(market_ready.first).to_be_visible(timeout=5000)
+            page.get_by_role("link",name="Marché",exact=True).click()
+            expect(page.get_by_role("heading",name="La halle des échanges")).to_be_visible()
+            wood_for_ore=page.locator(
+                "form.merchant-rate:has(input[name='pay_resource'][value='wood'])"
+                ":has(input[name='receive_resource'][value='ore'])"
+            )
+            wood_for_ore.locator("input[name='pay_amount']").fill("6")
+            wood_for_ore.get_by_role("button",name="Obtenir un devis").click()
+            expect(page.locator("#market-quote")).to_contain_text("3 minerai")
+            page.get_by_role("button",name="Confirmer cet échange").click()
+            expect(page.get_by_text("Échange confirmé :",exact=False)).to_be_visible(timeout=20000)
+            expect(page.get_by_test_id("market-history-row")).to_have_count(1)
+            expect(page.get_by_test_id("market-history-row").first).to_contain_text("6 bois vers 3 minerai")
+            # US-ECH-004/005/008: actually reserve a lot outside spendable stock,
+            # display its state and withdraw it to the same city.
+            publish=page.get_by_test_id("marketplace-publish")
+            expect(publish.get_by_role("button",name="Publier et réserver le lot")).to_be_enabled()
+            publish.locator('input[name="quantity"]').fill("4")
+            publish.locator('input[name="priceAmount"]').fill("6")
+            publish.get_by_role("button",name="Publier et réserver le lot").click()
+            expect(page.get_by_text("Offre publiée :",exact=False)).to_be_visible(timeout=20000)
+            expect(page.get_by_test_id("marketplace-my-offer")).to_have_count(1)
+            own_lot=page.get_by_test_id("marketplace-my-offer").first
+            expect(own_lot).to_contain_text("4 Bois")
+            expect(own_lot).to_contain_text("En vente")
+            own_lot.get_by_role("button",name="Retirer l'offre").click()
+            expect(page.get_by_text("Lot retiré et remis",exact=False)).to_be_visible(timeout=20000)
+            expect(page.get_by_test_id("marketplace-my-offer").first).to_contain_text("Retiré")
+            page.get_by_role("link",name="Retourner dans la cité.").click()
+            expect(page.get_by_role("heading",level=1,name="Premier Havre")).to_be_visible()
+            # Progression: after exchanging resources, build the first dwelling
+            # and recruit the army used by the next journey.
             tier_one = page.locator(
                 "form.build-option:has(input[name='buildingCode'][value='recruit_t1'])"
                 ":has(input[name='mode'][value='rapid'])"
@@ -192,8 +254,15 @@ def main() -> int:
             transfer.get_by_role("button", name="Affecter").click()
             expect(page.get_by_text("Transfert confirmé", exact=False)).to_be_visible(timeout=20000)
             expect(page.get_by_text("Miliciens du Havre : 2")).to_be_visible()
+            # Prepare seven-slot army without changing real soldier counts.
+            page.locator('a[href$="/heroes"]').first.click()
+            expect(page.get_by_role("heading", name="Les sept positions de l'armée")).to_be_visible()
+            expect(page.locator(".formation-slot")).to_have_count(7)
+            page.get_by_role("button", name="Enregistrer les sept positions").click()
+            expect(page.get_by_text("Formation de combat enregistrée", exact=False)).to_be_visible(timeout=20000)
+            page.locator('a[href$="/region"]').first.click()
             # Two seeded laboratory encounters, genuinely scoped to this city.
-            page.get_by_role("link", name="Région et rencontres").click()
+            # Region is already open through the main kingdom navbar.
             expect(page.get_by_role("heading", name="Autour de Premier Havre")).to_be_visible()
             wolf = page.locator('[data-region-i="1"][data-region-j="3"] polygon')
             wolf.click()
@@ -218,6 +287,15 @@ def main() -> int:
             expect(page.locator(".region-mission-map [data-mission-stage='returning']")).to_have_count(0,timeout=100000)
             expect(page.get_by_text("Aucun héros actuellement en déplacement.")).to_be_visible()
             expect(page.get_by_role("heading", name="Loups des bois")).to_be_visible()
+            # Mission history is collapsed by default. Reveal its report link.
+            page.get_by_text("Dernières missions achevées").click()
+            page.get_by_role("link", name="Rapport", exact=True).first.click()
+            expect(page.get_by_role("heading", level=1, name="Chronique de mission")).to_be_visible()
+            expect(page.locator(".mission-report-events li")).to_have_count(3)
+            expect(page.locator(".mission-report-formation > div")).to_have_count(7)
+            expect(page.get_by_text("Peloton du duel expérimental")).to_be_visible()
+            page.get_by_role("link", name="Suivre sur la carte").click()
+            expect(page.get_by_role("heading", name="Autour de Premier Havre")).to_be_visible()
 
             # The user can navigate back and log out via the real server action.
             page.get_by_role("link", name="Revenir à la carte du monde").click()

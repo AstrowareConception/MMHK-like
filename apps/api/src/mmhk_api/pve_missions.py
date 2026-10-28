@@ -63,6 +63,24 @@ def start_pve_mission(db:psycopg.Connection,*,owner:UUID,city_id:UUID,
         if distance<1:raise RecruitmentConflict("Cannot attack city centre")
         seconds=distance*policy[0]
         if seconds>172800:raise RecruitmentConflict("Unsupported journey length")
+        # Freeze the preparation at departure; editing is impossible until
+        # return. Only the selected unit code participates in the current
+        # bounded Jactari duel; the remaining slots are documentary.
+        prepared=db.execute(
+            """SELECT position,unit_code,quantity FROM hero_formation_slots
+               WHERE hero_id=%s ORDER BY position""",(hero_id,),
+        ).fetchall()
+        if not prepared:
+            all_units=db.execute(
+                """SELECT unit_code,quantity FROM hero_army_units
+                   WHERE hero_id=%s AND quantity>0 ORDER BY unit_code""",(hero_id,),
+            ).fetchall()
+            if len(all_units)>7:
+                raise RecruitmentConflict("Configure the seven-position army before departure")
+            prepared=[(i,code,quantity)
+                      for i,(code,quantity) in enumerate(all_units,start=1)]
+        snapshot=[{"position":pos,"jactari_index":pos+1,"unit_code":code,
+                   "quantity":int(qty)} for pos,code,qty in prepared]
         now=db.execute("SELECT clock_timestamp()").fetchone()[0]
         arrival=now+timedelta(seconds=seconds)
         returning=arrival+timedelta(seconds=seconds)
@@ -70,10 +88,11 @@ def start_pve_mission(db:psycopg.Connection,*,owner:UUID,city_id:UUID,
             """INSERT INTO pve_missions(
               mission_id,city_id,hero_id,encounter_id,actor_account_id,
               unit_code,stack_count,stack_power,target_i,target_j,travel_seconds,
-              travel_policy_id,stage,started_at,arrival_due_at,return_due_at)
-              VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'outbound',%s,%s,%s)""",
+              travel_policy_id,stage,started_at,arrival_due_at,return_due_at,
+              formation_snapshot)
+              VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'outbound',%s,%s,%s,%s)""",
             (mission_id,city_id,hero_id,encounter_id,owner,unit_code,
-             stack[0],stack[1],enemy[0],enemy[1],seconds,policy[1],now,arrival,returning),
+             stack[0],stack[1],enemy[0],enemy[1],seconds,policy[1],now,arrival,returning,Jsonb(snapshot)),
         )
         db.execute(
             "UPDATE city_heroes SET status='on_mission' WHERE hero_id=%s",(hero_id,),
@@ -183,3 +202,47 @@ def advance_pve_missions(db:psycopg.Connection,*,max_orders:int=25,
                 )
                 processed.append({"mission_id":str(mid),"phase":"returned"})
     return processed
+
+
+def report_for_mission(db:psycopg.Connection,*,owner:UUID,city_id:UUID,
+                       mission_id:UUID)->dict:
+    """A private and immutable account-scoped report, even after return."""
+    _owned_city(db,owner,city_id)
+    row=db.execute(
+        """SELECT m.mission_id,m.stage,m.started_at,m.arrival_due_at,
+                  m.return_due_at,m.arrived_at,m.returned_at,m.duel_report,
+                  m.formation_snapshot,m.travel_policy_id,
+                  m.unit_code,m.stack_count,m.target_i,m.target_j,
+                  h.hero_id,h.name,e.name
+           FROM pve_missions m
+           JOIN city_heroes h ON h.hero_id=m.hero_id
+           JOIN region_encounters e ON e.encounter_id=m.encounter_id
+           WHERE m.mission_id=%s AND m.city_id=%s AND m.actor_account_id=%s""",
+        (mission_id,city_id,owner),
+    ).fetchone()
+    if row is None:raise RecruitmentNotFound
+    (mid,stage,started,arrival_due,return_due,arrived,returned,duel,formation,
+     policy,unit,stack_count,i,j,hero_id,hero_name,enemy_name)=row
+    events=db.execute(
+        """SELECT phase,occurred_at FROM pve_mission_events
+           WHERE mission_id=%s ORDER BY
+             CASE phase WHEN 'departed' THEN 1 WHEN 'arrived' THEN 2
+                        WHEN 'returned' THEN 3 END""",(mission_id,),
+    ).fetchall()
+    return {
+      "mission_id":str(mid),"city_id":str(city_id),
+      "hero_id":str(hero_id),"hero_name":hero_name,
+      "encounter_name":enemy_name,"target_i":i,"target_j":j,
+      "stage":stage,"unit_code":unit,"stack_count":stack_count,
+      "travel_policy_id":policy,
+      "started_at":started.isoformat(),
+      "arrival_due_at":arrival_due.isoformat(),
+      "return_due_at":return_due.isoformat(),
+      "arrived_at":arrived.isoformat() if arrived else None,
+      "returned_at":returned.isoformat() if returned else None,
+      "formation_snapshot":formation or [],
+      "duel_report":duel,
+      "historically_certified":False,
+      "events":[{"phase":phase,"occurred_at":when.isoformat()}
+                for phase,when in events]
+    }

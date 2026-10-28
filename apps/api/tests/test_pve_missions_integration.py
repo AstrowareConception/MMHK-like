@@ -33,12 +33,26 @@ def test_hero_goes_out_and_back_only_when_worker_confirms(city):
     h=headers(city["username"]);foreign=headers(city["enemyname"])
     payload={"mission_id":str(uuid4()),"hero_id":str(hero),
              "encounter_id":str(encounter),"unit_code":unit}
+    # Free hero has eight assigned units; explicitly split them into two slots.
+    layout=client.post(f"{root}/heroes/{hero}/formation",headers=h,json={
+        "order_id":str(uuid4()),"positions":[
+            {"position":1,"unit_code":unit,"quantity":3},
+            {"position":7,"unit_code":unit,"quantity":5}
+        ]})
+    assert layout.status_code==201,layout.text
     assert client.post(root+"/missions",json=payload).status_code==401
     assert client.post(root+"/missions",headers=foreign,json=payload).status_code==404
     started=client.post(root+"/missions",headers=h,json=payload)
     assert started.status_code==201,started.text
     result=started.json()
     assert result["travel_seconds"]==60
+    report_url=root+"/missions/"+payload["mission_id"]+"/report"
+    assert client.get(report_url).status_code==401
+    assert client.get(report_url,headers=foreign).status_code==404
+    pending=client.get(report_url,headers=h).json()
+    assert pending["duel_report"] is None
+    assert [p["position"] for p in pending["formation_snapshot"]]==[1,7]
+    assert pending["events"][0]["phase"]=="departed"
     arrival=datetime.fromisoformat(result["arrival_due_at"])
     return_at=datetime.fromisoformat(result["return_due_at"])
     assert (return_at-arrival).total_seconds()==60
@@ -70,6 +84,11 @@ def test_hero_goes_out_and_back_only_when_worker_confirms(city):
         assert advance_pve_missions(db,now_at=return_at)==[]
     finished=client.get(root+"/missions",headers=h).json()["missions"][0]
     assert finished["stage"]=="completed"
+    final_report=client.get(report_url,headers=h).json()
+    assert [e["phase"] for e in final_report["events"]]==[
+        "departed","arrived","returned"]
+    assert final_report["formation_snapshot"]==pending["formation_snapshot"]
+    assert final_report["duel_report"]["no_losses_applied"] is True
     with psycopg.connect(URL) as db:
         assert db.execute("SELECT status FROM city_heroes WHERE hero_id=%s",(hero,)).fetchone()[0]=="idle"
         assert db.execute("SELECT quantity FROM hero_army_units WHERE hero_id=%s AND unit_code=%s",

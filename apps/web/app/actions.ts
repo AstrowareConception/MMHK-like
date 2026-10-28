@@ -244,3 +244,169 @@ export async function launchRegionalPveMission(form:FormData) {
   redirect("/cities/"+cityId+"/region?mission="+(status===200||status===201?"ok":
     status===409?"conflict":"unavailable")+selectedTile);
 }
+
+
+/** Confirm a server-provided merchant quote. The quote form supplies ONE UUID
+ * generated at render time, so double-clicks replay the same order. Never
+ * generate a new UUID while retrying an uncertain payment.
+ */
+export async function tradeCityResources(form:FormData) {
+  const cityId=form.get("cityId"),orderId=form.get("orderId");
+  const pay=form.get("payResource"),receive=form.get("receiveResource");
+  const amount=form.get("payAmount"),expected=form.get("expectedReceive");
+  const policy=form.get("policyId");
+  const numerator=form.get("expectedNumerator"),denominator=form.get("expectedDenominator");
+  const uuid=/^[a-f0-9-]{36}$/i;
+  const isResource=(x:FormDataEntryValue|null):x is string=>
+    typeof x==="string" && /^(gold|wood|ore|crystal|gems|sulfur|mercury)$/.test(x);
+  if(typeof cityId!=="string"||!uuid.test(cityId)||
+     typeof orderId!=="string"||!uuid.test(orderId)||
+     !isResource(pay)||!isResource(receive)||pay===receive||
+     typeof amount!=="string"||!/^[0-9]{1,7}$/.test(amount)||
+     typeof expected!=="string"||!/^[0-9]{1,13}$/.test(expected)||
+     typeof numerator!=="string"||!/^[0-9]{1,7}$/.test(numerator)||
+     typeof denominator!=="string"||!/^[0-9]{1,7}$/.test(denominator)||
+     typeof policy!=="string"||policy.length<3||policy.length>100)
+    redirect("/");
+  const paid=Number(amount),given=Number(expected);
+  const num=Number(numerator),den=Number(denominator);
+  if(!Number.isSafeInteger(paid)||paid<1||paid>1000000||
+     !Number.isSafeInteger(given)||given<1||given>1000000000000||
+     !Number.isSafeInteger(num)||num<1||num>1000000||
+     !Number.isSafeInteger(den)||den<1||den>1000000)
+    redirect("/cities/"+cityId+"/market?trade=invalid");
+  const token=(await cookies()).get("mmhk_session")?.value;
+  if(!token)redirect("/");
+  let status=503;
+  try{
+    const response=await fetch(apiUrl("/api/v1/me/cities/"+cityId+"/market"),{
+      method:"POST",
+      headers:{"Authorization":"Bearer "+token,"Content-Type":"application/json"},
+      body:JSON.stringify({order_id:orderId,pay_resource:pay,
+        receive_resource:receive,pay_amount:paid,
+        expected_policy_id:policy,expected_receive_amount:given,
+        expected_numerator:num,expected_denominator:den}),
+      cache:"no-store",signal:AbortSignal.timeout(7000),
+    });
+    status=response.status;
+  }catch{/* Unknown result: consult the transaction ledger, do NOT auto-retry. */}
+  if(status===401)redirect("/");
+  redirect("/cities/"+cityId+"/market?trade="+
+    (status===200||status===201?"ok":status===409?"conflict":"unavailable"));
+}
+
+
+/** Fixed price marketplace: all UUIDs originate in server-rendered forms.
+ * A timeout does not create a new command. PostgreSQL is the only arbiter.
+ */
+function marketUuid(value: FormDataEntryValue|null):value is string {
+  return typeof value==="string" && /^[a-f0-9-]{36}$/i.test(value);
+}
+function marketResource(value: FormDataEntryValue|null):value is string {
+  return typeof value==="string" &&
+    /^(gold|wood|ore|crystal|gems|sulfur|mercury)$/.test(value);
+}
+function marketInteger(value: FormDataEntryValue|null, maximum:number):number|null {
+  if(typeof value!=="string" || !/^[0-9]{1,7}$/.test(value))return null;
+  const number=Number(value);
+  return Number.isSafeInteger(number)&&number>=1&&number<=maximum?number:null;
+}
+async function marketPost(path:string,payload:unknown){
+  const token=(await cookies()).get("mmhk_session")?.value;
+  if(!token)return 401;
+  try{
+    const result=await fetch(apiUrl(path),{
+      method:"POST",headers:{"Authorization":"Bearer "+token,"Content-Type":"application/json"},
+      body:JSON.stringify(payload),cache:"no-store",signal:AbortSignal.timeout(7000),
+    });
+    if(result.status===401)return 401;
+    if(result.status===200||result.status===201){
+      if(path.endsWith("/withdraw")){
+        const receipt=await result.json() as {escrow_recovered?:boolean};
+        return receipt.escrow_recovered?"recovered":"stored";
+      }
+      return "ok";
+    }
+    return result.status===409||result.status===404?"conflict":"unavailable";
+  }catch {return "unavailable";}
+}
+export async function publishMarketplaceOffer(form:FormData){
+  const cityId=form.get("cityId"),orderId=form.get("orderId");
+  const resource=form.get("resource"),priceResource=form.get("priceResource");
+  const quantity=marketInteger(form.get("quantity"),1000000);
+  const price=marketInteger(form.get("priceAmount"),1000000);
+  const duration=marketInteger(form.get("durationSeconds"),604800);
+  if(!marketUuid(cityId)||!marketUuid(orderId)||!marketResource(resource)||
+     !marketResource(priceResource)||resource===priceResource||
+     quantity===null||price===null||duration===null||duration<60)
+    redirect(marketUuid(cityId)?"/cities/"+cityId+"/market?offer=invalid#marketplace":"/");
+  const result=await marketPost("/api/v1/me/cities/"+cityId+"/market/offers",{
+    order_id:orderId,resource,quantity,price_resource:priceResource,
+    price_amount:price,duration_seconds:duration,
+  });
+  if(result===401)redirect("/");
+  redirect("/cities/"+cityId+"/market?offer="+(result==="ok"?"published":result)+"#marketplace");
+}
+export async function buyMarketplaceOffer(form:FormData){
+  const cityId=form.get("cityId"),orderId=form.get("orderId");
+  const offerId=form.get("offerId");
+  const resource=form.get("resource"),priceResource=form.get("priceResource");
+  const quantity=marketInteger(form.get("quantity"),1000000);
+  const price=marketInteger(form.get("priceAmount"),1000000);
+  if(!marketUuid(cityId)||!marketUuid(offerId)||!marketUuid(orderId)||
+     !marketResource(resource)||!marketResource(priceResource)||
+     resource===priceResource||quantity===null||price===null)
+    redirect(marketUuid(cityId)?"/cities/"+cityId+"/market?offer=invalid#marketplace":"/");
+  const result=await marketPost(
+    "/api/v1/me/cities/"+cityId+"/market/offers/"+offerId+"/buy",
+    {order_id:orderId,expected_resource:resource,expected_quantity:quantity,
+     expected_price_resource:priceResource,expected_price_amount:price});
+  if(result===401)redirect("/");
+  redirect("/cities/"+cityId+"/market?offer="+(result==="ok"?"bought":result)+"#marketplace");
+}
+export async function withdrawMarketplaceOffer(form:FormData){
+  const cityId=form.get("cityId"),orderId=form.get("orderId");
+  const offerId=form.get("offerId");
+  if(!marketUuid(cityId)||!marketUuid(offerId)||!marketUuid(orderId))redirect("/");
+  const result=await marketPost(
+    "/api/v1/me/cities/"+cityId+"/market/offers/"+offerId+"/withdraw",
+    {order_id:orderId});
+  if(result===401)redirect("/");
+  redirect("/cities/"+cityId+"/market?offer="+result+"#marketplace");
+}
+
+/** Atomic army composition. All seven positions are validated by FastAPI.
+ * The browser cannot mutate hero_army_units totals.
+ */
+export async function saveHeroFormation(data:FormData){
+  const city=data.get("cityId"),hero=data.get("heroId");
+  const uuid=/^[0-9a-f-]{36}$/i;
+  if(typeof city!=="string"||!uuid.test(city)||
+     typeof hero!=="string"||!uuid.test(hero))redirect("/");
+  const target="/cities/"+city+"/heroes?hero="+hero;
+  const positions:{position:number;unit_code:string;quantity:number}[]=[];
+  for(let i=1;i<=7;i++){
+    const code=data.get("unit-"+i),raw=data.get("quantity-"+i);
+    if(typeof code!=="string")redirect(target+"&formation=invalid");
+    if(!code)continue;
+    if(typeof raw!=="string")redirect(target+"&formation=invalid");
+    if(!/^[a-z][a-z0-9_]{1,47}$/.test(code)||!/^[1-9]\d{0,6}$/.test(raw)||
+       Number(raw)>1000000)redirect(target+"&formation=invalid");
+    positions.push({position:i,unit_code:code,quantity:Number(raw)});
+  }
+  const token=(await cookies()).get("mmhk_session")?.value;
+  if(!token)redirect("/");
+  let status=503;
+  try{
+    const res=await fetch(apiUrl("/api/v1/me/cities/"+city+"/heroes/"+hero+"/formation"),{
+      method:"POST",cache:"no-store",headers:{
+        Authorization:"Bearer "+token,"Content-Type":"application/json"
+      },body:JSON.stringify({order_id:randomUUID(),positions}),
+      signal:AbortSignal.timeout(8000)
+    });
+    status=res.status;
+  }catch {/* Never retry a possibly completed operation without its order ID. */}
+  if(status===401)redirect("/");
+  redirect(target+"&formation="+(status===201||status===200?"ok":
+    status===409?"conflict":"unavailable"));
+}

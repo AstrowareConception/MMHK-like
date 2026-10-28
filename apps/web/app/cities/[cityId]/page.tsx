@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CityScene } from "../../../components/city-scene";
+import { CityBuildingInspector, buildingName } from "../../../components/city-building-inspector";
 import { AssetImage } from "../../../components/asset-image";
 import { LiveRefresh } from "../../../components/live-refresh";
 import { notFound, redirect } from "next/navigation";
@@ -24,7 +25,7 @@ export default async function CityPage({
   searchParams,
 }: {
   params: Promise<{ cityId: string }>;
-  searchParams: Promise<{ build?: string }>;
+  searchParams: Promise<{ build?: string; inspect?: string }>;
 }) {
   const { cityId } = await params;
   const token = await sessionToken();
@@ -52,10 +53,14 @@ export default async function CityPage({
       worldId={city.world_id} cityId={cityId} stocks={city.stocks}>
         <nav className="city-shortcuts" aria-label="Accès rapide à la cité">
           <a href="#city-scene">Panorama</a><a href="#city-resources">Ressources</a>
-          <a href="#urban-construction">Chantiers</a><Link href={`/cities/${cityId}/heroes`}>Héros et artefacts</Link>
+          <a href="#urban-construction">Chantiers</a><a href="#city-history">Historique</a>
+          <Link href={`/cities/${cityId}/market`}>Marché</Link>
+          <Link href={`/cities/${cityId}/heroes`}>Héros et artefacts</Link>
           <Link href={`/cities/${cityId}/forces`}>Armée et recrutements</Link>
         </nav>
-        <CityScene city={city} catalog={buildingAnswer.data} />
+        <CityScene city={city} catalog={buildingAnswer.data} selectedBuilding={query.inspect}/>
+        <CityBuildingInspector city={city} catalog={buildingAnswer.data}
+          selectedBuilding={query.inspect}/>
         {(city.production_active || !!buildingAnswer.data?.active) && <LiveRefresh intervalSeconds={10} />}
         <h2 id="city-resources">Réserves de la ville</h2>
         <div className="resource-grid">
@@ -73,6 +78,12 @@ export default async function CityPage({
           ))}
         </div>
         <div className="city-module-cards" aria-label="Gestion du royaume">
+          <Link href={`/cities/${cityId}/market`} className="city-module-card">
+            <span aria-hidden="true" className="city-module-icon">⚖</span>
+            <span><strong>Marché et échanges</strong>
+              <small>Marchand, devis, transactions et futur comptoir de caravanes</small></span>
+            <span aria-hidden="true">›</span>
+          </Link>
           <Link href={`/cities/${cityId}/heroes`} className="city-module-card">
             <span aria-hidden="true" className="city-module-icon">♞</span>
             <span><strong>Héros et artefacts</strong>
@@ -132,6 +143,10 @@ export default async function CityPage({
                               stables:"Écuries",watchtower:"Tour de guet",
                             } as Record<string,string>)[o.building_code]??o.building_code}</h3>
                             <small>Niveau {o.target_level} · Contrat {o.policy_id}</small>
+                            <Link className="building-inspect-link"
+                              href={"/cities/"+cityId+"?inspect="+o.building_code+"#city-inspector"}>
+                              Examiner le bâtiment
+                            </Link>
                           </div>
                           <span className="building-plan-rank">NIV. {o.target_level}</span>
                         </div>
@@ -168,8 +183,28 @@ export default async function CityPage({
               buildingAnswer.data!.effects.mine_additive_bonus,
             ).map(([resource,value]) => `${resource} +${Number(value)*100} %`).join(", ")}.</p>
           )}
+          <section id="city-history" aria-labelledby="city-history-heading">
+          <h3 id="city-history-heading">Historique des chantiers</h3>
+          {buildingAnswer.data?.history?.length ? (
+            <ol className="construction-history-list">
+              {buildingAnswer.data.history.map(order=>(
+                <li className="construction-history-entry" key={order.order_id}>
+                  <strong>{buildingName(order.building_code)} · niveau {order.target_level}</strong>
+                  <span>{order.status==="building"?"En cours":"Terminé"} ·
+                    {" "}{order.mode==="normal"?"Standard":order.mode==="rapid"?"Rapide":"Économique"}</span>
+                  <small>Lancé le {new Date(order.started_at).toLocaleString("fr-FR",{timeZone:"Europe/Paris"})}
+                    {" "}· échéance {new Date(order.due_at).toLocaleString("fr-FR",{timeZone:"Europe/Paris"})}</small>
+                  <small>Coût réellement payé : {Object.entries(order.applied_costs)
+                    .filter(([,amount])=>amount>0)
+                    .map(([key,amount])=>amount.toLocaleString("fr-FR")+" "+key).join(" · ")||"aucun"}</small>
+                </li>
+              ))}
+            </ol>
+          ) : <p>Aucun chantier enregistré dans cette cité.</p>}
           <p className="notice">Une construction active par cité, débit immédiat et achèvement par worker PostgreSQL.
-          La convention d'arrondi à l'entier supérieur est expérimentale, pas une règle historique certifiée.</p>
+          La convention d'arrondi à l'entier supérieur est expérimentale, pas une règle historique certifiée.
+          Le journal conserve les douze derniers ordres et leurs coûts réels.</p>
+          </section>
         </div>
         <p className="notice">
           {city.production_active

@@ -36,6 +36,7 @@ export async function GameShell({token,title,eyebrow,description,worldId,cityId,
           <Link href={"/cities/"+encodeURIComponent(cityId)}>⌂ Entrer en ville</Link>
           <Link href={"/cities/"+encodeURIComponent(cityId)+"/heroes"}>♞ Héros</Link>
           <Link href={"/cities/"+encodeURIComponent(cityId)+"/forces"}>⚔ Armées</Link>
+          <Link href={"/cities/"+encodeURIComponent(cityId)+"/market"}>⚖ Marché</Link>
         </>}
         <form action={signOut}><button type="submit">Déconnexion</button></form>
       </nav>

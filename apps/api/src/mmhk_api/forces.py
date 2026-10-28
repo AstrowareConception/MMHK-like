@@ -289,6 +289,9 @@ def transfer_units(db: psycopg.Connection, *, owner: UUID, city_id: UUID, order_
                 DO UPDATE SET quantity={dest}.quantity+EXCLUDED.quantity""",
             (destination_id,unit_code,quantity),
         )
+        # Formation must be prepared again after any unit-count change.
+        # The city lock serializes this with concurrent formation saves.
+        db.execute("DELETE FROM hero_formation_slots WHERE hero_id=%s",(hero_id,))
         now=db.execute("SELECT clock_timestamp()").fetchone()[0]
         db.execute(
             """INSERT INTO hero_unit_transfer_orders(order_id,city_id,actor_account_id,

@@ -6,18 +6,27 @@ from typing import Annotated
 from uuid import UUID
 
 import psycopg
-from fastapi import Depends, FastAPI, HTTPException, Request, Response, status
+from fastapi import Depends, FastAPI, HTTPException, Query, Request, Response, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel, ConfigDict, Field
 
 from .construction import (
     ConstructionConflict, ConstructionNotFound, catalog_for_city, start_construction,
 )
+from .merchant import (
+    MerchantConflict, MerchantNotFound, market_for_city, quote_merchant,
+    execute_merchant,
+)
+from .marketplace import (
+    MarketplaceNotFound, MarketplaceConflict, offers_for_city,
+    publish_offer, buy_offer, withdraw_offer,
+)
 from .map_views import MapNotFound, own_region, world_overview
 from .timeline import timeline_for_player
 from .artifacts import artifact_inventory, move_artifact
 from .region_pve import preview_duel
-from .pve_missions import start_pve_mission,missions_for_city
+from .pve_missions import start_pve_mission,missions_for_city,report_for_mission
+from .formations import formation_for_hero,save_formation
 from .forces import city_forces, recruit_units, hire_hero, RecruitmentNotFound, RecruitmentConflict, transfer_units
 from .login_limits import (
     RateLimitConfigurationError, reserve_login_attempt, audit_login,
@@ -277,6 +286,164 @@ def start_my_city_construction(
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
+
+# US-ECH-001/002/003: versioned, strictly owner-scoped market laboratory.
+# No direct browser price/capacity or historical tariff is ever accepted.
+_MARKET_RESOURCE = r"^(gold|wood|ore|crystal|gems|sulfur|mercury)$"
+
+
+class MerchantExchangeRequest(StrictDTO):
+    order_id: UUID
+    pay_resource: str = Field(pattern=_MARKET_RESOURCE)
+    receive_resource: str = Field(pattern=_MARKET_RESOURCE)
+    pay_amount: int = Field(ge=1, le=1000000)
+    expected_policy_id: str = Field(min_length=3, max_length=100)
+    expected_receive_amount: int = Field(ge=1, le=1000000000000)
+    expected_numerator: int = Field(ge=1, le=1000000)
+    expected_denominator: int = Field(ge=1, le=1000000)
+
+
+@app.get("/api/v1/me/cities/{city_id}/market")
+def my_city_market(city_id: UUID, db: _db, player: _player,
+                   response: Response) -> dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        return market_for_city(db,owner=player,city_id=city_id)
+    except MerchantNotFound as exc:
+        raise HTTPException(status_code=404,detail="City not found") from exc
+
+
+@app.get("/api/v1/me/cities/{city_id}/market/quote")
+def my_city_market_quote(
+    city_id: UUID, db: _db, player: _player, response: Response,
+    pay_resource: str = Query(pattern=_MARKET_RESOURCE),
+    receive_resource: str = Query(pattern=_MARKET_RESOURCE),
+    pay_amount: int = Query(ge=1, le=1000000),
+) -> dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        return quote_merchant(db,owner=player,city_id=city_id,
+            pay_resource=pay_resource,receive_resource=receive_resource,
+            pay_amount=pay_amount)
+    except MerchantNotFound as exc:
+        raise HTTPException(status_code=404,detail="City not found") from exc
+    except MerchantConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+@app.post("/api/v1/me/cities/{city_id}/market", status_code=201)
+def my_city_market_exchange(
+    city_id: UUID, command: MerchantExchangeRequest,
+    db: _db, player: _player, response: Response,
+) -> dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        receipt=execute_merchant(
+            db,owner=player,city_id=city_id,order_id=command.order_id,
+            pay_resource=command.pay_resource,
+            receive_resource=command.receive_resource,
+            pay_amount=command.pay_amount,
+            expected_policy_id=command.expected_policy_id,
+            expected_receive_amount=command.expected_receive_amount,
+            expected_numerator=command.expected_numerator,
+            expected_denominator=command.expected_denominator)
+        if receipt["replayed"]:
+            response.status_code=200
+        return receipt
+    except MerchantNotFound as exc:
+        raise HTTPException(status_code=404,detail="City not found") from exc
+    except MerchantConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+
+# US-ECH-004/005/006/008: laboratory fixed-price offers; no historic auctions
+# or player-defined trading policies. All settlement is server-side escrowed.
+class MarketOfferPublishRequest(StrictDTO):
+    order_id: UUID
+    resource: str = Field(pattern=_MARKET_RESOURCE)
+    quantity: int = Field(ge=1,le=1000000)
+    price_resource: str = Field(pattern=_MARKET_RESOURCE)
+    price_amount: int = Field(ge=1,le=1000000)
+    duration_seconds: int = Field(ge=60,le=604800)
+
+
+class MarketOfferBuyRequest(StrictDTO):
+    order_id: UUID
+    expected_resource: str = Field(pattern=_MARKET_RESOURCE)
+    expected_quantity: int = Field(ge=1,le=1000000)
+    expected_price_resource: str = Field(pattern=_MARKET_RESOURCE)
+    expected_price_amount: int = Field(ge=1,le=1000000)
+
+
+class MarketOfferWithdrawRequest(StrictDTO):
+    order_id: UUID
+
+
+@app.get("/api/v1/me/cities/{city_id}/market/offers")
+def my_market_offers(city_id: UUID, db: _db, player: _player,
+                     response: Response) -> dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        return offers_for_city(db,owner=player,city_id=city_id)
+    except MarketplaceNotFound as exc:
+        raise HTTPException(status_code=404,detail="City not found") from exc
+
+
+@app.post("/api/v1/me/cities/{city_id}/market/offers",status_code=201)
+def my_market_offer_publish(city_id:UUID, command:MarketOfferPublishRequest,
+                            db:_db, player:_player, response:Response)->dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        receipt=publish_offer(
+            db,owner=player,city_id=city_id,order_id=command.order_id,
+            resource=command.resource,quantity=command.quantity,
+            price_resource=command.price_resource,price_amount=command.price_amount,
+            duration_seconds=command.duration_seconds)
+        if receipt["replayed"]:response.status_code=200
+        return receipt
+    except MarketplaceNotFound as exc:
+        raise HTTPException(status_code=404,detail="City not found") from exc
+    except MarketplaceConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+@app.post("/api/v1/me/cities/{city_id}/market/offers/{offer_id}/buy",status_code=201)
+def my_market_offer_buy(city_id:UUID,offer_id:UUID,command:MarketOfferBuyRequest,
+                        db:_db,player:_player,response:Response)->dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        receipt=buy_offer(
+            db,owner=player,city_id=city_id,offer_id=offer_id,
+            order_id=command.order_id,
+            expected_resource=command.expected_resource,
+            expected_quantity=command.expected_quantity,
+            expected_price_resource=command.expected_price_resource,
+            expected_price_amount=command.expected_price_amount)
+        if receipt["replayed"]:response.status_code=200
+        return receipt
+    except MarketplaceNotFound as exc:
+        raise HTTPException(status_code=404,detail="City or offer not found") from exc
+    except MarketplaceConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+@app.post("/api/v1/me/cities/{city_id}/market/offers/{offer_id}/withdraw",status_code=201)
+def my_market_offer_withdraw(city_id:UUID,offer_id:UUID,command:MarketOfferWithdrawRequest,
+                             db:_db,player:_player,response:Response)->dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        receipt=withdraw_offer(
+            db,owner=player,city_id=city_id,offer_id=offer_id,
+            order_id=command.order_id)
+        if receipt["replayed"]:response.status_code=200
+        return receipt
+    except MarketplaceNotFound as exc:
+        raise HTTPException(status_code=404,detail="City or offer not found") from exc
+    except MarketplaceConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
 # First urban military vertical slice; all costs, pools and hero offers are
 # resolved on the server. No Jactari combat endpoint is activated.
 class UnitRecruitRequest(StrictDTO):
@@ -433,6 +600,50 @@ def start_region_mission(city_id:UUID,command:PveMissionRequest,db:_db,player:_p
         raise HTTPException(status_code=404,detail="City, hero or encounter not found") from exc
     except RecruitmentConflict as exc:
         raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+class FormationSlotRequest(StrictDTO):
+    position: int = Field(ge=1,le=7)
+    unit_code: str = Field(pattern=r"^[a-z][a-z0-9_]{1,47}$")
+    quantity: int = Field(ge=1,le=1000000)
+
+
+class FormationSaveRequest(StrictDTO):
+    order_id: UUID
+    positions: list[FormationSlotRequest] = Field(max_length=7)
+
+
+@app.get("/api/v1/me/cities/{city_id}/heroes/{hero_id}/formation")
+def my_hero_formation(city_id:UUID,hero_id:UUID,db:_db,player:_player)->dict:
+    try:
+        return formation_for_hero(db,owner=player,city_id=city_id,hero_id=hero_id)
+    except RecruitmentNotFound as exc:
+        raise HTTPException(status_code=404,detail="City or hero not found") from exc
+
+
+@app.post("/api/v1/me/cities/{city_id}/heroes/{hero_id}/formation",status_code=201)
+def save_my_hero_formation(city_id:UUID,hero_id:UUID,
+                            command:FormationSaveRequest,db:_db,
+                            player:_player,response:Response)->dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        result=save_formation(db,owner=player,city_id=city_id,hero_id=hero_id,
+           order_id=command.order_id,
+           positions=[r.model_dump() for r in command.positions])
+        if result["replayed"]:response.status_code=200
+        return result
+    except RecruitmentNotFound as exc:
+        raise HTTPException(status_code=404,detail="City or hero not found") from exc
+    except RecruitmentConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+@app.get("/api/v1/me/cities/{city_id}/missions/{mission_id}/report")
+def my_pve_report(city_id:UUID,mission_id:UUID,db:_db,player:_player)->dict:
+    try:
+        return report_for_mission(db,owner=player,city_id=city_id,mission_id=mission_id)
+    except RecruitmentNotFound as exc:
+        raise HTTPException(status_code=404,detail="Mission or city not found") from exc
 
 
 # Read-only map prototypes. No foreign city, fog-of-war intelligence or

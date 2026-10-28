@@ -91,9 +91,10 @@ def test_migration_catalog_and_undisclosed_enemy_buildings(city):
     e=headers(city["enemyname"])
     with psycopg.connect(URL) as db:
         assert migrate(db)==[]
-        assert db.execute("SELECT version FROM app_schema_migrations ORDER BY version").fetchall()==[
-            (1,),(2,),(3,),(4,),(5,),(6,),(7,),(8,),(9,),(10,),(11,),(12,),
-        ]
+        versions=[r[0] for r in db.execute(
+            "SELECT version FROM app_schema_migrations ORDER BY version").fetchall()]
+        # 013 is introduced by the parallel hero formation PR; 014 is market.
+        assert versions==list(range(1,13))+([13] if 13 in versions else [])+[14,15]
     assert client.get(f"/api/v1/me/cities/{city['city']}/construction").status_code==401
     own=client.get(f"/api/v1/me/cities/{city['city']}/construction",headers=h)
     assert own.status_code==200
@@ -198,3 +199,35 @@ def test_modes_round_up_and_bad_inputs_rejected(city):
                        headers=h,json={"order_id":str(uuid4()),
                        "building_code":city["code"],"mode":"normal",
                        "applied_costs":{"gold":0}}).status_code==422
+
+def test_construction_history_is_private_and_preserves_accepted_prices(city):
+    owner=headers(city["username"])
+    stranger=headers(city["enemyname"])
+    path=f"/api/v1/me/cities/{city['city']}/construction"
+    assert client.get(path,headers=owner).json()["history"]==[]
+    oid=uuid4()
+    created=start(city,owner,"rapid",oid)
+    assert created.status_code==201,created.text
+    receipt=created.json()
+    during=client.get(path,headers=owner).json()["history"]
+    assert len(during)==1 and during[0]["order_id"]==str(oid)
+    assert during[0]["status"]=="building"
+    assert during[0]["mode"]=="rapid"
+    assert during[0]["applied_costs"]==receipt["applied_costs"]
+    assert "actor_account_id" not in during[0]
+    assert client.get(path,headers=stranger).status_code==404
+    assert client.get(f"/api/v1/me/cities/{city['other']}/construction",
+                      headers=owner).status_code==404
+    with psycopg.connect(URL,autocommit=True) as db:
+        assert len(run_construction_batch(
+            db,now_at=datetime.fromisoformat(receipt["due_at"])))==1
+    done=client.get(path,headers=owner).json()["history"]
+    assert done[0]["status"]=="completed"
+    assert done[0]["completed_at"]==receipt["due_at"]
+    assert done[0]["applied_costs"]==receipt["applied_costs"]
+    next_order=start(city,owner,"economic")
+    assert next_order.status_code==201,next_order.text
+    latest=client.get(path,headers=owner).json()["history"]
+    assert [entry["order_id"] for entry in latest]==[
+        next_order.json()["order_id"],str(oid)]
+    assert latest[1]["applied_costs"]==receipt["applied_costs"]
