@@ -133,6 +133,18 @@ détaille les secrets, migrations et limites restantes.
 **La préproduction n'a pas été déployée sur le VPS ;** il s'agit
 d'une configuration versionnée et vérifiée par CI.
 
+## Parcours utilisateur testé dans un véritable navigateur (28 octobre 2026)
+
+Le [test de bout en bout Chromium](tools/e2e/local_browser.py) vérifie
+désormais la connexion, la navigation monde → région → ville, le démarrage
+et le paiement d'un chantier, son achèvement par le **vrai worker
+PostgreSQL**, puis la déconnexion. La ville se met à jour toutes les dix
+secondes lorsqu'elle est visible, sans calcul côté navigateur.
+
+Le [guide de test Playwright](docs/specifications/TEST-NAVIGATEUR-BOUT-EN-BOUT.md)
+distingue ce parcours fonctionnel des mécaniques historiques encore
+non implémentées. Les valeurs du bac à sable sont expérimentales.
+
 ## Lire le dossier
 
 | Besoin | Document |

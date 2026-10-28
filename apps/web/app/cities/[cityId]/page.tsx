@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CityScene } from "../../../components/city-scene";
+import { LiveRefresh } from "../../../components/live-refresh";
 import { notFound, redirect } from "next/navigation";
 import { signOut, startUrbanConstruction } from "../../actions";
 import { privateApi, sessionToken, type CityDetail, type ConstructionCatalog } from "../../../lib/server-api";
@@ -57,6 +58,7 @@ export default async function CityPage({
           <form action={signOut}><button type="submit">Déconnexion</button></form>
         </nav>
         <CityScene city={city} catalog={buildingAnswer.data} />
+        {(city.production_active || !!buildingAnswer.data?.active) && <LiveRefresh intervalSeconds={10} />}
         <h2>Réserves de la ville</h2>
         <div className="resource-grid">
           {RESOURCES.map(([key, label]) => (
