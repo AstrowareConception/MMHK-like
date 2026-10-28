@@ -313,3 +313,22 @@ def test_marketplace_absent_blocks_dispatch_and_policy_is_not_inferred(city):
     assert view.json()["destinations"]==[]
     assert view.json()["marketplace_active"] is False
     assert view.json()["transport_policy"]["capacity_units"]==30000
+
+
+
+def test_timeline_shows_only_real_private_caravan_events(two_cities):
+    site=two_cities;h=headers(site["username"])
+    outsider=headers(site["stranger_name"])
+    assert client.get("/api/v1/me/timeline",headers=h).json()["events"]==[]
+    shipment=client.post(route(site),headers=h,json=plan(site,wood=2))
+    assert shipment.status_code==201
+    own=client.get("/api/v1/me/timeline",headers=h).json()["events"]
+    assert len(own)==1
+    assert own[0]["type"]=="caravan_arrival"
+    assert own[0]["city_id"]==str(site["source"])
+    assert own[0]["target_url"]=="/cities/"+str(site["source"])+"/market#caravans"
+    assert client.get("/api/v1/me/timeline",headers=outsider).json()["events"]==[]
+    due=datetime.fromisoformat(shipment.json()["arrival_due_at"])
+    with psycopg.connect(URL,autocommit=True) as db:
+        assert run_caravan_batch(db,now_at=due)[0]["phase"]=="delivered"
+    assert client.get("/api/v1/me/timeline",headers=h).json()["events"]==[]

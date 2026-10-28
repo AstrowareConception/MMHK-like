@@ -1,5 +1,6 @@
 export type TimelineEvent = {
-  id:string; type:"construction_complete"|"hero_arrival"|"hero_return"; title:string; occurs_at:string;
+  id:string; type:"construction_complete"|"hero_arrival"|"hero_return"|
+    "caravan_arrival"|"caravan_return"; title:string; occurs_at:string;
   world_id:string; city_id:string; city_name:string; target_url:string;
   icon:string; priority:string;
 };
