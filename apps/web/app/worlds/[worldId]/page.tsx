@@ -33,9 +33,10 @@ export default async function WorldPage({
       "/api/v1/me/worlds/"+encodeURIComponent(worldId)+"/colonization",token),
   ]);
   const cityDetail=details[0];
-  const cityModels=world.cities.map((c,i)=>({
-    city:c,detail:details[i]?.ok?details[i].data:undefined,
-  }));
+  const cityModels=world.cities.map((c,i)=>{
+    const result=details[i];
+    return {city:c,detail:result?.ok?result.data:undefined};
+  });
   const colonies=colonyResponse.ok?colonyResponse.data:undefined;
   return (
     <GameShell token={token} title={world.name}

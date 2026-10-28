@@ -136,7 +136,8 @@ export default async function ColonizePage({params,searchParams}:{
       <form method="get" className="colony-selector"
         action={"/worlds/"+worldId+"/colonize"}>
         <label>Région admissible
-          <select name="plot" defaultValue={selectedSite?.x+":"+selectedSite?.y}>
+          <select name="plot" defaultValue={selectedSite?
+            String(selectedSite.x)+":"+String(selectedSite.y):""}>
             {colony.qualified_sites.map(p=><option key={p.x+":"+p.y} value={p.x+":"+p.y}>
               Région ({p.x}, {p.y}) · mines déclarées : {p.mine_types.join(", ")}
             </option>)}
