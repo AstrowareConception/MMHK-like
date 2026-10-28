@@ -94,3 +94,26 @@ def test_missions_remain_private_and_worker_immune_to_replays(city):
     kinds={event["type"] for event in own_timeline}
     assert "hero_arrival" in kinds and "hero_return" in kinds
     assert client.get("/api/v1/me/timeline",headers=e).json()["events"]==[]
+
+
+def test_late_worker_never_shortens_the_return_leg(city):
+    hero,unit,encounter=_setup(city)
+    h=headers(city["username"])
+    root=f"/api/v1/me/cities/{city['city']}"
+    created=client.post(root+"/missions",headers=h,json={
+      "mission_id":str(uuid4()),"hero_id":str(hero),
+      "encounter_id":str(encounter),"unit_code":unit})
+    assert created.status_code==201,created.text
+    scheduled=datetime.fromisoformat(created.json()["arrival_due_at"])
+    actual=scheduled+timedelta(seconds=19)
+    with psycopg.connect(URL,autocommit=True) as db:
+        report=advance_pve_missions(db,now_at=actual)
+        assert len(report)==1 and report[0]["phase"]=="arrived"
+    mission=client.get(root+"/missions",headers=h).json()["missions"][0]
+    assert mission["arrived_at"]==actual.isoformat()
+    adjusted=datetime.fromisoformat(mission["return_due_at"])
+    assert (adjusted-actual).total_seconds()==60
+    with psycopg.connect(URL,autocommit=True) as db:
+        assert advance_pve_missions(db,now_at=adjusted-timedelta(seconds=1))==[]
+        assert advance_pve_missions(db,now_at=adjusted)[0]["phase"]=="returned"
+    assert client.get(root+"/forces",headers=h).json()["heroes"][0]["status"]=="idle"
