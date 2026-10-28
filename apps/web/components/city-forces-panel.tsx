@@ -2,6 +2,7 @@ import {hireCityHero,recruitCityUnits} from "../app/actions";
 import type {CityForces} from "../lib/server-api";
 
 const money=(value:number)=>value.toLocaleString("fr-FR");
+const UNIT_ART:Record<string,string>={militia:"/themes/public-safe/haven-militia.svg",archers:"/themes/public-safe/haven-archer.svg"};
 const translations:Record<string,string>={idle:"À la cité",on_mission:"En mission",wounded:"Convalescence"};
 export function CityForcesPanel({cityId,forces,message}:{cityId:string;
   forces:CityForces|null;message:{hero?:string;recruit?:string}}) {
@@ -74,7 +75,8 @@ export function CityForcesPanel({cityId,forces,message}:{cityId:string;
           <div className="garrison-grid">
             {forces.garrison.map(troop=><article className="garrison-unit" key={troop.unit_code}>
               <div className="unit-emblem" aria-hidden="true">
-                <span>{troop.tier===1?"⚔":"➶"}</span></div>
+                {UNIT_ART[troop.unit_code]?<img src={UNIT_ART[troop.unit_code]} width="42" height="42"
+                  alt="" loading="lazy"/>:<span>{troop.tier===1?"⚔":"➶"}</span>}</div>
               <strong>{troop.name}</strong>
               <span>Tier {troop.tier} · {money(troop.quantity)} soldats</span>
             </article>)}
@@ -87,7 +89,10 @@ export function CityForcesPanel({cityId,forces,message}:{cityId:string;
             <input type="hidden" name="cityId" value={cityId}/>
             <input type="hidden" name="unitCode" value={unit.unit_code}/>
             <div className="unit-recruit-info">
-              <strong>{unit.name}</strong>
+              <div className="unit-recruit-title">
+                {UNIT_ART[unit.unit_code]&&<img src={UNIT_ART[unit.unit_code]} alt="" width="42" height="42"/>}
+                <strong>{unit.name}</strong>
+              </div>
               <span>Tier {unit.tier} · {unit.available} recrues en réserve</span>
               <small>{unit.unlocked?"Demeure opérationnelle":
                 "Bâtiment requis : "+unit.dwelling_code}</small>
