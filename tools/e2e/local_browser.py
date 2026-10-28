@@ -192,6 +192,14 @@ def main() -> int:
             transfer.get_by_role("button", name="Affecter").click()
             expect(page.get_by_text("Transfert confirmé", exact=False)).to_be_visible(timeout=20000)
             expect(page.get_by_text("Miliciens du Havre : 2")).to_be_visible()
+            # Formation preparation: all 2 assigned militiamen occupy one
+            # ordinary Jactari slot; saving must not change the real army.
+            page.get_by_role("link", name="Héros", exact=True).click()
+            expect(page.get_by_role("heading", name="Les sept positions de l'armée")).to_be_visible()
+            expect(page.locator(".formation-slot")).to_have_count(7)
+            page.get_by_role("button", name="Enregistrer les sept positions").click()
+            expect(page.get_by_text("Formation de combat enregistrée", exact=False)).to_be_visible(timeout=20000)
+            page.get_by_role("link", name="Région", exact=True).click()
             # Two seeded laboratory encounters, genuinely scoped to this city.
             page.get_by_role("link", name="Région et rencontres").click()
             expect(page.get_by_role("heading", name="Autour de Premier Havre")).to_be_visible()
@@ -218,6 +226,15 @@ def main() -> int:
             expect(page.locator(".region-mission-map [data-mission-stage='returning']")).to_have_count(0,timeout=100000)
             expect(page.get_by_text("Aucun héros actuellement en déplacement.")).to_be_visible()
             expect(page.get_by_role("heading", name="Loups des bois")).to_be_visible()
+            # Permanent private report, with both worker-confirmed time points
+            # and the immutable seven-position formation snapshot.
+            page.get_by_role("link", name="Rapport", exact=True).first.click()
+            expect(page.get_by_role("heading", level=1, name="Chronique de mission")).to_be_visible()
+            expect(page.locator(".mission-report-events li")).to_have_count(3)
+            expect(page.locator(".mission-report-formation > div")).to_have_count(7)
+            expect(page.get_by_text("Peloton du duel expérimental")).to_be_visible()
+            page.get_by_role("link", name="Suivre sur la carte").click()
+            expect(page.get_by_role("heading", name="Autour de Premier Havre")).to_be_visible()
 
             # The user can navigate back and log out via the real server action.
             page.get_by_role("link", name="Revenir à la carte du monde").click()
