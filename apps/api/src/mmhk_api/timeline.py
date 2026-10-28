@@ -56,19 +56,20 @@ def timeline_for_player(
                   src.city_id,src.name,src.world_id,dst.name
            FROM caravan_shipments s
            JOIN cities src ON src.city_id=s.source_city_id
-           JOIN cities dst ON dst.city_id=s.destination_city_id
+           LEFT JOIN cities dst ON dst.city_id=s.destination_city_id
+             AND dst.owner_account_id=%s
            JOIN world_memberships m ON m.world_id=src.world_id AND m.account_id=%s
            WHERE src.owner_account_id=%s AND s.owner_account_id=%s
              AND s.status IN ('in_transit','returning')
              AND s.next_attempt_at<=%s
            ORDER BY s.next_attempt_at,s.shipment_id LIMIT %s""",
-        (account_id,account_id,account_id,horizon,limit+1),
+        (account_id,account_id,account_id,account_id,horizon,limit+1),
     ).fetchall()
     caravan_events=[{
         "id":"caravan-"+("return-" if status=="returning" else "arrival-")+str(sid),
         "type":"caravan_return" if status=="returning" else "caravan_arrival",
         "title":("Retour du convoi" if status=="returning"
-                 else "Convoi vers "+dst_name),
+                 else "Convoi vers "+(dst_name or "une destination devenue inaccessible")),
         "occurs_at":due,"world_id":world_id,
         "city_id":str(origin_id),"city_name":origin_name,
         "target_url":"/cities/"+str(origin_id)+"/market#caravans",

@@ -243,12 +243,10 @@ def send_caravan(db:psycopg.Connection,*,owner:UUID,city_id:UUID,
         if not isinstance(expected_policy_id,str) or not 3<=len(expected_policy_id)<=100:
             raise CaravanConflict("Invalid transport contract")
         load=_validated_cargo(cargo)
-        # Serialize peer city operations and protect against double spending.
-        for cid in sorted((city_id,destination_city_id),key=str):
-            if cid==city_id:
-                _city(db,city_id=cid,owner=owner,lock=True)
-            else:
-                _city(db,city_id=cid,owner=owner,world_id=origin[0],lock=True)
+        # Fence the UUID first, so a lost-response retry returns the same
+        # receipt even after the destination owner or policy has changed.
+        db.execute("SELECT pg_advisory_xact_lock(hashtextextended(%s,1))",
+                   (str(shipment_id),))
         existing=db.execute(
             "SELECT "+_COLUMNS+" FROM caravan_shipments WHERE shipment_id=%s",
             (shipment_id,),
@@ -259,6 +257,13 @@ def send_caravan(db:psycopg.Connection,*,owner:UUID,city_id:UUID,
                 existing[5]!=expected_policy_id):
                 raise CaravanConflict("Shipment ID is already assigned to a different intent")
             return _receipt(existing,replayed=True)
+        # New shipments lock both cities in a deterministic order, matching
+        # marketplace transactions and existing game resource writes.
+        for cid in sorted((city_id,destination_city_id),key=str):
+            if cid==city_id:
+                _city(db,city_id=cid,owner=owner,lock=True)
+            else:
+                _city(db,city_id=cid,owner=owner,world_id=origin[0],lock=True)
         if city_id==destination_city_id:
             raise CaravanConflict("Cannot send a caravan to itself")
         target=_city(db,city_id=destination_city_id,owner=owner,world_id=origin[0])
