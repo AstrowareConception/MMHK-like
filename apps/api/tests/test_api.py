@@ -47,6 +47,7 @@ def test_openapi_contains_no_unapproved_game_commands():
         "/api/v1/me/cities/{city_id}/forces/transfer",
         "/api/v1/me/cities/{city_id}/artifacts",
         "/api/v1/me/cities/{city_id}/artifacts/move",
+        "/api/v1/me/cities/{city_id}/encounters/{encounter_id}/preview",
         "/api/v1/me/worlds/{world_id}/overview",
         "/api/v1/me/cities/{city_id}/region",
     }

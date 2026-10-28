@@ -16,6 +16,7 @@ from .construction import (
 from .map_views import MapNotFound, own_region, world_overview
 from .timeline import timeline_for_player
 from .artifacts import artifact_inventory, move_artifact
+from .region_pve import preview_duel
 from .forces import city_forces, recruit_units, hire_hero, RecruitmentNotFound, RecruitmentConflict, transfer_units
 from .login_limits import (
     RateLimitConfigurationError, reserve_login_attempt, audit_login,
@@ -380,6 +381,24 @@ def my_artifact_move(city_id:UUID,command:ArtifactMoveCommand,db:_db,
         return receipt
     except RecruitmentNotFound as exc:
         raise HTTPException(status_code=404,detail="City, hero or object not found") from exc
+    except RecruitmentConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+class PreviewBattleCommand(StrictDTO):
+    hero_id: UUID
+    unit_code: str = Field(pattern=r"^[a-z][a-z0-9_]{1,47}$")
+
+
+@app.post("/api/v1/me/cities/{city_id}/encounters/{encounter_id}/preview")
+def my_pve_preview(city_id:UUID,encounter_id:UUID,command:PreviewBattleCommand,
+                   db:_db,player:_player)->dict:
+    """Read-only bounded Jactari laboratory, not a combat order."""
+    try:
+        return preview_duel(db,owner=player,city_id=city_id,
+            encounter_id=encounter_id,hero_id=command.hero_id,unit_code=command.unit_code)
+    except RecruitmentNotFound as exc:
+        raise HTTPException(status_code=404,detail="Encounter, city or hero not found") from exc
     except RecruitmentConflict as exc:
         raise HTTPException(status_code=409,detail=str(exc)) from exc
 

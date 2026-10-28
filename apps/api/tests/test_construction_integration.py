@@ -92,7 +92,7 @@ def test_migration_catalog_and_undisclosed_enemy_buildings(city):
     with psycopg.connect(URL) as db:
         assert migrate(db)==[]
         assert db.execute("SELECT version FROM app_schema_migrations ORDER BY version").fetchall()==[
-            (1,),(2,),(3,),(4,),(5,),(6,),(7,),(8,),(9,),(10,),
+            (1,),(2,),(3,),(4,),(5,),(6,),(7,),(8,),(9,),(10,),(11,),
         ]
     assert client.get(f"/api/v1/me/cities/{city['city']}/construction").status_code==401
     own=client.get(f"/api/v1/me/cities/{city['city']}/construction",headers=h)
