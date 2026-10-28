@@ -111,3 +111,39 @@ def test_unbuilt_dwelling_cannot_recruit(city):
     assert client.post(f"/api/v1/me/cities/{city['city']}/recruit",headers=h,json=p).status_code==409
     forces=client.get(f"/api/v1/me/cities/{city['city']}/forces",headers=h).json()
     assert forces["recruitment"][0]["unlocked"] is False
+
+
+def test_unit_transfers_are_atomic_reversible_idempotent_and_private(city):
+    owner,unit,offer=fixture_forces(city)
+    h=headers(city["username"])
+    eh=headers(city["enemyname"])
+    endpoint=f"/api/v1/me/cities/{city['city']}"
+    p={"order_id":str(uuid4()),"unit_code":unit,"quantity":5}
+    assert client.post(endpoint+"/recruit",headers=h,json=p).status_code==201
+    hero_request={"order_id":str(uuid4()),"offer_id":str(offer)}
+    hired=client.post(endpoint+"/heroes/hire",headers=h,json=hero_request)
+    assert hired.status_code==201,hired.text
+    hero_id=hired.json()["hero_id"]
+    move={"order_id":str(uuid4()),"hero_id":hero_id,"unit_code":unit,
+          "quantity":3,"direction":"to_hero"}
+    first=client.post(endpoint+"/forces/transfer",headers=h,json=move)
+    assert first.status_code==201,first.text
+    assert first.json()["replayed"] is False
+    second=client.post(endpoint+"/forces/transfer",headers=h,json=move)
+    assert second.status_code==200
+    assert second.json()["replayed"] is True
+    forces=client.get(endpoint+"/forces",headers=h).json()
+    assert forces["garrison"][0]["quantity"]==2
+    assert forces["hero_armies"][0]["hero_id"]==hero_id
+    assert forces["hero_armies"][0]["quantity"]==3
+    assert client.post(endpoint+"/forces/transfer",headers=eh,json={
+        **move,"order_id":str(uuid4())}).status_code==404
+    assert client.post(endpoint+"/forces/transfer",headers=h,json={
+        **move,"order_id":str(uuid4()),"quantity":4}).status_code==409
+    back={"order_id":str(uuid4()),"hero_id":hero_id,"unit_code":unit,
+          "quantity":2,"direction":"to_garrison"}
+    assert client.post(endpoint+"/forces/transfer",headers=h,json=back).status_code==201
+    current=client.get(endpoint+"/forces",headers=h).json()
+    assert current["garrison"][0]["quantity"]==4
+    assert current["hero_armies"][0]["quantity"]==1
+    assert current["garrison"][0]["quantity"]+current["hero_armies"][0]["quantity"]==5
