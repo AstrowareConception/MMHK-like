@@ -5,8 +5,6 @@ on:
   push:
     branches:
       - main
-      # One-off integration validation. Remove before merging to main.
-      - integration/mmhk-city-commerce-military-2026-10-28
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
