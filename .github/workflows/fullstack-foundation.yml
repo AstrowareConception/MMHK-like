@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+      # Temporary one-off validation for caravan P0 slice; removed right after scheduling.
+      - feat/caravans-one-way-owned-cities
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
