@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { GameShell } from "../components/game-shell/game-shell";
 import { signIn, signOut } from "./actions";
 import { privateApi, sessionToken, type World } from "../lib/server-api";
 
@@ -33,6 +34,23 @@ export default async function Home({
   ]);
   const connected = health?.status === "ok" && engine?.engine === "Jactari";
   const loggedIn = !!token && worlds?.ok;
+  if (loggedIn && token) {
+    return <GameShell token={token} title="Mes royaumes" eyebrow="PORTAIL · GUERRE DES LARMES"
+      description="Votre domaine, vos cités et les chroniques du royaume.">
+      <div className="panel-title"><span className="eyebrow">LES ROYAUMES</span>
+        <h2>Mes mondes</h2></div>
+      <div className="statusline" role="status"><span className={connected?"dot online":"dot offline"} />
+        {connected?"API FastAPI joignable":"API momentanément inaccessible"}</div>
+      <div className="tile-links">
+        {worlds?.data?.map(world=><Link className="tile-link" key={world.world_id}
+          href={"/worlds/"+encodeURIComponent(world.world_id)}>
+          <span className="eyebrow">MONDE DISPONIBLE</span>
+          <strong>{world.name}</strong><span>Carte {world.world_size} × {world.world_size}</span>
+        </Link>)}
+      </div>
+      {!worlds?.data?.length&&<p>Votre compte ne possède pas encore de monde.</p>}
+    </GameShell>;
+  }
   return (
     <main className="shell">
       <header className="masthead">

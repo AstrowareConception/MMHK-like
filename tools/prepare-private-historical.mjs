@@ -15,7 +15,16 @@ const recipes=[{
     'data/assets-recovered/cdn-bulk/4.1.27-MTR/img/city/HAVEN/TAVERN.gif',
     'data/assets-recovered/ubisoft-archive/4.1.27-MTR/img/city/HAVEN/TAVERN.gif'
   ]
-}];
+},...[
+  ["ui.page.background","img/backgroundGame/bg_haven.jpg"],
+  ["ui.panel.main","img/background/metal.jpg"],
+  ["timeline.background","img/timeLine/background.jpg"],
+  ["world.background","img/worldMap/zoom1/background.jpg"],
+  ["region.background","img/region/background_region.jpg"]
+].map(([id,asset])=>({id,relative:"4.1.13-MTR/"+asset,sources:[
+  "data/assets-recovered/cdn-bulk/4.1.13-MTR/"+asset,
+  "data/assets-recovered/ubisoft-archive/4.1.13-MTR/"+asset
+]}))];
 const sha=filename=>createHash('sha256').update(readFileSync(filename)).digest('hex');
 const manifestFile=join(target,'manifest.json');
 const existing=existsSync(manifestFile)?JSON.parse(readFileSync(manifestFile,'utf8')):{};

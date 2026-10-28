@@ -1,4 +1,5 @@
 import type { City, World } from "../lib/server-api";
+import { resolveAssetUrl } from "../lib/assets/runtime";
 
 export function WorldAtlas({
   world, cities,
@@ -8,6 +9,7 @@ export function WorldAtlas({
 }) {
   // Render only cities explicitly returned by the owner's private API.
   const dim = world.world_size;
+  const historicMap=resolveAssetUrl("world.background");
   const mapX = (x: number) => 36 + ((x - 0.5) / dim) * 608;
   const mapY = (y: number) => 34 + ((y - 0.5) / dim) * 432;
   return (
@@ -34,6 +36,7 @@ export function WorldAtlas({
         </defs>
         <rect x="12" y="12" width="656" height="476" rx="8" fill="url(#world-gradient)"/>
         <rect x="36" y="34" width="608" height="432" fill="url(#world-grid)" stroke="#ad9363" strokeWidth="1.5"/>
+        {historicMap && <image href={historicMap} x="36" y="34" width="608" height="432" preserveAspectRatio="xMidYMid slice"/>}
         <path d="M36 240 H644 M340 34 V466" stroke="#d2b782" strokeOpacity=".22" strokeDasharray="5 9"/>
         <text x="44" y="29" fill="#c8b17d" fontSize="11">NORD</text>
         <text x="44" y="479" fill="#c8b17d" fontSize="10">Bords du monde connectés · représentation non géographique</text>

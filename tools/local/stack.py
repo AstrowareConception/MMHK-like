@@ -20,6 +20,7 @@ ROOT = Path(__file__).resolve().parents[2]
 ENV = ROOT / ".env.local"
 COMPOSE = ROOT / "compose.local.yaml"
 PROJECT = ("docker", "compose", "--env-file", str(ENV), "-f", str(COMPOSE))
+HISTORICAL = False
 
 
 def init() -> None:
@@ -45,7 +46,8 @@ def init() -> None:
 
 def run(*command: str, check: bool = True, output=None) -> subprocess.CompletedProcess:
     return subprocess.run(
-        (*PROJECT, *command), cwd=ROOT, check=check,
+        (*PROJECT, *(("-f", str(ROOT / "compose.historical.yaml")) if HISTORICAL else ()), *command),
+        cwd=ROOT, check=check,
         stdout=output,
     )
 
@@ -120,6 +122,8 @@ def main() -> int:
         "start", help="One command: check Docker, boot stack, seed demo once and open browser"
     )
     start.add_argument("--username", default="joueurdemo")
+    start.add_argument("--historical", action="store_true",
+                       help="Enable private restored MMHK art only for this local launch")
     start.add_argument("--no-browser", action="store_true")
     start.add_argument("--no-build", action="store_true",
                        help="Reuse local images instead of rebuilding")
@@ -141,6 +145,16 @@ def main() -> int:
     if args.command == "start":
         prerequisites()
         init()
+        if args.historical:
+            if not shutil.which("node"):
+                raise RuntimeError("Node.js is required to prepare the private historical theme.")
+            subprocess.run(["node", "tools/prepare-private-historical.mjs"],
+                           cwd=ROOT, check=True)
+            (ROOT / "data/assets-private-reconstructed").mkdir(
+                parents=True, exist_ok=True)
+            global HISTORICAL
+            HISTORICAL = True
+            print("Historical theme enabled for this localhost launch.", flush=True)
         print("\n[1/3] Starting the isolated Docker stack...", flush=True)
         command = ("up", "-d", "--wait") if args.no_build else (
             "up", "-d", "--build", "--wait"

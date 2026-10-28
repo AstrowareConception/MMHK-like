@@ -31,6 +31,7 @@ def main() -> int:
             page.get_by_label("Mot de passe").fill(password)
             page.get_by_role("button", name="Entrer dans le royaume").click()
             expect(page.get_by_role("heading", name="Mes mondes")).to_be_visible(timeout=20000)
+            expect(page.get_by_role("region", name="Frise temporelle du royaume")).to_be_visible()
             # Session bearer stays in an HttpOnly Lax cookie, not exposed to JS.
             sessions = [cookie for cookie in page.context.cookies()
                         if cookie["name"] == "mmhk_session"]
@@ -59,6 +60,15 @@ def main() -> int:
             expect(rapid.get_by_role("button", name="Lancer ce chantier")).to_be_enabled()
             rapid.get_by_role("button", name="Lancer ce chantier").click()
             expect(page.get_by_text("Chantier enregistré et ressources payées.")).to_be_visible(timeout=20000)
+            snap = page.request.get(root + "/api/game-timeline?hours=12")
+            payload = snap.json() if snap.ok else {}
+            print("Timeline construction diagnostics:",
+                  "http", snap.status,
+                  "server_events", len(payload.get("events", [])),
+                  "visual_events", page.locator(".timeline-event").count(),
+                  "clusters", page.locator(".timeline-cluster").count(),
+                  "message", page.locator(".kingdom-timeline").inner_text()[:180], flush=True)
+            expect(page.locator(".timeline-event")).to_have_count(1, timeout=20000)
             expect(page.get_by_text("En construction", exact=False)).to_be_visible()
             # One active site, no queue and no second payment option.
             assert page.locator("form.build-option").count() == 0
@@ -72,6 +82,7 @@ def main() -> int:
                     break
                 page.wait_for_timeout(2500)
             expect(finished.first).to_be_visible(timeout=5000)
+            expect(page.locator(".timeline-event")).to_have_count(0, timeout=45000)
             expect(page.get_by_text("Bonus de mine actifs", exact=False)).to_be_visible()
             # The user can navigate back and log out via the real server action.
             page.get_by_role("link", name="Carte du monde").click()

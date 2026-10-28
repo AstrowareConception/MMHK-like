@@ -3,7 +3,8 @@ import { CityScene } from "../../../components/city-scene";
 import { AssetImage } from "../../../components/asset-image";
 import { LiveRefresh } from "../../../components/live-refresh";
 import { notFound, redirect } from "next/navigation";
-import { signOut, startUrbanConstruction } from "../../actions";
+import { startUrbanConstruction } from "../../actions";
+import { GameShell } from "../../../components/game-shell/game-shell";
 import { privateApi, sessionToken, type CityDetail, type ConstructionCatalog } from "../../../lib/server-api";
 
 export const dynamic = "force-dynamic";
@@ -45,19 +46,10 @@ export default async function CityPage({
       <Link href="/">Retour</Link></main>;
   const city = answer.data;
   return (
-    <main className="shell">
-      <header className="masthead compact">
-        <span className="eyebrow">VILLE · HAVRE · ÉCONOMIE EXPÉRIMENTALE</span>
-        <h1>{city.name}</h1>
-        <p className="intro">Coordonnées ({city.x}, {city.y})</p>
-      </header>
-      <section className="panel">
-        <nav className="nav">
-          <Link href="/">Mes mondes</Link>
-          <Link href={`/worlds/${encodeURIComponent(city.world_id)}`}>Carte du monde</Link>
-          <Link href={`/cities/${cityId}/region`}>Ma région</Link>
-          <form action={signOut}><button type="submit">Déconnexion</button></form>
-        </nav>
+    <GameShell token={token} title={city.name}
+      eyebrow="HAVRE · VUE DE LA CITÉ"
+      description={"Région ("+city.x+", "+city.y+") · Édifices et trésorerie"}
+      worldId={city.world_id} cityId={cityId} stocks={city.stocks}>
         <CityScene city={city} catalog={buildingAnswer.data} />
         {(city.production_active || !!buildingAnswer.data?.active) && <LiveRefresh intervalSeconds={10} />}
         <h2>Réserves de la ville</h2>
@@ -151,7 +143,6 @@ export default async function CityPage({
           et cristal. Les quantités et cadences historiques restent à vérifier.
           Les stocks sont lus dans PostgreSQL, pas dans Redis.
         </p>
-      </section>
-    </main>
+    </GameShell>
   );
 }

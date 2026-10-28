@@ -7,7 +7,7 @@ echo Assurez-vous que Docker Desktop est ouvert.
 echo.
 where py >nul 2>nul
 if not errorlevel 1 (
-    py -3 tools\local\stack.py start %*
+    py -3 tools\local\stack.py start --historical %*
 ) else (
     where python >nul 2>nul
     if errorlevel 1 (
