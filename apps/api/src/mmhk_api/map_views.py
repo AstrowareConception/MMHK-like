@@ -73,9 +73,9 @@ def world_overview(db: psycopg.Connection, account_id: UUID, world_id: str) -> d
         "name": world["name"],
         "world_size": world["world_size"],
         "topology": "torus",
-        "known_scope": "owned_cities_only",
+        "known_scope": "owned_and_discovered" if (discovered or sites or influence) else "owned_cities_only",
         "cities": cities,
-        "enemy_positions_exposed": False,
+        "enemy_positions_exposed": bool(discovered),
         "world_terrain_loaded": False,
         "discovered_cities": [
             {"city_id":str(r[0]),"name":r[1],"x":r[2],"y":r[3]}

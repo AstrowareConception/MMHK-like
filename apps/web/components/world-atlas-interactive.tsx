@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent, type PointerEvent as ReactPointerEvent } from "react";
-import type { City, World } from "../lib/server-api";
+import type { City, WorldOverview } from "../lib/server-api";
 import {
   MAP_VIEW, TILE_METRICS, polygonAt, screenToWorld, tileFromPoint, tileToPoint,
   worldDelta, worldWrap, type MapCoordinate, type MapScale
@@ -24,7 +24,7 @@ const CORNERS = [
 ] as const;
 
 export function WorldAtlasInteractive({world,cities,detailBackground,politicalBackground}:{
-  world:World; cities:City[]; detailBackground:string|null; politicalBackground:string|null;
+  world:WorldOverview; cities:City[]; detailBackground:string|null; politicalBackground:string|null;
 }) {
   const size=world.world_size;
   const first=cities[0];
@@ -40,6 +40,9 @@ export function WorldAtlasInteractive({world,cities,detailBackground,politicalBa
   // The recovered background already contains the original grid. Do not add
   // a second visible grid by default; an optional *diagnostic* overlay remains.
   const [showGrid,setShowGrid]=useState(false);
+  const [showSites,setShowSites]=useState(true);
+  const [showInfluence,setShowInfluence]=useState(true);
+  const [showDiscoveredCities,setShowDiscoveredCities]=useState(true);
   const drag=useRef<Drag|null>(null);
   const svgRef=useRef<SVGSVGElement|null>(null);
   const {hw,hh}=TILE_METRICS[zoom];
@@ -86,6 +89,29 @@ export function WorldAtlasInteractive({world,cities,detailBackground,politicalBa
     const p=tileToPoint(i,j,hw,hh);
     return {city,...p,visible:p.x>=27&&p.x<=W-27&&p.y>=36&&p.y<=H-42};
   }).filter(p=>p.visible),[cities,center,size,hw,hh]);
+
+  const discoveredMarks=useMemo(()=>world.discovered_cities.map(city=>{
+    const pos=tileToPoint(worldDelta(city.x,center.x,size),worldDelta(city.y,center.y,size),hw,hh);
+    return {city,...pos};
+  }).filter(p=>p.x>=25&&p.x<=W-25&&p.y>=25&&p.y<=H-36),
+  [world.discovered_cities,center,size,hw,hh]);
+  const siteMarks=useMemo(()=>world.visible_sites.map(site=>{
+    const pos=tileToPoint(worldDelta(site.x,center.x,size),worldDelta(site.y,center.y,size),hw,hh);
+    return {site,...pos};
+  }).filter(p=>p.x>=25&&p.x<=W-25&&p.y>=25&&p.y<=H-36),
+  [world.visible_sites,center,size,hw,hh]);
+  const influenceTiles=useMemo(()=>world.visible_influence.map(cell=>{
+    const pos=tileToPoint(worldDelta(cell.x,center.x,size),worldDelta(cell.y,center.y,size),hw,hh);
+    return {cell,...pos};
+  }).filter(p=>p.x>=8-hw&&p.x<=W-8+hw&&p.y>=8-hh&&p.y<=H-8+hh),
+  [world.visible_influence,center,size,hw,hh]);
+  const selectedForeign=world.discovered_cities.find(city=>city.x===selected?.x&&city.y===selected?.y);
+  const selectedSite=world.visible_sites.find(site=>site.x===selected?.x&&site.y===selected?.y);
+  const selectedInfluence=world.visible_influence.find(tile=>tile.x===selected?.x&&tile.y===selected?.y);
+  const kindLabels:Record<string,string>={sphinx:"Sphinx",obelisk:"Obélisque",dolmen:"Dolmen",
+    portal:"Portail",relic:"Relique",special:"Site remarquable"};
+  const kindSymbols:Record<string,string>={sphinx:"♟",obelisk:"♜",dolmen:"◆",
+    portal:"◎",relic:"✦",special:"✧"};
 
   // Build the optional diagnostic grid within the actual viewport, and only
   // when requested. Raster grids are *not* historical server terrain.
@@ -211,6 +237,14 @@ export function WorldAtlasInteractive({world,cities,detailBackground,politicalBa
           onChange={event=>setJumpY(event.target.value)}/></label>
         <button type="submit">Centrer</button>
       </form>
+      <div className="map-layer-switches" role="group" aria-label="Couches du monde">
+        <label><input type="checkbox" checked={showDiscoveredCities}
+          onChange={e=>setShowDiscoveredCities(e.target.checked)}/>Villes découvertes</label>
+        <label><input type="checkbox" checked={showSites}
+          onChange={e=>setShowSites(e.target.checked)}/>Sites</label>
+        <label><input type="checkbox" checked={showInfluence}
+          onChange={e=>setShowInfluence(e.target.checked)}/>Influence connue</label>
+      </div>
       <label className="map-grid-switch">
         <input type="checkbox" checked={showGrid} onChange={event=>setShowGrid(event.target.checked)}/>
         Grille indicative
@@ -239,8 +273,45 @@ export function WorldAtlasInteractive({world,cities,detailBackground,politicalBa
           {lines.map(cell=><polygon key={cell.i+":"+cell.j} points={polygonAt(cell.x,cell.y,hw,hh)}
             fill="none" stroke="#f6e9b3" strokeOpacity=".18" strokeWidth=".5"/>)}
         </g>}
+        {showInfluence&&influenceTiles.map(({cell,x,y})=>
+          <polygon key={"influence-"+cell.x+"-"+cell.y} data-world-influence={cell.x+","+cell.y}
+            points={polygonAt(x,y,hw,hh)}
+            fill={cell.is_mine?"#e4b356":"#6491aa"} fillOpacity=".34"
+            stroke={cell.is_mine?"#f4dc9a":"#a6cbe0"} strokeOpacity=".85"
+            strokeWidth="1.2" strokeDasharray="2 2" pointerEvents="none">
+            <title>{"Influence connue : "+cell.controller+" ("+cell.x+", "+cell.y+")"}</title>
+          </polygon>)}
         {highlight(selected,"#dbad55","#f9d997",.23,2.2)}
         {highlight(hover,"#f9e5a8","#fff6c6",.25,1.7)}
+        {showDiscoveredCities&&discoveredMarks.map(({city,x,y})=>
+          <g key={"discovered-"+city.city_id} data-map-control="true" role="button"
+            tabIndex={0} className="world-discovered-city"
+            aria-label={"Cité découverte "+city.name+" ("+city.x+", "+city.y+")"}
+            onPointerDown={e=>e.stopPropagation()}
+            onClick={()=>setSelected({x:city.x,y:city.y})}
+            onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();setSelected({x:city.x,y:city.y});}}}>
+            <title>{city.name+" : cité découverte"}</title>
+            <circle cx={x} cy={y} r="17" fill="#1f3645" stroke="#a9cad6" strokeWidth="2"/>
+            <text x={x} y={y+5} textAnchor="middle" fontSize="18" fill="#d4e0e6">⌂</text>
+            <text x={x} y={y+29} textAnchor="middle" fontSize="11" fontWeight="bold"
+              fill="#e8f3f6" stroke="#1b2832" strokeWidth="3" paintOrder="stroke">
+              {city.name}</text>
+          </g>)}
+        {showSites&&siteMarks.map(({site,x,y})=>
+          <g key={"site-"+site.site_id} data-map-control="true" role="button"
+            tabIndex={0} className="world-map-site"
+            aria-label={kindLabels[site.kind]+" : "+site.label+" ("+site.x+", "+site.y+")"}
+            onPointerDown={e=>e.stopPropagation()}
+            onClick={()=>setSelected({x:site.x,y:site.y})}
+            onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();setSelected({x:site.x,y:site.y});}}}>
+            <title>{kindLabels[site.kind]+" · "+site.label}</title>
+            <circle cx={x} cy={y} r="17" fill="#52422b" stroke="#f1d38f" strokeWidth="2"/>
+            <text x={x} y={y+6} textAnchor="middle" fontSize="19" fill="#fff1bc">
+              {kindSymbols[site.kind]}</text>
+            <text x={x} y={y+29} textAnchor="middle" fontSize="10" fontWeight="bold"
+              fill="#fff2c2" stroke="#1b2832" strokeWidth="3" paintOrder="stroke">
+              {site.label}</text>
+          </g>)}
         {marks.map(({city,x,y})=><Link href={"/cities/"+city.city_id+"/region"} key={city.city_id}
           aria-label={"Ouvrir la région de "+city.name+", coordonnées "+city.x+", "+city.y}>
           <title>{city.name+" ("+city.x+", "+city.y+")"}</title>
@@ -281,7 +352,19 @@ export function WorldAtlasInteractive({world,cities,detailBackground,politicalBa
       <strong>{selected?"Région "+readable(selected):"Sélectionnez une région"}</strong>
       {cityOnSelection
         ?<Link href={"/cities/"+cityOnSelection.city_id+"/region"}>Explorer {cityOnSelection.name}</Link>
+        :selectedForeign
+        ?<span>Cité découverte : {selectedForeign.name} · informations privées non disponibles</span>
+        :selectedSite
+        ?<span>{kindLabels[selectedSite.kind]} : {selectedSite.label} · emplacement découvert</span>
+        :selectedInfluence
+        ?<span>Influence connue : {selectedInfluence.controller} · {selectedInfluence.observed_at.slice(0,10)}</span>
         :<span>Contenu non découvert : aucune information géographique ou militaire supposée.</span>}
+    </div>
+    <div className="world-layer-legend">
+      <span>⌂ Vos villes : {cities.length}</span>
+      <span>⌂ Cités découvertes : {world.discovered_cities.length}</span>
+      <span>✦ Sites découverts : {world.visible_sites.length}</span>
+      <span>◇ Cases d'influence connues : {world.visible_influence.length}</span>
     </div>
     <p className="map-qualification">
       Le décor historique est une image illustrative fixe et contient déjà son quadrillage.
