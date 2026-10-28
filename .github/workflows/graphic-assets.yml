@@ -1,6 +1,9 @@
 name: Asset catalogue and public theme guard
+# CI-safe policy: no automatic PR/sync or feature-branch push runs.
 on:
   push:
+    branches:
+      - main
     paths:
       - 'tools/audit-graphic-assets.mjs'
       - 'tools/prepare-private-historical.mjs'
@@ -11,16 +14,11 @@ on:
       - 'apps/web/public/**'
       - '.dockerignore'
       - '.github/workflows/graphic-assets.yml'
-  pull_request:
-    paths:
-      - 'tools/audit-graphic-assets.mjs'
-      - 'tools/tests/**'
-      - 'tools/ci/check_asset_boundaries.py'
-      - 'apps/web/lib/assets/**'
-      - 'apps/web/public/**'
-      - '.dockerignore'
-      - '.github/workflows/graphic-assets.yml'
   workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 jobs:

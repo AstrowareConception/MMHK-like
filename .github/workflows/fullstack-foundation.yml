@@ -1,25 +1,10 @@
 name: FastAPI + Next.js foundation
+# CI-safe policy: no automatic PR/sync or feature-branch push runs.
+# Run manually after consolidating a PR; run once again after merge to main.
 on:
   push:
-    paths:
-      - 'apps/**'
-      - 'tools/jactari-port/core.mjs'
-      - 'tools/jactari-port/python-duel-oracle.mjs'
-      - '.github/workflows/fullstack-foundation.yml'
-      - 'compose.dev.yaml'
-      - 'compose.workers.yaml'
-      - 'compose.preview.yaml'
-      - '.dockerignore'
-      - 'tools/ci/check_private_preview.py'
-      - 'compose.local.yaml'
-      - '.env.local.example'
-      - 'tools/local/**'
-      - 'tools/ci/check_local_stack.py'
-      - 'tools/ci/test_quickstart.py'
-      - 'demarrer.bat'
-      - 'demarrer.sh'
-      - 'tools/e2e/**'
-  pull_request:
+    branches:
+      - main
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
@@ -39,6 +24,10 @@ on:
       - 'demarrer.sh'
       - 'tools/e2e/**'
   workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 jobs:
