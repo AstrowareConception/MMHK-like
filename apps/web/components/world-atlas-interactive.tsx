@@ -89,8 +89,9 @@ export function WorldAtlasInteractive({world,cities,detailBackground,politicalBa
 
   // Build the optional diagnostic grid within the actual viewport, and only
   // when requested. Raster grids are *not* historical server terrain.
+  const drawGrid=showGrid || !background;
   const lines=useMemo(()=>{
-    if(!showGrid)return [];
+    if(!drawGrid)return [];
     const cells:{i:number;j:number;x:number;y:number}[]=[];
     const corners=[[8,8],[W-8,8],[8,H-8],[W-8,H-8]];
     const coords=corners.map(([x,y])=>{
@@ -107,7 +108,7 @@ export function WorldAtlasInteractive({world,cities,detailBackground,politicalBa
         cells.push({i,j,...p});
     }
     return cells;
-  },[showGrid,hw,hh]);
+  },[drawGrid,hw,hh]);
 
   // SVG current transformation matrix resolves the exact viewBox conversion,
   // including responsive dimensions and CSS borders.
@@ -220,7 +221,7 @@ export function WorldAtlasInteractive({world,cities,detailBackground,politicalBa
       <span>Centre : <strong data-testid="world-center">{readable(center)}</strong></span>
       <span>Survol : <strong data-testid="world-hover">{readable(hover)}</strong></span>
       <span>Sélection : <strong data-testid="world-selection">{readable(selected)}</strong></span>
-      <span>{showGrid?"Grille de diagnostic (non historique)":"Grille d’origine préservée"}</span>
+      <span>{!background?"Grille schématique de substitution":showGrid?"Grille de diagnostic (non historique)":"Grille d’origine préservée"}</span>
     </div>
     <svg ref={svgRef} className="world-atlas world-atlas-interactive" viewBox="0 0 680 500"
       role="group" tabIndex={0} onKeyDown={onKeyboard}
@@ -234,7 +235,7 @@ export function WorldAtlasInteractive({world,cities,detailBackground,politicalBa
       {background&&<image href={background} x="8" y="8" width="664" height="484"
         preserveAspectRatio="xMidYMid slice" pointerEvents="none"/>}
       <g clipPath="url(#mmhk-world-viewport)" transform={"translate("+pan.x+" "+pan.y+")"}>
-        {showGrid&&<g className="map-diagnostic-grid" pointerEvents="none">
+        {drawGrid&&<g className="map-diagnostic-grid" pointerEvents="none">
           {lines.map(cell=><polygon key={cell.i+":"+cell.j} points={polygonAt(cell.x,cell.y,hw,hh)}
             fill="none" stroke="#f6e9b3" strokeOpacity=".18" strokeWidth=".5"/>)}
         </g>}
