@@ -330,6 +330,9 @@ export type ColonizationExpedition={
   completed_at:string|null;blocked_at:string|null;
   blocked_reason:string|null;refunded_at:string|null;
   replayed:boolean;historically_certified:false;
+  source_city_name?:string;hero_name?:string;
+  events?:{phase:"departed"|"founded"|"blocked"|"refunded";
+    occurred_at:string;details:Record<string,unknown>}[];
 };
 export type ColonizationCatalog={
   world_id:string;world_size:number;server_now:string;

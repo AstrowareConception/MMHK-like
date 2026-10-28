@@ -219,7 +219,17 @@ export default async function ColonizePage({params,searchParams}:{
             <small>{stage[o.status]??o.status}</small>
             <small>Coût réservé : {Object.entries(o.applied_costs).filter(([,v])=>v>0)
               .map(([k,v])=>fmt(v)+" "+k).join(" · ")}</small>
+            <small>Fondation confiée à {o.hero_name??"un héros"} ·
+              départ : {o.source_city_name??"votre cité"}</small>
             <small>Expédition : {at(o.started_at)} · arrivée prévue {at(o.due_at)}</small>
+            {(o.events??[]).length>0&&<ol className="colony-event-history"
+              aria-label={"Événements de "+o.colony_name}>
+              {(o.events??[]).map(e=><li key={e.phase}>
+                {e.phase==="departed"?"Héros parti":e.phase==="founded"?
+                  "Cité fondée":e.phase==="blocked"?"Expédition bloquée":
+                  "Ressources restituées"} · {at(e.occurred_at)}
+              </li>)}
+            </ol>}
             {o.completed_at&&<small>Fondation confirmée : {at(o.completed_at)}</small>}
             {o.blocked_reason&&<small>Blocage : emplacement ou droit
               modifié pendant le trajet. Les ressources sont en attente de restitution.</small>}
