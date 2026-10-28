@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+      # One consolidated validation for recurring caravan programs.
+      - feat/caravan-repeat-programs
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
