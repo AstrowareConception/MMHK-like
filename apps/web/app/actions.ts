@@ -454,3 +454,79 @@ export async function sendCityCaravan(form:FormData){
   redirect("/cities/"+cityId+"/market?convoy="+
     (status===200||status===201?"sent":status===409?"conflict":"unavailable")+"#caravans");
 }
+
+
+/** A schedule creates no cargo payment: each due leg is later re-authorized
+ * by the PostgreSQL worker. One stable UUID per form prevents duplicates.
+ */
+export async function createCityCaravanProgram(form:FormData){
+  const city=form.get("cityId"),destination=form.get("destinationId");
+  const program=form.get("programId"),policy=form.get("policyId");
+  const mode=form.get("quantityMode"),total=form.get("shipmentsTotal");
+  const wait=form.get("waitSeconds");
+  const uuid=/^[a-f0-9-]{36}$/i;
+  const number=(s:FormDataEntryValue|null,max:number,minimum:number):number|null=>{
+    if(typeof s!=="string"||!/^\d{1,7}$/.test(s))return null;
+    const n=Number(s);
+    return Number.isSafeInteger(n)&&n>=minimum&&n<=max?n:null;
+  };
+  if(typeof city!=="string"||!uuid.test(city)||
+     typeof destination!=="string"||!uuid.test(destination)||
+     typeof program!=="string"||!uuid.test(program)||
+     typeof policy!=="string"||policy.length<3||policy.length>100||
+     (mode!=="exact"&&mode!=="available_up_to")||
+     number(total,12,2)===null||number(wait,86400,60)===null||
+     city===destination)redirect("/");
+  const resources=["gold","wood","ore","crystal","gems","sulfur","mercury"] as const;
+  const cargo:Record<string,number>={};
+  for(const resource of resources){
+    const value=number(form.get("cargo_"+resource),1000000,0);
+    if(value===null)redirect("/cities/"+city+"/market?program=invalid#caravans");
+    cargo[resource]=value;
+  }
+  if(!resources.some(k=>cargo[k]>0))
+    redirect("/cities/"+city+"/market?program=invalid#caravans");
+  const token=(await cookies()).get("mmhk_session")?.value;
+  if(!token)redirect("/");
+  let status=503;
+  try{
+    const response=await fetch(apiUrl("/api/v1/me/cities/"+city+"/caravans/programs"),{
+      method:"POST",headers:{"Authorization":"Bearer "+token,
+        "Content-Type":"application/json"},
+      body:JSON.stringify({program_id:program,destination_city_id:destination,
+        cargo_template:cargo,expected_policy_id:policy,
+        quantity_mode:mode,shipments_total:number(total,12,2),
+        wait_seconds:number(wait,86400,60)}),
+      cache:"no-store",signal:AbortSignal.timeout(7000),
+    });
+    status=response.status;
+  }catch{/* Unknown result: consult the program registry; no auto-retry. */}
+  if(status===401)redirect("/");
+  redirect("/cities/"+city+"/market?program="+
+    (status===200||status===201?"created":status===409?"conflict":"unavailable")+"#caravans");
+}
+
+/** Stopping a programme never refunds/cancels any already dispatched cargo. */
+export async function stopCityCaravanProgram(form:FormData){
+  const city=form.get("cityId"),program=form.get("programId");
+  const order=form.get("stopOrderId"),uuid=/^[a-f0-9-]{36}$/i;
+  if(typeof city!=="string"||!uuid.test(city)||
+     typeof program!=="string"||!uuid.test(program)||
+     typeof order!=="string"||!uuid.test(order))redirect("/");
+  const token=(await cookies()).get("mmhk_session")?.value;
+  if(!token)redirect("/");
+  let status=503;
+  try{
+    const response=await fetch(apiUrl("/api/v1/me/cities/"+city+
+      "/caravans/programs/"+program+"/stop"),{
+      method:"POST",headers:{"Authorization":"Bearer "+token,
+        "Content-Type":"application/json"},
+      body:JSON.stringify({order_id:order}),cache:"no-store",
+      signal:AbortSignal.timeout(7000),
+    });
+    status=response.status;
+  }catch{/* Failed acknowledgment is not proof the stop was rejected. */}
+  if(status===401)redirect("/");
+  redirect("/cities/"+city+"/market?program="+
+    (status===200||status===201?"stopped":status===409?"conflict":"unavailable")+"#caravans");
+}
