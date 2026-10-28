@@ -5,8 +5,6 @@ on:
   push:
     branches:
       - main
-      # Temporary focused API revalidation after all three other jobs passed.
-      - feat/caravans-one-way-owned-cities
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
@@ -74,7 +72,6 @@ jobs:
         run: docker run --rm mmhk-worker-ci python -m mmhk_api.supervised_worker --help
 
   next-build:
-    if: github.ref == 'refs/heads/main'  # one-off API-only recheck
     name: Next.js production build and strict TypeScript
     runs-on: ubuntu-latest
     defaults:
@@ -97,7 +94,6 @@ jobs:
         run: npm run typecheck
 
   private-preview-build:
-    if: github.ref == 'refs/heads/main'  # one-off API-only recheck
     name: Check SSH-only preview ports and build API/Next images
     runs-on: ubuntu-latest
     env:
@@ -131,7 +127,6 @@ jobs:
         run: docker compose -f compose.preview.yaml down --volumes --remove-orphans
 
   local-six-service-smoke:
-    if: github.ref == 'refs/heads/main'  # one-off API-only recheck
     name: Build and start six-service localhost stack with a real demo
     # Playwright 1.56 Chromium supports Noble, not the runner's newer Ubuntu 26.04.
     runs-on: ubuntu-24.04
