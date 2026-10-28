@@ -17,7 +17,8 @@ from .map_views import MapNotFound, own_region, world_overview
 from .timeline import timeline_for_player
 from .artifacts import artifact_inventory, move_artifact
 from .region_pve import preview_duel
-from .pve_missions import start_pve_mission,missions_for_city
+from .pve_missions import start_pve_mission,missions_for_city,report_for_mission
+from .formations import formation_for_hero,save_formation
 from .forces import city_forces, recruit_units, hire_hero, RecruitmentNotFound, RecruitmentConflict, transfer_units
 from .login_limits import (
     RateLimitConfigurationError, reserve_login_attempt, audit_login,
@@ -433,6 +434,51 @@ def start_region_mission(city_id:UUID,command:PveMissionRequest,db:_db,player:_p
         raise HTTPException(status_code=404,detail="City, hero or encounter not found") from exc
     except RecruitmentConflict as exc:
         raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+
+class FormationSlotRequest(StrictDTO):
+    position: int = Field(ge=1,le=7)
+    unit_code: str = Field(pattern=r"^[a-z][a-z0-9_]{1,47}$")
+    quantity: int = Field(ge=1,le=1000000)
+
+
+class FormationSaveRequest(StrictDTO):
+    order_id: UUID
+    positions: list[FormationSlotRequest] = Field(max_length=7)
+
+
+@app.get("/api/v1/me/cities/{city_id}/heroes/{hero_id}/formation")
+def my_hero_formation(city_id:UUID,hero_id:UUID,db:_db,player:_player)->dict:
+    try:
+        return formation_for_hero(db,owner=player,city_id=city_id,hero_id=hero_id)
+    except RecruitmentNotFound as exc:
+        raise HTTPException(status_code=404,detail="City or hero not found") from exc
+
+
+@app.post("/api/v1/me/cities/{city_id}/heroes/{hero_id}/formation",status_code=201)
+def save_my_hero_formation(city_id:UUID,hero_id:UUID,
+                            command:FormationSaveRequest,db:_db,
+                            player:_player,response:Response)->dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        result=save_formation(db,owner=player,city_id=city_id,hero_id=hero_id,
+           order_id=command.order_id,
+           positions=[r.model_dump() for r in command.positions])
+        if result["replayed"]:response.status_code=200
+        return result
+    except RecruitmentNotFound as exc:
+        raise HTTPException(status_code=404,detail="City or hero not found") from exc
+    except RecruitmentConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+@app.get("/api/v1/me/cities/{city_id}/missions/{mission_id}/report")
+def my_pve_report(city_id:UUID,mission_id:UUID,db:_db,player:_player)->dict:
+    try:
+        return report_for_mission(db,owner=player,city_id=city_id,mission_id=mission_id)
+    except RecruitmentNotFound as exc:
+        raise HTTPException(status_code=404,detail="Mission or city not found") from exc
 
 
 # Read-only map prototypes. No foreign city, fog-of-war intelligence or
