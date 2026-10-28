@@ -20,7 +20,7 @@ export function WorldAtlas({
         <span className="map-section-legend">Carte torique · {dim} × {dim}</span>
       </div>
       <svg className="world-atlas" viewBox="0 0 680 500"
-        role="img"
+        role="group"
         aria-label={`Atlas schématique de ${world.name}, avec ${cities.length} villes du joueur uniquement`}>
         <defs>
           <linearGradient id="world-gradient" x1="0" y1="0" x2="1" y2="1">
