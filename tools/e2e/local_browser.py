@@ -105,11 +105,23 @@ def main() -> int:
             page.get_by_role("link", name="Entrer en ville").first.click()
             expect(page.get_by_role("heading", level=1, name="Premier Havre", exact=True)).to_be_visible()
             expect(page.get_by_role("heading", name="Réserves de la ville")).to_be_visible()
-            expect(page.get_by_role("heading", name="Armées et héros")).to_be_visible()
-            expect(page.locator(".hero-profile-info").get_by_text("Aldric du Havre")).to_be_visible()
+            expect(page.get_by_role("link", name="Héros et artefacts")).to_be_visible()
+            expect(page.get_by_role("link", name="Garnison et recrutement")).to_be_visible()
             assert page.locator(".building-plan").count() >= 8, "Expanded Haven catalogue not provisioned"
-            assert page.locator(".unit-recruit-offer").count() == 2
             expect(page.get_by_text("Demeure des miliciens", exact=True)).to_be_visible()
+
+            # US-ART-001/003/006: hero inventory is a separate readable screen.
+            page.get_by_role("link", name="Héros et artefacts").first.click()
+            expect(page.get_by_role("heading", level=1, name="Héros et équipement")).to_be_visible()
+            expect(page.get_by_text("Aldric du Havre", exact=True).first).to_be_visible()
+            expect(page.get_by_text("Heaume de bronze")).to_be_visible()
+            expect(page.get_by_text("Sceau des anciens")).to_be_visible()
+            helm=page.locator(".artifact-card").filter(has_text="Heaume de bronze")
+            helm.get_by_role("button", name="Équiper").click()
+            expect(page.get_by_text("Artefact déplacé : les inventaires ont été mis à jour.")).to_be_visible(timeout=20000)
+            expect(page.locator(".equipment-slot.filled")).to_have_count(1)
+            page.get_by_role("link", name="Ville", exact=True).click()
+            expect(page.get_by_role("heading", level=1, name="Premier Havre")).to_be_visible()
 
             expect(page.get_by_text("Actualisation automatique", exact=False)).to_be_visible()
 
@@ -162,6 +174,11 @@ def main() -> int:
                     break
                 page.wait_for_timeout(2500)
             expect(next_ready.first).to_be_visible(timeout=5000)
+            # Recruitment is now isolated in the military workspace.
+            page.get_by_role("link", name="Garnison et recrutement").first.click()
+            expect(page.get_by_role("heading", name="Armées et héros")).to_be_visible()
+            expect(page.locator(".hero-profile-info").get_by_text("Aldric du Havre")).to_be_visible()
+            assert page.locator(".unit-recruit-offer").count() == 2
             # Recruit units and transfer a subset to the starting hero.
             militia = page.locator("form.unit-recruit-offer:has(input[name='unitCode'][value='militia'])")
             expect(militia.get_by_role("button", name="Recruter")).to_be_enabled()
@@ -175,6 +192,16 @@ def main() -> int:
             transfer.get_by_role("button", name="Affecter").click()
             expect(page.get_by_text("Transfert confirmé", exact=False)).to_be_visible(timeout=20000)
             expect(page.get_by_text("Miliciens du Havre : 2")).to_be_visible()
+            # Two seeded laboratory encounters, genuinely scoped to this city.
+            page.get_by_role("link", name="Région et rencontres").click()
+            expect(page.get_by_role("heading", name="Autour de Premier Havre")).to_be_visible()
+            wolf = page.locator('[data-region-i="1"][data-region-j="3"] polygon')
+            wolf.click()
+            expect(page.get_by_role("heading", name="Loups des bois")).to_be_visible()
+            page.get_by_role("button", name="Tester un duel Jactari").click()
+            expect(page.get_by_text("Rapport de simulation", exact=False)).to_be_visible(timeout=15000)
+            expect(page.get_by_text("Rien n'est débité, libéré ou attribué dans PostgreSQL.", exact=False)).to_be_visible()
+
 
 
             # The user can navigate back and log out via the real server action.
