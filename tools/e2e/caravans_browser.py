@@ -58,6 +58,39 @@ def main():
                 name="Comptoir des caravanes (laboratoire)")).to_be_visible()
             warehouse=page.locator(".resource-grid article").filter(has_text="Bois")
             expect(warehouse.locator("strong")).to_have_text("2")
+            # Return to the SENDER: the destination test city has no
+            # marketplace built, and must not be allowed to dispatch cargo.
+            page.locator('a[href="/worlds/local-sandbox"]').first.click()
+            source=page.locator(".world-city-link").filter(has_text="Premier Havre")
+            source.get_by_role("link",name="Entrer en ville").click()
+            page.get_by_role("link",name="Marché",exact=True).click()
+            # US-ECH-014..017: two independent, worker-confirmed departures.
+
+            plan=page.get_by_test_id("caravan-quote-form")
+            plan.locator("input[name='load_wood']").fill("2")
+            plan.get_by_role("button",name="Calculer la charge et le trajet").click()
+            form=page.get_by_test_id("caravan-program-form")
+            expect(form).to_be_visible(timeout=16000)
+            form.locator("select[name='shipmentsTotal']").select_option("2")
+            form.locator("select[name='quantityMode']").select_option("exact")
+            form.locator("select[name='waitSeconds']").select_option("60")
+            form.get_by_role("button",name="Enregistrer le programme de caravanes").click()
+            expect(page.get_by_text("Programme enregistré.",exact=False)).to_be_visible(timeout=20000)
+            program=page.get_by_test_id("caravan-program").first
+            expect(program).to_contain_text(" / 2 départs")
+            expect(program).to_contain_text("2 bois")
+            # Worker creates one immutable caravan per program step; the browser
+            # only polls. No fake 'finish' transition from client-side timers.
+            expect(program).to_contain_text("2 / 2 départs",timeout=155000)
+            expect(program).to_contain_text("Tous les départs effectués")
+            expect(page.get_by_test_id("caravan-record")).to_have_count(3,timeout=160000)
+            expect(page.get_by_test_id("caravan-record").filter(
+                has_text="Livrée")).to_have_count(3,timeout=160000)
+            page.locator('a[href="/worlds/local-sandbox"]').first.click()
+            dest=page.locator(".world-city-link").filter(has_text="Comptoir des caravanes")
+            dest.get_by_role("link",name="Entrer en ville").click()
+            warehouse=page.locator(".resource-grid article").filter(has_text="Bois")
+            expect(warehouse.locator("strong")).to_have_text("6")
             if errors:
                 raise AssertionError("Browser JavaScript errors: "+repr(errors[:4]))
             print("PASS: private player -> approved destination -> 7-resource quote -> "+

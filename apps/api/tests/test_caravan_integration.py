@@ -64,7 +64,15 @@ def two_cities(city):
            "world":city["world"],"username":city["username"],
            "stranger_name":city["enemyname"]}
     with psycopg.connect(URL) as db:
+        db.execute(
+            """DELETE FROM caravan_program_stop_orders
+               WHERE program_id IN (
+                 SELECT program_id FROM caravan_dispatch_programs
+                 WHERE world_id=%s)""",(city["world"],),
+        )
         db.execute("DELETE FROM caravan_shipments WHERE world_id=%s",
+                   (city["world"],))
+        db.execute("DELETE FROM caravan_dispatch_programs WHERE world_id=%s",
                    (city["world"],))
         db.execute("DELETE FROM cities WHERE city_id IN (%s,%s)",
                    (recipient,foreign))
@@ -116,7 +124,7 @@ def test_private_destinations_read_does_not_change_stocks(two_cities):
     data=client.get(endpoint,headers=h).json()
     assert data["marketplace_active"] is True
     assert data["transport_policy"]["capacity_units"]==30000
-    assert data["repetition_enabled"] is False
+    assert data["repetition_enabled"] is True
     assert data["ally_destinations_enabled"] is False
     assert data["destinations"]==[{
         "city_id":str(site["destination"]),

@@ -271,14 +271,16 @@ export type CaravanShipment={
   return_due_at:string|null;next_attempt_at:string|null;
   completed_at:string|null;
   status:"in_transit"|"returning"|"awaiting_storage"|"delivered"|"returned";
-  return_leg:boolean;replayed:boolean;historically_certified:false;
+  return_leg:boolean;program_id:string|null;program_sequence:number|null;
+  replayed:boolean;historically_certified:false;
 };
 export type CaravanCatalog={
   city_id:string;marketplace_active:boolean;
   transport_policy:CaravanPolicy|null;
   destinations:{city_id:string;name:string;x:number;y:number}[];
   shipments:CaravanShipment[];
-  repetition_enabled:false;ally_destinations_enabled:false;
+  programs:CaravanProgram[];
+  repetition_enabled:true;ally_destinations_enabled:false;
   historically_certified:false;
 };
 export type CaravanQuote={
@@ -289,4 +291,20 @@ export type CaravanQuote={
   policy_id:string;resource_weights:Record<string,number>;
   marketplace_active:boolean;missing_stocks:Record<string,number>;
   can_send:boolean;historically_certified:false;
+};
+
+
+export type CaravanProgram={
+  program_id:string;world_id:string;
+  source_city_id:string;destination_city_id:string;
+  policy_id:string;cargo_template:Record<string,number>;
+  quantity_mode:"exact"|"available_up_to";
+  shipments_total:number;shipments_sent:number;
+  wait_seconds:number;capacity_units:number;
+  resource_weights:Record<string,number>;seconds_per_tile:number;
+  status:"active"|"waiting_stock"|"paused"|"stopped"|"completed";
+  status_reason:string|null;
+  created_at:string;next_departure_at:string|null;
+  last_departed_at:string|null;closed_at:string|null;
+  replayed:boolean;historically_certified:false;
 };

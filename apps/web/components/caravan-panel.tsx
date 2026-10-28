@@ -1,5 +1,6 @@
 import {randomUUID} from "node:crypto";
-import {sendCityCaravan} from "../app/actions";
+import {sendCityCaravan,createCityCaravanProgram,
+  stopCityCaravanProgram} from "../app/actions";
 import {privateApi,type CaravanCatalog,type CaravanQuote} from "../lib/server-api";
 import {LiveRefresh} from "./live-refresh";
 
@@ -13,7 +14,7 @@ type CaravanQuery={
   caravan_quote?:string;destination_city_id?:string;
   load_gold?:string;load_wood?:string;load_ore?:string;
   load_crystal?:string;load_gems?:string;load_sulfur?:string;load_mercury?:string;
-  convoy?:string;
+  convoy?:string;program?:string;
 };
 function format(n:number){return n.toLocaleString("fr-FR");}
 function date(s:string){return new Date(s).toLocaleString("fr-FR",{timeZone:"Europe/Paris"});}
@@ -25,6 +26,13 @@ function duration(seconds:number){
   const min=Math.ceil(seconds/60);
   return min>=60?(Math.floor(min/60)+" h "+(min%60)+" min"):min+" min";
 }
+const programStatus:Record<string,string>={
+  active:"Actif · prochain départ prévu",
+  waiting_stock:"En attente de ressources",
+  paused:"Suspendu · nouvelle autorisation nécessaire",
+  stopped:"Arrêté par le propriétaire",
+  completed:"Tous les départs effectués",
+};
 const currentStatus:Record<string,string>={
   in_transit:"En route",returning:"Retour vers l'origine",
   awaiting_storage:"En dépôt à l'arrivée, stockage différé",
@@ -58,8 +66,9 @@ export async function CaravanPanel({cityId,token,catalog,stocks,query}:{
     }).toString():null;
   const quoteResponse=url?await privateApi<CaravanQuote>(url,token):null;
   const quote=quoteResponse?.ok?quoteResponse.data:null;
-  const active=catalog?.shipments.some(s=>
-    s.status==="in_transit"||s.status==="returning"||s.status==="awaiting_storage")??false;
+  const active=(catalog?.shipments.some(s=>
+    s.status==="in_transit"||s.status==="returning"||s.status==="awaiting_storage")??false) ||
+    (catalog?.programs.some(p=>p.status==="active"||p.status==="waiting_stock")??false);
   return <section id="caravans" className="caravan-panel" aria-labelledby="caravan-heading">
     <div className="caravan-heading">
       <span className="eyebrow">LOGISTIQUE · US-ECH-010 À 013</span>
@@ -68,6 +77,20 @@ export async function CaravanPanel({cityId,token,catalog,stocks,query}:{
         au worker du royaume. Un ordre envoyé est réellement débité ; aucune
         ressource n'est créée ou livrée par la simple animation du navigateur.</p>
     </div>
+    {query.program==="created"&&<p className="construction-notice" role="status">
+      Programme enregistré. Le prochain passage du worker décidera du premier départ
+      après revalidation des ressources. Aucun chargement futur n'a été réservé.</p>}
+    {query.program==="stopped"&&<p className="construction-notice" role="status">
+      Programme arrêté. Les caravanes déjà parties poursuivent leur trajet.</p>}
+    {query.program==="conflict"&&<p className="error" role="alert">
+      Programme refusé : politique, droits, capacité, délai ou état modifiés.
+      Vérifiez les paramètres et consultez le registre.</p>}
+    {query.program==="unavailable"&&<p className="error" role="alert">
+      Confirmation incertaine : contrôlez le registre avant de créer un autre
+      programme ou de répéter la commande.</p>}
+    {query.program==="invalid"&&<p className="error" role="alert">
+      Programme invalide : vérifiez le nombre total de départs, la cadence
+      et les quantités de toutes les ressources.</p>}
     {query.convoy==="sent"&&<p className="construction-notice" role="status">
       Convoi enregistré et marchandises réservées. Son arrivée sera confirmée par le serveur.</p>}
     {query.convoy==="conflict"&&<p className="error" role="alert">
@@ -145,6 +168,46 @@ export async function CaravanPanel({cityId,token,catalog,stocks,query}:{
             </form>
             <small>La capacité, les stocks et les droits sont revérifiés
               transactionnellement au départ. Ce devis ne réserve rien.</small>
+            <div className="caravan-program-offer">
+              <h4>Programmer plusieurs départs</h4>
+              <p>Chaque départ sera une caravane indépendante. Un programme
+                ne réserve <strong>aucun stock futur</strong> : le worker vérifie
+                à chaque fois le Marché, les droits, le contrat et les réserves.</p>
+              <form action={createCityCaravanProgram} data-testid="caravan-program-form">
+                <input type="hidden" name="cityId" value={cityId}/>
+                <input type="hidden" name="destinationId" value={quote.destination_city_id}/>
+                <input type="hidden" name="programId" value={randomUUID()}/>
+                <input type="hidden" name="policyId" value={quote.policy_id}/>
+                {RESOURCE_LIST.map(([k])=><input key={k} type="hidden"
+                  name={"cargo_"+k} value={quote.cargo[k]}/>)}
+                <label>Nombre de départs au total
+                  <select name="shipmentsTotal" defaultValue="2">
+                    {[2,4,8,12].map(n=><option key={n} value={n}>{n} départs au total</option>)}
+                  </select>
+                </label>
+                <label>Politique de quantité
+                  <select name="quantityMode" defaultValue="exact">
+                    <option value="exact">Quantité exacte · attendre si insuffisante</option>
+                    <option value="available_up_to">Jusqu'au stock disponible (laboratoire)</option>
+                  </select>
+                </label>
+                <label>Intervalle minimal entre deux départs
+                  <select name="waitSeconds" defaultValue="60">
+                    <option value="60">Sans attente supplémentaire · minimum lab 60 s</option>
+                    <option value="120">2 minutes</option>
+                    <option value="300">5 minutes</option>
+                    <option value="900">15 minutes</option>
+                    <option value="3600">1 heure</option>
+                  </select>
+                </label>
+                <button type="submit" disabled={!quote.can_send}>
+                  Enregistrer le programme de caravanes
+                </button>
+              </form>
+              <small>« 4 fois » signifie ici 4 départs au total, et non 4
+                répétitions après le premier. C'est une convention explicite du
+                laboratoire, pas une règle historique confirmée.</small>
+            </div>
           </>}
         </section>
       </div>}
@@ -162,6 +225,8 @@ export async function CaravanPanel({cityId,token,catalog,stocks,query}:{
                 "Retour prévu : "+date(s.return_due_at):
                 "Arrivée prévue : "+date(s.arrival_due_at)}</small>
               <small>Contrat : {s.policy_id} · charge {format(s.load_units)}</small>
+              {s.program_id&&<small>Programme {s.program_id.slice(0,8)} ·
+                départ n° {s.program_sequence}</small>}
             </div>
             <div className="caravan-record-status">
               <strong>{currentStatus[s.status]??s.status}</strong>
@@ -174,12 +239,48 @@ export async function CaravanPanel({cityId,token,catalog,stocks,query}:{
           </li>)}</ol>:
           <p>Aucune caravane n'est encore enregistrée pour cette cité.</p>}
       </section>
+      <section className="caravan-programs" aria-label="Programmes de convois">
+        <h4>Programmes de transport</h4>
+        {(catalog.programs??[]).length>0?
+          <ol>{catalog.programs.map(p=><li key={p.program_id}
+            className="caravan-program" data-testid="caravan-program">
+            <div>
+              <strong>{p.shipments_sent} / {p.shipments_total} départs</strong>
+              <small>Mode : {p.quantity_mode==="exact"?"Quantité exacte":
+                "Plafonnée aux stocks disponibles"} · intervalle {duration(p.wait_seconds)}</small>
+              <small>Chargement type : {contents(p.cargo_template)}</small>
+              <small>{p.next_departure_at?
+                "Prochaine tentative : "+date(p.next_departure_at):
+                p.closed_at?"Clôturé : "+date(p.closed_at):
+                "Aucun prochain départ"}</small>
+              {p.status_reason&&<small>Motif : {p.status_reason==="insufficient_stock"?
+                "Ressources insuffisantes, nouvelle vérification prévue":
+                p.status_reason==="rights_market_or_policy_changed"?
+                "Droits, Marché ou politique modifiés — aucun nouveau départ":
+                p.status_reason==="dispatch_rejected"?
+                "Départ refusé, révision nécessaire":
+                "Programme arrêté"}</small>}
+            </div>
+            <div className="caravan-program-state">
+              <strong>{programStatus[p.status]??p.status}</strong>
+              {["active","waiting_stock","paused"].includes(p.status)&&
+                <form action={stopCityCaravanProgram}>
+                  <input type="hidden" name="cityId" value={cityId}/>
+                  <input type="hidden" name="programId" value={p.program_id}/>
+                  <input type="hidden" name="stopOrderId" value={randomUUID()}/>
+                  <button type="submit">Arrêter les prochains départs</button>
+                </form>}
+            </div>
+          </li>)}</ol>:
+          <p>Aucun programme enregistré pour cette cité.</p>}
+      </section>
       {active&&<LiveRefresh intervalSeconds={10}/>}
       <p className="market-disclaimer">
         Trajets non interceptables, transfert entre cités du même propriétaire uniquement.
         En cas de stockage saturé, le chargement reste en dépôt protégé jusqu'à sa livraison.
         Les délais, poids et capacités de cette tranche ne sont pas des données MMHK S2 certifiées.
-        Programmes répétitifs et transferts alliés viendront dans une tranche distincte.</p>
+        Les programmes répétitifs relèvent de conventions explicites de laboratoire,
+        avec revalidation avant chaque départ. Les transferts alliés restent exclus.</p>
     </>}
   </section>;
 }

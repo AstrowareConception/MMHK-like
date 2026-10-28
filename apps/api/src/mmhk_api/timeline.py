@@ -75,6 +75,31 @@ def timeline_for_player(
         "target_url":"/cities/"+str(origin_id)+"/market#caravans",
         "icon":"timeline.hero_return","priority":"normal",
     } for sid,status,due,origin_id,origin_name,world_id,dst_name in caravan_rows]
+    # Program deadlines are *attempts*, never guaranteed cargo departures:
+    # every candidate still requires a worker-side stock/authorization check.
+    programs=db.execute(
+        """SELECT p.program_id,p.status,p.shipments_total,p.shipments_sent,
+                  p.next_departure_at,c.city_id,c.name,c.world_id
+           FROM caravan_dispatch_programs p
+           JOIN cities c ON c.city_id=p.source_city_id
+           JOIN world_memberships m ON m.world_id=c.world_id AND m.account_id=%s
+           WHERE p.owner_account_id=%s AND c.owner_account_id=%s
+             AND p.status IN ('active','waiting_stock')
+             AND p.next_departure_at<=%s
+           ORDER BY p.next_departure_at,p.program_id LIMIT %s""",
+        (account_id,account_id,account_id,horizon,limit+1),
+    ).fetchall()
+    program_events=[{
+        "id":"caravan-program-"+str(pid),
+        "type":"caravan_program_attempt",
+        "title":("Vérification du stock du convoi"
+                 if stage=="waiting_stock" else
+                 f"Départ programmé {sent+1}/{total} (sous réserve)"),
+        "occurs_at":due,"world_id":world,
+        "city_id":str(cid),"city_name":name,
+        "target_url":"/cities/"+str(cid)+"/market#caravans",
+        "icon":"timeline.hero_return","priority":"normal",
+    } for pid,stage,total,sent,due,cid,name,world in programs]
     construction_events=[{
         "id":"construction-"+str(order_id),
         "type":"construction_complete",
@@ -102,12 +127,13 @@ def timeline_for_player(
             "city_name":city_name,"target_url":"/cities/"+str(city_id)+"/region",
             "icon":"timeline.hero_return","priority":"normal"
         })
-    events=sorted(construction_events+movement_events+caravan_events,
+    events=sorted(construction_events+movement_events+caravan_events+program_events,
                   key=lambda e:(e["occurs_at"],e["id"]))
     return {
         "server_now": now,
         "horizon_hours": hours,
         "truncated": (len(events)>limit or len(rows)>limit or
-                      len(missions)>limit or len(caravan_rows)>limit),
+                      len(missions)>limit or len(caravan_rows)>limit
+                      or len(programs)>limit),
         "events": events[:limit],
     }
