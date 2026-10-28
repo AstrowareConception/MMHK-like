@@ -9,12 +9,14 @@ CREATE TABLE artifact_profiles (
   policy_id text NOT NULL CHECK(length(policy_id) BETWEEN 3 AND 100),
   historically_certified boolean NOT NULL DEFAULT false
 );
+CREATE UNIQUE INDEX city_heroes_city_identity ON city_heroes(city_id,hero_id);
 CREATE TABLE city_artifacts (
   artifact_id uuid PRIMARY KEY,
   city_id uuid NOT NULL REFERENCES cities(city_id) ON DELETE CASCADE,
   artifact_code text NOT NULL REFERENCES artifact_profiles(artifact_code),
   location text NOT NULL CHECK(location IN ('reserve','bag','equipped')),
-  hero_id uuid REFERENCES city_heroes(hero_id),
+  hero_id uuid,
+  FOREIGN KEY(city_id,hero_id) REFERENCES city_heroes(city_id,hero_id),
   equipped_slot text,
   created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
   seed_key text UNIQUE,
