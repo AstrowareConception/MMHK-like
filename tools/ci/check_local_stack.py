@@ -30,6 +30,10 @@ def main() -> None:
     assert int(webports[0]["target"])==3000
     assert int(webports[0]["published"])==3000
     assert conf["networks"]["backend"]["internal"] is True
+    assert conf["networks"]["edge"].get("internal",False) is False
+    assert set(services["web"]["networks"])=={"backend","edge"}
+    for name in ("postgres","redis","migrate","api","worker"):
+        assert set(services[name]["networks"])=={"backend"},name
     assert services["migrate"]["depends_on"]["postgres"]["condition"]=="service_healthy"
     assert services["api"]["depends_on"]["migrate"]["condition"]=="service_completed_successfully"
     assert services["worker"]["depends_on"]["migrate"]["condition"]=="service_completed_successfully"
