@@ -85,7 +85,7 @@ def _validate_offers(data:list)->list[dict]:
             or any(ord(c)<32 or ord(c)==127 for c in row["name"])
             or row["archetype"] not in ("might","magic")
             or type(row["gold_cost"]) is not int
-            or not 0<=row["gold_cost"]<=1000000):
+            or not 1<=row["gold_cost"]<=1000000):
             raise ValueError("Invalid paid hero offer configuration")
         result.append({
             "name":row["name"].strip(),"archetype":row["archetype"],
@@ -625,6 +625,16 @@ def run_colonization_batch(
             if (not source_owned or hero_state!=("colonizing",source)
                 or not region_owned or not site_present or occupied or special):
                 result.append(_block(db,row,now,"founding_site_or_rights_changed"))
+                continue
+            # Operator-configured recruitment profiles may be disabled between
+            # payment and arrival. Do not commit an unusable settlement
+            # indefinitely: return a blocked order with recoverable escrow.
+            if any(not db.execute(
+                """SELECT 1 FROM city_unit_profiles
+                   WHERE unit_code=%s AND enabled""",
+                (unit_code,),
+            ).fetchone() for unit_code in recruitment):
+                result.append(_block(db,row,now,"recruitment_profile_withdrawn"))
                 continue
             # All city artifacts remain in the original city. The founder
             # hero returns there as idle after establishing the new settlement.
