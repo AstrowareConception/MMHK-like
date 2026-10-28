@@ -194,7 +194,7 @@ def main() -> int:
             expect(page.get_by_text("Miliciens du Havre : 2")).to_be_visible()
             # Formation preparation: all 2 assigned militiamen occupy one
             # ordinary Jactari slot; saving must not change the real army.
-            page.get_by_role("link", name="Héros", exact=True).click()
+            page.locator('a[href$="/heroes"]').first.click()
             expect(page.get_by_role("heading", name="Les sept positions de l'armée")).to_be_visible()
             expect(page.locator(".formation-slot")).to_have_count(7)
             page.get_by_role("button", name="Enregistrer les sept positions").click()
