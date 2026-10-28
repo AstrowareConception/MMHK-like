@@ -3,7 +3,7 @@ import type {ReactNode} from "react";
 import {signOut} from "../../app/actions";
 import {AssetImage} from "../asset-image";
 import {resolveAssetUrl} from "../../lib/assets/runtime";
-import {privateApi} from "../../lib/server-api";
+import {privateApi,type City} from "../../lib/server-api";
 import type {TimelineResponse} from "../../lib/timeline";
 import {TopTimelineBar} from "../top-timeline-bar";
 const RESOURCE_LIST=[
@@ -14,7 +14,13 @@ export async function GameShell({token,title,eyebrow,description,worldId,cityId,
   token:string;title:string;eyebrow:string;description:string;
   worldId?:string;cityId?:string;stocks?:Record<string,number>;children:ReactNode;
 }) {
-  const response=await privateApi<TimelineResponse>("/api/v1/me/timeline?hours=12",token);
+  const [response,citiesResponse]=await Promise.all([
+    privateApi<TimelineResponse>("/api/v1/me/timeline?hours=12",token),
+    worldId&&cityId
+      ?privateApi<City[]>("/api/v1/me/worlds/"+encodeURIComponent(worldId)+"/cities",token)
+      :Promise.resolve(null),
+  ]);
+  const ownCities=citiesResponse?.ok?citiesResponse.data??[]:[];
   const backdrop=resolveAssetUrl("ui.page.background");
   const paper=resolveAssetUrl("ui.panel.main");
   return <main className="shell kingdom-shell"
@@ -30,7 +36,10 @@ export async function GameShell({token,title,eyebrow,description,worldId,cityId,
       </header>
       <nav className="kingdom-navbar" aria-label="Navigation principale du royaume">
         <Link href="/">♜ Mes mondes</Link>
-        {worldId&&<Link href={"/worlds/"+encodeURIComponent(worldId)}>♧ Carte du monde</Link>}
+        {worldId&&<>
+          <Link href={"/worlds/"+encodeURIComponent(worldId)}>♧ Carte du monde</Link>
+          <Link href={"/worlds/"+encodeURIComponent(worldId)+"/colonize"}>◇ Expansion</Link>
+        </>}
         {cityId&&<>
           <Link href={"/cities/"+encodeURIComponent(cityId)+"/region"}>◆ Ma région</Link>
           <Link href={"/cities/"+encodeURIComponent(cityId)}>⌂ Entrer en ville</Link>
@@ -40,6 +49,16 @@ export async function GameShell({token,title,eyebrow,description,worldId,cityId,
         </>}
         <form action={signOut}><button type="submit">Déconnexion</button></form>
       </nav>
+      {worldId&&cityId&&ownCities.length>1&&
+        <nav className="kingdom-city-switcher" aria-label="Changer de cité">
+          <strong>Vos cités</strong>
+          {ownCities.map(city=><Link
+            href={"/cities/"+city.city_id} key={city.city_id}
+            aria-current={city.city_id===cityId?"page":undefined}
+            className={city.city_id===cityId?"selected":""}>
+            {city.first_city?"♜":"⌂"} {city.name}
+          </Link>)}
+        </nav>}
       <div className="kingdom-treasury" aria-label="Ressources du royaume">
         {RESOURCE_LIST.map(([key,label])=><div key={key} className="kingdom-resource"
           title={stocks?label+" : "+(stocks[key]??0).toLocaleString("fr-FR"):label+" : stock consultable en ville"}>

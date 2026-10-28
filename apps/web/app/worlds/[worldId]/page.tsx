@@ -2,7 +2,8 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { GameShell } from "../../../components/game-shell/game-shell";
 import { WorldAtlas } from "../../../components/world-atlas";
-import { privateApi, sessionToken, type WorldOverview, type CityDetail } from "../../../lib/server-api";
+import { privateApi, sessionToken, type WorldOverview, type CityDetail,
+  type ColonizationCatalog } from "../../../lib/server-api";
 
 export const dynamic = "force-dynamic";
 
@@ -25,9 +26,14 @@ export default async function WorldPage({
   }
   const world = result.data;
   const currentCity=world.cities[0];
-  const cityDetail=currentCity
-    ?await privateApi<CityDetail>("/api/v1/me/cities/"+encodeURIComponent(currentCity.city_id),token)
-    :null;
+  const [cityDetail,colonyResponse]=await Promise.all([
+    currentCity
+      ?privateApi<CityDetail>("/api/v1/me/cities/"+encodeURIComponent(currentCity.city_id),token)
+      :Promise.resolve(null),
+    privateApi<ColonizationCatalog>(
+      "/api/v1/me/worlds/"+encodeURIComponent(worldId)+"/colonization",token),
+  ]);
+  const colonies=colonyResponse.ok?colonyResponse.data:undefined;
   return (
     <GameShell token={token} title={world.name}
       eyebrow="ROYAUME · CARTE DU MONDE"
@@ -35,6 +41,24 @@ export default async function WorldPage({
       worldId={world.world_id} cityId={currentCity?.city_id}
       stocks={cityDetail?.ok?cityDetail.data?.stocks:undefined}>
         <WorldAtlas world={world} cities={world.cities}/>
+        <section className="world-expansion-entry" aria-label="Colonisation et protection">
+          <div>
+            <span className="eyebrow">INFLUENCE · COLONISATION</span>
+            <h2>Développer votre royaume</h2>
+            <p>{colonies?.newbie_protected?
+              "Votre protection débutant reste active pendant sept jours. Il est impossible d'acquérir une deuxième cité avant son échéance.":
+              "Préparez une expédition de fondation vers une région qualifiée de votre influence."}</p>
+            {colonies&&<small>
+              {colonies.owned_cities} cité(s) · {colonies.pending_expeditions} expédition(s)
+              {" "}· {colonies.qualified_sites.length} site(s) qualifié(s)
+              {colonies.newbie_protected?" · Protection jusqu'au "+
+                new Date(colonies.protection_until).toLocaleDateString("fr-FR"):""}
+            </small>}
+          </div>
+          <Link className="scene-action" href={"/worlds/"+worldId+"/colonize"}>
+            Examiner les droits de colonisation
+          </Link>
+        </section>
         <h2>Mes cités</h2>
         <div className="tile-links">
           {world.cities.map((city) => (
@@ -45,6 +69,7 @@ export default async function WorldPage({
               <div className="map-card-actions">
                 <Link href={`/cities/${city.city_id}/region`}>Voir la région</Link>
                 <Link href={`/cities/${city.city_id}`}>Entrer en ville</Link>
+                <Link href={`/cities/${city.city_id}/market#caravans`}>Caravanes</Link>
               </div>
             </div>
           ))}

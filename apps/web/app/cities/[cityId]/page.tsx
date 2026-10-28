@@ -55,6 +55,7 @@ export default async function CityPage({
           <a href="#city-scene">Panorama</a><a href="#city-resources">Ressources</a>
           <a href="#urban-construction">Chantiers</a><a href="#city-history">Historique</a>
           <Link href={`/cities/${cityId}/market`}>Marché</Link>
+          <Link href={`/worlds/${city.world_id}/colonize`}>Expansion</Link>
           <Link href={`/cities/${cityId}/heroes`}>Héros et artefacts</Link>
           <Link href={`/cities/${cityId}/forces`}>Armée et recrutements</Link>
         </nav>
