@@ -104,7 +104,7 @@ jobs:
         run: |
           docker compose -f compose.preview.yaml up -d api web
           for attempt in $(seq 1 30); do
-            if curl --fail --silent --show-error http://127.0.0.1:3001/ 2>/dev/null | grep -q 'MMHK-like'; then
+            if curl --fail --silent --show-error http://127.0.0.1:3001/ 2>/dev/null | grep -q 'API FastAPI joignable'; then
               echo "Private end-to-end app reachable on localhost only"
               exit 0
             fi
