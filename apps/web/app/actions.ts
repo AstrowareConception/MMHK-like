@@ -244,3 +244,46 @@ export async function launchRegionalPveMission(form:FormData) {
   redirect("/cities/"+cityId+"/region?mission="+(status===200||status===201?"ok":
     status===409?"conflict":"unavailable")+selectedTile);
 }
+
+
+/** Confirm a server-provided merchant quote. The quote form supplies ONE UUID
+ * generated at render time, so double-clicks replay the same order. Never
+ * generate a new UUID while retrying an uncertain payment.
+ */
+export async function tradeCityResources(form:FormData) {
+  const cityId=form.get("cityId"),orderId=form.get("orderId");
+  const pay=form.get("payResource"),receive=form.get("receiveResource");
+  const amount=form.get("payAmount"),expected=form.get("expectedReceive");
+  const policy=form.get("policyId");
+  const uuid=/^[a-f0-9-]{36}$/i;
+  const isResource=(x:FormDataEntryValue|null):x is string=>
+    typeof x==="string" && /^(gold|wood|ore|crystal|gems|sulfur|mercury)$/.test(x);
+  if(typeof cityId!=="string"||!uuid.test(cityId)||
+     typeof orderId!=="string"||!uuid.test(orderId)||
+     !isResource(pay)||!isResource(receive)||pay===receive||
+     typeof amount!=="string"||!/^[0-9]{1,7}$/.test(amount)||
+     typeof expected!=="string"||!/^[0-9]{1,13}$/.test(expected)||
+     typeof policy!=="string"||policy.length<3||policy.length>100)
+    redirect("/");
+  const paid=Number(amount),given=Number(expected);
+  if(!Number.isSafeInteger(paid)||paid<1||paid>1000000||
+     !Number.isSafeInteger(given)||given<1||given>1000000000000)
+    redirect("/cities/"+cityId+"/market?trade=invalid");
+  const token=(await cookies()).get("mmhk_session")?.value;
+  if(!token)redirect("/");
+  let status=503;
+  try{
+    const response=await fetch(apiUrl("/api/v1/me/cities/"+cityId+"/market"),{
+      method:"POST",
+      headers:{"Authorization":"Bearer "+token,"Content-Type":"application/json"},
+      body:JSON.stringify({order_id:orderId,pay_resource:pay,
+        receive_resource:receive,pay_amount:paid,
+        expected_policy_id:policy,expected_receive_amount:given}),
+      cache:"no-store",signal:AbortSignal.timeout(7000),
+    });
+    status=response.status;
+  }catch{/* Unknown result: consult the transaction ledger, do NOT auto-retry. */}
+  if(status===401)redirect("/");
+  redirect("/cities/"+cityId+"/market?trade="+
+    (status===200||status===201?"ok":status===409?"conflict":"unavailable"));
+}

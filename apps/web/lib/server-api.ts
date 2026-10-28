@@ -189,3 +189,27 @@ export type PveMissionsResponse={
   travel_policy:{seconds_per_step:number;policy_id:string}|null;
   missions:PveMission[];
 };
+
+
+export type MerchantCatalog = {
+  city_id:string;
+  merchant_unlocked:boolean;
+  auctions_available:false;
+  caravans_available:false;
+  rounding_policy:string;
+  historically_certified:false;
+  rates:{pay_resource:string;receive_resource:string;policy_id:string;
+    numerator:number;denominator:number}[];
+  history:{order_id:string;pay_resource:string;receive_resource:string;
+    pay_amount:number;receive_amount:number;policy_id:string;completed_at:string}[];
+};
+
+export type MerchantQuote = {
+  city_id:string;pay_resource:string;receive_resource:string;
+  pay_amount:number;receive_amount:number;policy_id:string;
+  numerator:number;denominator:number;
+  current_pay_stock:number;current_receive_stock:number;
+  expected_pay_balance:number|null;expected_receive_balance:number|null;
+  affordable:boolean;capacity_sufficient:boolean;can_execute:boolean;
+  rounding_policy:string;historically_certified:false;
+};
