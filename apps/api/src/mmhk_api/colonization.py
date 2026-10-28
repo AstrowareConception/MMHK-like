@@ -655,6 +655,14 @@ def reclaim_blocked_colony(
             return {"order_id":str(order_id),"reclaimed":True,
                     "replayed":True,"applied_refund":row[10],
                     "refunded_at":row[23].isoformat()}
+        # The refund UUID is a global command identifier, not a local UI nonce:
+        # reject its reuse for another expedition before any stock credit.
+        other=db.execute(
+            """SELECT order_id FROM colonization_orders WHERE refund_order_id=%s""",
+            (refund_order_id,),
+        ).fetchone()
+        if other and other[0]!=order_id:
+            raise ColonizationConflict("Refund identifier already used")
         if row[19]!="blocked":
             raise ColonizationConflict("Only a blocked founding can be refunded")
         src=row[2]
