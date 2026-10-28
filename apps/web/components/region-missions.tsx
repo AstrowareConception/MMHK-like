@@ -23,7 +23,7 @@ export function RegionJourneyLayer({missions}:{missions:PveMissionsResponse|null
     {(missions?.missions??[]).filter(m=>m.stage!=="completed").map(m=>{
       const source=regionCellCenter(2,2),target=regionCellCenter(m.target_i,m.target_j);
       const outbound=m.stage==="outbound";
-      const started=Date.parse(outbound?m.started_at:m.arrival_due_at);
+      const started=Date.parse(outbound?m.started_at:(m.arrived_at??m.arrival_due_at));
       const end=Date.parse(outbound?m.arrival_due_at:m.return_due_at);
       const progress=localNow===null?0:clamp((now-started)/(end-started));
       const from=outbound?source:target,to=outbound?target:source;
