@@ -138,3 +138,36 @@ button:focus-visible, a:focus-visible, input:focus-visible { outline: 3px solid 
   .city-marker-name{font-size:8px;max-width:74px;white-space:normal;text-align:center;padding:2px;}
   .city-scene-corner{font-size:7px;}
 }
+
+/* World -> region -> city navigation; original UI, no recovered Ubisoft art. */
+.nav { flex-wrap:wrap; }
+.nav-current { color:#a9babf; font:12px system-ui,sans-serif; }
+.world-atlas-wrap,.region-scene-container { margin: 0 0 30px; }
+.map-section-heading { display:flex; justify-content:space-between; align-items:center; gap:14px; margin:0 0 10px; }
+.map-section-heading h2 { margin:3px 0; color:#efdfb8; }
+.map-section-legend { white-space:nowrap; font:12px/1.5 system-ui,sans-serif; color:#b2c3c5; }
+.world-atlas,.region-scene { display:block; width:100%; height:auto; border:1px solid #bfa36d;
+  border-radius:8px; background:#1b3442; box-shadow:0 10px 30px #0006; }
+.world-atlas a,.region-scene a { cursor:pointer; }
+.world-atlas a:focus-visible,.region-scene a:focus-visible { outline:3px solid #fff1b2; }
+.map-qualification { font:12px/1.65 system-ui,sans-serif; color:#b5c5c8; margin:10px 0 24px; }
+.world-city-link { min-height:145px; }
+.map-card-actions { display:flex; flex-wrap:wrap; gap:8px; margin-top:auto; }
+.map-card-actions a { font:600 12px/1.5 system-ui,sans-serif; color:#f1dcaa;
+  border:1px solid #a9915e; padding:6px 9px; border-radius:4px; text-decoration:none; }
+.map-card-actions a:hover,.map-card-actions a:focus-visible { background:#3e5360; }
+.region-legend { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:16px 0; }
+.region-legend > div { padding:16px; background:#122733; border:1px solid #a9915e55; border-radius:6px; }
+.region-legend strong { color:#f0dfb7; font:600 14px system-ui,sans-serif; }
+.region-legend p { font:14px/1.6 system-ui,sans-serif; color:#d9dcce; }
+.region-legend small { display:block; font:12px/1.5 system-ui,sans-serif; color:#b4c3c8; }
+.region-neighbors { display:grid; grid-template-columns:repeat(3,1fr); gap:5px; max-width:230px; margin:10px 0; }
+.region-neighbors span { text-align:center; padding:7px 3px; border:1px solid #58727c; border-radius:3px;
+  background:#214151; color:#c4d2cf; font:12px/1.3 system-ui,sans-serif; }
+.region-neighbors span.current { color:#1e2c33; background:#dfc487; border-color:#f5dfa3; font-weight:700; }
+.region-actions { display:flex; gap:12px; flex-wrap:wrap; justify-content:center; margin:22px 0; }
+@media(max-width:680px) {
+  .map-section-heading { align-items:flex-start; flex-direction:column; }
+  .region-legend { grid-template-columns:1fr; }
+  .region-actions { justify-content:flex-start; }
+}
