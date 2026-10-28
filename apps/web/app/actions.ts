@@ -338,7 +338,8 @@ export async function publishMarketplaceOffer(form:FormData){
   const duration=marketInteger(form.get("durationSeconds"),604800);
   if(!marketUuid(cityId)||!marketUuid(orderId)||!marketResource(resource)||
      !marketResource(priceResource)||resource===priceResource||
-     quantity===null||price===null||duration===null||duration<60)redirect("/");
+     quantity===null||price===null||duration===null||duration<60)
+    redirect(marketUuid(cityId)?"/cities/"+cityId+"/market?offer=invalid#marketplace":"/");
   const result=await marketPost("/api/v1/me/cities/"+cityId+"/market/offers",{
     order_id:orderId,resource,quantity,price_resource:priceResource,
     price_amount:price,duration_seconds:duration,
@@ -354,7 +355,8 @@ export async function buyMarketplaceOffer(form:FormData){
   const price=marketInteger(form.get("priceAmount"),1000000);
   if(!marketUuid(cityId)||!marketUuid(offerId)||!marketUuid(orderId)||
      !marketResource(resource)||!marketResource(priceResource)||
-     resource===priceResource||quantity===null||price===null)redirect("/");
+     resource===priceResource||quantity===null||price===null)
+    redirect(marketUuid(cityId)?"/cities/"+cityId+"/market?offer=invalid#marketplace":"/");
   const result=await marketPost(
     "/api/v1/me/cities/"+cityId+"/market/offers/"+offerId+"/buy",
     {order_id:orderId,expected_resource:resource,expected_quantity:quantity,

@@ -47,6 +47,9 @@ export function MarketplacePanel({cityId,catalog,stocks,notice}:{
     {notice==="stored"&&<p className="construction-notice" role="status">
       Offre retirée mais stocks pleins : le lot demeure protégé en entrepôt.
       Vous pourrez le récupérer dès que suffisamment d'espace sera libre.</p>}
+    {notice==="invalid"&&<p className="error" role="alert">
+      Offre invalide : choisissez deux ressources distinctes et des montants
+      positifs conformes à la politique du monde.</p>}
     {notice==="conflict"&&<p className="error" role="alert">
       Opération refusée : lot expiré, stock insuffisant, entrepôt saturé,
       conditions modifiées ou offre déjà clôturée. Actualisez les offres.</p>}
