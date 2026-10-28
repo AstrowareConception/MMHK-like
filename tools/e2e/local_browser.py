@@ -152,6 +152,30 @@ def main() -> int:
                 ":has(input[name='mode'][value='rapid'])"
             )
             expect(tier_one.get_by_role("button", name="Lancer ce chantier")).to_be_enabled()
+            # Build the first actual dwelling: no pre-existing units are fabricated.
+            tier_one.get_by_role("button", name="Lancer ce chantier").click()
+            expect(page.get_by_text("Chantier enregistré et ressources payées.")).to_be_visible(timeout=20000)
+            next_ready = page.get_by_text("recruit_t1 niveau 1", exact=False)
+            deadline = time.monotonic() + 125
+            while time.monotonic() < deadline:
+                if next_ready.count() and next_ready.first.is_visible():
+                    break
+                page.wait_for_timeout(2500)
+            expect(next_ready.first).to_be_visible(timeout=5000)
+            # Recruit units and transfer a subset to the starting hero.
+            militia = page.locator("form.unit-recruit-offer:has(input[name='unitCode'][value='militia'])")
+            expect(militia.get_by_role("button", name="Recruter")).to_be_enabled()
+            militia.locator('input[name="quantity"]').fill("3")
+            militia.get_by_role("button", name="Recruter").click()
+            expect(page.get_by_text("Recrutement confirmé.", exact=False)).to_be_visible(timeout=20000)
+            expect(page.get_by_text("3 soldats", exact=False)).to_be_visible()
+            page.locator(".hero-transfer-box summary").click()
+            transfer = page.locator('form.hero-transfer-row:has(input[name="direction"][value="to_hero"])').first
+            transfer.locator('input[name="quantity"]').fill("2")
+            transfer.get_by_role("button", name="Affecter").click()
+            expect(page.get_by_text("Transfert confirmé", exact=False)).to_be_visible(timeout=20000)
+            expect(page.get_by_text("Miliciens du Havre : 2")).to_be_visible()
+
 
             # The user can navigate back and log out via the real server action.
             page.get_by_role("link", name="Carte du monde").click()
