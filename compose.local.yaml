@@ -95,7 +95,9 @@ services:
       timeout: 8s
       retries: 5
       start_period: 30s
-    networks: [backend]
+    # Separate port-publishing bridge. PostgreSQL/API/Redis/worker
+    # only connect to internal backend; only web can reach the host bridge.
+    networks: [backend, edge]
     restart: unless-stopped
     read_only: true
     tmpfs:
@@ -133,6 +135,8 @@ networks:
   backend:
     driver: bridge
     internal: true
+  edge:
+    driver: bridge
 
 volumes:
   postgres_data:
