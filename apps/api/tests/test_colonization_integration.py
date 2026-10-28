@@ -225,3 +225,122 @@ def test_cap_includes_inflight_and_hero_is_busy_while_colonizing(colony):
         )
     assert send(colony,order(colony,x=1,y=2,hero=hero)).status_code==409
     assert stock(colony["source"])==180
+
+
+def test_lost_site_after_departure_blocks_escrow_and_refunds_exactly_once(colony):
+    unlocked(colony)
+    first=send(colony)
+    assert first.status_code==201,first.text
+    receipt=first.json()
+    due=datetime.fromisoformat(receipt["due_at"])
+    with psycopg.connect(URL) as db:
+        db.execute(
+            "DELETE FROM colonization_site_profiles WHERE world_id=%s AND x=2 AND y=1",
+            (colony["world"],),
+        )
+    blocked=advance(due)
+    assert blocked==[{"order_id":receipt["order_id"],"phase":"blocked",
+                       "reason":"founding_site_or_rights_changed"}]
+    assert stock(colony["source"])==180
+    assert advance(due+timedelta(days=1))==[]
+    with psycopg.connect(URL) as db:
+        assert db.execute("SELECT status FROM city_heroes WHERE hero_id=%s",
+                          (colony["hero"],)).fetchone()==("idle",)
+    uri=route(colony)+"/"+receipt["order_id"]+"/reclaim"
+    h=headers(colony["username"])
+    key=str(uuid4())
+    refund=client.post(uri,headers=h,json={"refund_order_id":key})
+    assert refund.status_code==201,refund.text
+    assert refund.json()["applied_refund"]==COSTS
+    replay=client.post(uri,headers=h,json={"refund_order_id":key})
+    assert replay.status_code==200 and replay.json()["replayed"] is True
+    assert stock(colony["source"])==200
+    assert client.post(uri,headers=h,json={
+        "refund_order_id":str(uuid4()),
+    }).status_code==409
+    assert client.post(uri,headers=headers(colony["other_username"]),
+                       json={"refund_order_id":str(uuid4())}).status_code==404
+
+
+def test_refund_waits_without_overflowing_source_warehouse(colony):
+    unlocked(colony)
+    receipt=send(colony).json()
+    with psycopg.connect(URL) as db:
+        db.execute(
+            "DELETE FROM colonization_site_profiles WHERE world_id=%s AND x=2 AND y=1",
+            (colony["world"],),
+        )
+        db.execute(
+            """UPDATE city_stocks SET capacity=180
+               WHERE city_id=%s AND resource='gold'""",
+            (colony["source"],),
+        )
+    assert advance(datetime.fromisoformat(receipt["due_at"]))[0]["phase"]=="blocked"
+    uri=route(colony)+"/"+receipt["order_id"]+"/reclaim"
+    h=headers(colony["username"])
+    blocked=client.post(uri,headers=h,json={"refund_order_id":str(uuid4())})
+    assert blocked.status_code==409,blocked.text
+    assert stock(colony["source"])==180
+    with psycopg.connect(URL) as db:
+        db.execute(
+            "UPDATE city_stocks SET capacity=200 WHERE city_id=%s AND resource='gold'",
+            (colony["source"],),
+        )
+    recovery=client.post(uri,headers=h,json={"refund_order_id":str(uuid4())})
+    assert recovery.status_code==201,recovery.text
+    assert stock(colony["source"])==200
+
+
+def test_second_city_immediately_appears_in_world_and_caravan_destinations(colony):
+    unlocked(colony)
+    h=headers(colony["username"])
+    pending=send(colony).json()
+    completed=advance(datetime.fromisoformat(pending["due_at"]))
+    destination=completed[0]["city_id"]
+    world=client.get(f"/api/v1/me/worlds/{colony['world']}/overview",
+                     headers=h)
+    assert world.status_code==200,world.text
+    assert len(world.json()["cities"])==2
+    assert {c["first_city"] for c in world.json()["cities"]}=={True,False}
+    assert any(c["city_id"]==destination for c in world.json()["cities"])
+    caravans=client.get(f"/api/v1/me/cities/{colony['source']}/caravans",headers=h)
+    assert caravans.status_code==200,caravans.text
+    assert any(c["city_id"]==destination for c in caravans.json()["destinations"])
+    construction=client.get(f"/api/v1/me/cities/{destination}/construction",headers=h)
+    assert construction.status_code==200
+    assert construction.json()["buildings"]==[]
+    assert construction.json()["active"] is None
+    assert client.get(f"/api/v1/me/cities/{destination}",
+                      headers=headers(colony["other_username"])).status_code==404
+
+
+def test_approval_requires_explicit_influence_and_seven_resource_profile(colony):
+    with psycopg.connect(URL) as db:
+        with pytest.raises(ValueError):
+            configure_colonization_policy(
+                db,world_id=colony["world"],policy_id="BAD-COSTS",
+                costs={"gold":20},max_owned_cities=3,max_distance_steps=3,
+                seconds_per_step=10,
+            )
+        with pytest.raises(ValueError):
+            configure_colony_site(
+                db,world_id=colony["world"],x=4,y=4,
+                source_ref="UNKNOWN-PLOT",mines=MINES,
+                rates_per_day=RATES,capacities=CAPS,tick_seconds=60,
+            )
+        with pytest.raises(ValueError):
+            configure_colony_site(
+                db,world_id=colony["world"],x=2,y=1,
+                source_ref="BAD-DUPLICATE-MINES",
+                mines=["gold","gold","ore"],rates_per_day=RATES,
+                capacities=CAPS,tick_seconds=60,
+            )
+
+
+def test_worker_refuses_non_autocommit_and_zero_work_on_future_due(colony):
+    unlocked(colony)
+    due=datetime.fromisoformat(send(colony).json()["due_at"])
+    with psycopg.connect(URL) as db:
+        with pytest.raises(ValueError):
+            run_colonization_batch(db,now_at=due)
+    assert advance(due-timedelta(seconds=1))==[]
