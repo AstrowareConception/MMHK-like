@@ -2,14 +2,16 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { GameShell } from "../../../../components/game-shell/game-shell";
 import { RegionScene } from "../../../../components/region-scene";
-import { privateApi, sessionToken, type RegionView, type CityDetail, type CityForces } from "../../../../lib/server-api";
+import {LiveRefresh} from "../../../../components/live-refresh";
+import { privateApi, sessionToken, type RegionView, type CityDetail, type CityForces, type PveMissionsResponse } from "../../../../lib/server-api";
 
 export const dynamic = "force-dynamic";
 
 export default async function RegionPage({
-  params,
+  params, searchParams,
 }: {
   params: Promise<{ cityId: string }>;
+  searchParams:Promise<{mission?:string}>;
 }) {
   const { cityId } = await params;
   const token = await sessionToken();
@@ -25,9 +27,10 @@ export default async function RegionPage({
       <Link href="/">Retour aux mondes</Link></main>;
   }
   const region = response.data;
-  const [ownCity,forces]=await Promise.all([
+  const [ownCity,forces,missions]=await Promise.all([
     privateApi<CityDetail>("/api/v1/me/cities/"+encodeURIComponent(cityId),token),
-    privateApi<CityForces>("/api/v1/me/cities/"+encodeURIComponent(cityId)+"/forces",token)
+    privateApi<CityForces>("/api/v1/me/cities/"+encodeURIComponent(cityId)+"/forces",token),
+    privateApi<PveMissionsResponse>("/api/v1/me/cities/"+encodeURIComponent(cityId)+"/missions",token)
   ]);
   return (
     <GameShell token={token} title={region.city_name}
@@ -35,7 +38,14 @@ export default async function RegionPage({
       description={"Région ("+region.world_x+", "+region.world_y+") · "+region.world_id}
       worldId={region.world_id} cityId={region.city_id}
       stocks={ownCity.ok?ownCity.data?.stocks:undefined}>
-        <RegionScene region={region} forces={forces.ok?forces.data??null:null}/>
+        <LiveRefresh intervalSeconds={8}/>
+        {(await searchParams).mission&&<p role={(await searchParams).mission==="ok"?"status":"alert"}
+          className={(await searchParams).mission==="ok"?"construction-notice":"error"}>
+          {(await searchParams).mission==="ok"?"Le héros est parti. Son trajet est désormais suivi par le worker.":
+            "Départ refusé : héros occupé, rencontre déjà ciblée ou trajet indisponible."}
+        </p>}
+        <RegionScene region={region} forces={forces.ok?forces.data??null:null}
+          missions={missions.ok?missions.data??null:null}/>
         <div className="region-actions">
           <Link className="scene-action" href={`/cities/${region.city_id}`}>
             Ouvrir la cité {region.city_name}
