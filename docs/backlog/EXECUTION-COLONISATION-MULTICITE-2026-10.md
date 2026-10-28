@@ -76,6 +76,13 @@ configuration de jeu.
   dupliqués.** Les nouvelles cités n'obtiennent pas de bâtiment gratuit,
   de soldats ou d'artéfacts. Elles doivent reconstruire leurs services
   et disposent immédiatement d'une économie locale indépendante.
+- Le profil d'initialisation de cité peut fournir, en laboratoire,
+  une **réserve de recrues disponibles à l'achat** et des **offres payantes
+  de taverne**, figées sur l'ordre de fondation. Ces lignes **ne créent**
+  ni soldats en garnison, ni héros possédés. Les demeures/taverne
+  correspondantes doivent encore être construites. Sans configuration
+  opérateur, ces offres restent absentes : aucun catalogue fictif
+  n'est ajouté silencieusement.
 - Un conflit de territoire, d'occupation ou de droits à l'arrivée
   empêche la création de cité : l'ordre devient \`blocked\`,
   les ressources restent sous séquestre, le héros est libéré.

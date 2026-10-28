@@ -95,7 +95,10 @@ export default async function ColonizePage({params,searchParams}:{
         mine et aucune position d'adversaire ne sont inventés par le navigateur.</p>
       <p>Un héros disponible mène l'expédition et revient ensuite à son point
         de départ. La nouvelle ville possède des stocks et des mines indépendants ;
-        elle ne reçoit aucun bâtiment, soldat ou héros supplémentaire gratuit.</p>
+        elle ne reçoit aucun bâtiment, soldat ou héros supplémentaire gratuit.
+        Selon la configuration du monde, elle peut recevoir un catalogue
+        de recrues à acheter après construction des demeures et des offres
+        payantes de taverne.</p>
     </section>
     <div className="colony-rules">
       <article>
