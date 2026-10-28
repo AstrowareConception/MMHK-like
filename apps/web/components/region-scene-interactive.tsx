@@ -1,6 +1,7 @@
 "use client";
 import {useState,type KeyboardEvent} from "react";
-import type {RegionView} from "../lib/server-api";
+import type {RegionView,CityForces} from "../lib/server-api";
+import {RegionEncounterPanel} from "./region-encounter-panel";
 import {REGION_VIEW,regionCellCenter,regionPolygon,type RegionCell} from "../lib/region-geometry";
 
 const MINE_LABELS:Record<string,string>={gold:"Or",wood:"Bois",ore:"Minerai",crystal:"Cristal",
@@ -12,6 +13,7 @@ export function RegionSceneInteractive({region,background}:{region:RegionView;ba
   const [selected,setSelected]=useState<RegionCell>({i:2,j:2});
   const [showGuide,setShowGuide]=useState(!background);
   const known=region.cells.find(c=>c.i===selected.i&&c.j===selected.j);
+  const currentEncounter=region.encounters?.find(e=>e.i===selected.i&&e.j===selected.j)??null;
   const activate=(cell:RegionCell)=>setSelected({i:cell.i,j:cell.j});
   const key=(e:KeyboardEvent<SVGGElement>,cell:RegionCell)=>{
     if(e.key==="Enter"||e.key===" "){e.preventDefault();activate(cell);}
@@ -38,6 +40,7 @@ export function RegionSceneInteractive({region,background}:{region:RegionView;ba
         <path d="M0 230 L200 100 L400 185 L680 72 L680 562 L0 562Z" fill="#426f56" pointerEvents="none"/>}
       {region.cells.map(cell=>{
         const {x:cx,y:cy}=regionCellCenter(cell.i,cell.j);
+        const encounter=region.encounters?.find(e=>e.i===cell.i&&e.j===cell.j);
         const owned=cell.kind==="owned_city";
         const chosen=cell.i===selected.i&&cell.j===selected.j;
         const hovered=cell.i===hover?.i&&cell.j===hover?.j;
@@ -45,10 +48,10 @@ export function RegionSceneInteractive({region,background}:{region:RegionView;ba
           className="region-selectable-cell"
           role="button" tabIndex={0}
           aria-label={"Sélectionner la case régionale ("+cell.i+", "+cell.j+")"+
-            (owned?" : ville "+region.city_name:" : non cartographiée")}
+            (owned?" : ville "+region.city_name:encounter?" : rencontre "+encounter.name:" : non cartographiée")}
           onMouseEnter={()=>setHover({i:cell.i,j:cell.j})}
           onClick={()=>activate(cell)} onKeyDown={e=>key(e,cell)}>
-          <title>{"Case ("+cell.i+", "+cell.j+") · "+(owned?"Ville du joueur":"Terrain inconnu")}</title>
+          <title>{"Case ("+cell.i+", "+cell.j+") · "+(owned?"Ville du joueur":encounter?"Rencontre : "+encounter.name:"Terrain inconnu")}</title>
           <polygon points={regionPolygon(cell.i,cell.j)}
             data-testid={"region-tile-"+cell.i+"-"+cell.j}
             fill={chosen?"#c79c4f":owned?"#a48b60":"#7da18a"}
@@ -68,7 +71,10 @@ export function RegionSceneInteractive({region,background}:{region:RegionView;ba
             <text x={cx} y={cy+26} textAnchor="middle" fontSize="12"
               fill="#fff3d1" stroke="#172e36" strokeWidth="3" paintOrder="stroke">Ville</text>
           </a>}
-          {!owned&&(hovered||chosen||!background)&&<text x={cx} y={cy+4} textAnchor="middle"
+          {encounter&&<image href={encounter.unit_code==="wolves"?
+            "/themes/public-safe/region-wolf.svg":"/themes/public-safe/region-bandit.svg"}
+            x={cx-25} y={cy-48} width="50" height="50" pointerEvents="none"/>}
+          {!owned&&!encounter&&(hovered||chosen||!background)&&<text x={cx} y={cy+4} textAnchor="middle"
             fill="#fff3cf" fontSize="12" pointerEvents="none">?</text>}
         </g>;
       })}
@@ -80,9 +86,11 @@ export function RegionSceneInteractive({region,background}:{region:RegionView;ba
     <div className="region-selected-details" role="status">
       <strong>{"Case sélectionnée "+cellLabel(selected)}</strong>
       <span>{known?.kind==="owned_city"?"Cité du joueur : "+region.city_name:
+        currentEncounter?"Rencontre : "+currentEncounter.name+" · "+currentEncounter.unit_count+" créatures":
         "Terrain, forêt, mine, site ou PNJ : non cartographié"}</span>
       {known?.kind==="owned_city"&&<a href={"/cities/"+region.city_id}>Entrer dans la cité</a>}
     </div>
+    <RegionEncounterPanel encounter={currentEncounter} forces={forces} cityId={region.city_id}/>
     <div className="region-legend">
       <div><strong>Mines rattachées à cette cité</strong>
         <p>{region.mine_types_unlocated.map(k=>MINE_LABELS[k]??k).join(" · ")||"Aucune mine enregistrée"}</p>

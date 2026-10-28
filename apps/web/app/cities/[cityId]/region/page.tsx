@@ -2,7 +2,7 @@ import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { GameShell } from "../../../../components/game-shell/game-shell";
 import { RegionScene } from "../../../../components/region-scene";
-import { privateApi, sessionToken, type RegionView, type CityDetail } from "../../../../lib/server-api";
+import { privateApi, sessionToken, type RegionView, type CityDetail, type CityForces } from "../../../../lib/server-api";
 
 export const dynamic = "force-dynamic";
 
@@ -25,14 +25,17 @@ export default async function RegionPage({
       <Link href="/">Retour aux mondes</Link></main>;
   }
   const region = response.data;
-  const ownCity=await privateApi<CityDetail>("/api/v1/me/cities/"+encodeURIComponent(cityId),token);
+  const [ownCity,forces]=await Promise.all([
+    privateApi<CityDetail>("/api/v1/me/cities/"+encodeURIComponent(cityId),token),
+    privateApi<CityForces>("/api/v1/me/cities/"+encodeURIComponent(cityId)+"/forces",token)
+  ]);
   return (
     <GameShell token={token} title={region.city_name}
       eyebrow="ROYAUME · VUE RÉGIONALE"
       description={"Région ("+region.world_x+", "+region.world_y+") · "+region.world_id}
       worldId={region.world_id} cityId={region.city_id}
       stocks={ownCity.ok?ownCity.data?.stocks:undefined}>
-        <RegionScene region={region}/>
+        <RegionScene region={region} forces={forces.ok?forces.data??null:null}/>
         <div className="region-actions">
           <Link className="scene-action" href={`/cities/${region.city_id}`}>
             Ouvrir la cité {region.city_name}
