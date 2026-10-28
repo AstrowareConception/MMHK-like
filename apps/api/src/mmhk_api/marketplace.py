@@ -14,7 +14,7 @@ from psycopg.types.json import Jsonb
 
 from .building_effects import resolve_city_effects
 from .worlds import RESOURCE_NAMES
-from .merchant import _city_world
+from .merchant import _city_world, MerchantNotFound
 
 MAX_AMOUNT=1_000_000
 BIGINT=2**63-1
@@ -27,6 +27,16 @@ class MarketplaceNotFound(Exception):
 
 class MarketplaceConflict(Exception):
     """A market command is unauthorized in the current economic state."""
+
+
+def _authorized_world(db: psycopg.Connection, *, owner: UUID, city_id: UUID) -> str:
+    """Convert the shared city authorization failure into the marketplace API's
+    documented 404 rather than exposing a 500 or a foreign city's existence.
+    """
+    try:
+        return _city_world(db,owner=owner,city_id=city_id)
+    except MerchantNotFound as exc:
+        raise MarketplaceNotFound from exc
 
 
 def _positive(value: int, *, max_value: int = MAX_AMOUNT) -> bool:
@@ -199,7 +209,7 @@ def _offer_view(row: tuple, *, now, own: bool = False) -> dict:
 
 
 def offers_for_city(db: psycopg.Connection, *, owner: UUID, city_id: UUID) -> dict:
-    world_id=_city_world(db,owner=owner,city_id=city_id)
+    world_id=_authorized_world(db,owner=owner,city_id=city_id)
     active=_active_market(db,city_id) is not None
     policy=_policy(db,world_id) if active else None
     now=db.execute("SELECT clock_timestamp()").fetchone()[0]
@@ -241,7 +251,7 @@ def publish_offer(db: psycopg.Connection, *, owner: UUID, city_id: UUID,
             "price_resource":price_resource,"price_amount":price_amount,
             "duration_seconds":duration_seconds}
     with db.transaction():
-        world_id=_city_world(db,owner=owner,city_id=city_id)
+        world_id=_authorized_world(db,owner=owner,city_id=city_id)
         _lock_intent(db,order_id)
         replay=_replay(db,order_id=order_id,actor=owner,city_id=city_id,
                        action="publish",intent=intent)
@@ -302,7 +312,7 @@ def buy_offer(db: psycopg.Connection, *, owner: UUID, city_id: UUID,
             "quantity":expected_quantity,"price_resource":expected_price_resource,
             "price_amount":expected_price_amount}
     with db.transaction():
-        world_id=_city_world(db,owner=owner,city_id=city_id)
+        world_id=_authorized_world(db,owner=owner,city_id=city_id)
         _lock_intent(db,order_id)
         replay=_replay(db,order_id=order_id,actor=owner,city_id=city_id,
                        action="buy",intent=intent)
@@ -398,7 +408,7 @@ def withdraw_offer(db: psycopg.Connection, *, owner: UUID, city_id: UUID,
     """
     intent={"offer_id":str(offer_id)}
     with db.transaction():
-        world_id=_city_world(db,owner=owner,city_id=city_id)
+        world_id=_authorized_world(db,owner=owner,city_id=city_id)
         _lock_intent(db,order_id)
         replay=_replay(db,order_id=order_id,actor=owner,city_id=city_id,
                        action="withdraw",intent=intent)
