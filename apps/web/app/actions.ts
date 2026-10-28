@@ -108,3 +108,45 @@ export async function startUrbanConstruction(data: FormData) {
   if (status === 409) redirect(`${path}?build=conflict`);
   redirect(`${path}?build=unavailable`);
 }
+
+
+/** Real city orders: prices and inventory are never taken from the browser. */
+export async function recruitCityUnits(data:FormData) {
+  const cityId=data.get("cityId"),unitCode=data.get("unitCode"),raw=data.get("quantity");
+  if(typeof cityId!=="string"||!/^[0-9a-f-]{36}$/i.test(cityId)||
+     typeof unitCode!=="string"||!/^[a-z][a-z0-9_]{1,47}$/.test(unitCode)||
+     typeof raw!=="string"||!/^\d{1,4}$/.test(raw))redirect("/");
+  const quantity=Number(raw);
+  if(!Number.isInteger(quantity)||quantity<1||quantity>1000)redirect("/cities/"+cityId+"?recruit=conflict#military-panel");
+  const token=(await cookies()).get("mmhk_session")?.value;
+  if(!token)redirect("/");
+  let status=503;
+  try {
+    const response=await fetch(apiUrl("/api/v1/me/cities/"+cityId+"/recruit"),{
+      method:"POST",headers:{"Authorization":"Bearer "+token,"Content-Type":"application/json"},
+      cache:"no-store",signal:AbortSignal.timeout(6000),
+      body:JSON.stringify({order_id:randomUUID(),unit_code:unitCode,quantity}),
+    });
+    status=response.status;
+  }catch {/* server down: show an explicit error without retrying a non-idempotent order */}
+  if(status===401)redirect("/");
+  redirect("/cities/"+cityId+"?recruit="+(status===200||status===201?"ok":status===409?"conflict":"unavailable")+"#military-panel");
+}
+export async function hireCityHero(data:FormData) {
+  const cityId=data.get("cityId"),offerId=data.get("offerId");
+  if(typeof cityId!=="string"||!/^[0-9a-f-]{36}$/i.test(cityId)||
+    typeof offerId!=="string"||!/^[0-9a-f-]{36}$/i.test(offerId))redirect("/");
+  const token=(await cookies()).get("mmhk_session")?.value;
+  if(!token)redirect("/");
+  let status=503;
+  try {
+    const response=await fetch(apiUrl("/api/v1/me/cities/"+cityId+"/heroes/hire"),{
+      method:"POST",headers:{"Authorization":"Bearer "+token,"Content-Type":"application/json"},
+      cache:"no-store",signal:AbortSignal.timeout(6000),
+      body:JSON.stringify({order_id:randomUUID(),offer_id:offerId}),
+    });
+    status=response.status;
+  }catch {/* Do not automatically retry an order without preserving its UUID. */}
+  if(status===401)redirect("/");
+  redirect("/cities/"+cityId+"?hero="+(status===200||status===201?"ok":status===409?"conflict":"unavailable")+"#military-panel");
+}
