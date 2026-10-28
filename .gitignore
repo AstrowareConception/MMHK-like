@@ -24,3 +24,8 @@ apps/web/.turbo/
 !.env.example
 apps/api/.coverage
 apps/web/.env.local
+
+# Local one-command full stack: secrets and snapshots remain private
+.env.local
+!.env.local.example
+/backups/

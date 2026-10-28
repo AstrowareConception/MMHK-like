@@ -11,6 +11,10 @@ on:
       - 'compose.preview.yaml'
       - '.dockerignore'
       - 'tools/ci/check_private_preview.py'
+      - 'compose.local.yaml'
+      - '.env.local.example'
+      - 'tools/local/**'
+      - 'tools/ci/check_local_stack.py'
   pull_request:
     paths:
       - 'apps/**'
@@ -22,6 +26,10 @@ on:
       - 'compose.preview.yaml'
       - '.dockerignore'
       - 'tools/ci/check_private_preview.py'
+      - 'compose.local.yaml'
+      - '.env.local.example'
+      - 'tools/local/**'
+      - 'tools/ci/check_local_stack.py'
   workflow_dispatch:
 permissions:
   contents: read
@@ -116,3 +124,71 @@ jobs:
       - name: Remove disposable CI preview database and containers
         if: always()
         run: docker compose -f compose.preview.yaml down --volumes --remove-orphans
+
+  local-six-service-smoke:
+    name: Build and start six-service localhost stack with a real demo
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - name: Assert local-only network and automatic migrations
+        run: python3 tools/ci/check_local_stack.py
+      - name: Start all local services with generated ephemeral secrets
+        run: python3 tools/local/stack.py up
+      - name: Verify worker health and all services
+        run: |
+          docker compose --env-file .env.local -f compose.local.yaml ps --all
+          docker compose --env-file .env.local -f compose.local.yaml exec -T worker \
+            python -m mmhk_api.supervised_worker --check-health
+      - name: Provision experimental playable sandbox and verify authenticated HTTP
+        run: |
+          output="$(python3 tools/local/stack.py demo --username demo_ci)"
+          password="$(printf '%s\n' "$output" | sed -n 's/^One-time generated password: //p')"
+          test ${#password} -ge 16
+          docker compose --env-file .env.local -f compose.local.yaml exec -T \
+            -e "MMHK_CI_DEMO_PASSWORD=$password" api python - <<'PY'
+          import json, os, urllib.request
+          def request(path, token=None, payload=None):
+              headers={"Content-Type":"application/json"}
+              if token:
+                  headers["Authorization"]="Bearer "+token
+              data=json.dumps(payload).encode() if payload is not None else None
+              result=urllib.request.urlopen(
+                  urllib.request.Request(
+                      "http://127.0.0.1:8000"+path,
+                      data=data,headers=headers,method="POST" if data else "GET",
+                  ),timeout=8)
+              return json.load(result)
+          authenticated=request("/api/v1/sessions",payload={
+              "username":"demo_ci",
+              "password":os.environ["MMHK_CI_DEMO_PASSWORD"],
+          })
+          token=authenticated["access_token"]
+          worlds=request("/api/v1/me/worlds",token)
+          assert len(worlds)==1 and worlds[0]["world_id"]=="local-sandbox",worlds
+          cities=request("/api/v1/me/worlds/local-sandbox/cities",token)
+          assert len(cities)==1,cities
+          city=request("/api/v1/me/cities/"+cities[0]["city_id"],token)
+          assert city["stocks"]["gold"]>=120,city
+          assert city["production_active"] is True,city
+          catalog=request("/api/v1/me/cities/"+cities[0]["city_id"]+"/construction",token)
+          assert any(row["building_code"]=="village_hall" for row in catalog["options"]),catalog
+          print("Authenticated local sandbox OK: world, resources, production, construction")
+          PY
+          curl --fail --silent --show-error http://127.0.0.1:3000/ | grep -q 'API FastAPI joignable'
+          echo "Browser-to-API and sandbox login verified"
+      - name: Verify local PostgreSQL backup is readable
+        run: |
+          python3 tools/local/stack.py backup
+          file="$(find backups -maxdepth 1 -type f -name 'mmhk-local-*.dump' -print -quit)"
+          test -s "$file"
+          docker compose --env-file .env.local -f compose.local.yaml exec -T \
+            postgres pg_restore --list < "$file" > /dev/null
+          echo "Local pg_dump backup archive verified"
+      - name: Stop disposable stack and destroy its CI volume
+        if: always()
+        run: |
+          if [ -f .env.local ]; then
+            docker compose --env-file .env.local -f compose.local.yaml down -v --remove-orphans
+            rm -f .env.local
+          fi
