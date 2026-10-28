@@ -2,6 +2,53 @@
 
 **Objectif : reconstruire le fonctionnement de Might & Magic Heroes Kingdoms avant de développer son successeur jouable par navigateur.** Le présent dépôt contient un référentiel de gameplay, des spécifications fonctionnelles, des données historiques extraites et un plan de validation. Il inclut désormais un **prototype local interactif** sous FastAPI/Next.js : connexion, navigation monde → région → ville, production de ressources, construction et bonus de bâtiments. Le combat PvP et les mécaniques historiques complètes ne sont pas encore intégrés au jeu navigateur.
 
+## Installer et lancer le prototype sur son ordinateur portable
+
+**Prérequis :** Git, Python 3.10 ou plus et Docker Desktop **déjà démarré**
+(Windows ou macOS), ou Docker Engine + Compose v2 sous Linux. Docker
+doit disposer d'environ **4 Go de RAM disponibles** ; le port local
+**3000** doit être libre. Aucun Node.js ni PostgreSQL local à installer.
+
+Depuis un terminal, clonez le dépôt :
+
+```bash
+git clone https://github.com/AstrowareConception/MMHK-like.git
+cd MMHK-like
+```
+
+- **Windows** (PowerShell ou terminal de Windows) :
+  ```powershell
+  .\demarrer.bat
+  ```
+  Double-cliquer sur `demarrer.bat` dans l'Explorateur fonctionne aussi.
+  La fenêtre reste ouverte pour conserver le mot de passe initial.
+- **macOS / Linux** :
+  ```bash
+  sh demarrer.sh
+  ```
+
+Le lanceur contrôle les prérequis, crée les secrets locaux, construit
+et démarre les **six services Docker**, applique les migrations, puis
+crée le compte `joueurdemo` et le monde `local-sandbox` **uniquement
+s'ils n'existent pas déjà**. Il affiche une seule fois le mot de passe
+aléatoire du compte et ouvre `http://localhost:3000` dans le navigateur.
+**Sauvegardez le mot de passe : les démarrages suivants ne le réinitialisent pas.**
+
+Pour relancer une installation existante, répétez exactement la même
+commande ; les ressources, bâtiments et données PostgreSQL sont conservés.
+Pour désactiver l'ouverture automatique du navigateur, ajoutez
+`--no-browser`. Pour éviter la reconstruction des images Docker :
+`--no-build` (seulement si les images sont déjà présentes).
+
+En cas de diagnostic : `python tools/local/stack.py ps` ou
+`python tools/local/stack.py logs`. Pour arrêter les conteneurs sans
+effacer la partie : `python tools/local/stack.py stop`.
+
+**Attention :** `reset --yes-delete-local-data` efface définitivement
+les données locales ; ne l'utilisez pas pour simplement relancer le jeu.
+Le prototype demeure **local et expérimental**, sans jeu PvP public
+ni déploiement sur le VPS.
+
 ## Démarrer la version locale complète avec Docker
 
 Le prototype applicatif s'exécute désormais avec **PostgreSQL, Redis,
