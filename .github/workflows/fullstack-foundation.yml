@@ -38,6 +38,7 @@ jobs:
     env:
       MMHK_DATABASE_URL: postgresql://mmhk:mmhk_ci_only@localhost:5432/mmhk_test
       MMHK_TEST_DATABASE_URL: postgresql://mmhk:mmhk_ci_only@localhost:5432/mmhk_test
+      MMHK_LOGIN_RATE_KEY: this-is-a-ci-only-random-like-32-character-test-secret-123
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
