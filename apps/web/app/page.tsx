@@ -92,7 +92,7 @@ export default async function Home({
           </>
         )}
         <p className="notice">Version de développement : monde et ressources
-          persistants, sans production économique active, combat PvP ni inscription
+          persistants, avec production économique expérimentale en local, sans combat PvP ni inscription
           publique. Moteur Jactari conservé comme référence historique.</p>
       </section>
       <footer>MMHK-like · Saison 2 recherchée · Prototype expérimental</footer>
