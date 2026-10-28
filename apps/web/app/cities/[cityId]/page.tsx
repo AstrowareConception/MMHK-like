@@ -54,6 +54,7 @@ export default async function CityPage({
         <nav className="city-shortcuts" aria-label="Accès rapide à la cité">
           <a href="#city-scene">Panorama</a><a href="#city-resources">Ressources</a>
           <a href="#urban-construction">Chantiers</a><a href="#city-history">Historique</a>
+          <Link href={`/cities/${cityId}/market`}>Marché</Link>
           <Link href={`/cities/${cityId}/heroes`}>Héros et artefacts</Link>
           <Link href={`/cities/${cityId}/forces`}>Armée et recrutements</Link>
         </nav>
@@ -77,6 +78,12 @@ export default async function CityPage({
           ))}
         </div>
         <div className="city-module-cards" aria-label="Gestion du royaume">
+          <Link href={`/cities/${cityId}/market`} className="city-module-card">
+            <span aria-hidden="true" className="city-module-icon">⚖</span>
+            <span><strong>Marché et échanges</strong>
+              <small>Marchand, devis, transactions et futur comptoir de caravanes</small></span>
+            <span aria-hidden="true">›</span>
+          </Link>
           <Link href={`/cities/${cityId}/heroes`} className="city-module-card">
             <span aria-hidden="true" className="city-module-icon">♞</span>
             <span><strong>Héros et artefacts</strong>

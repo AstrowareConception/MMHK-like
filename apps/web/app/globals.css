@@ -642,3 +642,60 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
 .construction-history-entry strong{color:#f0dbb0;}
 .construction-history-entry small{grid-column:1/-1;color:#bfcbc5;font:11px/1.55 system-ui,sans-serif;}
 @media(max-width:760px){.city-inspector-quotes{grid-template-columns:1fr;}}
+
+
+/* US-ECH-001/002/003: separate merchant, auctions and caravans. */
+.market-headline{display:flex;align-items:start;justify-content:space-between;
+  gap:18px;margin:3px 0 20px;flex-wrap:wrap;}
+.market-headline h2{font:small-caps clamp(27px,4vw,36px) Georgia,serif;
+  margin:4px 0 9px;color:#eed9aa;}
+.market-headline p{max-width:640px;color:#c7cfc5;font:13px/1.7 Georgia,serif;}
+.market-service-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;}
+.market-service{padding:16px;border:2px ridge #ac9265;
+  background:linear-gradient(145deg,#284048,#122832);min-height:190px;}
+.market-service>span{display:block;font-size:27px;color:#edcc82;}
+.market-service h3{font:small-caps 23px Georgia,serif;color:#e9d7aa;margin:5px 0;}
+.market-service strong{display:block;color:#d2ba88;font:700 12px system-ui,sans-serif;}
+.market-service p{color:#c7ceca;font:12px/1.6 system-ui,sans-serif;}
+.market-service.locked{border-color:#706b5a;background:#18272e;opacity:.85;}
+.market-locked,.merchant-offers,.merchant-quote,.merchant-ledger{border:1px solid #a18c65;
+  background:linear-gradient(140deg,#223841,#112630);padding:16px 18px;margin:18px 0;}
+.market-locked h3,.merchant-offers h3,.merchant-quote h3,.merchant-ledger h3{
+  font:small-caps 25px Georgia,serif;color:#eed8a7;margin:0 0 10px;}
+.market-locked p,.merchant-offers p,.merchant-quote p,.merchant-ledger p{
+  color:#c4cdc9;font:12px/1.7 system-ui,sans-serif;}
+.market-locked a{color:#f2dca7;}
+.market-disclaimer{color:#b6c4c3!important;font-size:11px!important;}
+.merchant-rate-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
+.merchant-rate{display:flex;flex-direction:column;gap:9px;
+  padding:15px;background:#152b34;border:1px solid #99855b;}
+.merchant-rate strong{color:#eed8a8;font:small-caps 20px Georgia,serif;}
+.merchant-rate small{font:11px/1.6 system-ui,sans-serif;color:#b8c3bf;}
+.merchant-rate label{display:grid;gap:6px;color:#e5d3b0;font:12px Georgia,serif;}
+.merchant-rate input{max-width:240px;background:#11242e;color:#eddfbb;
+  border:1px solid #b29a69;padding:9px;}
+.merchant-rate button{align-self:start;min-height:37px;}
+.merchant-quote{border:2px ridge #dbb879;scroll-margin-top:18px;}
+.merchant-quote-figures{display:flex;justify-content:space-between;gap:15px;
+  align-items:center;flex-wrap:wrap;margin:12px 0;}
+.merchant-quote-figures>div{flex:1;min-width:170px;padding:13px;
+  border:1px solid #ad9567;background:#102832;}
+.merchant-quote-figures>div span,.merchant-quote-figures>div small{
+  display:block;color:#c2c7c0;font:11px/1.5 system-ui,sans-serif;}
+.merchant-quote-figures strong{display:block;font:small-caps 23px Georgia,serif;
+  color:#f2dea9;margin:5px 0;}
+.merchant-quote-figures>span{font:27px Georgia,serif;color:#e1bd78;}
+.merchant-confirm-form button{padding:11px 18px;}
+.merchant-confirm-form button:disabled{opacity:.5;cursor:not-allowed;}
+.merchant-ledger ol{padding:0;list-style:none;display:grid;gap:8px;}
+.merchant-ledger-row{display:grid;grid-template-columns:1fr auto;gap:6px;
+  padding:12px;border:1px solid #806f52;background:#142b34;}
+.merchant-ledger-row strong{color:#ead6ac;font:14px Georgia,serif;}
+.merchant-ledger-row span,.merchant-ledger-row small{color:#bbc8c5;
+  font:11px/1.6 system-ui,sans-serif;}
+.merchant-ledger-row small{grid-column:1/-1;}
+@media(max-width:780px){.market-service-grid{grid-template-columns:1fr;}
+  .merchant-rate-grid{grid-template-columns:1fr;}
+  .market-service{min-height:0;}
+  .merchant-quote-figures>span{display:none;}
+}

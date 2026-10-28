@@ -106,6 +106,8 @@ export function CityBuildingInspector({city,catalog,selectedBuilding}:{
           examiner l'Hôtel de ville</Link>.</p>}
       {["recruit_t1","recruit_t2","tavern"].includes(code)&&
         <p><Link href={"/cities/"+city.city_id+"/forces"}>Accéder à la garnison et à la taverne</Link></p>}
+      {code==="marketplace"&&
+        <p><Link href={"/cities/"+city.city_id+"/market"}>Entrer dans le marché</Link></p>}
       {records.length>0&&<div className="city-inspector-past">
         <h4>Derniers travaux sur cet édifice</h4>
         <ul>{records.map(order=><li key={order.order_id}>
