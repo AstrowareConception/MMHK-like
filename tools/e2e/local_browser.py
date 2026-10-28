@@ -208,6 +208,7 @@ def main() -> int:
             # Real two-legged journey is controlled by the worker, not the UI.
             page.get_by_role("button", name="Lancer la marche et préparer le retour").click()
             expect(page.get_by_text("Le héros est parti. Son trajet est désormais suivi par le worker.")).to_be_visible(timeout=20000)
+            expect(page.get_by_test_id("region-selection")).to_have_text("(1, 3)")
             expect(page.locator(".region-mission-map [data-mission-stage='outbound']")).to_have_count(1)
             expect(page.get_by_text("En marche vers", exact=False)).to_be_visible()
             expect(page.get_by_text("Aller", exact=False)).to_be_visible()
