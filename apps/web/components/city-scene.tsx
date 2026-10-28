@@ -95,7 +95,7 @@ export function CityScene({city,catalog}:{city:CityDetail;catalog?:ConstructionC
   const unmapped=buildings.filter(b=>!SPOTS.some(p=>p.code===b.building_code));
   const unlocked=points.filter(p=>p.done?.active).length;
   const available=points.filter(p=>p.option?.available&&!p.done).length;
-  return <section className="city-scene-section" aria-labelledby="city-scene-heading">
+  return <section className="city-scene-section" id="city-scene" aria-labelledby="city-scene-heading">
     <div className="city-scene-header">
       <div><span className="eyebrow">CITÉ DU HAVRE · PANORAMA</span>
         <h2 id="city-scene-heading">{city.name}</h2>

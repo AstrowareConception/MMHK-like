@@ -405,3 +405,48 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   border:1px solid #9b845b;background:#1a2b33;color:#e3d2ab;font:12px/1.45 Georgia,serif;}
 .haven-scene-key b {color:#e4c483;}
 @media(max-width:600px){.haven-scene-key{font-size:10px;gap:4px 10px;}}
+
+
+/* Heroes and recruitments — a compact town-management interface. */
+.city-shortcuts {display:flex;flex-wrap:wrap;gap:7px;margin-bottom:17px;}
+.city-shortcuts a {padding:9px 13px;font:700 12px Georgia,serif;color:#e9d6ab;
+  text-decoration:none;background:linear-gradient(#3b5258,#203039);border:1px solid #a99768;}
+.city-shortcuts a:hover,.city-shortcuts a:focus-visible {background:#475f64;border-color:#eacb81;}
+.military-panel {margin-top:27px;padding:23px 0;border-top:2px solid #a79266;}
+.military-panel-heading {display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:17px;}
+.military-panel-heading h2 {margin:2px 0 5px;font:small-caps 31px Georgia,serif;color:#f4dfb1;}
+.military-panel-heading p {margin:0;font:13px Georgia,serif;color:#c9c8ba;}
+.military-side-tag {font:700 11px Georgia,serif;letter-spacing:.06em;color:#d3bd89;}
+.military-columns {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;}
+.military-wing {background:linear-gradient(#1f353c,#162932);border:2px ridge #9b845f;padding:17px;min-width:0;}
+.military-wing h3 {font:small-caps 22px Georgia,serif;color:#e7d19b;border-bottom:1px solid #a9905a80;
+  padding-bottom:8px;display:flex;justify-content:space-between;gap:8px;}
+.military-wing h3 small {font:11px system-ui,sans-serif;color:#d0c7ae;text-transform:none;align-self:center;}
+.hero-roster {display:grid;gap:9px;margin:13px 0;}
+.hero-profile {display:flex;gap:12px;align-items:center;padding:9px;background:#10252c;
+  border:1px solid #9d855d;}
+.hero-portrait {background:radial-gradient(ellipse,#52645e,#233943);border:2px ridge #b8a377;
+  border-radius:4px;width:73px;min-width:73px;height:81px;overflow:hidden;}
+.hero-profile-info {display:grid;gap:5px;min-width:0;}
+.hero-profile-info strong {font:small-caps 20px Georgia,serif;color:#f4ddb0;}
+.hero-profile-info small,.hero-profile-info span {font:12px/1.4 system-ui,sans-serif;color:#becbc9;}
+.hero-offer,.unit-recruit-offer {display:flex;align-items:center;gap:11px;justify-content:space-between;
+  padding:11px;margin-top:8px;background:#132832;border:1px solid #7a785d;}
+.hero-offer>div,.unit-recruit-info {display:grid;gap:5px;}
+.hero-offer strong,.unit-recruit-info strong {color:#ebd9aa;font:600 16px Georgia,serif;}
+.hero-offer small,.unit-recruit-info small,.unit-recruit-info span {color:#b9c6c7;font:12px/1.45 system-ui,sans-serif;}
+.hero-offer button,.unit-recruit-offer button {font:700 12px system-ui,sans-serif;flex:none;}
+.hero-offer button:disabled,.unit-recruit-offer button:disabled {opacity:.5;cursor:not-allowed;}
+.garrison-grid {display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:9px;}
+.garrison-unit {padding:10px;border:1px solid #9b8d6a;background:#12252e;
+  display:grid;gap:4px;color:#c3cdc9;}
+.garrison-unit strong {font:600 15px Georgia,serif;color:#f2ddb0;}
+.garrison-unit span {font:12px system-ui,sans-serif;}
+.unit-emblem {display:grid;place-items:center;width:40px;height:40px;font-size:24px;
+  color:#e3c68c;border:2px ridge #a68c5d;background:radial-gradient(circle,#5b6972,#233942);}
+.unit-recruit-offer label {display:grid;gap:6px;font:12px Georgia,serif;color:#f0d7a6;}
+.unit-recruit-offer input {width:65px;padding:8px;border:1px solid #b8a277;background:#12222c;color:#f6e8c0;}
+.military-muted {font:12px/1.6 system-ui,sans-serif;color:#b8c4bf;}
+@media(max-width:850px){.military-columns{grid-template-columns:1fr;}
+  .military-panel-heading{align-items:flex-start;flex-direction:column;}}
+@media(max-width:550px){.hero-offer,.unit-recruit-offer{flex-wrap:wrap;}}
