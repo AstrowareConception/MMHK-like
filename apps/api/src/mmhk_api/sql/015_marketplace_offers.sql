@@ -40,12 +40,21 @@ CREATE TABLE marketplace_offers (
     REFERENCES marketplace_policies(world_id,policy_id),
   CHECK(resource<>price_resource),
   CHECK(expires_at>created_at),
-  CHECK((status='sold') =
-        (buyer_city_id IS NOT NULL AND purchase_order_id IS NOT NULL AND purchased_at IS NOT NULL)),
-  CHECK((status='sold') = (escrow_claimed_at IS NULL AND closed_at IS NULL)
-        OR status<>'sold'),
-  CHECK(status<>'active' OR (closed_at IS NULL AND escrow_claimed_at IS NULL)),
-  CHECK(status<>'sold' OR (buyer_city_id IS NOT NULL AND purchase_order_id IS NOT NULL))
+  -- A single lifecycle: a lot is either open, delivered once, or
+  -- closed with goods still in escrow / already recovered. No mixed states.
+  CHECK(
+    (status='active' AND buyer_city_id IS NULL AND purchase_order_id IS NULL
+      AND purchased_at IS NULL AND closed_at IS NULL
+      AND escrow_claimed_at IS NULL)
+    OR
+    (status='sold' AND buyer_city_id IS NOT NULL AND purchase_order_id IS NOT NULL
+      AND purchased_at IS NOT NULL AND closed_at IS NULL
+      AND escrow_claimed_at IS NULL)
+    OR
+    (status IN ('cancelled','expired') AND buyer_city_id IS NULL
+      AND purchase_order_id IS NULL AND purchased_at IS NULL
+      AND closed_at IS NOT NULL)
+  )
 );
 CREATE INDEX marketplace_active_offers
   ON marketplace_offers(world_id,expires_at,created_at DESC,offer_id)
