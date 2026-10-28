@@ -374,3 +374,39 @@ export async function withdrawMarketplaceOffer(form:FormData){
   if(result===401)redirect("/");
   redirect("/cities/"+cityId+"/market?offer="+result+"#marketplace");
 }
+
+/** Atomic army composition. All seven positions are validated by FastAPI.
+ * The browser cannot mutate hero_army_units totals.
+ */
+export async function saveHeroFormation(data:FormData){
+  const city=data.get("cityId"),hero=data.get("heroId");
+  const uuid=/^[0-9a-f-]{36}$/i;
+  if(typeof city!=="string"||!uuid.test(city)||
+     typeof hero!=="string"||!uuid.test(hero))redirect("/");
+  const target="/cities/"+city+"/heroes?hero="+hero;
+  const positions:{position:number;unit_code:string;quantity:number}[]=[];
+  for(let i=1;i<=7;i++){
+    const code=data.get("unit-"+i),raw=data.get("quantity-"+i);
+    if(typeof code!=="string")redirect(target+"&formation=invalid");
+    if(!code)continue;
+    if(typeof raw!=="string")redirect(target+"&formation=invalid");
+    if(!/^[a-z][a-z0-9_]{1,47}$/.test(code)||!/^[1-9]\d{0,6}$/.test(raw)||
+       Number(raw)>1000000)redirect(target+"&formation=invalid");
+    positions.push({position:i,unit_code:code,quantity:Number(raw)});
+  }
+  const token=(await cookies()).get("mmhk_session")?.value;
+  if(!token)redirect("/");
+  let status=503;
+  try{
+    const res=await fetch(apiUrl("/api/v1/me/cities/"+city+"/heroes/"+hero+"/formation"),{
+      method:"POST",cache:"no-store",headers:{
+        Authorization:"Bearer "+token,"Content-Type":"application/json"
+      },body:JSON.stringify({order_id:randomUUID(),positions}),
+      signal:AbortSignal.timeout(8000)
+    });
+    status=res.status;
+  }catch {/* Never retry a possibly completed operation without its order ID. */}
+  if(status===401)redirect("/");
+  redirect(target+"&formation="+(status===201||status===200?"ok":
+    status===409?"conflict":"unavailable"));
+}
