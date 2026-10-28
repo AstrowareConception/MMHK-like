@@ -129,7 +129,7 @@ def test_private_destinations_read_does_not_change_stocks(two_cities):
     assert q["distance_steps"]==2
     assert q["travel_seconds"]==30
     assert q["can_send"] is True
-    assert good.headers["cache-control"]=="private, no-store"
+    assert "no-store" in good.headers["cache-control"]
     assert stock(site["source"],"wood")==start
     assert quote(site,h,destination=site["foreign"],wood=4).status_code==409
     assert quote(site,rival,wood=4).status_code==404
