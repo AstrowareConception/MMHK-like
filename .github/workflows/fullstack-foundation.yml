@@ -6,12 +6,16 @@ on:
       - 'tools/jactari-port/core.mjs'
       - 'tools/jactari-port/python-duel-oracle.mjs'
       - '.github/workflows/fullstack-foundation.yml'
+      - 'compose.dev.yaml'
+      - 'compose.workers.yaml'
   pull_request:
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
       - 'tools/jactari-port/python-duel-oracle.mjs'
       - '.github/workflows/fullstack-foundation.yml'
+      - 'compose.dev.yaml'
+      - 'compose.workers.yaml'
   workflow_dispatch:
 permissions:
   contents: read
@@ -46,6 +50,14 @@ jobs:
         run: python -m pip install -e './apps/api[dev]'
       - name: Verify Python Jactari and PostgreSQL world/session isolation
         run: python -m pytest -q apps/api/tests
+      - name: Validate opt-in worker Compose configuration
+        env:
+          MMHK_POSTGRES_PASSWORD: ci_only_password
+        run: docker compose -f compose.dev.yaml -f compose.workers.yaml --profile workers config --quiet
+      - name: Build unprivileged worker container
+        run: docker build -f apps/api/Dockerfile.worker -t mmhk-worker-ci .
+      - name: Verify worker CLI boots without database
+        run: docker run --rm mmhk-worker-ci python -m mmhk_api.supervised_worker --help
 
   next-build:
     name: Next.js production build and strict TypeScript

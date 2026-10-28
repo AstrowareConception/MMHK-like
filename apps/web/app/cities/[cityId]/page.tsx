@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { CityScene } from "../../../components/city-scene";
 import { notFound, redirect } from "next/navigation";
 import { signOut, startUrbanConstruction } from "../../actions";
 import { privateApi, sessionToken, type CityDetail, type ConstructionCatalog } from "../../../lib/server-api";
@@ -53,6 +54,7 @@ export default async function CityPage({
           <Link href={`/worlds/${encodeURIComponent(city.world_id)}`}>Mes villes</Link>
           <form action={signOut}><button type="submit">Déconnexion</button></form>
         </nav>
+        <CityScene city={city} catalog={buildingAnswer.data} />
         <h2>Réserves de la ville</h2>
         <div className="resource-grid">
           {RESOURCES.map(([key, label]) => (
@@ -68,7 +70,7 @@ export default async function CityPage({
             </article>
           ))}
         </div>
-        <div className="construction-panel">
+        <div className="construction-panel" id="urban-construction">
           <span className="eyebrow">CHANTIERS URBAINS · PROFILS EXPÉRIMENTAUX</span>
           <h2>Construire dans la cité</h2>
           {query.build === "started" && (
