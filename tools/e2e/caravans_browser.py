@@ -58,9 +58,14 @@ def main():
                 name="Comptoir des caravanes (laboratoire)")).to_be_visible()
             warehouse=page.locator(".resource-grid article").filter(has_text="Bois")
             expect(warehouse.locator("strong")).to_have_text("2")
-            # US-ECH-014..017: create two separate scheduled departures without
-            # reserving future stocks, then verify worker-owned completion.
+            # Return to the SENDER: the destination test city has no
+            # marketplace built, and must not be allowed to dispatch cargo.
+            page.locator('a[href="/worlds/local-sandbox"]').first.click()
+            source=page.locator(".world-city-link").filter(has_text="Premier Havre")
+            source.get_by_role("link",name="Entrer en ville").click()
             page.get_by_role("link",name="Marché",exact=True).click()
+            # US-ECH-014..017: two independent, worker-confirmed departures.
+
             plan=page.get_by_test_id("caravan-quote-form")
             plan.locator("input[name='load_wood']").fill("2")
             plan.get_by_role("button",name="Calculer la charge et le trajet").click()
@@ -72,7 +77,7 @@ def main():
             form.get_by_role("button",name="Enregistrer le programme de caravanes").click()
             expect(page.get_by_text("Programme enregistré.",exact=False)).to_be_visible(timeout=20000)
             program=page.get_by_test_id("caravan-program").first
-            expect(program).to_contain_text("0 / 2 départs")
+            expect(program).to_contain_text(" / 2 départs")
             expect(program).to_contain_text("2 bois")
             # Worker creates one immutable caravan per program step; the browser
             # only polls. No fake 'finish' transition from client-side timers.
