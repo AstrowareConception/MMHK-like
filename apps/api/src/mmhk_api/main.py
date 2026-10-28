@@ -15,6 +15,7 @@ from .construction import (
 )
 from .map_views import MapNotFound, own_region, world_overview
 from .timeline import timeline_for_player
+from .forces import city_forces, recruit_units, hire_hero, RecruitmentNotFound, RecruitmentConflict
 from .login_limits import (
     RateLimitConfigurationError, reserve_login_attempt, audit_login,
     reset_account_limit_after_login,
@@ -270,6 +271,59 @@ def start_my_city_construction(
     except ConstructionNotFound as exc:
         raise HTTPException(status_code=404, detail="City not found") from exc
     except ConstructionConflict as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+
+# First urban military vertical slice; all costs, pools and hero offers are
+# resolved on the server. No Jactari combat endpoint is activated.
+class UnitRecruitRequest(StrictDTO):
+    order_id: UUID
+    unit_code: str = Field(pattern=r"^[a-z][a-z0-9_]{1,47}$")
+    quantity: int = Field(ge=1, le=1000)
+
+
+class HeroHireRequest(StrictDTO):
+    order_id: UUID
+    offer_id: UUID
+
+
+@app.get("/api/v1/me/cities/{city_id}/forces")
+def my_city_forces(city_id: UUID, db: _db, player: _player) -> dict:
+    try:
+        return city_forces(db, owner=player, city_id=city_id)
+    except RecruitmentNotFound as exc:
+        raise HTTPException(status_code=404, detail="City not found") from exc
+
+
+@app.post("/api/v1/me/cities/{city_id}/recruit", status_code=201)
+def my_city_recruit(city_id: UUID, data: UnitRecruitRequest, db: _db,
+                    player: _player, response: Response) -> dict:
+    response.headers["Cache-Control"] = "no-store"
+    try:
+        receipt = recruit_units(db, owner=player, city_id=city_id,
+            order_id=data.order_id, unit_code=data.unit_code, quantity=data.quantity)
+        if receipt["replayed"]:
+            response.status_code = 200
+        return receipt
+    except RecruitmentNotFound as exc:
+        raise HTTPException(status_code=404, detail="City not found") from exc
+    except RecruitmentConflict as exc:
+        raise HTTPException(status_code=409, detail=str(exc)) from exc
+
+
+@app.post("/api/v1/me/cities/{city_id}/heroes/hire", status_code=201)
+def my_city_hero_hire(city_id: UUID, data: HeroHireRequest, db: _db,
+                      player: _player, response: Response) -> dict:
+    response.headers["Cache-Control"] = "no-store"
+    try:
+        receipt = hire_hero(db, owner=player, city_id=city_id,
+            order_id=data.order_id, offer_id=data.offer_id)
+        if receipt["replayed"]:
+            response.status_code = 200
+        return receipt
+    except RecruitmentNotFound as exc:
+        raise HTTPException(status_code=404, detail="City not found") from exc
+    except RecruitmentConflict as exc:
         raise HTTPException(status_code=409, detail=str(exc)) from exc
 
 
