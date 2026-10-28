@@ -299,7 +299,9 @@ class MerchantExchangeRequest(StrictDTO):
 
 
 @app.get("/api/v1/me/cities/{city_id}/market")
-def my_city_market(city_id: UUID, db: _db, player: _player) -> dict:
+def my_city_market(city_id: UUID, db: _db, player: _player,
+                   response: Response) -> dict:
+    response.headers["Cache-Control"]="private, no-store"
     try:
         return market_for_city(db,owner=player,city_id=city_id)
     except MerchantNotFound as exc:
@@ -308,11 +310,12 @@ def my_city_market(city_id: UUID, db: _db, player: _player) -> dict:
 
 @app.get("/api/v1/me/cities/{city_id}/market/quote")
 def my_city_market_quote(
-    city_id: UUID, db: _db, player: _player,
+    city_id: UUID, db: _db, player: _player, response: Response,
     pay_resource: str = Query(pattern=_MARKET_RESOURCE),
     receive_resource: str = Query(pattern=_MARKET_RESOURCE),
     pay_amount: int = Query(ge=1, le=1000000),
 ) -> dict:
+    response.headers["Cache-Control"]="private, no-store"
     try:
         return quote_merchant(db,owner=player,city_id=city_id,
             pay_resource=pay_resource,receive_resource=receive_resource,

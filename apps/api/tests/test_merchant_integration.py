@@ -14,6 +14,8 @@ from mmhk_api.merchant import (
 )
 from mmhk_api.building_effects import set_building_operational
 
+pytestmark=pytest.mark.skipif(not URL,reason="PostgreSQL test URL required")
+
 
 def setup_market(city, *, built=True):
     with psycopg.connect(URL) as db:
@@ -193,12 +195,16 @@ def test_destination_capacity_market_suspension_and_rate_revision(city):
     latest=client.get(quote_url(city),headers=h).json()
     assert latest["receive_amount"]==4
     assert latest["policy_id"]=="TEST-TRADER-2"
-    assert client.post(path,headers=h,json=request_for(latest)).status_code==201
+    confirmed=request_for(latest)
+    assert client.post(path,headers=h,json=confirmed).status_code==201
     before=balances(city,"wood","ore")
     with psycopg.connect(URL) as db:
         set_building_operational(
             db,city_id=city["city"],building_code="marketplace",enabled=False)
     assert client.get(path,headers=h).json()["merchant_unlocked"] is False
+    # Idempotent receipt stays readable after market closure.
+    replay=client.post(path,headers=h,json=confirmed)
+    assert replay.status_code==200 and replay.json()["replayed"] is True
     assert client.post(path,headers=h,json={
         **request_for(latest),"order_id":str(uuid4()),
     }).status_code==409
