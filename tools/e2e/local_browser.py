@@ -105,6 +105,12 @@ def main() -> int:
             page.get_by_role("link", name="Entrer en ville").first.click()
             expect(page.get_by_role("heading", level=1, name="Premier Havre", exact=True)).to_be_visible()
             expect(page.get_by_role("heading", name="Réserves de la ville")).to_be_visible()
+            expect(page.get_by_role("heading", name="Armées et héros")).to_be_visible()
+            expect(page.locator(".hero-profile-info").get_by_text("Aldric du Havre")).to_be_visible()
+            assert page.locator(".building-plan").count() >= 8, "Expanded Haven catalogue not provisioned"
+            assert page.locator(".unit-recruit-offer").count() == 2
+            expect(page.get_by_text("Demeure des miliciens", exact=True)).to_be_visible()
+
             expect(page.get_by_text("Actualisation automatique", exact=False)).to_be_visible()
 
             # The actual first townhall can be built from the demo fixture.
@@ -139,6 +145,38 @@ def main() -> int:
             expect(finished.first).to_be_visible(timeout=5000)
             expect(page.locator(".timeline-event")).to_have_count(0, timeout=45000)
             expect(page.get_by_text("Bonus de mine actifs", exact=False)).to_be_visible()
+            # Progression: after village hall completion, the first dwelling
+            # becomes available; recruitment itself requires that building to finish.
+            tier_one = page.locator(
+                "form.build-option:has(input[name='buildingCode'][value='recruit_t1'])"
+                ":has(input[name='mode'][value='rapid'])"
+            )
+            expect(tier_one.get_by_role("button", name="Lancer ce chantier")).to_be_enabled()
+            # Build the first actual dwelling: no pre-existing units are fabricated.
+            tier_one.get_by_role("button", name="Lancer ce chantier").click()
+            expect(page.get_by_text("Chantier enregistré et ressources payées.")).to_be_visible(timeout=20000)
+            next_ready = page.get_by_text("recruit_t1 niveau 1", exact=False)
+            deadline = time.monotonic() + 125
+            while time.monotonic() < deadline:
+                if next_ready.count() and next_ready.first.is_visible():
+                    break
+                page.wait_for_timeout(2500)
+            expect(next_ready.first).to_be_visible(timeout=5000)
+            # Recruit units and transfer a subset to the starting hero.
+            militia = page.locator("form.unit-recruit-offer:has(input[name='unitCode'][value='militia'])")
+            expect(militia.get_by_role("button", name="Recruter")).to_be_enabled()
+            militia.locator('input[name="quantity"]').fill("3")
+            militia.get_by_role("button", name="Recruter").click()
+            expect(page.get_by_text("Recrutement confirmé.", exact=False)).to_be_visible(timeout=20000)
+            expect(page.get_by_text("3 soldats", exact=False)).to_be_visible()
+            page.locator(".hero-transfer-box summary").click()
+            transfer = page.locator('form.hero-transfer-row:has(input[name="direction"][value="to_hero"])').first
+            transfer.locator('input[name="quantity"]').fill("2")
+            transfer.get_by_role("button", name="Affecter").click()
+            expect(page.get_by_text("Transfert confirmé", exact=False)).to_be_visible(timeout=20000)
+            expect(page.get_by_text("Miliciens du Havre : 2")).to_be_visible()
+
+
             # The user can navigate back and log out via the real server action.
             page.get_by_role("link", name="Carte du monde").click()
             expect(page.get_by_role("heading", name="Mes positions dans le monde")).to_be_visible()

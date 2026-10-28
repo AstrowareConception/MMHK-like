@@ -38,6 +38,7 @@ class QuickstartTests(unittest.TestCase):
                     "run", "--rm", "-T", "api", "python",
                     "-m", "mmhk_api.local_demo", "--username", "joueurdemo",
                 ),
+                mock.call("exec", "-T", "api", "python", "-m", "mmhk_api.demo_expansion"),
             ],
         )
         open_browser.assert_called_once_with("http://localhost:3000")
@@ -56,7 +57,10 @@ class QuickstartTests(unittest.TestCase):
             ),
         ):
             self.assertEqual(stack.main(), 0)
-        run.assert_called_once_with("up", "-d", "--wait")
+        self.assertEqual(run.call_args_list, [
+            mock.call("up", "-d", "--wait"),
+            mock.call("exec", "-T", "api", "python", "-m", "mmhk_api.demo_expansion"),
+        ])
         open_browser.assert_not_called()
 
     def test_custom_local_port(self):

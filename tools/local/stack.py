@@ -168,6 +168,9 @@ def main() -> int:
             print("Creating your first demo account. SAVE THE PASSWORD BELOW.",
                   flush=True)
             provision_demo(args.username)
+        # Extend the existing sandbox without deleting any original player state.
+        # This executable is guarded by MMHK_LOCAL_DEMO_ENABLED and PGDATABASE.
+        run("exec", "-T", "api", "python", "-m", "mmhk_api.demo_expansion")
         url = local_url()
         print(f"\n[3/3] Ready: {url}", flush=True)
         print("Close this terminal only after saving the generated password.")

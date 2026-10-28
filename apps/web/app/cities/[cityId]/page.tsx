@@ -2,10 +2,11 @@ import Link from "next/link";
 import { CityScene } from "../../../components/city-scene";
 import { AssetImage } from "../../../components/asset-image";
 import { LiveRefresh } from "../../../components/live-refresh";
+import { CityForcesPanel } from "../../../components/city-forces-panel";
 import { notFound, redirect } from "next/navigation";
 import { startUrbanConstruction } from "../../actions";
 import { GameShell } from "../../../components/game-shell/game-shell";
-import { privateApi, sessionToken, type CityDetail, type ConstructionCatalog } from "../../../lib/server-api";
+import { privateApi, sessionToken, type CityDetail, type ConstructionCatalog, type CityForces } from "../../../lib/server-api";
 
 export const dynamic = "force-dynamic";
 
@@ -24,19 +25,20 @@ export default async function CityPage({
   searchParams,
 }: {
   params: Promise<{ cityId: string }>;
-  searchParams: Promise<{ build?: string }>;
+  searchParams: Promise<{ build?: string; recruit?:string; hero?:string;transfer?:string }>;
 }) {
   const { cityId } = await params;
   const token = await sessionToken();
   if (!token) redirect("/");
   if (!/^[a-f0-9-]{36}$/i.test(cityId)) notFound();
-  const [answer, buildingAnswer, query] = await Promise.all([
+  const [answer, buildingAnswer, forcesAnswer, query] = await Promise.all([
     privateApi<CityDetail>(
       `/api/v1/me/cities/${encodeURIComponent(cityId)}`, token,
     ),
     privateApi<ConstructionCatalog>(
       `/api/v1/me/cities/${encodeURIComponent(cityId)}/construction`, token,
     ),
+    privateApi<CityForces>(`/api/v1/me/cities/${encodeURIComponent(cityId)}/forces`, token),
     searchParams,
   ]);
   if (answer.status === 401) redirect("/");
@@ -50,9 +52,13 @@ export default async function CityPage({
       eyebrow="HAVRE · VUE DE LA CITÉ"
       description={"Région ("+city.x+", "+city.y+") · Édifices et trésorerie"}
       worldId={city.world_id} cityId={cityId} stocks={city.stocks}>
+        <nav className="city-shortcuts" aria-label="Accès rapide à la cité">
+          <a href="#city-scene">Panorama</a><a href="#city-resources">Ressources</a>
+          <a href="#urban-construction">Chantiers</a><a href="#military-panel">Héros et armée</a>
+        </nav>
         <CityScene city={city} catalog={buildingAnswer.data} />
         {(city.production_active || !!buildingAnswer.data?.active) && <LiveRefresh intervalSeconds={10} />}
-        <h2>Réserves de la ville</h2>
+        <h2 id="city-resources">Réserves de la ville</h2>
         <div className="resource-grid">
           {RESOURCES.map(([key, label]) => (
             <article key={key}>
@@ -67,6 +73,8 @@ export default async function CityPage({
             </article>
           ))}
         </div>
+        <CityForcesPanel cityId={cityId} forces={forcesAnswer.ok?forcesAnswer.data??null:null}
+          message={{hero:query.hero,recruit:query.recruit,transfer:query.transfer}} />
         <div className="construction-panel" id="urban-construction">
           <span className="eyebrow">CHANTIERS URBAINS · PROFILS EXPÉRIMENTAUX</span>
           <h2>Construire dans la cité</h2>
@@ -96,23 +104,46 @@ export default async function CityPage({
                 </article>
               ) : buildingAnswer.data.options.length ? (
                 <div className="build-options">
-                  {buildingAnswer.data.options.flatMap((o) => o.modes.map((mode) => (
-                    <form action={startUrbanConstruction} key={`${o.building_code}-${mode.mode}`} className="build-option">
-                      <input type="hidden" name="cityId" value={cityId}/>
-                      <input type="hidden" name="buildingCode" value={o.building_code}/>
-                      <input type="hidden" name="mode" value={mode.mode}/>
-                      <strong>{o.building_code} · niveau {o.target_level}</strong>
-                      <span>{mode.mode === "normal" ? "Standard" : mode.mode === "rapid" ? "Rapide" : "Économique"}</span>
-                      <small>Durée : {mode.duration_seconds.toLocaleString("fr-FR")} secondes</small>
-                      <small>Coût : {Object.entries(mode.costs).filter(([,v])=>v>0).map(([k,v])=>`${v} ${k}`).join(", ") || "Gratuit"}</small>
-                      {!o.available && (
-                        <small>Prérequises indisponibles : {o.missing_prerequisites.join(", ")}</small>
-                      )}
-                      <button disabled={!o.available} type="submit">
-                        {o.available ? "Lancer ce chantier" : "Construction verrouillée"}
-                      </button>
-                    </form>
-                  )))}
+                  {buildingAnswer.data.options.slice()
+                    .sort((a,b)=>Number(b.available)-Number(a.available) ||
+                      a.building_code.localeCompare(b.building_code))
+                    .map(o=>(
+                      <article className={"building-plan "+(o.available?"can-build":"locked-build")}
+                        key={o.building_code}>
+                        <div className="building-plan-header">
+                          <div>
+                            <span className="eyebrow">{o.available?"PROJET DISPONIBLE":"PRÉREQUIS MANQUANTS"}</span>
+                            <h3>{({
+                              village_hall:"Hôtel du village",town_hall:"Hôtel de ville",
+                              marketplace:"Marché",resource_silo:"Silos",tavern:"Taverne",
+                              recruit_t1:"Demeure des miliciens",recruit_t2:"Demeure des archers",
+                              fort:"Fortifications",blacksmith:"Forge",mage_guild:"Guilde des mages",
+                              stables:"Écuries",watchtower:"Tour de guet",
+                            } as Record<string,string>)[o.building_code]??o.building_code}</h3>
+                            <small>Niveau {o.target_level} · Contrat {o.policy_id}</small>
+                          </div>
+                          <span className="building-plan-rank">NIV. {o.target_level}</span>
+                        </div>
+                        {!o.available&&<p className="building-blockers">
+                          Nécessite : {o.missing_prerequisites.join(", ")}</p>}
+                        <div className="building-plan-modes">
+                          {o.modes.map(mode=><form action={startUrbanConstruction}
+                            key={o.building_code+"-"+mode.mode} className="build-option">
+                            <input type="hidden" name="cityId" value={cityId}/>
+                            <input type="hidden" name="buildingCode" value={o.building_code}/>
+                            <input type="hidden" name="mode" value={mode.mode}/>
+                            <strong>{mode.mode==="normal"?"Standard":mode.mode==="rapid"?"Rapide":"Économique"}</strong>
+                            <small>⏳ {Math.ceil(mode.duration_seconds/60)} min</small>
+                            <small>Coût : {Object.entries(mode.costs)
+                              .filter(([,value])=>value>0)
+                              .map(([name,value])=>value.toLocaleString("fr-FR")+" "+name).join(" · ")||"Aucun"}</small>
+                            <button type="submit" disabled={!o.available}>
+                              {o.available?"Lancer ce chantier":"Construction verrouillée"}
+                            </button>
+                          </form>)}
+                        </div>
+                      </article>
+                    ))}
                 </div>
               ) : (
                 <p>Aucun bâtiment n'est proposé : l'opérateur n'a pas encore configuré de profil pour le prochain niveau.</p>

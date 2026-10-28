@@ -132,3 +132,18 @@ export type RegionView = {
   }[];
   historical_regional_terrain_certified: false;
 };
+
+export type CityForces = {
+  city_id:string;
+  garrison: {unit_code:string;name:string;quantity:number;tier:number}[];
+  recruitment: {unit_code:string;name:string;dwelling_code:string;tier:number;
+    unit_costs:Record<string,number>;policy_id:string;available:number;unlocked:boolean}[];
+  hero_armies:{hero_id:string;unit_code:string;name:string;quantity:number;tier:number}[];
+  heroes: {hero_id:string;name:string;archetype:"might"|"magic";
+    level:number;experience:number;status:string;hired_at:string}[];
+  hero_offers:{offer_id:string;name:string;archetype:"might"|"magic";
+    gold_cost:number;policy_id:string}[];
+  tavern_unlocked:boolean;
+  hero_capacity:number;
+  historically_certified:false;
+};
