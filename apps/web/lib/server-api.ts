@@ -172,3 +172,19 @@ export type DuelPreview = {
     losses:{attacker:number;defender:number};
     draw:boolean;note:string};
 };
+
+export type PveMission={
+  mission_id:string;hero_id:string;hero_name:string;encounter_name:string;
+  target_i:number;target_j:number;stage:"outbound"|"returning"|"completed";
+  unit_code:string;stack_count:number;travel_seconds:number;travel_policy_id:string;
+  started_at:string;arrival_due_at:string;return_due_at:string;
+  arrived_at:string|null;returned_at:string|null;
+  duel_report:{scope:string;preview_only:boolean;outcome:{
+    totalPower:{attacker:number;defender:number};remaining:{attacker:number;defender:number}
+  }}|null;
+};
+export type PveMissionsResponse={
+  city_id:string;server_now:string;historically_certified:false;
+  travel_policy:{seconds_per_step:number;policy_id:string}|null;
+  missions:PveMission[];
+};
