@@ -100,6 +100,28 @@ def timeline_for_player(
         "target_url":"/cities/"+str(cid)+"/market#caravans",
         "icon":"timeline.hero_return","priority":"normal",
     } for pid,stage,total,sent,due,cid,name,world in programs]
+    # Founding arrivals are scheduled server actions, not simulated completed
+    # cities. The worker must confirm them before the atlas changes.
+    founding=db.execute(
+        """SELECT o.order_id,o.due_at,o.colony_name,o.source_city_id,
+                  c.name,c.world_id
+           FROM colonization_orders o
+           JOIN cities c ON c.city_id=o.source_city_id
+           JOIN world_memberships m ON m.world_id=o.world_id
+             AND m.account_id=%s
+           WHERE o.owner_account_id=%s AND c.owner_account_id=%s
+             AND o.status='traveling' AND o.due_at<=%s
+           ORDER BY o.due_at,o.order_id LIMIT %s""",
+        (account_id,account_id,account_id,horizon,limit+1),
+    ).fetchall()
+    founding_events=[{
+        "id":"colony-founding-"+str(oid),"type":"colony_founding",
+        "title":"Fondation prévue : "+name,
+        "occurs_at":due,"world_id":world,
+        "city_id":str(source),"city_name":source_name,
+        "target_url":"/worlds/"+world+"/colonize",
+        "icon":"timeline.construction","priority":"normal",
+    } for oid,due,name,source,source_name,world in founding]
     construction_events=[{
         "id":"construction-"+str(order_id),
         "type":"construction_complete",
@@ -127,13 +149,14 @@ def timeline_for_player(
             "city_name":city_name,"target_url":"/cities/"+str(city_id)+"/region",
             "icon":"timeline.hero_return","priority":"normal"
         })
-    events=sorted(construction_events+movement_events+caravan_events+program_events,
+    events=sorted(construction_events+movement_events+caravan_events+program_events+
+                  founding_events,
                   key=lambda e:(e["occurs_at"],e["id"]))
     return {
         "server_now": now,
         "horizon_hours": hours,
         "truncated": (len(events)>limit or len(rows)>limit or
                       len(missions)>limit or len(caravan_rows)>limit
-                      or len(programs)>limit),
+                      or len(programs)>limit or len(founding)>limit),
         "events": events[:limit],
     }

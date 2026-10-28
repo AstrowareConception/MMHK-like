@@ -81,7 +81,7 @@ export function TopTimelineBar({initial,backgroundUrl}:{initial:TimelineResponse
             const event=first.event;
             const details=event.title+" · "+event.city_name+" · "+dueLabel(event.occurs_at)+" · "+timeRemaining(event.occurs_at,now);
             return <Link key={event.id} href={event.target_url} className="timeline-event" style={location}
-              title={details} aria-label={details} data-timeline-type={event.type}>{event.type==="construction_complete"?"⚒":
+              title={details} aria-label={details} data-timeline-type={event.type}>{event.type==="construction_complete"||event.type==="colony_founding"?"⚒":
                 event.type==="hero_arrival"?"⚔":
                 event.type==="caravan_arrival"||event.type==="caravan_return"||
                 event.type==="caravan_program_attempt"?"♧":"♞"}</Link>;
