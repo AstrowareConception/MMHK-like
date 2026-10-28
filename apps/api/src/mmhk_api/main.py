@@ -17,6 +17,10 @@ from .merchant import (
     MerchantConflict, MerchantNotFound, market_for_city, quote_merchant,
     execute_merchant,
 )
+from .caravans import (
+    CaravanNotFound, CaravanConflict, caravan_for_city, quote_caravan,
+    send_caravan,
+)
 from .marketplace import (
     MarketplaceNotFound, MarketplaceConflict, offers_for_city,
     publish_offer, buy_offer, withdraw_offer,
@@ -441,6 +445,66 @@ def my_market_offer_withdraw(city_id:UUID,offer_id:UUID,command:MarketOfferWithd
     except MarketplaceNotFound as exc:
         raise HTTPException(status_code=404,detail="City or offer not found") from exc
     except MarketplaceConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+
+# P0 caravan slice US-ECH-010..013: owner-owned same-world cities only.
+# Repeat programs and transfers to allied cities require a separate policy.
+class CaravanSendRequest(StrictDTO):
+    shipment_id: UUID
+    destination_city_id: UUID
+    cargo: dict[str,int]
+    expected_policy_id: str = Field(min_length=3,max_length=100)
+
+
+@app.get("/api/v1/me/cities/{city_id}/caravans")
+def my_city_caravans(city_id:UUID,db:_db,player:_player,response:Response)->dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        return caravan_for_city(db,owner=player,city_id=city_id)
+    except CaravanNotFound as exc:
+        raise HTTPException(status_code=404,detail="City not found") from exc
+
+
+@app.get("/api/v1/me/cities/{city_id}/caravans/quote")
+def my_caravan_quote(city_id:UUID,db:_db,player:_player,response:Response,
+    destination_city_id:UUID,
+    gold:int=Query(default=0,ge=0,le=1000000),
+    wood:int=Query(default=0,ge=0,le=1000000),
+    ore:int=Query(default=0,ge=0,le=1000000),
+    crystal:int=Query(default=0,ge=0,le=1000000),
+    gems:int=Query(default=0,ge=0,le=1000000),
+    sulfur:int=Query(default=0,ge=0,le=1000000),
+    mercury:int=Query(default=0,ge=0,le=1000000),
+)->dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        return quote_caravan(
+            db,owner=player,city_id=city_id,destination_city_id=destination_city_id,
+            cargo={"gold":gold,"wood":wood,"ore":ore,"crystal":crystal,
+                   "gems":gems,"sulfur":sulfur,"mercury":mercury})
+    except CaravanNotFound as exc:
+        raise HTTPException(status_code=404,detail="City not found") from exc
+    except CaravanConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+@app.post("/api/v1/me/cities/{city_id}/caravans",status_code=201)
+def my_send_caravan(city_id:UUID,command:CaravanSendRequest,db:_db,
+                    player:_player,response:Response)->dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        result=send_caravan(
+            db,owner=player,city_id=city_id,shipment_id=command.shipment_id,
+            destination_city_id=command.destination_city_id,
+            cargo=command.cargo,expected_policy_id=command.expected_policy_id)
+        if result["replayed"]:
+            response.status_code=200
+        return result
+    except CaravanNotFound as exc:
+        raise HTTPException(status_code=404,detail="City not found") from exc
+    except CaravanConflict as exc:
         raise HTTPException(status_code=409,detail=str(exc)) from exc
 
 
