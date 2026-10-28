@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { signOut } from "../../actions";
-import { privateApi, sessionToken, type City, type World } from "../../../lib/server-api";
+import { WorldAtlas } from "../../../components/world-atlas";
+import { privateApi, sessionToken, type WorldOverview } from "../../../lib/server-api";
 
 export const dynamic = "force-dynamic";
 
@@ -13,40 +14,51 @@ export default async function WorldPage({
   const { worldId } = await params;
   const token = await sessionToken();
   if (!token) redirect("/");
-  const listed = await privateApi<World[]>("/api/v1/me/worlds", token);
-  if (listed.status === 401) redirect("/");
-  const world = listed.data?.find((w) => w.world_id === worldId);
-  if (!world) notFound();
-
-  const result = await privateApi<City[]>(
-    `/api/v1/me/worlds/${encodeURIComponent(worldId)}/cities`, token,
+  const result = await privateApi<WorldOverview>(
+    `/api/v1/me/worlds/${encodeURIComponent(worldId)}/overview`, token,
   );
-  if (!result.ok) {
-    return <main className="shell"><p>La liste des villes est momentanément inaccessible.</p>
-      <Link href="/">Retour</Link></main>;
+  if (result.status === 401) redirect("/");
+  if (result.status === 404) notFound();
+  if (!result.ok || !result.data) {
+    return <main className="shell"><p>Le monde est momentanément inaccessible.</p>
+      <Link href="/">Retour aux mondes</Link></main>;
   }
+  const world = result.data;
   return (
     <main className="shell">
       <header className="masthead compact">
-        <span className="eyebrow">CARTE DU MONDE · PREMIÈRE PROVINCE</span>
+        <span className="eyebrow">GUERRE DES LARMES · MONDE PERSISTANT</span>
         <h1>{world.name}</h1>
-        <p className="intro">Monde torique de {world.world_size} × {world.world_size} régions.</p>
+        <p className="intro">Atlas de vos territoires — {world.world_size} × {world.world_size} régions toriques.</p>
       </header>
       <section className="panel">
-        <nav className="nav"><Link href="/">Mes mondes</Link>
-          <form action={signOut}><button type="submit">Déconnexion</button></form></nav>
-        <h2>Mes villes</h2>
+        <nav className="nav" aria-label="Navigation du royaume">
+          <Link href="/">Mes mondes</Link>
+          <span className="nav-current">Monde : {world.name}</span>
+          <form action={signOut}><button type="submit">Déconnexion</button></form>
+        </nav>
+        <WorldAtlas world={world} cities={world.cities}/>
+        <h2>Mes cités</h2>
         <div className="tile-links">
-          {(result.data ?? []).map((city) => (
-            <Link className="tile-link" href={`/cities/${city.city_id}`} key={city.city_id}>
-              <span className="eyebrow">{city.first_city ? "CAPITALE INITIALE" : "VILLE"}</span>
+          {world.cities.map((city) => (
+            <div className="tile-link world-city-link" key={city.city_id}>
+              <span className="eyebrow">{city.first_city ? "CAPITALE INITIALE" : "CITÉ"}</span>
               <strong>{city.name}</strong>
               <span>Région ({city.x}, {city.y})</span>
-            </Link>
+              <div className="map-card-actions">
+                <Link href={`/cities/${city.city_id}/region`}>Voir la région</Link>
+                <Link href={`/cities/${city.city_id}`}>Entrer en ville</Link>
+              </div>
+            </div>
           ))}
         </div>
-        {result.data?.length === 0 && <p>Vous ne possédez pas encore de ville dans ce monde.</p>}
-        <p className="notice">Les villes des autres joueurs ne sont pas exposées par cette API.</p>
+        {world.cities.length === 0 && (
+          <p>Vous ne possédez pas encore de ville dans ce monde.</p>
+        )}
+        <p className="notice">
+          Cette carte n'affiche que vos propres villes. Les autres positions,
+          le terrain et la reconnaissance ne sont pas disponibles dans cette tranche.
+        </p>
       </section>
     </main>
   );

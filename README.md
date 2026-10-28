@@ -71,6 +71,23 @@ avec ancres vérifiées pour certains bâtiments. Le décor est une
 sans licence de redistribution identifiée, ne sont pas diffusées.
 Voir le [rapport de livraison](docs/specifications/WORKERS-SUPERVISES-VILLE-VISUELLE.md).
 
+## Navigation entre monde, région et ville (28 octobre 2026)
+
+La navigation Next.js couvre maintenant les trois échelles du jeu :
+**monde torique → région 5×5 → ville**. L'[atlas](apps/web/components/world-atlas.tsx)
+ne montre que les positions des villes appartenant au joueur. La
+[vue de région](apps/web/components/region-scene.tsx) distingue les
+25 emplacements illustratifs de la liste réelle des **types** de mines,
+sans leur inventer d'emplacements.
+
+Le backend [FastAPI](apps/api/src/mmhk_api/map_views.py) vérifie
+l'appartenance au monde et la propriété de la cité dans PostgreSQL ;
+les tests couvrent deux joueurs situés **dans le même monde**.
+Cette présentation originale ne contient aucun sprite Ubisoft.
+La [spécification complète](docs/specifications/NAVIGATION-MONDE-REGION-VILLE.md)
+documente les données vérifiées, les inconnues historiques et les limites
+de reconnaissance.
+
 ## Lire le dossier
 
 | Besoin | Document |
