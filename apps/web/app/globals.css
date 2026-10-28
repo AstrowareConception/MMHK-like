@@ -562,3 +562,28 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   .hero-workspace-header h2{font-size:24px;}
   .artifact-action{width:100%;}
 }
+
+
+/* Local PvE encounter cards, deliberately separate from real combat orders. */
+.region-encounter-panel {margin:14px 0;padding:17px;border:1px solid #b79e6b;
+  background:linear-gradient(125deg,#273e42,#142b36);box-shadow:inset 0 1px #fff2c218;}
+.region-encounter-panel>strong {color:#e8d5a7;font:small-caps 19px Georgia,serif;}
+.region-encounter-panel p {color:#c2cfc8;font:12px/1.6 system-ui,sans-serif;}
+.encounter-title {display:flex;align-items:center;gap:15px;border-bottom:1px solid #b9a16d55;padding-bottom:12px;}
+.encounter-title>span {display:grid;place-items:center;font-size:32px;color:#eed79e;
+  min-width:65px;height:65px;border:2px ridge #c8aa73;background:#162f36;}
+.encounter-title h3 {font:small-caps 25px Georgia,serif;margin:2px 0;color:#f0dbae;}
+.encounter-title p {margin:0;}
+.encounter-preview-controls {display:flex;align-items:end;flex-wrap:wrap;gap:11px;}
+.encounter-preview-controls label {display:grid;gap:6px;color:#d5c8a7;font:12px Georgia,serif;}
+.encounter-preview-controls select {padding:9px;background:#11252d;color:#f2ddaf;
+  border:1px solid #a58b64;min-width:210px;max-width:100%;}
+.encounter-preview-controls button {min-height:38px;}
+.encounter-no-army {padding:13px;border:1px solid #ab9162;color:#d4ccb5;font:13px/1.6 Georgia,serif;}
+.encounter-no-army a {color:#e6ce9a;}
+.encounter-report {margin-top:17px;padding:15px;background:#12252d;border:1px solid #b79b6c;}
+.encounter-report strong {color:#f2dba8;font:small-caps 18px Georgia,serif;}
+.encounter-report div {display:flex;justify-content:space-between;gap:16px;
+  padding:7px;border-bottom:1px solid #8a8e7566;font:13px Georgia,serif;}
+.encounter-report b {color:#efcd88;}
+.encounter-report small {display:block;margin-top:11px;color:#c8cfc9;font:11px/1.6 system-ui,sans-serif;}
