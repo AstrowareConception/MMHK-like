@@ -188,3 +188,22 @@ export type PveMissionsResponse={
   travel_policy:{seconds_per_step:number;policy_id:string}|null;
   missions:PveMission[];
 };
+
+export type HeroFormation={
+  city_id:string;hero_id:string;status:string;slots_count:7;
+  historically_certified_s2:false;positions:{
+    position:number;jactari_index:number;unit_code:string;quantity:number
+  }[];saved:boolean;needs_configuration:boolean;
+  available_units:{unit_code:string;quantity:number}[];jactari_scope:string;
+};
+export type MissionReport={
+  mission_id:string;city_id:string;hero_id:string;hero_name:string;
+  encounter_name:string;target_i:number;target_j:number;stage:PveMission["stage"];
+  unit_code:string;stack_count:number;travel_policy_id:string;
+  started_at:string;arrival_due_at:string;return_due_at:string;
+  arrived_at:string|null;returned_at:string|null;
+  historically_certified:false;
+  formation_snapshot:{position:number;jactari_index:number;unit_code:string;quantity:number}[];
+  duel_report:(PveMission["duel_report"]&{no_losses_applied?:boolean;no_rewards?:boolean})|null;
+  events:{phase:"departed"|"arrived"|"returned";occurred_at:string}[];
+};
