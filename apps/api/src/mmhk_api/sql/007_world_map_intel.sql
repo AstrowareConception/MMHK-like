@@ -48,7 +48,7 @@ CREATE TABLE map_influence_cells (
   observed_at timestamptz NOT NULL DEFAULT now(),
   PRIMARY KEY(world_id,x,y),
   FOREIGN KEY(world_id,controller_account_id)
-    REFERENCES world_memberships(world_id,account_id)
+    REFERENCES world_memberships(world_id,account_id) ON DELETE CASCADE
 );
 CREATE TABLE map_influence_discoveries (
   world_id text NOT NULL,
