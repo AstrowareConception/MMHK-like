@@ -105,8 +105,8 @@ def main() -> int:
             page.get_by_role("link", name="Entrer en ville").first.click()
             expect(page.get_by_role("heading", level=1, name="Premier Havre", exact=True)).to_be_visible()
             expect(page.get_by_role("heading", name="Réserves de la ville")).to_be_visible()
-            expect(page.get_by_role("link", name="Héros et artefacts")).to_be_visible()
-            expect(page.get_by_role("link", name="Garnison et recrutement")).to_be_visible()
+            expect(page.get_by_role("link", name="Héros et artefacts").first).to_be_visible()
+            expect(page.get_by_role("link", name="Garnison et recrutement").first).to_be_visible()
             assert page.locator(".building-plan").count() >= 8, "Expanded Haven catalogue not provisioned"
             expect(page.get_by_text("Demeure des miliciens", exact=True)).to_be_visible()
 
