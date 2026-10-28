@@ -96,3 +96,23 @@ jobs:
         run: python tools/ci/check_private_preview.py
       - name: Build private FastAPI and Next.js preview images
         run: docker compose -f compose.preview.yaml build api web
+      - name: Start isolated PostgreSQL and apply actual migrations
+        run: |
+          docker compose -f compose.preview.yaml up -d postgres redis
+          docker compose -f compose.preview.yaml run --rm api python -m mmhk_api.manage migrate
+      - name: Smoke test private Next.js to internal FastAPI connection
+        run: |
+          docker compose -f compose.preview.yaml up -d api web
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --show-error http://127.0.0.1:3001/ 2>/dev/null | grep -q 'MMHK-like'; then
+              echo "Private end-to-end app reachable on localhost only"
+              exit 0
+            fi
+            sleep 2
+          done
+          docker compose -f compose.preview.yaml ps
+          docker compose -f compose.preview.yaml logs --tail=60 api web
+          exit 1
+      - name: Remove disposable CI preview database and containers
+        if: always()
+        run: docker compose -f compose.preview.yaml down --volumes --remove-orphans
