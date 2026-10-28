@@ -344,3 +344,38 @@ def test_worker_refuses_non_autocommit_and_zero_work_on_future_due(colony):
         with pytest.raises(ValueError):
             run_colonization_batch(db,now_at=due)
     assert advance(due-timedelta(seconds=1))==[]
+
+
+
+def test_operator_disables_plot_during_travel_then_blocked_site_is_reusable(colony):
+    """The world does not hold a qualified region hostage after a failed founding."""
+    unlocked(colony)
+    first=send(colony)
+    assert first.status_code==201,first.text
+    due=datetime.fromisoformat(first.json()["due_at"])
+    with psycopg.connect(URL) as db:
+        db.execute(
+            """UPDATE colonization_site_profiles SET enabled=false
+               WHERE world_id=%s AND x=2 AND y=1""",
+            (colony["world"],),
+        )
+    blocked=advance(due)
+    assert blocked[0]["phase"]=="blocked"
+    assert stock(colony["source"])==180
+    own=client.get(route(colony),headers=headers(colony["username"])).json()
+    assert own["pending_expeditions"]==0
+    # Operator reapproves the *same* proven site. A new order, with an
+    # independently validated idle hero, should not be blocked by a failed
+    # reservation. The original paid escrow is still separately claimable.
+    with psycopg.connect(URL) as db:
+        db.execute(
+            """UPDATE colonization_site_profiles SET enabled=true
+               WHERE world_id=%s AND x=2 AND y=1""",
+            (colony["world"],),
+        )
+    second=send(colony,order(colony,name="Nouvelle tentative"))
+    assert second.status_code==201,second.text
+    assert second.json()["order_id"]!=first.json()["order_id"]
+    assert stock(colony["source"])==160
+    assert client.get(route(colony),headers=headers(colony["username"])
+                      .json()["pending_expeditions"]==1
