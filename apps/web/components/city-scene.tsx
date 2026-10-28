@@ -42,7 +42,7 @@ export function CityScene({
         </Link>
       </div>
       <div className="city-scene-frame">
-        <div className="city-scene-art" role="img"
+        <div className="city-scene-art"
           aria-label={`Vue illustrative de ${city.name}, avec ${staged.length} bâtiments placés selon les ancres identifiées`}>
           <div className="city-scene-sky" aria-hidden="true"/>
           <div className="city-scene-distant" aria-hidden="true"/>
