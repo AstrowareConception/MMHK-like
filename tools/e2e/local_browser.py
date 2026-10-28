@@ -31,6 +31,13 @@ def main() -> int:
             page.get_by_label("Mot de passe").fill(password)
             page.get_by_role("button", name="Entrer dans le royaume").click()
             expect(page.get_by_role("heading", name="Mes mondes")).to_be_visible(timeout=20000)
+            # Session bearer stays in an HttpOnly Lax cookie, not exposed to JS.
+            sessions = [cookie for cookie in page.context.cookies()
+                        if cookie["name"] == "mmhk_session"]
+            assert len(sessions) == 1, "Expected one browser session cookie"
+            assert sessions[0]["httpOnly"] is True, "Session must be HttpOnly"
+            assert sessions[0]["sameSite"] == "Lax", "Session must be SameSite=Lax"
+            assert sessions[0]["path"] == "/", "Session must cover private routes"
             expect(page.get_by_text("Royaume de démonstration")).to_be_visible()
             page.get_by_role("link", name=re.compile("Royaume de démonstration")).click()
             expect(page.get_by_role("heading", name="Mes positions dans le monde")).to_be_visible()
@@ -71,6 +78,8 @@ def main() -> int:
             expect(page.get_by_role("heading", name="Mes positions dans le monde")).to_be_visible()
             page.get_by_role("button", name="Déconnexion").click()
             expect(page.get_by_role("heading", name="Accéder au royaume")).to_be_visible()
+            assert not any(cookie["name"] == "mmhk_session"
+                           for cookie in page.context.cookies()), "Cookie not cleared on logout"
             page.goto(root + "/worlds/local-sandbox", wait_until="domcontentloaded")
             expect(page.get_by_role("heading", name="Accéder au royaume")).to_be_visible()
             if errors:
