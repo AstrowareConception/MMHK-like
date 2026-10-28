@@ -131,6 +131,7 @@ export type RegionView = {
     is_current: boolean;
   }[];
   historical_regional_terrain_certified: false;
+  encounters: RegionEncounter[];
 };
 
 export type CityForces = {
@@ -146,4 +147,28 @@ export type CityForces = {
   tavern_unlocked:boolean;
   hero_capacity:number;
   historically_certified:false;
+};
+
+export type ArtifactItem = {
+  artifact_id:string; artifact_code:string; name:string; slot:string;
+  required_level:number; effects:Record<string,unknown>; policy_id:string;
+  historically_certified:boolean; location:"reserve"|"bag"|"equipped";
+  hero_id:string|null; equipped_slot:string|null;
+};
+export type ArtifactInventory = {
+  city_id:string; slots:string[]; equipment_budget_policy:string;
+  effects_applied_to_combat:boolean; artifacts:ArtifactItem[];
+};
+export type RegionEncounter = {
+  encounter_id:string; i:number;j:number;name:string;unit_code:string;
+  unit_count:number;unit_power:number;source_ref:string;historically_certified:boolean;
+};
+export type DuelPreview = {
+  scope:string;preview_only:true;note:string;hero_id:string;hero_name:string;
+  unit_code:string;encounter_id:string;encounter_name:string;i:number;j:number;
+  outcome:{basePower:{attacker:number;defender:number};
+    totalPower:{attacker:number;defender:number};
+    remaining:{attacker:number;defender:number};
+    losses:{attacker:number;defender:number};
+    draw:boolean;note:string};
 };
