@@ -83,7 +83,8 @@ def start_pve_mission(db:psycopg.Connection,*,owner:UUID,city_id:UUID,
         return {"mission_id":str(mission_id),"replayed":False,
                 "stage":"outbound","started_at":now.isoformat(),
                 "arrival_due_at":arrival.isoformat(),"return_due_at":returning.isoformat(),
-                "travel_seconds":seconds,"historically_certified":False}
+                "travel_seconds":seconds,"target_i":enemy[0],"target_j":enemy[1],
+                "historically_certified":False}
 
 
 def missions_for_city(db:psycopg.Connection,owner:UUID,city_id:UUID,*,limit:int=40)->dict:
