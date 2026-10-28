@@ -1,7 +1,7 @@
 import Link from "next/link";
 import {notFound,redirect} from "next/navigation";
-import {GameShell} from "../../../../../../components/game-shell/game-shell";
-import {privateApi,sessionToken,type CityDetail,type MissionReport} from "../../../../../../lib/server-api";
+import {GameShell} from "../../../../../components/game-shell/game-shell";
+import {privateApi,sessionToken,type CityDetail,type MissionReport} from "../../../../../lib/server-api";
 export const dynamic="force-dynamic";
 const stateName:Record<string,string>={
   outbound:"Aller en cours",returning:"Retour en cours",completed:"Héros rentré"

@@ -258,10 +258,9 @@ export async function saveHeroFormation(data:FormData){
   const positions:{position:number;unit_code:string;quantity:number}[]=[];
   for(let i=1;i<=7;i++){
     const code=data.get("unit-"+i),raw=data.get("quantity-"+i);
-    if(typeof code!=="string"||typeof raw!=="string"){
-      redirect(target+"&formation=invalid");
-    }
+    if(typeof code!=="string")redirect(target+"&formation=invalid");
     if(!code)continue;
+    if(typeof raw!=="string")redirect(target+"&formation=invalid");
     if(!/^[a-z][a-z0-9_]{1,47}$/.test(code)||!/^[1-9]\d{0,6}$/.test(raw)||
        Number(raw)>1000000)redirect(target+"&formation=invalid");
     positions.push({position:i,unit_code:code,quantity:Number(raw)});
