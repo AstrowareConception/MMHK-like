@@ -17,6 +17,7 @@ CREATE TABLE city_artifacts (
   hero_id uuid REFERENCES city_heroes(hero_id),
   equipped_slot text,
   created_at timestamptz NOT NULL DEFAULT clock_timestamp(),
+  seed_key text UNIQUE,
   CONSTRAINT artifact_location_consistency CHECK (
     (location='reserve' AND hero_id IS NULL AND equipped_slot IS NULL) OR
     (location='bag' AND hero_id IS NOT NULL AND equipped_slot IS NULL) OR
