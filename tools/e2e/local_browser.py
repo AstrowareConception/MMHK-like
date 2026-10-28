@@ -57,7 +57,7 @@ def main() -> int:
             page.get_by_label("Coordonnée X").fill("101")
             page.get_by_label("Coordonnée Y").fill("23")
             page.get_by_role("button", name="Centrer", exact=True).click()
-            expect(page.get_by_role("alert")).to_contain_text("Coordonnées invalides")
+            expect(page.locator(".map-navigation-error")).to_contain_text("Coordonnées invalides")
             page.get_by_label("Coordonnée X").fill("100")
             page.get_by_role("button", name="Centrer", exact=True).click()
             expect(page.get_by_test_id("world-center")).to_have_text("(100, 23)")
