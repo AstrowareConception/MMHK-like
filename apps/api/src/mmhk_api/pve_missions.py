@@ -131,7 +131,7 @@ def advance_pve_missions(db:psycopg.Connection,*,max_orders:int=25,
             now=now_at or db.execute("SELECT clock_timestamp()").fetchone()[0]
             row=db.execute(
                 """SELECT m.mission_id,m.stage,m.hero_id,m.encounter_id,
-                          m.unit_code,m.stack_count,m.stack_power,
+                          m.unit_code,m.stack_count,m.stack_power,m.travel_seconds,
                           m.arrival_due_at,m.return_due_at
                    FROM pve_missions m WHERE
                      (m.stage='outbound' AND m.arrival_due_at<=%s) OR
@@ -141,7 +141,7 @@ def advance_pve_missions(db:psycopg.Connection,*,max_orders:int=25,
                    FOR UPDATE OF m SKIP LOCKED LIMIT 1""",(now,now),
             ).fetchone()
             if row is None:break
-            mid,stage,hid,eid,unit,count,power,arrival,returning=row
+            mid,stage,hid,eid,unit,count,power,travel_seconds,arrival,returning=row
             if stage=="outbound":
                 enemy=db.execute(
                     """SELECT unit_count,unit_power FROM region_encounters
@@ -155,10 +155,13 @@ def advance_pve_missions(db:psycopg.Connection,*,max_orders:int=25,
                 })
                 report={"scope":"LAB-SINGLE-STACK","preview_only":True,
                         "outcome":outcome,"no_losses_applied":True,"no_rewards":True}
+                # Late workers do not consume part of the return leg.
+                # Return duration begins with the confirmed arrival timestamp.
+                confirmed_return=now+timedelta(seconds=travel_seconds)
                 db.execute(
                     """UPDATE pve_missions SET stage='returning',arrived_at=%s,
-                       duel_report=%s WHERE mission_id=%s""",
-                    (now,Jsonb(report),mid),
+                       duel_report=%s,return_due_at=%s WHERE mission_id=%s""",
+                    (now,Jsonb(report),confirmed_return,mid),
                 )
                 db.execute(
                     """INSERT INTO pve_mission_events(mission_id,phase,occurred_at)
