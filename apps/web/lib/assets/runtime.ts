@@ -13,23 +13,35 @@ export function historicalModeEnabled(): boolean {
 }
 export function privateAssetFile(id: string): {path:string; mime:string} | null {
   if (!historicalModeEnabled() || !isAssetId(id)) return null;
-  const root = process.env.MMHK_PRIVATE_ASSETS_ROOT || "/opt/mmhk-private";
+  const originals = process.env.MMHK_PRIVATE_ASSETS_ROOT || "/opt/mmhk-private";
+  const reconstructions = process.env.MMHK_PRIVATE_RECONSTRUCTED_ROOT || "/opt/mmhk-reconstructed";
   try {
-    const manifest = JSON.parse(readFileSync(resolve(root,"manifest.json"),"utf8")) as unknown;
+    const manifest = JSON.parse(readFileSync(resolve(originals,"manifest.json"),"utf8")) as unknown;
     if (!manifest || typeof manifest !== "object" || Array.isArray(manifest)) return null;
-    const fileName = (manifest as Record<string,unknown>)[id];
-    if (typeof fileName !== "string" || !fileName || isAbsolute(fileName)) return null;
-    const mime = ALLOWED_MIME[extname(fileName).toLowerCase()];
-    if (!mime) return null;
-    const rootReal = realpathSync(root);
-    const target = resolve(rootReal,fileName);
-    const rel = relative(rootReal,target);
-    if (!rel || rel === ".." || rel.startsWith(".."+sep) || isAbsolute(rel)) return null;
-    if (!existsSync(target) || !statSync(target).isFile()) return null;
-    const real = realpathSync(target);
-    const safeRelative = relative(rootReal,real);
-    if (!safeRelative || safeRelative === ".." || safeRelative.startsWith(".."+sep) || isAbsolute(safeRelative)) return null;
-    return {path:real,mime};
+    const entry = (manifest as Record<string,unknown>)[id];
+    const mapped = typeof entry === "string" ? { original:entry } : entry;
+    if (!mapped || typeof mapped !== "object" || Array.isArray(mapped)) return null;
+    const paths = mapped as Record<string,unknown>;
+    // Exact historic original, then locally reconstructed version, then public-safe.
+    for (const [root,fileName] of [
+      [originals,paths.original], [reconstructions,paths.reconstructed]
+    ] as const) {
+      if (typeof fileName !== "string" || !fileName || isAbsolute(fileName)) continue;
+      const mime = ALLOWED_MIME[extname(fileName).toLowerCase()];
+      if (!mime) continue;
+      try {
+        const rootReal = realpathSync(root);
+        const target = resolve(rootReal,fileName);
+        const rel = relative(rootReal,target);
+        if (!rel || rel === ".." || rel.startsWith(".."+sep) || isAbsolute(rel)) continue;
+        if (!existsSync(target) || !statSync(target).isFile()) continue;
+        const real = realpathSync(target);
+        const safeRelative = relative(rootReal,real);
+        if (!safeRelative || safeRelative === ".." || safeRelative.startsWith(".."+sep) || isAbsolute(safeRelative)) continue;
+        return {path:real,mime};
+      } catch {/* Missing candidate: try the next theme layer. */}
+    }
+    return null;
   } catch {
     return null; // Missing private pack must never affect public-safe rendering.
   }

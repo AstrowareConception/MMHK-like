@@ -18,3 +18,7 @@ Do not commit screenshots made with the historical pack. The CI runs public-safe
 The Haven tavern uses the known full-size 80 × 75 GIF only when that building is active in PostgreSQL and the historical pack is enabled. Otherwise the marker remains original CSS. The image version 4.1.27 and historical positions 4.1.3 have not been proven compatible.
 
 Known limitation: the genuine city base and 169 of 170 full-scene building GIFs are still missing. The current city remains schematic, not a flattened fully-built screenshot.
+
+## Fallbacks and reconstructions
+
+The private manifest accepts a simple legacy string (original path), or a mapping object for each stable ID: { "original": "4.1.27-MTR/img/city/HAVEN/TAVERN.gif", "reconstructed": "haven/tavern-reconstruction.png" }. The resolver tries the exact original in data/assets-private-original, then the local reconstruction in data/assets-private-reconstructed, then the public-safe mapping. Both directories are mounted read-only using compose.historical.yaml. Never put reconstructed Ubisoft-derived graphics in the public theme. Create both private directories before starting the optional Compose overlay.
