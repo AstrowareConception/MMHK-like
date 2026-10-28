@@ -1,0 +1,37 @@
+name: Asset catalogue and public theme guard
+on:
+  push:
+    paths:
+      - 'tools/audit-graphic-assets.mjs'
+      - 'tools/tests/**'
+      - 'tools/ci/check_asset_boundaries.py'
+      - 'apps/web/lib/assets/**'
+      - 'apps/web/public/**'
+      - '.dockerignore'
+      - '.github/workflows/graphic-assets.yml'
+  pull_request:
+    paths:
+      - 'tools/audit-graphic-assets.mjs'
+      - 'tools/tests/**'
+      - 'tools/ci/check_asset_boundaries.py'
+      - 'apps/web/lib/assets/**'
+      - 'apps/web/public/**'
+      - '.dockerignore'
+      - '.github/workflows/graphic-assets.yml'
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Unit test with temporary fake corpus
+        run: node --test tools/tests/asset-audit.test.mjs
+      - name: Audit real tracked corpus without writing artifacts
+        run: node tools/audit-graphic-assets.mjs --check
+      - name: Reject non-whitelisted public theme material
+        run: python3 tools/ci/check_asset_boundaries.py
