@@ -1,5 +1,6 @@
 "use client";
 import {useEffect,useState} from "react";
+import Link from "next/link";
 import {regionCellCenter} from "../lib/region-geometry";
 import type {PveMissionsResponse,PveMission} from "../lib/server-api";
 
@@ -82,6 +83,8 @@ export function RegionMissionsPanel({missions}:{missions:PveMissionsResponse|nul
       <span>Case ({m.target_i}, {m.target_j}) · {m.travel_seconds} s par trajet</span>
       <span>{m.stage==="outbound"?"Arrivée":"Retour"} : {fmt(m.stage==="outbound"?m.arrival_due_at:m.return_due_at)}</span>
       <strong className="journey-countdown">{remaining(m)}</strong>
+      <Link className="mission-report-link" href={"/cities/"+missions.city_id+
+        "/missions/"+m.mission_id}>Voir le rapport et le trajet</Link>
       {m.duel_report&&<small>
         Rapport Jactari enregistré à l’arrivée (simulation mono-peloton, sans pertes ni butin).
         Attaque {m.duel_report.outcome?.totalPower.attacker} ·
@@ -91,7 +94,8 @@ export function RegionMissionsPanel({missions}:{missions:PveMissionsResponse|nul
     {!active.length&&<p>Aucun héros actuellement en déplacement.</p>}
     {historical.length>0&&<details><summary>Dernières missions achevées</summary>
       {historical.map(m=><p key={m.mission_id}>{m.hero_name} · {m.encounter_name} ·
-        retour confirmé à {fmt(m.returned_at??m.return_due_at)}.</p>)}
+        retour confirmé à {fmt(m.returned_at??m.return_due_at)} ·
+        <Link href={"/cities/"+missions.city_id+"/missions/"+m.mission_id}>Rapport</Link></p>)}
     </details>}
     <small>Délais et progression proviennent du serveur. Une arrivée calculée sur le
       navigateur n’achève jamais la mission : seul le worker valide l’étape et le retour.</small>

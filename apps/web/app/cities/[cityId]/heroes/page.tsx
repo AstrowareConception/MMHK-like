@@ -1,9 +1,10 @@
 import Link from "next/link";
 import {notFound,redirect} from "next/navigation";
 import {moveCityArtifact} from "../../../actions";
+import {HeroFormationEditor} from "../../../../components/hero-formation-editor";
 import {GameShell} from "../../../../components/game-shell/game-shell";
 import {privateApi,sessionToken,type ArtifactInventory,type ArtifactItem,
-  type CityDetail,type CityForces} from "../../../../lib/server-api";
+  type CityDetail,type CityForces,type HeroFormation} from "../../../../lib/server-api";
 export const dynamic="force-dynamic";
 const SLOTS:Record<string,string>={
   head:"Tête",neck:"Cou",chest:"Torse",weapon:"Arme",
@@ -60,7 +61,7 @@ function ArtifactCard({item,cityId,hero,heroes}:{
 }
 
 export default async function HeroesPage({params,searchParams}:{
-  params:Promise<{cityId:string}>;searchParams:Promise<{hero?:string;artifact?:string}>;
+  params:Promise<{cityId:string}>;searchParams:Promise<{hero?:string;artifact?:string;formation?:string}>;
 }) {
   const {cityId}=await params,query=await searchParams;
   const token=await sessionToken();
@@ -79,6 +80,11 @@ export default async function HeroesPage({params,searchParams}:{
     <Link href={"/cities/"+cityId}>Retour à la cité</Link>
   </main>;
   const selected=forces.heroes.find(h=>h.hero_id===query.hero)??forces.heroes[0];
+  const formationAnswer=selected
+    ?await privateApi<HeroFormation>("/api/v1/me/cities/"+cityId+"/heroes/"+
+      selected.hero_id+"/formation",token)
+    :null;
+
   const equipment=inventory.artifacts.filter(a=>a.hero_id===selected?.hero_id&&a.location==="equipped");
   const bag=inventory.artifacts.filter(a=>a.hero_id===selected?.hero_id&&a.location==="bag");
   const reserve=inventory.artifacts.filter(a=>a.location==="reserve");
@@ -111,6 +117,13 @@ export default async function HeroesPage({params,searchParams}:{
         </div>
       </aside>
       <div className="hero-workspace">
+        <nav className="hero-subnav" aria-label="Sections de la fiche du héros">
+          <a href="#hero-equipment">Équipement</a>
+          <a href="#hero-bag">Sac</a>
+          <a href="#hero-reserve">Réserve</a>
+          <a href="#hero-formation">Formation à sept positions</a>
+          <a href="#hero-army">Armée</a>
+        </nav>
         <div className="hero-workspace-header">
           <div><span className="eyebrow">FICHE DU HÉROS</span><h2>{selected.name}</h2>
             <p>{selected.archetype==="magic"?"Voie de la Magie":"Voie de la Force"}
@@ -122,7 +135,7 @@ export default async function HeroesPage({params,searchParams}:{
           <span>{spent} / {selected.level} niveaux</span>
           <meter min="0" max={Math.max(1,selected.level)} value={Math.min(selected.level,spent)}/>
         </div>
-        <h3>Équipement — huit emplacements</h3>
+        <h3 id="hero-equipment">Équipement — huit emplacements</h3>
         <div className="equipment-slots">
           {slots.map(slot=>{
             const item=equipment.find(a=>a.equipped_slot===slot);
@@ -133,19 +146,27 @@ export default async function HeroesPage({params,searchParams}:{
             </div>;
           })}
         </div>
-        <h3>Sac de {selected.name} <small>{bag.length} objet(s)</small></h3>
+        <h3 id="hero-bag">Sac de {selected.name} <small>{bag.length} objet(s)</small></h3>
         <div className="artifact-list">
           {bag.length?bag.map(item=><ArtifactCard key={item.artifact_id} item={item}
             cityId={cityId} hero={selected} heroes={forces.heroes}/>):
             <p className="military-muted">Le sac de ce héros est vide.</p>}
         </div>
-        <h3>Réserve de la cité <small>{reserve.length} objet(s)</small></h3>
+        <h3 id="hero-reserve">Réserve de la cité <small>{reserve.length} objet(s)</small></h3>
         <div className="artifact-list">
           {reserve.length?reserve.map(item=><ArtifactCard key={item.artifact_id} item={item}
             cityId={cityId} hero={selected} heroes={forces.heroes}/>):
             <p className="military-muted">La réserve ne possède aucun artefact.</p>}
         </div>
-        <div className="hero-army-summary">
+        {query.formation&&<p role={query.formation==="ok"?"status":"alert"}
+          className={query.formation==="ok"?"construction-notice":"error"}>
+          {query.formation==="ok"?"Formation de combat enregistrée sans modifier les effectifs.":
+            "Formation refusée : vérifiez les sept positions, les quantités ou la disponibilité du héros."}
+        </p>}
+        {formationAnswer?.ok&&formationAnswer.data&&
+          <HeroFormationEditor key={selected.hero_id} cityId={cityId}
+            formation={formationAnswer.data}/>}
+        <div className="hero-army-summary" id="hero-army">
           <h3>Armée portée</h3>
           {forces.hero_armies.filter(u=>u.hero_id===selected.hero_id).map(u=>
             <p key={u.unit_code}>{u.name} : {u.quantity}</p>)}
