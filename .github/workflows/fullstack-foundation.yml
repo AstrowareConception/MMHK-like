@@ -162,6 +162,8 @@ jobs:
           output="$(python3 tools/local/stack.py demo --username demo_ci)"
           password="$(printf '%s\n' "$output" | sed -n 's/^One-time generated password: //p')"
           test ${#password} -ge 16
+          # The laptop one-command launcher must be safe to run again.
+          python3 tools/local/stack.py start --no-build --no-browser --username demo_ci
           docker compose --env-file .env.local -f compose.local.yaml exec -T \
             -e "MMHK_CI_DEMO_PASSWORD=$password" api python - <<'PY'
           import json, os, urllib.request
