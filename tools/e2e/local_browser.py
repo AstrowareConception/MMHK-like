@@ -167,8 +167,45 @@ def main() -> int:
             expect(page.locator(".timeline-event")).to_have_count(0, timeout=45000)
             expect(page.get_by_text("Bonus de mine actifs", exact=False)).to_be_visible()
             expect(page.locator("#city-history .construction-history-entry").first).to_contain_text("Terminé")
-            # Progression: after village hall completion, the first dwelling
-            # becomes available; recruitment itself requires that building to finish.
+            # US-ECH: local test rate policies are not enough on their own:
+            # the real marketplace must be constructed and completed first.
+            page.get_by_role("link", name="Marché", exact=True).click()
+            expect(page.get_by_role("heading", name="Marché de Premier Havre")).to_be_visible()
+            expect(page.get_by_role("heading", name="Le marché attend son ouverture")).to_be_visible()
+            page.get_by_role("link", name="Voir le bâtiment Marché").click()
+            expect(page.locator("#city-inspector")).to_have_attribute(
+                "data-selected-building", "marketplace")
+            market_job=page.locator(
+                "form.city-inspector-quote:has(input[name='buildingCode'][value='marketplace'])"
+                ":has(input[name='mode'][value='rapid'])"
+            )
+            expect(market_job.get_by_role("button",name="Lancer le chantier")).to_be_enabled()
+            market_job.get_by_role("button",name="Lancer le chantier").click()
+            expect(page.get_by_text("Chantier enregistré et ressources payées.")).to_be_visible(timeout=20000)
+            market_ready=page.get_by_text("marketplace niveau 1",exact=False)
+            deadline=time.monotonic()+115
+            while time.monotonic()<deadline:
+                if market_ready.count() and market_ready.first.is_visible():
+                    break
+                page.wait_for_timeout(2500)
+            expect(market_ready.first).to_be_visible(timeout=5000)
+            page.get_by_role("link",name="Marché",exact=True).click()
+            expect(page.get_by_role("heading",name="La halle des échanges")).to_be_visible()
+            wood_for_ore=page.locator(
+                "form.merchant-rate:has(input[name='pay_resource'][value='wood'])"
+                ":has(input[name='receive_resource'][value='ore'])"
+            )
+            wood_for_ore.locator("input[name='pay_amount']").fill("6")
+            wood_for_ore.get_by_role("button",name="Obtenir un devis").click()
+            expect(page.locator("#market-quote")).to_contain_text("3 minerai")
+            page.get_by_role("button",name="Confirmer cet échange").click()
+            expect(page.get_by_text("Échange confirmé :",exact=False)).to_be_visible(timeout=20000)
+            expect(page.get_by_test_id("market-history-row")).to_have_count(1)
+            expect(page.get_by_test_id("market-history-row").first).to_contain_text("6 bois vers 3 minerai")
+            page.get_by_role("link",name="Retourner dans la cité.").click()
+            expect(page.get_by_role("heading",level=1,name="Premier Havre")).to_be_visible()
+            # Progression: after exchanging resources, build the first dwelling
+            # and recruit the army used by the next journey.
             tier_one = page.locator(
                 "form.build-option:has(input[name='buildingCode'][value='recruit_t1'])"
                 ":has(input[name='mode'][value='rapid'])"
