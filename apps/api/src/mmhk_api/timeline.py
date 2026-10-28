@@ -47,7 +47,7 @@ def timeline_for_player(
              AND m.stage<>'completed'
              AND (m.arrival_due_at <= %s OR m.return_due_at <= %s)
            ORDER BY m.started_at,m.mission_id LIMIT %s""",
-        (account_id,account_id,account_id,horizon,limit+1),
+        (account_id,account_id,account_id,horizon,horizon,limit+1),
     ).fetchall()
     construction_events=[{
         "id":"construction-"+str(order_id),
