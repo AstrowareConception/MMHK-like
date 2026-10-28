@@ -1,14 +1,8 @@
 name: Jactari port regression
+# Run once after merge to main; manual validation on a consolidated feature branch.
 on:
   push:
-    paths:
-      - 'tools/jactari-port/**'
-      - 'data/Jactari/src/scripts/combat.min.js'
-      - 'data/Jactari/src/scripts/donnees.*.min.js'
-      - 'data/analysis/jactari-combat-conformance-roadmap.json'
-      - 'docs/game-design/32-ROADMAP-CONFORMITE-MOTEUR-COMBAT.md'
-      - '.github/workflows/jactari-port-test.yml'
-  pull_request:
+    branches: [main]
     paths:
       - 'tools/jactari-port/**'
       - 'data/Jactari/src/scripts/combat.min.js'
@@ -17,6 +11,10 @@ on:
       - 'docs/game-design/32-ROADMAP-CONFORMITE-MOTEUR-COMBAT.md'
       - '.github/workflows/jactari-port-test.yml'
   workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 jobs:
