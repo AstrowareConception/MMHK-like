@@ -135,7 +135,8 @@ def _stock_rows(db:psycopg.Connection,city_id:UUID,*,lock:bool) -> dict:
 def _receipt(row:tuple,*,replayed:bool=False) -> dict:
     (shipment_id,world_id,owner,origin,destination,policy_id,cargo,weights,
      load_units,capacity_units,distance_steps,travel_seconds,dispatched_at,
-     arrival_due_at,return_due_at,next_attempt_at,completed_at,status,return_leg)=row
+     arrival_due_at,return_due_at,next_attempt_at,completed_at,status,return_leg,
+     program_id,program_sequence)=row
     return {
         "shipment_id":str(shipment_id),"world_id":world_id,
         "source_city_id":str(origin),"destination_city_id":str(destination),
@@ -148,6 +149,8 @@ def _receipt(row:tuple,*,replayed:bool=False) -> dict:
         "next_attempt_at":next_attempt_at.isoformat() if next_attempt_at else None,
         "completed_at":completed_at.isoformat() if completed_at else None,
         "status":status,"return_leg":return_leg,
+        "program_id":str(program_id) if program_id else None,
+        "program_sequence":program_sequence,
         "replayed":replayed,"historically_certified":False,
     }
 
@@ -156,10 +159,12 @@ _COLUMNS = """shipment_id,world_id,owner_account_id,source_city_id,
                destination_city_id,policy_id,cargo,resource_weights,load_units,
                capacity_units,distance_steps,travel_seconds,dispatched_at,
                arrival_due_at,return_due_at,next_attempt_at,completed_at,
-               status,return_leg"""
+               status,return_leg,program_id,program_sequence"""
 
 
 def caravan_for_city(db:psycopg.Connection,*,owner:UUID,city_id:UUID)->dict:
+    # Local import: program worker uses send_caravan from this module.
+    from .caravan_programs import programs_for_city
     source=_city(db,city_id=city_id,owner=owner)
     policy=None
     try:
@@ -198,7 +203,8 @@ def caravan_for_city(db:psycopg.Connection,*,owner:UUID,city_id:UUID)->dict:
         "destinations":[{"city_id":str(c[0]),"name":c[1],"x":c[2],"y":c[3]}
                         for c in destinations],
         "shipments":results,
-        "repetition_enabled":False,
+        "programs":programs_for_city(db,owner=owner,city_id=city_id),
+        "repetition_enabled":True,
         "ally_destinations_enabled":False,
         "historically_certified":False,
     }
@@ -237,7 +243,14 @@ def quote_caravan(db:psycopg.Connection,*,owner:UUID,city_id:UUID,
 
 def send_caravan(db:psycopg.Connection,*,owner:UUID,city_id:UUID,
                  destination_city_id:UUID,shipment_id:UUID,cargo:dict,
-                 expected_policy_id:str)->dict:
+                 expected_policy_id:str,
+                 depart_at:datetime|None=None)->dict:
+    # Explicit clock injection is trusted Python worker/test only. Public HTTP
+    # sends use PostgreSQL clock_timestamp(), not an untrusted client time.
+    if depart_at is not None:
+        if not isinstance(depart_at,datetime) or depart_at.tzinfo is None or depart_at.utcoffset() is None:
+            raise ValueError("Departure time must be timezone aware")
+        depart_at=depart_at.astimezone(UTC)
     with db.transaction():
         origin=_city(db,city_id=city_id,owner=owner)
         if not isinstance(expected_policy_id,str) or not 3<=len(expected_policy_id)<=100:
@@ -289,7 +302,8 @@ def send_caravan(db:psycopg.Connection,*,owner:UUID,city_id:UUID,
                 )
                 if updated.rowcount!=1:
                     raise CaravanConflict("Cargo reservation conflicted")
-        started=db.execute("SELECT clock_timestamp()").fetchone()[0]
+        started=depart_at if depart_at is not None else db.execute(
+            "SELECT clock_timestamp()").fetchone()[0]
         arrives=started+timedelta(seconds=seconds)
         db.execute(
             """INSERT INTO caravan_shipments(
@@ -358,7 +372,8 @@ def run_caravan_batch(db:psycopg.Connection,*,now_at:datetime|None=None,
             if due is None:
                 break
             (sid,world,owner,source,target,policy,cargo,weights,weight,capacity,
-             distance,travel,depart,arrives,return_due,retry,finished,status,back) = due
+             distance,travel,depart,arrives,return_due,retry,finished,status,back,
+             program_id,program_sequence) = due
             # Lock cities in fixed order, also matching player order acquisition.
             # Operator deletion of a city is RESTRICTED while cargo is in flight.
             for cid in sorted((source,target),key=str):

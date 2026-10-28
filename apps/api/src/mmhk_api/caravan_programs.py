@@ -237,8 +237,8 @@ def run_program_batch(
             ).fetchone()
             if not row:
                 break
-            pid,world,owner,origin,target,policy_id,template,mode,total,sent,wait,
-            capacity,weights,speed,status,reason,created,due,last,closed = row
+            (pid,world,owner,origin,target,policy_id,template,mode,total,sent,wait,
+             capacity,weights,speed,status,reason,created,due,last,closed) = row
             # Locks source and destination regardless of ownership so
             # concurrent capture/transfer has a definitive winner.
             for cid in sorted((origin,target),key=str):
