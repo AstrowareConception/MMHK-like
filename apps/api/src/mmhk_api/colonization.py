@@ -307,6 +307,30 @@ def colonies_for_world(db:psycopg.Connection,*,owner:UUID,world_id:str)->dict:
            ORDER BY started_at DESC,order_id DESC LIMIT 30""",
         (world_id,owner),
     ).fetchall()
+    source_names={str(cid):name for cid,name,_,_,_ in cities}
+    hero_names={str(hid):name for hid,_,name,_ in heroes}
+    ids=[row[0] for row in orders]
+    events_by_order={}
+    if ids:
+        for oid,phase,occurred,details in db.execute(
+            """SELECT order_id,phase,occurred_at,details
+               FROM colonization_order_events
+               WHERE order_id=ANY(%s::uuid[])
+               ORDER BY occurred_at,phase""",
+            (ids,),
+        ).fetchall():
+            events_by_order.setdefault(str(oid),[]).append({
+                "phase":phase,"occurred_at":occurred.isoformat(),
+                "details":details,
+            })
+    histories=[]
+    for row in orders:
+        entry=_receipt(row)
+        entry["source_city_name"]=source_names.get(entry["source_city_id"],
+                                                      "Cité indisponible")
+        entry["hero_name"]=hero_names.get(entry["hero_id"],"Héros")
+        entry["events"]=events_by_order.get(entry["order_id"],[])
+        histories.append(entry)
     return {
         "world_id":world_id,"world_size":size,"server_now":now.isoformat(),
         "protection_until":protection_until.isoformat(),
@@ -320,7 +344,7 @@ def colonies_for_world(db:psycopg.Connection,*,owner:UUID,world_id:str)->dict:
                   for hid,cid,name,status in heroes],
         "qualified_sites":[{"x":x,"y":y,"mine_types":mines,"source_ref":ref}
                             for x,y,mines,ref in sites],
-        "expeditions":[_receipt(row) for row in orders],
+        "expeditions":histories,
         "historically_certified":False,
         "influence_source":"operator_qualified_record_only",
     }
