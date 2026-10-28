@@ -27,7 +27,7 @@ def test_regional_encounter_visible_and_duel_preview_is_read_only(city):
           (encounter_id,city_id,cell_i,cell_j,name,unit_code,unit_count,unit_power,source_ref)
           VALUES(%s,%s,1,3,'Loups témoins','wolves',4,1.0,'TEST-PVE')""",
           (eid,city["city"]))
-    assert client.get(region).json()["encounters"][0]["name"]=="Loups témoins"
+    assert client.get(region,headers=owned).json()["encounters"][0]["name"]=="Loups témoins"
     assert client.get(region,headers=foreign).status_code==404
     endpoint=f"/api/v1/me/cities/{city['city']}/encounters/{eid}/preview"
     request={"hero_id":str(hero),"unit_code":code}
