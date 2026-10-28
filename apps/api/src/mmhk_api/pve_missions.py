@@ -111,8 +111,14 @@ def missions_for_city(db:psycopg.Connection,owner:UUID,city_id:UUID,*,limit:int=
           "arrived_at":arrived.isoformat() if arrived else None,
           "returned_at":returned.isoformat() if returned else None,
           "duel_report":report})
+    route=db.execute(
+        """SELECT p.seconds_per_step,p.policy_id FROM pve_travel_policies p
+           JOIN cities c ON c.world_id=p.world_id WHERE c.city_id=%s""",(city_id,),
+    ).fetchone()
     return {"server_now":now.isoformat(),"city_id":str(city_id),
-            "historically_certified":False,"missions":result}
+            "historically_certified":False,
+            "travel_policy":{"seconds_per_step":route[0],"policy_id":route[1]} if route else None,
+            "missions":result}
 
 
 def advance_pve_missions(db:psycopg.Connection,*,max_orders:int=25,
