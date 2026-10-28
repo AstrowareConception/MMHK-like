@@ -37,8 +37,8 @@ export function RegionSceneInteractive({region,background}:{region:RegionView;ba
       <rect width="680" height="500" rx="9" fill="#203a42"/>
       {background&&<image href={background} x="0" y="0" width="680" height="500"
         preserveAspectRatio="xMidYMid slice"/>}
-      <path d="M0 220 L200 90 L400 150 L680 65 L680 500 L0 500 Z"
-        fill="#496b67" opacity=".24" pointerEvents="none"/>
+      {!background && <path d="M0 220 L200 90 L400 150 L680 65 L680 500 L0 500 Z"
+        fill="#496b67" opacity=".24" pointerEvents="none"/>}
       {region.cells.map(cell=>{
         // One logical tile occupies one isometric diamond, anchored to the floor.
         const cx=340+(cell.i-cell.j)*57,cy=116+(cell.i+cell.j)*36;
@@ -59,8 +59,9 @@ export function RegionSceneInteractive({region,background}:{region:RegionView;ba
             (owned?"Votre cité":"Occupation et terrain non cartographiés")}</title>
           <polygon points={polygon} strokeWidth={chosen?3:hovered?2:1}
             fill={chosen?"#b99456":hovered?"#eedba0":owned?"#a48b60":"url(#region-ground)"}
-            fillOpacity={chosen?.58:hovered?.37:owned?.86:background?.18:.82}
-            stroke={chosen?"#fff0bc":hovered?"#f3dba1":"#a4b5a0"} />
+            fillOpacity={chosen?.55:hovered?.3:owned?.82:background?.065:.82}
+            stroke={chosen?"#fff0bc":hovered?"#f3dba1":"#a4b5a0"}
+            strokeOpacity={chosen||hovered||owned?1:background?.22:.85} />
           {owned?<a href={"/cities/"+region.city_id}
             aria-label={"Entrer dans la ville "+region.city_name}>
             <path d={"M"+(cx-22)+" "+(cy+8)+" L"+(cx-22)+" "+(cy-30)+
@@ -71,13 +72,13 @@ export function RegionSceneInteractive({region,background}:{region:RegionView;ba
             <rect x={cx-6} y={cy-11} width="12" height="20" fill="#435358"/>
             <text x={cx} y={cy+31} textAnchor="middle" fill="#fff3d1"
               fontSize="12" stroke="#172e36" strokeWidth="3" paintOrder="stroke">Ville</text>
-          </a>:<text x={cx} y={cy+4} textAnchor="middle" fill="#d1d9c9"
-            fontSize="12" pointerEvents="none">?</text>}
+          </a>:(!background||chosen||hovered) ? <text x={cx} y={cy+4} textAnchor="middle" fill="#d1d9c9"
+            fontSize="12" pointerEvents="none">?</text> : null}
         </g>;
       })}
-      <rect x="10" y="455" width="382" height="32" rx="4" fill="#10232ccc" pointerEvents="none"/>
+      <rect x="10" y="455" width="406" height="32" rx="4" fill="#10232ccc" pointerEvents="none"/>
       <text x="22" y="475" fill="#e5d8b2" fontSize="11" pointerEvents="none">
-        Les cases ? n&apos;ont pas encore de données de terrain vérifiées.
+        Décor historique · occupations non cartographiées
       </text>
     </svg>
     <div className="region-selected-details" role="status">
