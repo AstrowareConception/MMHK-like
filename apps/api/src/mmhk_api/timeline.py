@@ -1,7 +1,7 @@
-"""Read-only prediction of authorized construction completions.
+"""Read-only prediction of authorized construction and hero travel milestones.
 
-PostgreSQL and the construction worker remain the only sources of truth.
-No synthetic military movements, rediscovery of enemy positions, or client time.
+PostgreSQL and the workers remain the only sources of truth.
+Only explicitly launched timed PvE missions are shown; no client-clock authority.
 """
 from __future__ import annotations
 
@@ -82,8 +82,4 @@ def timeline_for_player(
         "horizon_hours": hours,
         "truncated": len(events)>limit or len(rows)>limit or len(missions)>limit,
         "events": events[:limit],
-    }
-            for order_id, code, level, due, city_id, city_name, world_id
-            in rows[:limit]
-        ],
     }
