@@ -562,8 +562,9 @@ def run_colonization_batch(
             ).fetchone()
             site_present=db.execute(
                 """SELECT 1 FROM colonization_site_profiles
-                   WHERE world_id=%s AND x=%s AND y=%s""",
-                (world,x,y),
+                   WHERE world_id=%s AND x=%s AND y=%s
+                     AND enabled AND source_ref=%s""",
+                (world,x,y,site_ref),
             ).fetchone()
             occupied=db.execute(
                 """SELECT 1 FROM cities WHERE world_id=%s AND x=%s AND y=%s""",
