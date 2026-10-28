@@ -40,15 +40,56 @@ def world_overview(db: psycopg.Connection, account_id: UUID, world_id: str) -> d
     """Return only *owned* settlements; no visibility/spy reports exist yet."""
     world = _accessible_world(db, account_id, world_id)
     cities = owned_cities(db, account_id, world_id)
+    # Discoveries are independently scoped to membership; mere storage does not
+    # reveal an opposing city, a relic or territorial information.
+    discovered = db.execute(
+        """SELECT c.city_id,c.name,c.x,c.y
+           FROM map_city_discoveries d
+           JOIN cities c ON c.world_id=d.world_id AND c.city_id=d.city_id
+           WHERE d.world_id=%s AND d.viewer_account_id=%s
+             AND c.owner_account_id<>%s
+           ORDER BY c.city_id""",(world_id,account_id,account_id),
+    ).fetchall()
+    sites = db.execute(
+        """SELECT s.site_id,s.kind,s.label,s.x,s.y
+           FROM map_site_discoveries d
+           JOIN map_world_sites s ON s.site_id=d.site_id AND s.world_id=d.world_id
+           WHERE d.world_id=%s AND d.viewer_account_id=%s
+           ORDER BY s.site_id""",(world_id,account_id),
+    ).fetchall()
+    influence = db.execute(
+        """SELECT i.x,i.y,i.controller_account_id,a.username,i.observed_at
+           FROM map_influence_cells i
+           JOIN accounts a ON a.account_id=i.controller_account_id
+           WHERE i.world_id=%s AND
+             (i.controller_account_id=%s OR EXISTS(
+               SELECT 1 FROM map_influence_discoveries d
+               WHERE d.world_id=i.world_id AND d.x=i.x AND d.y=i.y
+                 AND d.viewer_account_id=%s))
+           ORDER BY i.x,i.y LIMIT 10000""",(world_id,account_id,account_id),
+    ).fetchall()
     return {
         "world_id": world_id,
         "name": world["name"],
         "world_size": world["world_size"],
         "topology": "torus",
-        "known_scope": "owned_cities_only",
+        "known_scope": "owned_and_discovered" if (discovered or sites or influence) else "owned_cities_only",
         "cities": cities,
-        "enemy_positions_exposed": False,
+        "enemy_positions_exposed": bool(discovered),
         "world_terrain_loaded": False,
+        "discovered_cities": [
+            {"city_id":str(r[0]),"name":r[1],"x":r[2],"y":r[3]}
+            for r in discovered
+        ],
+        "visible_sites": [
+            {"site_id":str(r[0]),"kind":r[1],"label":r[2],"x":r[3],"y":r[4]}
+            for r in sites
+        ],
+        "visible_influence": [
+            {"x":r[0],"y":r[1],"controller":r[3],
+             "is_mine":r[2]==account_id,"observed_at":r[4].isoformat()}
+            for r in influence
+        ],
     }
 
 

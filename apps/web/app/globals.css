@@ -377,3 +377,19 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
 .world-atlas-interactive:focus-visible {outline:2px solid #f4d78a;}
 .world-atlas-interactive text {user-select:none;}
 @media (prefers-reduced-motion: reduce) {.map-edge-control circle {transition:none;}}
+
+/* Region raster is 680 × 562, and every hit polygon shares its visible geometry. */
+.region-scene {aspect-ratio:680 / 562;}
+.region-selectable-cell {cursor:pointer;outline:none;}
+.region-selectable-cell:focus-visible polygon {stroke:#fff1b5;stroke-width:3;stroke-opacity:1;}
+.region-selectable-cell polygon {transition:fill-opacity .14s ease,stroke-opacity .14s ease;}
+@media(prefers-reduced-motion:reduce){.region-selectable-cell polygon {transition:none;}}
+
+/* Server-scoped world intel: discovered cities, relic sites and known influence. */
+.map-layer-switches {display:flex;align-items:center;flex-wrap:wrap;gap:9px;}
+.map-layer-switches label {display:flex;align-items:center;gap:5px;font:12px Georgia,serif;color:#e9d6a7;white-space:nowrap;cursor:pointer;}
+.map-layer-switches input {accent-color:#d0ad72;}
+.world-layer-legend {display:flex;gap:15px;flex-wrap:wrap;padding:9px 12px;
+  background:#1b2d34;border:1px solid #998259;color:#d8d0b7;font:12px Georgia,serif;}
+.world-map-site,.world-discovered-city {cursor:pointer;outline:none;}
+.world-map-site:focus-visible circle,.world-discovered-city:focus-visible circle {stroke:#fff2bd;stroke-width:4;}

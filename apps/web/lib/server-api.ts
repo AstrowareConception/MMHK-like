@@ -96,10 +96,13 @@ export type ConstructionCatalog = {
 
 export type WorldOverview = World & {
   topology: "torus";
-  known_scope: "owned_cities_only";
+  known_scope: "owned_cities_only" | "owned_and_discovered";
   cities: City[];
   enemy_positions_exposed: boolean;
   world_terrain_loaded: boolean;
+  discovered_cities: {city_id:string;name:string;x:number;y:number}[];
+  visible_sites: {site_id:string;kind:"sphinx"|"obelisk"|"dolmen"|"portal"|"relic"|"special";label:string;x:number;y:number}[];
+  visible_influence: {x:number;y:number;controller:string;is_mine:boolean;observed_at:string}[];
 };
 
 export type RegionView = {
