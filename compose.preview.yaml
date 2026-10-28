@@ -1,0 +1,91 @@
+# SSH-tunnel-only PREVIEW. No public binding is allowed.
+# Requires MMHK_PREVIEW_POSTGRES_PASSWORD and MMHK_LOGIN_RATE_KEY.
+# Run DB migrations manually before starting api/web/worker.
+name: mmhk-private-preview
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: mmhk_preview
+      POSTGRES_PASSWORD: ${MMHK_PREVIEW_POSTGRES_PASSWORD:?Set MMHK_PREVIEW_POSTGRES_PASSWORD}
+      POSTGRES_DB: mmhk_preview
+    volumes:
+      - preview_pgdata:/var/lib/postgresql/data
+    networks: [private]
+    healthcheck:
+      test: ["CMD-SHELL","pg_isready -U mmhk_preview -d mmhk_preview"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server","--save","","--appendonly","no","--maxmemory","128mb","--maxmemory-policy","allkeys-lru"]
+    networks: [private]
+    restart: unless-stopped
+    # Redis is intentionally NOT yet attached to app game state.
+
+  api:
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile.api
+    environment:
+      PGHOST: postgres
+      PGDATABASE: mmhk_preview
+      PGUSER: mmhk_preview
+      PGPASSWORD: ${MMHK_PREVIEW_POSTGRES_PASSWORD:?Set MMHK_PREVIEW_POSTGRES_PASSWORD}
+      MMHK_LOGIN_RATE_KEY: ${MMHK_LOGIN_RATE_KEY:?Set MMHK_LOGIN_RATE_KEY}
+    expose: ["8000"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks: [private]
+    read_only: true
+    tmpfs: ["/tmp:size=16m,mode=1777"]
+    security_opt: ["no-new-privileges:true"]
+    restart: unless-stopped
+
+  web:
+    build:
+      context: .
+      dockerfile: apps/web/Dockerfile.preview
+    environment:
+      MMHK_API_INTERNAL_URL: http://api:8000
+      NODE_ENV: production
+    ports:
+      - "127.0.0.1:${MMHK_PREVIEW_PORT:-3001}:3000"
+    depends_on: [api]
+    networks: [private]
+    read_only: true
+    tmpfs: ["/tmp:size=32m,mode=1777"]
+    security_opt: ["no-new-privileges:true"]
+    restart: unless-stopped
+
+  worker:
+    profiles: ["workers"]
+    build:
+      context: .
+      dockerfile: apps/api/Dockerfile.worker
+    environment:
+      PGHOST: postgres
+      PGDATABASE: mmhk_preview
+      PGUSER: mmhk_preview
+      PGPASSWORD: ${MMHK_PREVIEW_POSTGRES_PASSWORD:?Set MMHK_PREVIEW_POSTGRES_PASSWORD}
+    command: ["python","-m","mmhk_api.supervised_worker","--loop","--interval-seconds","10"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks: [private]
+    read_only: true
+    tmpfs: ["/tmp:size=16m,mode=1777"]
+    security_opt: ["no-new-privileges:true"]
+    restart: unless-stopped
+    stop_grace_period: 40s
+
+networks:
+  private:
+    driver: bridge
+
+volumes:
+  preview_pgdata:
