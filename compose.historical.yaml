@@ -1,0 +1,19 @@
+# Optional LOCAL-ONLY overlay. Never use in public deployments.
+# Start using -f compose.local.yaml -f compose.historical.yaml
+services:
+  web:
+    environment:
+      MMHK_HISTORICAL_ASSETS: "true"
+      MMHK_PREVIEW_LOOPBACK_ONLY: "true"
+      MMHK_PRIVATE_ASSETS_ROOT: "/opt/mmhk-private"
+      MMHK_PRIVATE_RECONSTRUCTED_ROOT: "/opt/mmhk-reconstructed"
+    volumes:
+      - type: bind
+        source: ./data/assets-private-original
+        target: /opt/mmhk-private
+        read_only: true
+
+      - type: bind
+        source: ./data/assets-private-reconstructed
+        target: /opt/mmhk-reconstructed
+        read_only: true
