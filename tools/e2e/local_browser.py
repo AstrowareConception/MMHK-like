@@ -211,7 +211,7 @@ def main() -> int:
             expect(page.get_by_test_id("region-selection")).to_have_text("(1, 3)")
             expect(page.locator(".region-mission-map [data-mission-stage='outbound']")).to_have_count(1)
             expect(page.get_by_text("En marche vers", exact=False)).to_be_visible()
-            expect(page.get_by_text("Aller", exact=False)).to_be_visible()
+            expect(page.locator(".region-mission-map text").filter(has_text="Aller").first).to_be_visible()
             expect(page.locator(".region-mission-map [data-mission-stage='returning']")).to_have_count(1,timeout=100000)
             expect(page.get_by_text("Sur le chemin du retour", exact=False)).to_be_visible()
             expect(page.locator(".region-mission-map [data-mission-stage='outbound']")).to_have_count(0)
