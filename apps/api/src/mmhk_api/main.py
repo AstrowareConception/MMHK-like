@@ -21,6 +21,9 @@ from .caravans import (
     CaravanNotFound, CaravanConflict, caravan_for_city, quote_caravan,
     send_caravan,
 )
+from .caravan_programs import (
+    CaravanProgramConflict, create_program, stop_program,
+)
 from .marketplace import (
     MarketplaceNotFound, MarketplaceConflict, offers_for_city,
     publish_offer, buy_offer, withdraw_offer,
@@ -504,6 +507,66 @@ def my_send_caravan(city_id:UUID,command:CaravanSendRequest,db:_db,
         return result
     except CaravanNotFound as exc:
         raise HTTPException(status_code=404,detail="City not found") from exc
+    except CaravanConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+
+# US-ECH-014..017: bounded, operator-versioned scheduled caravan programs.
+# These are not unrestricted future action queues. Each leg is authorized
+# again by the PostgreSQL worker at its actual departure.
+class CaravanProgramCreateRequest(StrictDTO):
+    program_id: UUID
+    destination_city_id: UUID
+    cargo_template: dict[str,int]
+    expected_policy_id: str = Field(min_length=3,max_length=100)
+    quantity_mode: str = Field(pattern=r"^(exact|available_up_to)$")
+    shipments_total: int = Field(ge=2,le=12)
+    wait_seconds: int = Field(ge=60,le=86400)
+
+
+class CaravanProgramStopRequest(StrictDTO):
+    order_id: UUID
+
+
+@app.post("/api/v1/me/cities/{city_id}/caravans/programs",status_code=201)
+def my_create_caravan_program(
+    city_id:UUID, command:CaravanProgramCreateRequest, db:_db,
+    player:_player,response:Response,
+)->dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        receipt=create_program(
+            db,owner=player,city_id=city_id,
+            destination_city_id=command.destination_city_id,
+            program_id=command.program_id,cargo_template=command.cargo_template,
+            expected_policy_id=command.expected_policy_id,
+            quantity_mode=command.quantity_mode,
+            shipments_total=command.shipments_total,
+            wait_seconds=command.wait_seconds,
+        )
+        if receipt["replayed"]: response.status_code=200
+        return receipt
+    except CaravanNotFound as exc:
+        raise HTTPException(status_code=404,detail="City not found") from exc
+    except CaravanConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+@app.post("/api/v1/me/cities/{city_id}/caravans/programs/{program_id}/stop",
+          status_code=201)
+def my_stop_caravan_program(
+    city_id:UUID,program_id:UUID,command:CaravanProgramStopRequest,
+    db:_db,player:_player,response:Response,
+)->dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        receipt=stop_program(db,owner=player,city_id=city_id,
+                             program_id=program_id,order_id=command.order_id)
+        if receipt["replayed"]:response.status_code=200
+        return receipt
+    except CaravanNotFound as exc:
+        raise HTTPException(status_code=404,detail="City or program not found") from exc
     except CaravanConflict as exc:
         raise HTTPException(status_code=409,detail=str(exc)) from exc
 

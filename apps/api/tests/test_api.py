@@ -48,6 +48,8 @@ def test_openapi_contains_no_unapproved_game_commands():
         "/api/v1/me/cities/{city_id}/market/offers/{offer_id}/withdraw",
         "/api/v1/me/cities/{city_id}/caravans",
         "/api/v1/me/cities/{city_id}/caravans/quote",
+        "/api/v1/me/cities/{city_id}/caravans/programs",
+        "/api/v1/me/cities/{city_id}/caravans/programs/{program_id}/stop",
         "/api/v1/me/cities/{city_id}/forces",
         "/api/v1/me/cities/{city_id}/recruit",
         "/api/v1/me/cities/{city_id}/heroes/hire",

@@ -23,6 +23,7 @@ import psycopg
 from .construction import run_construction_batch
 from .pve_missions import advance_pve_missions
 from .caravans import run_caravan_batch
+from .caravan_programs import run_program_batch
 from .db import connect
 from .economy import run_economy_batch
 
@@ -81,6 +82,7 @@ def iteration(
     construction_fn: Callable=run_construction_batch,
     mission_fn: Callable=advance_pve_missions,
     caravan_fn: Callable=run_caravan_batch,
+    program_fn: Callable=run_program_batch,
 ) -> dict:
     """Isolate failure of the economic engine from construction processing.
 
@@ -107,6 +109,11 @@ def iteration(
         mission_count=0
         errors.append("missions")
     try:
+        program_count=len(program_fn(db,max_orders=max_orders))
+    except Exception:
+        program_count=0
+        errors.append("caravan_programs")
+    try:
         caravan_count=len(caravan_fn(db,max_orders=max_orders))
     except Exception:
         caravan_count=0
@@ -123,7 +130,8 @@ def iteration(
     return {"kind":"worker_cycle","iteration":number,"worker_id":worker_id,
             "counts":counts,"state":"degraded" if errors else "healthy",
             "error_kinds":errors,"mission_transitions":mission_count,
-            "caravan_transitions":caravan_count}
+            "caravan_transitions":caravan_count,
+            "program_transitions":program_count}
 
 
 def _log(item: dict) -> None:
