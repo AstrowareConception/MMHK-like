@@ -118,6 +118,15 @@ def expand_demo(db:psycopg.Connection)->dict:
                    ON CONFLICT DO NOTHING""",
                 (pay,receive,numerator,denominator),
             )
+        # Fixed-price offers are a separate, explicitly experimental lab.
+        # No fee, auction or transport rate is taken from the archived client.
+        db.execute(
+            """INSERT INTO marketplace_policies
+               (world_id,policy_id,enabled,max_quantity,max_price,
+                min_duration_seconds,max_duration_seconds)
+               VALUES('local-sandbox','LOCAL-FIXED-MARKET-V1',true,200,1000,60,86400)
+               ON CONFLICT DO NOTHING"""
+        )
         for (city_id,) in cities:
             for code,amount in (("militia",18),("archers",8)):
                 db.execute(

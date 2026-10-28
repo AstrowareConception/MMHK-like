@@ -17,6 +17,10 @@ from .merchant import (
     MerchantConflict, MerchantNotFound, market_for_city, quote_merchant,
     execute_merchant,
 )
+from .marketplace import (
+    MarketplaceNotFound, MarketplaceConflict, offers_for_city,
+    publish_offer, buy_offer, withdraw_offer,
+)
 from .map_views import MapNotFound, own_region, world_overview
 from .timeline import timeline_for_player
 from .artifacts import artifact_inventory, move_artifact
@@ -348,6 +352,94 @@ def my_city_market_exchange(
     except MerchantNotFound as exc:
         raise HTTPException(status_code=404,detail="City not found") from exc
     except MerchantConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+
+# US-ECH-004/005/006/008: laboratory fixed-price offers; no historic auctions
+# or player-defined trading policies. All settlement is server-side escrowed.
+class MarketOfferPublishRequest(StrictDTO):
+    order_id: UUID
+    resource: str = Field(pattern=_MARKET_RESOURCE)
+    quantity: int = Field(ge=1,le=1000000)
+    price_resource: str = Field(pattern=_MARKET_RESOURCE)
+    price_amount: int = Field(ge=1,le=1000000)
+    duration_seconds: int = Field(ge=60,le=604800)
+
+
+class MarketOfferBuyRequest(StrictDTO):
+    order_id: UUID
+    expected_resource: str = Field(pattern=_MARKET_RESOURCE)
+    expected_quantity: int = Field(ge=1,le=1000000)
+    expected_price_resource: str = Field(pattern=_MARKET_RESOURCE)
+    expected_price_amount: int = Field(ge=1,le=1000000)
+
+
+class MarketOfferWithdrawRequest(StrictDTO):
+    order_id: UUID
+
+
+@app.get("/api/v1/me/cities/{city_id}/market/offers")
+def my_market_offers(city_id: UUID, db: _db, player: _player,
+                     response: Response) -> dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        return offers_for_city(db,owner=player,city_id=city_id)
+    except MarketplaceNotFound as exc:
+        raise HTTPException(status_code=404,detail="City not found") from exc
+
+
+@app.post("/api/v1/me/cities/{city_id}/market/offers",status_code=201)
+def my_market_offer_publish(city_id:UUID, command:MarketOfferPublishRequest,
+                            db:_db, player:_player, response:Response)->dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        receipt=publish_offer(
+            db,owner=player,city_id=city_id,order_id=command.order_id,
+            resource=command.resource,quantity=command.quantity,
+            price_resource=command.price_resource,price_amount=command.price_amount,
+            duration_seconds=command.duration_seconds)
+        if receipt["replayed"]:response.status_code=200
+        return receipt
+    except MarketplaceNotFound as exc:
+        raise HTTPException(status_code=404,detail="City not found") from exc
+    except MarketplaceConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+@app.post("/api/v1/me/cities/{city_id}/market/offers/{offer_id}/buy",status_code=201)
+def my_market_offer_buy(city_id:UUID,offer_id:UUID,command:MarketOfferBuyRequest,
+                        db:_db,player:_player,response:Response)->dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        receipt=buy_offer(
+            db,owner=player,city_id=city_id,offer_id=offer_id,
+            order_id=command.order_id,
+            expected_resource=command.expected_resource,
+            expected_quantity=command.expected_quantity,
+            expected_price_resource=command.expected_price_resource,
+            expected_price_amount=command.expected_price_amount)
+        if receipt["replayed"]:response.status_code=200
+        return receipt
+    except MarketplaceNotFound as exc:
+        raise HTTPException(status_code=404,detail="City or offer not found") from exc
+    except MarketplaceConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+@app.post("/api/v1/me/cities/{city_id}/market/offers/{offer_id}/withdraw",status_code=201)
+def my_market_offer_withdraw(city_id:UUID,offer_id:UUID,command:MarketOfferWithdrawRequest,
+                             db:_db,player:_player,response:Response)->dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        receipt=withdraw_offer(
+            db,owner=player,city_id=city_id,offer_id=offer_id,
+            order_id=command.order_id)
+        if receipt["replayed"]:response.status_code=200
+        return receipt
+    except MarketplaceNotFound as exc:
+        raise HTTPException(status_code=404,detail="City or offer not found") from exc
+    except MarketplaceConflict as exc:
         raise HTTPException(status_code=409,detail=str(exc)) from exc
 
 
