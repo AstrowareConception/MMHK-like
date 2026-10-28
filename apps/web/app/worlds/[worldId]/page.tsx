@@ -26,13 +26,16 @@ export default async function WorldPage({
   }
   const world = result.data;
   const currentCity=world.cities[0];
-  const [cityDetail,colonyResponse]=await Promise.all([
-    currentCity
-      ?privateApi<CityDetail>("/api/v1/me/cities/"+encodeURIComponent(currentCity.city_id),token)
-      :Promise.resolve(null),
+  const [details,colonyResponse]=await Promise.all([
+    Promise.all(world.cities.map(c=>
+      privateApi<CityDetail>("/api/v1/me/cities/"+encodeURIComponent(c.city_id),token))),
     privateApi<ColonizationCatalog>(
       "/api/v1/me/worlds/"+encodeURIComponent(worldId)+"/colonization",token),
   ]);
+  const cityDetail=details[0];
+  const cityModels=world.cities.map((c,i)=>({
+    city:c,detail:details[i]?.ok?details[i].data:undefined,
+  }));
   const colonies=colonyResponse.ok?colonyResponse.data:undefined;
   return (
     <GameShell token={token} title={world.name}
@@ -74,6 +77,36 @@ export default async function WorldPage({
             </div>
           ))}
         </div>
+        {world.cities.length>1&&<section className="realm-treasury-summary"
+          aria-label="Comparaison des réserves des cités">
+          <h2>Réserves locales de mes cités</h2>
+          <p>Chaque cité possède ses propres stocks et capacités.
+            Ces montants ne constituent pas un portefeuille global et ne sont
+            pas immédiatement utilisables depuis une autre ville.
+            Préparez une caravane pour transférer vos ressources.</p>
+          <div className="realm-stock-scroll">
+            <table>
+              <thead><tr>
+                <th scope="col">Cité</th>
+                <th scope="col">Or</th><th scope="col">Bois</th>
+                <th scope="col">Minerai</th><th scope="col">Cristal</th>
+                <th scope="col">Gemmes</th><th scope="col">Soufre</th>
+                <th scope="col">Mercure</th>
+                <th scope="col">Action</th>
+              </tr></thead>
+              <tbody>{cityModels.map(({city,detail})=><tr key={city.city_id}>
+                <th scope="row">{city.name}</th>
+                {(["gold","wood","ore","crystal","gems","sulfur","mercury"] as const)
+                  .map(k=><td key={k}>
+                    {detail?.stocks[k]!==undefined?
+                      detail.stocks[k].toLocaleString("fr-FR"):"—"}
+                  </td>)}
+                <td><Link href={"/cities/"+city.city_id+"/market#caravans"}>
+                  Caravanes</Link></td>
+              </tr>)}</tbody>
+            </table>
+          </div>
+        </section>}
         {world.cities.length === 0 && (
           <p>Vous ne possédez pas encore de ville dans ce monde.</p>
         )}
