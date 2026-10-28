@@ -60,6 +60,14 @@ def main() -> int:
             expect(rapid.get_by_role("button", name="Lancer ce chantier")).to_be_enabled()
             rapid.get_by_role("button", name="Lancer ce chantier").click()
             expect(page.get_by_text("Chantier enregistré et ressources payées.")).to_be_visible(timeout=20000)
+            snap = page.request.get(root + "/api/game-timeline?hours=12")
+            payload = snap.json() if snap.ok else {}
+            print("Timeline construction diagnostics:",
+                  "http", snap.status,
+                  "server_events", len(payload.get("events", [])),
+                  "visual_events", page.locator(".timeline-event").count(),
+                  "clusters", page.locator(".timeline-cluster").count(),
+                  "message", page.locator(".kingdom-timeline").inner_text()[:180], flush=True)
             expect(page.locator(".timeline-event")).to_have_count(1, timeout=20000)
             expect(page.get_by_text("En construction", exact=False)).to_be_visible()
             # One active site, no queue and no second payment option.
