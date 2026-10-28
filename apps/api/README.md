@@ -217,6 +217,38 @@ Un bâtiment dépendant devient alors inactif et cesse de produire des
 bonus. Les détails, limites historiques et tests sont documentés dans
 [EFFETS-BATIMENTS-POSTGRESQL.md](../../docs/specifications/EFFETS-BATIMENTS-POSTGRESQL.md).
 
+## Worker supervisé et interface de ville visuelle
+
+Après migration PostgreSQL V005, les workers peuvent être lancés dans un
+conteneur Docker explicitement activé, au lieu de déclencher manuellement
+les deux exécutables.
+
+```bash
+export MMHK_POSTGRES_PASSWORD='votre-secret-local'
+python -m mmhk_api.manage migrate
+docker compose -f compose.dev.yaml -f compose.workers.yaml \
+  --profile workers up -d --build
+```
+
+La migration doit se faire sur la base de l'environnement ciblé.
+Le superviseur se nomme `mmhk_api.supervised_worker`, inclut une
+sonde de santé PostgreSQL et redémarre après erreurs répétées.
+Le traitement reste idempotent grâce aux transactions PostgreSQL.
+Vous pouvez lancer un seul cycle sans service résident :
+
+```bash
+python -m mmhk_api.supervised_worker --once
+```
+
+L'interface Next.js dispose maintenant d'une vue de ville DOM/CSS au ratio
+historique **680×552**, avec certains marqueurs placés sur les coordonnées
+du client Havre archivé. Les images historiques ne sont **pas embarquées**,
+faute de droits de redistribution établis. Il s'agit d'un gabarit
+schématique et non d'un rendu fidèle achevé.
+
+Lire [la documentation technique](../../docs/specifications/WORKERS-SUPERVISES-VILLE-VISUELLE.md)
+pour les garanties, tests, limites de supervision et commandes d'arrêt.
+
 ## Limites explicites avant tout déploiement public
 
 - Aucun mécanisme d'inscription publique, réinitialisation de mot de passe,
@@ -226,8 +258,8 @@ bonus. Les détails, limites historiques et tests sont documentés dans
   mais aucun recrutement, combat ou effet automatique des bâtiments n'est livré.
 - Redis est disponible dans Docker Compose **mais n'est pas utilisé** : ne
   jamais y conserver l'état autoritatif d'une ville.
-- Les workers économie et construction sont exécutables à la demande, mais
-  aucune planification autonome ni orchestration de combat n'est activée.
+- Le superviseur Docker est disponible par opt-in, mais aucune supervision
+  externe, alerte fiable ou orchestration de combat n'est activée.
 - PostgreSQL a été retenu **provisoirement comme base d'implémentation**,
   dans l'attente d'une confirmation explicite du choix définitif.
 - Les règles de saison 2 non démontrées restent signalées ; le moteur
