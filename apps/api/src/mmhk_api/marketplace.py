@@ -145,6 +145,25 @@ def _current_stock(db: psycopg.Connection, *, city_id: UUID, resource: str,
     return int(amount),cap
 
 
+def _locked_stocks(db: psycopg.Connection, city_id: UUID) -> dict:
+    """Lock all city stocks lexically: mirrors economy worker's row order."""
+    return {resource:(int(amount),capacity) for resource,amount,capacity in db.execute(
+        """SELECT resource,amount,capacity FROM city_stocks
+           WHERE city_id=%s ORDER BY resource FOR UPDATE""",(city_id,),
+    ).fetchall()}
+
+
+def _stock_balance(stocks: dict, resource: str, effects: dict) -> tuple[int,int]:
+    if resource not in stocks:
+        raise MarketplaceConflict("City stock row missing")
+    balance,base_cap=stocks[resource]
+    maximum=(BIGINT if base_cap is None else
+             int(base_cap)+int(effects["capacity_bonus"].get(resource,0)))
+    if maximum>BIGINT:
+        raise MarketplaceConflict("Storage capacity exceeds signed bigint")
+    return balance,maximum
+
+
 def _offer(db: psycopg.Connection, offer_id: UUID, *, lock: bool = False) -> tuple:
     row=db.execute(
         """SELECT offer_id,world_id,seller_city_id,seller_account_id,policy_id,
@@ -312,13 +331,14 @@ def buy_offer(db: psycopg.Connection, *, owner: UUID, city_id: UUID,
         policy=_policy(db,world_id,lock=True)
         if policy is None or offer[4]!=policy["policy_id"]:
             raise MarketplaceConflict("Offer policy has been withdrawn")
-        # A full-lot trade: goods reside in escrow, not in seller stock.
-        price_balance,_=_current_stock(
-            db,city_id=city_id,resource=offer[7],effects=buyer_effects)
-        goods_balance,goods_cap=_current_stock(
-            db,city_id=city_id,resource=offer[5],effects=buyer_effects)
-        proceeds_balance,proceeds_cap=_current_stock(
-            db,city_id=offer[2],resource=offer[7],effects=seller_effects)
+        # Economy worker locks stock rows ordered by resource. Lock all stocks
+        # using the same order, across cities, to prevent a two-resource deadlock.
+        city_stocks={}
+        for cid in sorted({city_id,offer[2]},key=str):
+            city_stocks[cid]=_locked_stocks(db,cid)
+        price_balance,_=_stock_balance(city_stocks[city_id],offer[7],buyer_effects)
+        goods_balance,goods_cap=_stock_balance(city_stocks[city_id],offer[5],buyer_effects)
+        proceeds_balance,proceeds_cap=_stock_balance(city_stocks[offer[2]],offer[7],seller_effects)
         if (price_balance<offer[8] or goods_balance+offer[6]>goods_cap or
             proceeds_balance+offer[8]>proceeds_cap or
             goods_balance+offer[6]>BIGINT or proceeds_balance+offer[8]>BIGINT):
