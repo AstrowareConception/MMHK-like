@@ -20,6 +20,7 @@ const recipes=[{
   ["ui.panel.main","img/background/metal.jpg"],
   ["timeline.background","img/timeLine/background.jpg"],
   ["world.background","img/worldMap/zoom1/background.jpg"],
+  ["world.background.political","img/worldMap/zoom2/background.jpg"],
   ["region.background","img/region/background_region.jpg"]
 ].map(([id,asset])=>({id,relative:"4.1.13-MTR/"+asset,sources:[
   "data/assets-recovered/cdn-bulk/4.1.13-MTR/"+asset,

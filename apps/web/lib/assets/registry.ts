@@ -4,6 +4,7 @@ export const ASSETS = {
   "ui.panel.main": { publicPath: null },
   "ui.page.background": { publicPath: null },
   "world.background": { publicPath: null },
+  "world.background.political": { publicPath: null },
   "region.background": { publicPath: null },
   "timeline.background": { publicPath: null },
   "resource.gold": { publicPath: "/themes/public-safe/gold.svg" },
