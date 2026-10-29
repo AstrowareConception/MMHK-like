@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+      # One focused PR42 full-matrix validation; remove before merge.
+      - feat/mmhk-historical-heroes-garrisons-42
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
@@ -88,6 +90,11 @@ jobs:
         run: node --experimental-strip-types --test ../../tools/tests/map-geometry.test.mjs
       - name: Install pinned top-level dependencies
         run: npm install --no-audit --no-fund
+      - name: Audit historical portraits and private-only Jactari sheets
+        run: |
+          node --test ../../tools/tests/prepare-private-historical.test.mjs
+          node ../../tools/prepare-private-historical.mjs > /tmp/mmhk-portraits.json
+          node -e 'const r=require("/tmp/mmhk-portraits.json"); const keys=["hero.sheet.haven","hero.sheet.academy","hero.sheet.inferno","hero.sheet.necropolis","hero.sheet.sylvan","army.sheet.haven"]; if(keys.some(k=>!r.manifest_keys.includes(k))) process.exit(1);'
       - name: Build frontend without a running API
         run: npm run build
       - name: Check frontend types
@@ -228,6 +235,11 @@ jobs:
           MMHK_E2E_USERNAME="demo_ci" \
           MMHK_E2E_PASSWORD="$password" \
           python3 tools/e2e/terrain_browser.py
+          # Switch the disposable test to a localhost-only historical theme.
+          # No screenshots of the restricted art may be uploaded to Actions.
+          node tools/prepare-private-historical.mjs > /tmp/mmhk-private-setup.json
+          docker compose --env-file .env.local -f compose.local.yaml -f compose.historical.yaml up -d --wait --no-build --no-deps --force-recreate web
+          python3 tools/e2e/historical_assets_browser.py
       - name: Diagnose SSR failure after authenticated browser navigation
         if: failure()
         run: |
