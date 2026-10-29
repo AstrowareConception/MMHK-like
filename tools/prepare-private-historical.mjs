@@ -1,6 +1,6 @@
 #!/usr/bin/env node
 /** Copies ONLY known recovered historical files into a gitignored local pack. */
-import { existsSync, mkdirSync, readFileSync, writeFileSync, copyFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync, copyFileSync, chmodSync } from 'node:fs';
 import { createHash } from 'node:crypto';
 import { resolve, join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -102,6 +102,11 @@ for(const row of recipes) {
   if(!Object.prototype.hasOwnProperty.call(existing,row.id))existing[row.id]=row.relative;
 }
 mkdirSync(target,{recursive:true});
-writeFileSync(manifestFile,JSON.stringify(existing,null,2)+'\n',{mode:0o600});
+// Only trusted localhost Docker web (USER node, not the host creator UID)
+// needs read access. The manifest contains asset paths, never credentials.
+// Mode 0600 used previously prevented the unprivileged container from
+// loading any artwork and silently returned 404 for valid authenticated requests.
+writeFileSync(manifestFile,JSON.stringify(existing,null,2)+'\n',{mode:0o644});
+chmodSync(manifestFile,0o644); // Fix existing 0600 manifests as well.
 console.log(JSON.stringify({private_root:'data/assets-private-original',copied,reused,unavailable,
   manifest_keys:Object.keys(existing).sort(),mode:'private_historical_opt_in'},null,2));
