@@ -2,7 +2,8 @@
 
 import {useRef,useState} from "react";
 import {CityScene} from "./city-scene";
-import {CityBuildingInspector,buildingName} from "./city-building-inspector";
+import {CityBuildingInspector} from "./city-building-inspector";
+import {buildingName} from "../lib/city-buildings";
 import type {CityDetail,ConstructionCatalog} from "../lib/server-api";
 
 /**
