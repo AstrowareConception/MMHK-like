@@ -2,6 +2,7 @@
 import {useEffect,useRef,useState,useTransition} from "react";
 import type {DragEvent,KeyboardEvent,PointerEvent} from "react";
 import {transferHeroUnits} from "../app/actions";
+import {HeritagePortrait,HeritageUnitArt} from "./heritage-art";
 import type {CityForces} from "../lib/server-api";
 
 type Hero=CityForces["heroes"][number];
@@ -16,8 +17,8 @@ const nice=(n:number)=>n.toLocaleString("fr-FR");
 
 export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
   cityId:string;forces:CityForces;
-  portrait:{might:string;magic:string};
-  backdrop:string|null;
+  portrait:{might:string;magic:string};portraitSheet:string|null;
+  unitSheet:string|null;backdrop:string|null;
 }){
   const [ready,setReady]=useState(false);
   useEffect(()=>setReady(true),[]);
@@ -83,9 +84,8 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
       role="button" tabIndex={0} aria-pressed={active}
       aria-label={item.name+", "+nice(item.quantity)+" soldats. Sélectionner ou déplacer"}>
       <span className="mmhk-stack-art">
-        {IMAGES[item.unit_code]?<img src={IMAGES[item.unit_code]}
-          width={76} height={76} alt="" draggable={false}/>:
-          <span aria-hidden="true">⚔</span>}
+        <HeritageUnitArt unitCode={item.unit_code} sheet={unitSheet}
+          fallback={IMAGES[item.unit_code]} scale={1.08}/>
       </span>
       <strong>{item.name}</strong>
       <small>Rang {item.tier}</small>
@@ -154,10 +154,10 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
     aria-label="Salle de déploiement des armées" aria-busy={pending}
     data-ready={ready?"true":"false"}>
     <header className="mmhk-board-heading">
-      <div><span className="eyebrow">GRAND HALL DES ARMÉES</span>
-        <h3>Déployer la garnison</h3>
-        <p>Glissez un peloton vers le portrait d'un héros, ou ramenez-le dans
-          le château. Une sélection puis un clic fonctionne aussi au tactile.</p></div>
+      <div><span className="eyebrow">ORGANISER VOS TROUPES</span>
+        <h3>Garnison et héros</h3>
+        <p>Déplacez une troupe de la ville vers le héros, ou inversement.
+          Choisissez ensuite le nombre exact de soldats.</p></div>
       <div className="mmhk-war-count"><strong>{
         nice(forces.garrison.reduce((n,u)=>n+u.quantity,0)+
           forces.hero_armies.reduce((n,u)=>n+u.quantity,0))
@@ -171,7 +171,7 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
         data-testid="garrison-drop-zone"
         {...targetEvents({heroId:null},"garrison")}>
         <div className="mmhk-keep-heading"><span aria-hidden="true">♜</span>
-          <h4>Garnison de la cité</h4>
+          <h4>Dans la cité</h4>
           <small>{nice(roster.reduce((n,u)=>n+u.quantity,0))} soldats</small></div>
         <div className="mmhk-battle-stacks">{roster.length?roster.map(stack):
           <p className="mmhk-empty-room">Aucun soldat en garnison · recrutez dans vos demeures.</p>}</div>
@@ -183,8 +183,8 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
           data-testid="hero-drop-zone" data-hero-id={hero.hero_id}
           {...targetEvents({heroId:hero.hero_id},hero.hero_id)}>
           <div className="mmhk-hero-card-head hero-profile-info">
-            <img src={portrait[hero.archetype]} width={86} height={112}
-              alt="" draggable={false}/>
+            <HeritagePortrait heroId={hero.hero_id} archetype={hero.archetype}
+              sheet={portraitSheet} fallback={portrait[hero.archetype]}/>
             <div><strong>{hero.name}</strong>
               <span>Héros niveau {hero.level}</span>
               <small>{hero.status==="idle"?"Présent au château":"Indisponible pour les transferts"}</small></div>
