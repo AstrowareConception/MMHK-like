@@ -230,6 +230,15 @@ jobs:
           MMHK_E2E_USERNAME="demo_ci" \
           MMHK_E2E_PASSWORD="$password" \
           python3 tools/e2e/terrain_browser.py
+      - name: Diagnose SSR failure after authenticated browser navigation
+        if: failure()
+        run: |
+          # Browser production React errors omit the server-side exception.
+          # Keep only local disposable service logs, never dump .env.local.
+          if [ -f .env.local ]; then
+            docker compose --env-file .env.local -f compose.local.yaml logs \
+              --no-color --tail=160 web api worker || true
+          fi
       - name: Collect fantasy UI screenshots for visual review
         if: always()
         uses: actions/upload-artifact@v4
