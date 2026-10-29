@@ -149,6 +149,12 @@ def main() -> int:
     influence_demo.add_argument("--username",default="joueurdemo")
     influence_demo.add_argument("--enable-influence-laboratory",action="store_true")
     influence_demo.add_argument("--military-power",type=int,default=30000)
+    terrain_import=sub.add_parser(
+        "terrain-import",help="Import operator-evidenced terrain profiles to isolated lab"
+    )
+    terrain_import.add_argument("--username",default="joueurdemo")
+    terrain_import.add_argument("--file",required=True)
+    terrain_import.add_argument("--enable-terrain-laboratory",action="store_true")
     sub.add_parser("stop", help="Stop containers without destroying persistent data")
     sub.add_parser("down", help="Remove containers but retain PostgreSQL volume")
     reset = sub.add_parser("reset", help="DANGER: delete all LOCAL PostgreSQL data")
@@ -241,6 +247,17 @@ def main() -> int:
         run("exec","-T","api","python","-m","mmhk_api.influence_demo",
             "--username",args.username,"--enable-influence-laboratory",
             "--military-power",str(args.military_power))
+    elif args.command == "terrain-import":
+        if not args.enable_terrain_laboratory:
+            parser.error("terrain-import requires --enable-terrain-laboratory")
+        file=Path(args.file)
+        if not file.is_file() or file.stat().st_size>512000:
+            parser.error("Missing or oversized qualified-terrain manifest")
+        subprocess.run(
+            (*PROJECT,"exec","-T","api","python","-m","mmhk_api.terrain_import",
+             "--username",args.username,"--enable-terrain-laboratory"),
+            cwd=ROOT,input=file.read_bytes(),check=True,
+        )
     elif args.command == "stop":
         run("stop")
     elif args.command == "down":
