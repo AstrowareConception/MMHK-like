@@ -224,6 +224,14 @@ jobs:
           MMHK_E2E_USERNAME="demo_ci" \
           MMHK_E2E_PASSWORD="$password" \
           python3 tools/e2e/terrain_browser.py
+      - name: Collect fantasy UI screenshots for visual review
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mmhk-hall-of-heroes-ui
+          path: test-output/visuals/*.png
+          if-no-files-found: ignore
+          retention-days: 7
       - name: Verify local PostgreSQL backup is readable
         run: |
           python3 tools/local/stack.py backup

@@ -124,6 +124,8 @@ def main() -> int:
             helm.drag_to(helmet)
             expect(page.get_by_text("Artefact déplacé : les inventaires ont été mis à jour.")).to_be_visible(timeout=20000)
             expect(page.locator(".equipment-slot.filled")).to_have_count(1)
+            os.makedirs("test-output/visuals",exist_ok=True)
+            page.screenshot(path="test-output/visuals/hero-equipment-desktop.png",full_page=True)
             page.get_by_role("link", name="Ville", exact=True).click()
             expect(page.get_by_role("heading", level=1, name="Premier Havre")).to_be_visible()
 
@@ -265,6 +267,7 @@ def main() -> int:
             expect(page.get_by_text("Transfert confirmé",exact=False)).to_be_visible(timeout=20000)
             expect(page.locator('[data-testid="troop-stack"][data-holder="garrison"][data-unit-code="militia"]')).to_contain_text("1")
             expect(page.locator('[data-testid="troop-stack"][data-unit-code="militia"]').filter(has_text="2")).to_have_count(1)
+            page.screenshot(path="test-output/visuals/garrison-deployment-desktop.png",full_page=True)
             # Prepare seven-slot army without changing real soldier counts.
             page.locator('a[href$="/heroes"]').first.click()
             expect(page.get_by_role("heading", name="Les sept positions de l'armée")).to_be_visible()
@@ -276,6 +279,7 @@ def main() -> int:
             expect(source_slot).to_contain_text("Miliciens du Havre")
             source_slot.drag_to(target_slot)
             expect(target_slot).to_contain_text("Miliciens du Havre")
+            page.screenshot(path="test-output/visuals/seven-slot-formation-desktop.png",full_page=True)
             page.get_by_role("button", name="Enregistrer les sept positions").click()
             expect(page.get_by_text("Formation de combat enregistrée", exact=False)).to_be_visible(timeout=20000)
             page.locator('a[href$="/region"]').first.click()

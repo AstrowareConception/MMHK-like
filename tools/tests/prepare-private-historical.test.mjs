@@ -24,3 +24,24 @@ test('preparation is local, idempotent and refuses modifications to existing his
     assert.throws(()=>execFileSync(process.execPath,[script,'--root',root],{stdio:'pipe'}));
   }finally{rmSync(root,{recursive:true,force:true});}
 });
+
+
+test('historic hero and formation visuals remain private after opt-in preparation',()=>{
+  const root=mkdtempSync(join(tmpdir(),'mmhk-historical-ui-'));
+  const relative='4.1.13-MTR/img/hero/equipementBg_Haven.jpg';
+  const source=join(root,'data/assets-recovered/cdn-bulk',relative);
+  mkdirSync(dirname(source),{recursive:true});
+  writeFileSync(source,Buffer.from('PRIVATE-TEST-ARTWORK'));
+  try{
+    const result=JSON.parse(execFileSync(process.execPath,[script,'--root',root],{
+      encoding:'utf8'
+    }));
+    assert.equal(result.copied,1);
+    const manifest=JSON.parse(readFileSync(join(root,
+      'data/assets-private-original/manifest.json'),'utf8'));
+    assert.equal(manifest['hero.background.haven'],relative);
+    assert.deepEqual(readFileSync(join(root,'data/assets-private-original',relative)),
+      Buffer.from('PRIVATE-TEST-ARTWORK'));
+    assert.equal(result.unavailable.includes('hero.portrait.might'),true);
+  }finally{rmSync(root,{recursive:true,force:true});}
+});
