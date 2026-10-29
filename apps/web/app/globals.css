@@ -258,6 +258,12 @@ body { background: radial-gradient(ellipse at 50% -15%,#655a44 0%,#28343a 27%,#1
   padding:8px 14px 9px;background:linear-gradient(90deg,#17252d,#34434c 58%,#1d3038);
   box-shadow:inset 0 0 22px #0009,0 3px 9px #0009;}
 .timeline-title {display:flex;align-items:center;gap:12px;padding-bottom:7px;border-bottom:1px solid #b69b6b55;}
+/* When there are no real orders to show, keep the chronicle as a slim HUD
+   instead of pushing the game board below the first viewport. The complete
+   time scale returns automatically when a new server event appears. */
+.kingdom-timeline--quiet .timeline-track,
+.kingdom-timeline--quiet .timeline-footer {display:none;}
+.kingdom-timeline--quiet .timeline-title {border-bottom:0;padding-bottom:0;}
 .timeline-title>div {display:flex;flex-direction:column;gap:2px;}
 .timeline-title strong {font:small-caps 18px Georgia,serif;color:#f1dfb9;}
 .timeline-title small {font:11px Georgia,serif;color:#cab88c;}
