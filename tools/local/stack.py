@@ -143,6 +143,12 @@ def main() -> int:
     colony_demo.add_argument("--username",default="joueurdemo")
     colony_demo.add_argument("--enable-colony-laboratory",action="store_true")
     colony_demo.add_argument("--age-membership-for-test",action="store_true")
+    influence_demo=sub.add_parser(
+        "influence-demo",help="Explicit localhost-only four-day territory snapshots"
+    )
+    influence_demo.add_argument("--username",default="joueurdemo")
+    influence_demo.add_argument("--enable-influence-laboratory",action="store_true")
+    influence_demo.add_argument("--military-power",type=int,default=30000)
     sub.add_parser("stop", help="Stop containers without destroying persistent data")
     sub.add_parser("down", help="Remove containers but retain PostgreSQL volume")
     reset = sub.add_parser("reset", help="DANGER: delete all LOCAL PostgreSQL data")
@@ -229,6 +235,12 @@ def main() -> int:
         if args.age_membership_for_test:
             command+=("--age-membership-for-test",)
         run(*command)
+    elif args.command == "influence-demo":
+        if not args.enable_influence_laboratory:
+            parser.error("influence-demo requires --enable-influence-laboratory")
+        run("exec","-T","api","python","-m","mmhk_api.influence_demo",
+            "--username",args.username,"--enable-influence-laboratory",
+            "--military-power",str(args.military_power))
     elif args.command == "stop":
         run("stop")
     elif args.command == "down":
