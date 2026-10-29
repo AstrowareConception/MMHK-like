@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+      # Temporary one-off validation for PR 37, remove immediately after scheduling.
+      - feat/colonization-multicity-protected-world
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
