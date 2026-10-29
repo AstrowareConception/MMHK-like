@@ -120,7 +120,7 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
     command.set("unitCode",selected.unit_code);
     command.set("quantity",String(quantity));
     command.set("direction",destination.heroId?"to_hero":"to_garrison");
-    setError("");startTransition(()=>{void transferHeroUnits(command);});
+    setError("");startTransition(async()=>{await transferHeroUnits(command);});
   }
   const destinationName=destination?.heroId?
     forces.heroes.find(h=>h.hero_id===destination.heroId)?.name:"Garnison";
