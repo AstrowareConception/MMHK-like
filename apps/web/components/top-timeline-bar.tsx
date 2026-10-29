@@ -49,6 +49,7 @@ export function TopTimelineBar({initial,backgroundUrl}:{initial:TimelineResponse
   },[router]);
   const now=clock?clock+offset:Date.parse(state?.server_now??'')||0;
   const hours=state?.horizon_hours??12;
+  const isQuiet=state!==null&&state.events.length===0;
   const clusters=useMemo(()=>{
     const buckets=new Map<number,{event:TimelineEvent;position:number}[]>();
     for(const event of state?.events??[]) {
@@ -59,11 +60,14 @@ export function TopTimelineBar({initial,backgroundUrl}:{initial:TimelineResponse
     return [...buckets.values()];
   },[state,now,hours]);
   return (
-    <section role="region" aria-label="Frise temporelle du royaume" className="kingdom-timeline"
+    <section role="region" aria-label="Frise temporelle du royaume"
+      className={"kingdom-timeline"+(isQuiet?" kingdom-timeline--quiet":"")}
       style={backgroundUrl?{backgroundImage:"linear-gradient(90deg,#141e23e8,#253038ba),url("+JSON.stringify(backgroundUrl)+")"}:undefined}>
       <div className="timeline-title">
         <span className="timeline-crest" aria-hidden="true">⌛</span>
-        <div><strong>Chronique du royaume</strong><small>Échéances des {hours} prochaines heures</small></div>
+        <div><strong>Chronique du royaume</strong>
+          <small>{isQuiet?"Aucune échéance annoncée · le royaume est paisible":
+            "Échéances des "+hours+" prochaines heures"}</small></div>
         <span className="timeline-clock" suppressHydrationWarning>{clock?new Date(now).toLocaleTimeString("fr-FR"):"—:—"}</span>
       </div>
       <div className="timeline-track" role="group" aria-label="Du présent vers les prochaines heures">
