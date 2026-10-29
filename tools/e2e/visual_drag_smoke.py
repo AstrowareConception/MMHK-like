@@ -53,6 +53,19 @@ def main():
             }""")
             post_requests=[]
             page.on("request",lambda req:post_requests.append(req.url) if req.method=="POST" else None)
+            # A selected object must not move if the user drops unrelated
+            # text or a file on the slot. Only the game's MIME is accepted.
+            bag.click()
+            expect(page.locator(".mmhk-selection-hint")).to_contain_text("Heaume de bronze")
+            page.evaluate("""() => {
+              const target=document.querySelector('[data-testid="equipment-drop-zone"][data-slot="head"]');
+              const foreign=new DataTransfer();
+              foreign.setData('text/plain','outside-the-game');
+              target.dispatchEvent(new DragEvent('drop',{
+                bubbles:true,cancelable:true,dataTransfer:foreign
+              }));
+            }""")
+            expect(page.locator(".equipment-slot.filled")).to_have_count(0)
             bag.drag_to(slot)
             page.screenshot(path="test-output/visuals/hero-after-drag.png",full_page=True)
             print("EQUIP DEBUG",{
