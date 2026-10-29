@@ -1,6 +1,6 @@
 "use client";
-import {useEffect,useState,useTransition} from "react";
-import type {DragEvent,KeyboardEvent} from "react";
+import {useEffect,useRef,useState,useTransition} from "react";
+import type {DragEvent,KeyboardEvent,PointerEvent} from "react";
 import {moveCityArtifact} from "../app/actions";
 import type {ArtifactInventory,ArtifactItem,CityForces} from "../lib/server-api";
 
@@ -24,6 +24,11 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
   const [hover,setHover]=useState<string|null>(null);
   const [error,setError]=useState("");
   const [pending,startTransition]=useTransition();
+  // Some browsers/assistive pointer implementations send pointer events but
+  // never synthesize HTML dragstart/drop. Preserve a real movement gesture
+  // fallback, rather than accepting a click-only substitute for DnD.
+  const pointerStart=useRef<{id:string;x:number;y:number}|null>(null);
+  const suppressClick=useRef(false);
   const equipped=inventory.artifacts.filter(a=>a.hero_id===hero.hero_id&&a.location==="equipped");
   const bag=inventory.artifacts.filter(a=>a.hero_id===hero.hero_id&&a.location==="bag");
   const reserve=inventory.artifacts.filter(a=>a.location==="reserve");
@@ -74,6 +79,17 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
         if(!pending&&ready){e.preventDefault();e.dataTransfer.dropEffect="move";setHover(label);}
       },
       onDragLeave:()=>setHover(null),
+      onPointerUp:(e:PointerEvent<HTMLElement>)=>{
+        const gesture=pointerStart.current;
+        pointerStart.current=null;
+        if(!gesture||!idle||pending||!ready)return;
+        // A tap still selects objects normally. Only a genuine movement
+        // from the source tile to a receiving region counts as a move.
+        const distance=Math.hypot(e.clientX-gesture.x,e.clientY-gesture.y);
+        if(distance<12)return;
+        suppressClick.current=true;
+        move(target,gesture.id);
+      },
       onDrop:(e:DragEvent<HTMLElement>)=>{
         e.preventDefault();e.stopPropagation();setHover(null);
         const id=e.dataTransfer.getData(MIME)||
@@ -81,7 +97,10 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
         if(id)move(target,id);
         else setError("Déposez un objet depuis la besace ou le coffre de cette cité.");
       },
-      onClick:()=>{if(chosen)move(target);},
+      onClick:()=>{
+        if(suppressClick.current){suppressClick.current=false;return;}
+        if(chosen)move(target);
+      },
       onKeyDown:(e:KeyboardEvent<HTMLElement>)=>{
         if(chosen&&(e.key==="Enter"||e.key===" ")){e.preventDefault();move(target);}
       }
@@ -93,7 +112,14 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
       data-testid="artifact-tile" data-artifact-id={item.artifact_id}
       className={"artifact-card mmhk-item "+(isSelected?"selected":"")}
       draggable={ready&&idle&&!pending}
+      onPointerDown={e=>{
+        if(!idle||pending||!ready||e.button!==0)return;
+        pointerStart.current={id:item.artifact_id,x:e.clientX,y:e.clientY};
+      }}
+      onPointerCancel={()=>{pointerStart.current=null;}}
       onDragStart={e=>{
+        // The native DnD path owns this gesture once dragstart fires.
+        pointerStart.current=null;
         if(!idle||pending||!ready){e.preventDefault();return;}
         e.dataTransfer.setData(MIME,item.artifact_id);
         e.dataTransfer.setData("text/plain",item.artifact_id);
