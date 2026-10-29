@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { CityScene } from "../../../components/city-scene";
-import { CityBuildingInspector, buildingName } from "../../../components/city-building-inspector";
+import { CityDistrict } from "../../../components/city-district";
+import { buildingName } from "../../../components/city-building-inspector";
+import { resolveAssetUrl } from "../../../lib/assets/runtime";
 import { AssetImage } from "../../../components/asset-image";
 import { LiveRefresh } from "../../../components/live-refresh";
 import { notFound, redirect } from "next/navigation";
@@ -59,9 +60,15 @@ export default async function CityPage({
           <Link href={`/cities/${cityId}/heroes`}>Héros et artefacts</Link>
           <Link href={`/cities/${cityId}/forces`}>Armée et recrutements</Link>
         </nav>
-        <CityScene city={city} catalog={buildingAnswer.data} selectedBuilding={query.inspect}/>
-        <CityBuildingInspector city={city} catalog={buildingAnswer.data}
-          selectedBuilding={query.inspect}/>
+        {query.build === "started" &&
+          <p role="status" className="construction-notice">Chantier enregistré et ressources payées.</p>}
+        {query.build === "conflict" &&
+          <p role="alert" className="error">Construction impossible : ressources insuffisantes, chantier déjà actif ou profil indisponible.</p>}
+        {query.build === "unavailable" &&
+          <p role="alert" className="error">Le chantier n’a pas pu être confirmé. Consultez son état avant de réessayer.</p>}
+        <CityDistrict key={cityId} city={city} catalog={buildingAnswer.data}
+          initialSelection={query.inspect}
+          tavernArtwork={resolveAssetUrl("building.haven.tavern.1")}/>
         {(city.production_active || !!buildingAnswer.data?.active) && <LiveRefresh intervalSeconds={10} />}
         <h2 id="city-resources">Réserves de la ville</h2>
         <div className="resource-grid">
@@ -100,16 +107,8 @@ export default async function CityPage({
         </div>
         <div className="construction-panel" id="urban-construction">
           <span className="eyebrow">CHANTIERS URBAINS · PROFILS EXPÉRIMENTAUX</span>
-          <h2>Construire dans la cité</h2>
-          {query.build === "started" && (
-            <p role="status" className="construction-notice">Chantier enregistré et ressources payées.</p>
-          )}
-          {query.build === "conflict" && (
-            <p role="alert" className="error">Construction impossible : ressources insuffisantes, chantier déjà actif ou profil indisponible.</p>
-          )}
-          {query.build === "unavailable" && (
-            <p role="alert" className="error">Le chantier n'a pas pu être confirmé. Consultez son état avant de réessayer.</p>
-          )}
+          <h2>Registre des chantiers</h2>
+          <p>Pour construire, sélectionnez un édifice sur le panorama : les modes et les coûts réels sont présentés dans sa fiche. Le registre détaillé reste disponible ci-dessous.</p>
           {buildingAnswer.ok && buildingAnswer.data ? (
             <>
               {buildingAnswer.data.buildings.length > 0 && (
@@ -126,6 +125,8 @@ export default async function CityPage({
                   <small>Chantier payé au lancement. Aucun second chantier ni annulation n'est possible.</small>
                 </article>
               ) : buildingAnswer.data.options.length ? (
+                <details className="mmhk-city-directory" data-testid="construction-directory">
+                  <summary>Ouvrir le catalogue détaillé des {buildingAnswer.data.options.length} projets</summary>
                 <div className="build-options">
                   {buildingAnswer.data.options.slice()
                     .sort((a,b)=>Number(b.available)-Number(a.available) ||
@@ -172,6 +173,7 @@ export default async function CityPage({
                       </article>
                     ))}
                 </div>
+                </details>
               ) : (
                 <p>Aucun bâtiment n'est proposé : l'opérateur n'a pas encore configuré de profil pour le prochain niveau.</p>
               )}
