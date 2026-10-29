@@ -108,3 +108,9 @@ parce que son endpoint renvoie 200.**
 `40877270285` ne couvrait que le parcours local six services ; les trois
 jobs API/PostgreSQL, TypeScript/Next et image preview étaient ignorés.
 Il précède également les corrections de la présente revue. La PR reste ouverte.
+
+- Revue des six captures d'écran du run 40877270285 : le bandeau
+  chronologique vide repoussait l'interface de jeu trop bas dans la fenêtre.
+  Le HUD est maintenant compact lorsqu'aucun événement réel n'est planifié,
+  et reprend sa frise complète lorsqu'un événement apparaît. Une assertion
+  Chromium couvre le cas sans échéance.
