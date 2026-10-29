@@ -218,6 +218,22 @@ def _approved_site(db:psycopg.Connection,*,world_id:str,owner:UUID,
     ).fetchone()
     if not row:
         raise ColonizationConflict("Region is not an approved location under your own influence")
+    # Once a world actively uses a calculated territory revision, a founder
+    # must ALSO own the square according to that revision. A stale manual
+    # claim cannot bypass a lost dynamic border. Qualified site profile
+    # still remains mandatory; dynamic influence alone creates NO terrain.
+    authority=db.execute(
+        """SELECT enabled,revision FROM world_influence_policies
+           WHERE world_id=%s""",(world_id,),
+    ).fetchone()
+    if authority and authority[0]:
+        if authority[1]==0 or not db.execute(
+            """SELECT 1 FROM world_influence_cells
+               WHERE world_id=%s AND x=%s AND y=%s
+                 AND state='controlled' AND owner_account_id=%s""",
+            (world_id,x,y,owner),
+        ).fetchone():
+            raise ColonizationConflict("Region not controlled by your current territory")
     return row
 
 

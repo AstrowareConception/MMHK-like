@@ -41,6 +41,7 @@ def test_openapi_contains_no_unapproved_game_commands():
         "/api/v1/me/worlds/{world_id}/cities",
         "/api/v1/me/worlds/{world_id}/colonization",
         "/api/v1/me/worlds/{world_id}/colonization/quote",
+        "/api/v1/me/worlds/{world_id}/influence",
         "/api/v1/me/worlds/{world_id}/colonization/{order_id}/reclaim",
         "/api/v1/me/cities/{city_id}",
         "/api/v1/me/cities/{city_id}/construction",

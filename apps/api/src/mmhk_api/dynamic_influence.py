@@ -88,6 +88,10 @@ def calculate_cells(cities,size):
         for c in sorted(cities,key=lambda city:str(city["city_id"])):
             power=Decimal(c["power"])
             r=radius(power)
+            # Torus wrapping may map multiple offset pairs to one actual
+            # square on tiny worlds. A city contributes ONLY its best,
+            # nearest score, rather than multiplying domination by wrapping.
+            nearest={}
             for dx in range(-r,r+1):
                 for dy in range(-r,r+1):
                     sq=dx*dx+dy*dy
@@ -95,11 +99,14 @@ def calculate_cells(cities,size):
                     point=(wrap(c["x"]+dx,size),wrap(c["y"]+dy,size))
                     # Squared torus distance is local to this radius-6 window.
                     part=max(Decimal(1),power)/(1+Decimal(sq).sqrt())**2
-                    owners=sums.setdefault(point,{})
-                    own=c["owner"]
-                    owners[own]=owners.get(own,Decimal(0))+part
-                    if len(sums)>MAX_CELLS:
-                        raise ValueError("Too many calculated cells for this lab profile")
+                    if point not in nearest or part>nearest[point]:
+                        nearest[point]=part
+            for point,part in nearest.items():
+                owners=sums.setdefault(point,{})
+                own=c["owner"]
+                owners[own]=owners.get(own,Decimal(0))+part
+                if len(sums)>MAX_CELLS:
+                    raise ValueError("Too many calculated cells for this lab profile")
         output={}
         for point,by_owner in sums.items():
             ranking=sorted(by_owner.items(),key=lambda kv:(-kv[1],str(kv[0])))

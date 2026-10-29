@@ -28,6 +28,7 @@ from .colonization import (
     ColonizationNotFound, ColonizationConflict, colonies_for_world,
     quote_colony, start_colonization, reclaim_blocked_colony,
 )
+from .dynamic_influence import InfluenceNotFound, influence_for_world
 from .marketplace import (
     MarketplaceNotFound, MarketplaceConflict, offers_for_city,
     publish_offer, buy_offer, withdraw_offer,
@@ -574,6 +575,18 @@ def my_stop_caravan_program(
     except CaravanConflict as exc:
         raise HTTPException(status_code=409,detail=str(exc)) from exc
 
+
+
+
+@app.get("/api/v1/me/worlds/{world_id}/influence")
+def my_world_influence(world_id:str,db:_db,player:_player,
+                       response:Response)->dict:
+    """Read-only operator-sampled territory: no public domination mutations."""
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        return influence_for_world(db,owner=player,world_id=world_id)
+    except InfluenceNotFound as exc:
+        raise HTTPException(status_code=404,detail="World not found") from exc
 
 
 # P0 multi-city vertical: precomputed own influence, 7-day beginner guard,

@@ -75,7 +75,7 @@ def test_schema_migration_is_reusable(scenario):
         assert migrate(db) == []
         rows = db.execute("SELECT version FROM app_schema_migrations").fetchall()
         versions=sorted(r[0] for r in rows)
-        assert versions==list(range(1,13))+([13] if 13 in versions else [])+[14,15,16,17,18]
+        assert versions==list(range(1,13))+([13] if 13 in versions else [])+[14,15,16,17,18,19]
 
 
 def test_private_world_and_city_are_readable_only_by_their_owner(scenario):
