@@ -378,7 +378,7 @@ def test_operator_disables_plot_during_travel_then_blocked_site_is_reusable(colo
     assert second.json()["order_id"]!=first.json()["order_id"]
     assert stock(colony["source"])==160
     assert client.get(route(colony),headers=headers(colony["username"])
-                      .json()["pending_expeditions"]==1
+                      ).json()["pending_expeditions"]==1
 
 
 
