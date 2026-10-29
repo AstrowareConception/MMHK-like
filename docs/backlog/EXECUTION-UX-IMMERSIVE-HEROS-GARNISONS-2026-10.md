@@ -63,8 +63,8 @@ Des portraits SVG originaux servent de **fallback public-safe**.
   d'un **heaume dans l'emplacement tête**, d'un **peloton de
   miliciens vers un héros**, puis sa permutation de position
   dans l'armée de sept pelotons.
-- Captures desktop conservées sous un artefact GitHub Actions
-  **privé, de courte durée**, pour pouvoir corriger l'esthétique
+- Captures desktop conservées sept jours sous un artefact GitHub Actions
+  du **dépôt public** (donc non confidentiel), pour pouvoir corriger l'esthétique
   sur des images réelles plutôt que sur une intuition CSS.
 - Tous les transferts contrôlent toujours les droits PostgreSQL et
   les invariants des tests de domaine existants.
@@ -89,3 +89,22 @@ Les screenshots MMHK servent de référence esthétique ; une
 fonctionnalité visuelle ne doit pas créer une règle de jeu
 inconnue. **Aucun écran ne doit être considéré terminé uniquement
 parce que son endpoint renvoie 200.**
+
+
+## Reprise de revue — protection des interactions (29/10/2026)
+
+- Une dépose étrangère (fichier ou texte sans MIME MMHK) ne peut plus
+  équiper un objet seulement parce qu'il était sélectionné au clavier.
+- Sur la formation à sept positions, un MIME absent ne peut plus être
+  interprété comme le numéro zéro (\`Number(\"\"\`) = 0) : seuls les indices
+  0 à 6 issus d'un véritable glissement de peloton sont acceptés.
+- Le bouton de sauvegarde ne valide plus une formation contenant un type
+  d'unité inconnu ou une quantité résiduelle sur une case vide.
+- Les deux parcours Chromium existants ont été enrichis d'une dépose
+  étrangère avant le vrai déplacement afin de détecter les régressions.
+
+**Validation encore requise :** relancer manuellement le workflow complet
+\`fullstack-foundation.yml\` sur la branche de la PR. Le dernier run vert
+\`40877270285\` ne couvrait que le parcours local six services ; les trois
+jobs API/PostgreSQL, TypeScript/Next et image preview étaient ignorés.
+Il précède également les corrections de la présente revue. La PR reste ouverte.
