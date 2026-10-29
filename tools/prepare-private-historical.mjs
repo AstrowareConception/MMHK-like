@@ -69,6 +69,16 @@ const jactariRecipes=[
   sources:["data/Jactari/src/images/"+name]
 }));
 recipes.push(...jactariRecipes);
+// Two large original MMHK hero-management reference illustrations (not
+// stand-alone Ubisoft character files). Crop only in CSS at runtime; no
+// modified derivative is published or claimed as a canonical hero identity.
+recipes.push(...[
+  ["hero.painting.might","might-magic-heroes-kingdoms_2123145.jpg"],
+  ["hero.painting.magic","HMMKingdoms_4.jpg"]
+].map(([id,name])=>({
+  id,relative:"reference-screenshots/hero/"+name,
+  sources:["data/Screenshots/Vue héros/"+name]
+})));
 
 const sha=filename=>createHash('sha256').update(readFileSync(filename)).digest('hex');
 const manifestFile=join(target,'manifest.json');
