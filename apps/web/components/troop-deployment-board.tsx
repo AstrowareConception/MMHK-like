@@ -157,7 +157,7 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
           className={"mmhk-deployment-hero "+(hover===hero.hero_id?"hover":"")}
           data-testid="hero-drop-zone" data-hero-id={hero.hero_id}
           {...targetEvents({heroId:hero.hero_id},hero.hero_id)}>
-          <div className="mmhk-hero-card-head">
+          <div className="mmhk-hero-card-head hero-profile-info">
             <img src={portrait[hero.archetype]} width={86} height={112}
               alt="" draggable={false}/>
             <div><strong>{hero.name}</strong>
