@@ -10,6 +10,12 @@
 ALTER TABLE colonization_site_profiles
   DROP CONSTRAINT colonization_site_profiles_world_id_x_y_fkey;
 
+-- Preserve world cleanup semantics after dropping the position-level
+-- dependency: prequalified terrain still belongs to exactly one world.
+ALTER TABLE colonization_site_profiles
+  ADD CONSTRAINT colonization_site_profiles_world_fk
+  FOREIGN KEY(world_id) REFERENCES worlds(world_id) ON DELETE CASCADE;
+
 ALTER TABLE colonization_site_profiles
   ADD COLUMN qualification_mode text NOT NULL DEFAULT 'manual_influence'
     CHECK(qualification_mode IN ('manual_influence','operator_terrain'));
