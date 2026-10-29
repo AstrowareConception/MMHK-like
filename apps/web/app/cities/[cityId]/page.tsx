@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { CityDistrict } from "../../../components/city-district";
-import { buildingName } from "../../../components/city-building-inspector";
+import { buildingName } from "../../../lib/city-buildings";
 import { resolveAssetUrl } from "../../../lib/assets/runtime";
 import { AssetImage } from "../../../components/asset-image";
 import { LiveRefresh } from "../../../components/live-refresh";
