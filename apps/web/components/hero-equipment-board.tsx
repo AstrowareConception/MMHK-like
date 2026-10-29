@@ -62,7 +62,7 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
     form.set("returnHeroId",hero.hero_id);form.set("operation",result.op);
     if(result.heroId)form.set("targetHeroId",result.heroId);
     setSelected(null);setError("");
-    startTransition(()=>{void moveCityArtifact(form);});
+    startTransition(async()=>{await moveCityArtifact(form);});
   }
   function makeTarget(target:Target,label:string){
     return {
