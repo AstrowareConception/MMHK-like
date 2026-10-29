@@ -269,6 +269,13 @@ def main() -> int:
             page.locator('a[href$="/heroes"]').first.click()
             expect(page.get_by_role("heading", name="Les sept positions de l'armée")).to_be_visible()
             expect(page.locator(".formation-slot")).to_have_count(7)
+            # Reorder actual seven Jactari positions using the illustrated
+            # troop cards, not select/quantity administration fields.
+            source_slot=page.locator(".mmhk-formation-tile").nth(0)
+            target_slot=page.locator(".mmhk-formation-tile").nth(1)
+            expect(source_slot).to_contain_text("Miliciens du Havre")
+            source_slot.drag_to(target_slot)
+            expect(target_slot).to_contain_text("Miliciens du Havre")
             page.get_by_role("button", name="Enregistrer les sept positions").click()
             expect(page.get_by_text("Formation de combat enregistrée", exact=False)).to_be_visible(timeout=20000)
             page.locator('a[href$="/region"]').first.click()
