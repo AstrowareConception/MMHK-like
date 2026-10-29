@@ -2,6 +2,7 @@
 import {useEffect,useMemo,useRef,useState} from "react";
 import type {DragEvent,PointerEvent} from "react";
 import {saveHeroFormation} from "../app/actions";
+import {HeritageUnitArt} from "./heritage-art";
 import type {HeroFormation} from "../lib/server-api";
 
 type Cell={unit_code:string;quantity:number};
@@ -18,8 +19,8 @@ function hydrate(initial:HeroFormation):Cell[]{
   return result;
 }
 
-export function HeroFormationEditor({cityId,formation}:{
-  cityId:string;formation:HeroFormation;
+export function HeroFormationEditor({cityId,formation,sheet}:{
+  cityId:string;formation:HeroFormation;sheet?:string|null;
 }){
   const [ready,setReady]=useState(false);
   const [rows,setRows]=useState<Cell[]>(()=>hydrate(formation));
@@ -88,14 +89,14 @@ export function HeroFormationEditor({cityId,formation}:{
     setRows(prev=>prev.map((v,i)=>i===index?{...v,...patch}:v));
     setTouched(true);
   }
-  return <section id="hero-formation" className="formation-editor mmhk-formation-board"
+  return <section id="hero-formation" className="formation-editor mmhk-formation-board mmhk-heritage-formation"
     aria-label="Formation de combat du héros" data-testid="formation-visual-board"
     data-ready={ready?"true":"false"}>
     <header className="mmhk-board-heading">
-      <div><span className="eyebrow">CHAMP DE BATAILLE · SEPT PELOTONS</span>
+      <div><span className="eyebrow">ORGANISER VOS TROUPES · POSITIONS 2–8</span>
         <h3>Formation de combat</h3>
-        <p>Glissez un peloton sur un autre emplacement pour les permuter.
-          Au clavier ou au tactile : sélectionnez un peloton, puis une destination.</p>
+        <p>Sept positions réelles · glissez une unité pour la permuter.
+          Au clavier ou au tactile, sélectionnez deux emplacements.</p>
       </div>
       <span className="formation-state">{formation.saved&&!touched?
         "Formation sauvegardée":touched?"Disposition modifiée":"Formation proposée"}</span>
@@ -151,9 +152,9 @@ export function HeroFormationEditor({cityId,formation}:{
               }}>
               <span className="formation-slot-number">0{i+1}</span>
               <span className="mmhk-formation-art">
-                {r.unit_code&&ART[r.unit_code]?
-                  <img src={ART[r.unit_code]} width={90} height={90} alt="" draggable={false}/>:
-                  <span aria-hidden="true">{r.unit_code?"⚔":"+"}</span>}
+                {r.unit_code?<HeritageUnitArt unitCode={r.unit_code} sheet={sheet??null}
+                  fallback={ART[r.unit_code]} scale={1}/>:
+                  <span aria-hidden="true">+</span>}
               </span>
               <strong>{u?.name??(r.unit_code||"Emplacement libre")}</strong>
               <span className="mmhk-formation-qty">{r.unit_code?
