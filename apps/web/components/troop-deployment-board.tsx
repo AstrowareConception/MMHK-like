@@ -15,7 +15,7 @@ const IMAGES:Record<string,string>={
 };
 const nice=(n:number)=>n.toLocaleString("fr-FR");
 
-export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
+export function TroopDeploymentBoard({cityId,forces,portrait,portraitSheet,unitSheet,backdrop}:{
   cityId:string;forces:CityForces;
   portrait:{might:string;magic:string};portraitSheet:string|null;
   unitSheet:string|null;backdrop:string|null;
