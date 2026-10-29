@@ -91,7 +91,7 @@ export function CityScene({city,catalog,selectedBuilding,onSelect,tavernArtwork}
   const options=catalog?.options??[];
   const active=catalog?.active;
   const tavern=tavernArtwork;
-  function inspect(event:MouseEvent<SVGAElement>,code:string){
+  function inspect(event:MouseEvent<HTMLAnchorElement>,code:string){
     // Keep a real URL as progressive enhancement / middle-click fallback.
     if(!onSelect||event.button!==0||event.ctrlKey||event.metaKey||event.altKey||event.shiftKey)return;
     event.preventDefault();onSelect(code);
