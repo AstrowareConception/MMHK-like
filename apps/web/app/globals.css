@@ -982,3 +982,23 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   border-left:2px solid #b9a16b;display:grid;gap:4px!important;}
 .colony-event-history li{padding:3px 5px;border-bottom:1px solid #816d4c4f;
   font:11px/1.6 system-ui,sans-serif;color:#ddcba8;}
+
+
+/* Dynamic four-day territorial projection — displayed only when world opted in. */
+.realm-influence-summary{margin:18px 0;padding:18px;background:linear-gradient(120deg,#1f3c42,#112a32);
+  border:2px ridge #aa946d;}
+.realm-influence-head{display:flex;gap:14px;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;}
+.realm-influence-summary h2{font:small-caps 26px Georgia,serif;margin:5px 0 10px;color:#efdbb3;}
+.realm-influence-summary p{font:12px/1.7 system-ui,sans-serif;color:#cad5cf;}
+.realm-influence-stat{display:grid;gap:4px;min-width:160px;text-align:center;
+  padding:9px 18px;border:1px solid #a48f67;background:#30464c;}
+.realm-influence-stat strong{color:#f0daad;font:small-caps 31px Georgia,serif;}
+.realm-influence-stat small{color:#d4d6cb;font:11px system-ui,sans-serif;}
+.realm-influence-cities{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));
+  gap:11px;margin:13px 0;}
+.realm-influence-cities article{padding:12px;background:#213740;border:1px solid #917c57;
+  display:grid;gap:5px;color:#d1ded5;}
+.realm-influence-cities strong{font:small-caps 18px Georgia,serif;color:#f0daac;}
+.realm-influence-cities span{font:700 13px system-ui,sans-serif;}
+.realm-influence-cities small{font:11px/1.5 system-ui,sans-serif;color:#d2d8ca;}

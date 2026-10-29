@@ -376,7 +376,9 @@ export function WorldAtlasInteractive({world,cities,detailBackground,politicalBa
     <p className="map-qualification">
       Le décor historique est une image illustrative fixe et contient déjà son quadrillage.
       Les coordonnées et les hitboxes sont des repères de navigation modernes, non une carte
-      des terrains confirmée par le serveur. Seules vos villes sont actuellement révélées.
+      des terrains confirmée par le serveur. L'influence affichée provient soit
+      des cases qualifiées, soit d'une projection de laboratoire activée par le monde ;
+      les frontières adverses non découvertes restent cachées.
     </p>
   </section>;
 }

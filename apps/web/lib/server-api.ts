@@ -97,6 +97,8 @@ export type ConstructionCatalog = {
 
 export type WorldOverview = World & {
   topology: "torus";
+  influence_mode: "qualified_manual"|"experimental_dynamic";
+  influence_revision:number|null;
   known_scope: "owned_cities_only" | "owned_and_discovered";
   cities: City[];
   enemy_positions_exposed: boolean;
@@ -358,4 +360,17 @@ export type ColonizationQuote={
     "newbie_protection"|"city_cap"|"hero_busy"|"resources"
   )[];
   historically_certified:false;
+};
+
+export type InfluenceSummary={
+  world_id:string;policy_id:string|null;enabled:boolean;revision:number;
+  last_refresh_at:string|null;next_refresh_at:string|null;
+  lookback_days:4;owned_cells:number;
+  cities:{
+    city_id:string;name:string;military_average:string|null;
+    building_domination:number|null;total_domination:string|null;
+    radius:number|null;sample_days:number;
+  }[];
+  historically_certified_s2:false;
+  spatial_method:string;historical_reference:string;
 };
