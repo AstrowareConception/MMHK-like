@@ -1,6 +1,6 @@
 "use client";
-import {useEffect,useState,useTransition} from "react";
-import type {DragEvent,KeyboardEvent} from "react";
+import {useEffect,useRef,useState,useTransition} from "react";
+import type {DragEvent,KeyboardEvent,PointerEvent} from "react";
 import {transferHeroUnits} from "../app/actions";
 import type {CityForces} from "../lib/server-api";
 
@@ -27,6 +27,10 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
   const [error,setError]=useState("");
   const [hover,setHover]=useState("");
   const [pending,startTransition]=useTransition();
+  // Track a real pointer gesture when a browser does not dispatch native
+  // HTML5 dragstart/drop. Never transfer a unit until the user confirms qty.
+  const pointerStart=useRef<{item:Stack;x:number;y:number}|null>(null);
+  const suppressClick=useRef(false);
   const roster:Stack[]=forces.garrison.filter(u=>u.quantity>0).map(u=>({...u,heroId:null}));
   const byHero=(id:string):Stack[]=>forces.hero_armies.filter(
     u=>u.hero_id===id&&u.quantity>0).map(u=>({...u,heroId:id}));
@@ -58,7 +62,13 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
       data-holder={item.heroId??"garrison"}
       draggable={ready&&!pending&&(!item.heroId||forces.heroes.some(
         h=>h.hero_id===item.heroId&&h.status==="idle"))}
+      onPointerDown={event=>{
+        if(!ready||pending||event.button!==0)return;
+        pointerStart.current={item,x:event.clientX,y:event.clientY};
+      }}
+      onPointerCancel={()=>{pointerStart.current=null;}}
       onDragStart={event=>{
+        pointerStart.current=null; // native drag/drop takes priority
         const value=JSON.stringify({unit:item.unit_code,hero:item.heroId});
         event.dataTransfer.setData(MIME,value);
         event.dataTransfer.effectAllowed="move";
@@ -103,7 +113,18 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
       },
       onDragLeave:()=>setHover(""),
       onDrop:(event:DragEvent<HTMLElement>)=>drop(event,dest),
-      onClick:()=>{if(selected)choose(selected,dest);},
+      onPointerUp:(event:PointerEvent<HTMLElement>)=>{
+        const gesture=pointerStart.current;
+        pointerStart.current=null;
+        if(!gesture||pending||!ready)return;
+        if(Math.hypot(event.clientX-gesture.x,event.clientY-gesture.y)<12)return;
+        suppressClick.current=true;
+        choose(gesture.item,dest);
+      },
+      onClick:()=>{
+        if(suppressClick.current){suppressClick.current=false;return;}
+        if(selected)choose(selected,dest);
+      },
       onKeyDown:(event:KeyboardEvent<HTMLElement>)=>{
         if(selected&&(event.key==="Enter"||event.key===" ")){
           event.preventDefault();choose(selected,dest);
