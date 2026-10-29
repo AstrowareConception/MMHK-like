@@ -1,6 +1,6 @@
 "use client";
-import {useEffect,useMemo,useState} from "react";
-import type {DragEvent} from "react";
+import {useEffect,useMemo,useRef,useState} from "react";
+import type {DragEvent,PointerEvent} from "react";
 import {saveHeroFormation} from "../app/actions";
 import type {HeroFormation} from "../lib/server-api";
 
@@ -25,6 +25,8 @@ export function HeroFormationEditor({cityId,formation}:{
   const [rows,setRows]=useState<Cell[]>(()=>hydrate(formation));
   const [selected,setSelected]=useState<number|null>(null);
   const [dragging,setDragging]=useState<number|null>(null);
+  const pointerStart=useRef<{index:number;x:number;y:number}|null>(null);
+  const suppressClick=useRef(false);
   const [touched,setTouched]=useState(false);
   useEffect(()=>{setReady(true);},[]);
   useEffect(()=>{setRows(hydrate(formation));setSelected(null);setTouched(false);},[formation]);
@@ -107,7 +109,21 @@ export function HeroFormationEditor({cityId,formation}:{
               aria-pressed={selected===i}
               disabled={!editable}
               draggable={editable&&Boolean(r.unit_code)}
+              onPointerDown={e=>{
+                if(editable&&r.unit_code&&e.button===0)
+                  pointerStart.current={index:i,x:e.clientX,y:e.clientY};
+              }}
+              onPointerCancel={()=>{pointerStart.current=null;}}
+              onPointerUp={(e:PointerEvent<HTMLButtonElement>)=>{
+                const src=pointerStart.current;
+                pointerStart.current=null;
+                if(!src||!editable)return;
+                if(Math.hypot(e.clientX-src.x,e.clientY-src.y)<12)return;
+                suppressClick.current=true;
+                swap(src.index,i);
+              }}
               onDragStart={e=>{
+                pointerStart.current=null; // native HTML drag owns this gesture
                 e.dataTransfer.setData("application/x-mmhk-slot",String(i));
                 e.dataTransfer.effectAllowed="move";setDragging(i);
               }}
@@ -115,6 +131,7 @@ export function HeroFormationEditor({cityId,formation}:{
               onDragOver={e=>{if(editable)e.preventDefault();}}
               onDrop={e=>drop(e,i)}
               onClick={()=>{
+                if(suppressClick.current){suppressClick.current=false;return;}
                 if(selected!==null&&selected!==i)swap(selected,i);
                 else setSelected(selected===i?null:i);
               }}>
