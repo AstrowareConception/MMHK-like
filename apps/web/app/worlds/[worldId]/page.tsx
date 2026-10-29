@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 import { GameShell } from "../../../components/game-shell/game-shell";
 import { WorldAtlas } from "../../../components/world-atlas";
 import { privateApi, sessionToken, type WorldOverview, type CityDetail,
-  type ColonizationCatalog } from "../../../lib/server-api";
+  type ColonizationCatalog, type InfluenceSummary } from "../../../lib/server-api";
 
 export const dynamic = "force-dynamic";
 
@@ -26,11 +26,13 @@ export default async function WorldPage({
   }
   const world = result.data;
   const currentCity=world.cities[0];
-  const [details,colonyResponse]=await Promise.all([
+  const [details,colonyResponse,influenceResponse]=await Promise.all([
     Promise.all(world.cities.map(c=>
       privateApi<CityDetail>("/api/v1/me/cities/"+encodeURIComponent(c.city_id),token))),
     privateApi<ColonizationCatalog>(
       "/api/v1/me/worlds/"+encodeURIComponent(worldId)+"/colonization",token),
+    privateApi<InfluenceSummary>(
+      "/api/v1/me/worlds/"+encodeURIComponent(worldId)+"/influence",token),
   ]);
   const cityDetail=details[0];
   const cityModels=world.cities.map((c,i)=>{
@@ -38,6 +40,7 @@ export default async function WorldPage({
     return {city:c,detail:result?.ok?result.data:undefined};
   });
   const colonies=colonyResponse.ok?colonyResponse.data:undefined;
+  const territory=influenceResponse.ok?influenceResponse.data:undefined;
   return (
     <GameShell token={token} title={world.name}
       eyebrow="ROYAUME · CARTE DU MONDE"
@@ -45,6 +48,50 @@ export default async function WorldPage({
       worldId={world.world_id} cityId={currentCity?.city_id}
       stocks={cityDetail?.ok?cityDetail.data?.stocks:undefined}>
         <WorldAtlas world={world} cities={world.cities}/>
+
+        <section className="realm-influence-summary" aria-label="Rayons d'influence territoriale">
+          <div className="realm-influence-head">
+            <div>
+              <span className="eyebrow">DOMINATION · TERRITOIRE</span>
+              <h2>Influence de mes cités</h2>
+              <p>La carte indique uniquement les cases dont la visibilité vous
+                est autorisée. Les zones contestées n'impliquent aucun droit
+                d'alliance, siège ou transfert de propriété d'une ville.</p>
+            </div>
+            <div className="realm-influence-stat">
+              <strong>{territory?.enabled?
+                territory.owned_cells.toLocaleString("fr-FR"):"—"}</strong>
+              <small>cases d'influence calculée sous votre contrôle</small>
+            </div>
+          </div>
+          {!territory?<p>Le calcul d'influence est momentanément inaccessible.</p>:
+          !territory.enabled?<p>Le modèle territorial dynamique n'est pas encore
+            activé dans ce monde. Seules les cases explicitement qualifiées
+            par l'opérateur sont utilisées.</p>:<>
+            <p className="notice">Profil expérimental : {territory.policy_id} ·
+              moyenne militaire sur {territory.lookback_days} jours ·
+              révision n° {territory.revision} ·
+              {territory.last_refresh_at?
+                " dernière projection "+new Date(territory.last_refresh_at).toLocaleString("fr-FR"):
+                " première projection non encore calculée"}.
+              La loi d'atténuation inverse-carré et l'absence d'alliances ne sont
+              pas des règles MMHK S2 certifiées.</p>
+            <div className="realm-influence-cities">
+              {territory.cities.map(c=><article key={c.city_id}>
+                <strong>{c.name}</strong>
+                <span>{c.radius===null?"Pas de puissance mesurée":
+                  "Rayon "+c.radius+" case(s)"}</span>
+                <small>Domination militaire moyenne : {c.military_average??"Non mesurée"}</small>
+                <small>Apport des bâtiments déclaré : {c.building_domination??"Non mesuré"}</small>
+                <small>Jours de mesure : {c.sample_days}/4</small>
+              </article>)}
+            </div>
+            <p>Les mesures militaires et les apports des bâtiments doivent avoir
+              une provenance réelle ou être configurés comme données
+              expérimentales. Aucun point de puissance n'est inventé
+              automatiquement à partir du nombre de soldats.</p>
+          </>}
+        </section>
         <section className="world-expansion-entry" aria-label="Colonisation et protection">
           <div>
             <span className="eyebrow">INFLUENCE · COLONISATION</span>

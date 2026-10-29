@@ -208,6 +208,14 @@ jobs:
           MMHK_E2E_USERNAME="demo_ci" \
           MMHK_E2E_PASSWORD="$password" \
           python3 tools/e2e/colonization_browser.py
+          # Explicit operator synthetic domination: the worker must publish
+          # a real world revision; no player-driven power mutations.
+          python3 tools/local/stack.py influence-demo --username demo_ci \
+            --enable-influence-laboratory --military-power 30000
+          MMHK_E2E_URL="http://127.0.0.1:3000" \
+          MMHK_E2E_USERNAME="demo_ci" \
+          MMHK_E2E_PASSWORD="$password" \
+          python3 tools/e2e/influence_browser.py
       - name: Verify local PostgreSQL backup is readable
         run: |
           python3 tools/local/stack.py backup

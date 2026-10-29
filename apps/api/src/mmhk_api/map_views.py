@@ -58,6 +58,13 @@ def world_overview(db: psycopg.Connection, account_id: UUID, world_id: str) -> d
            WHERE d.world_id=%s AND d.viewer_account_id=%s
            ORDER BY s.site_id""",(world_id,account_id),
     ).fetchall()
+    influence_mode=db.execute(
+        """SELECT enabled,revision,last_refresh_at
+           FROM world_influence_policies WHERE world_id=%s""",
+        (world_id,),
+    ).fetchone()
+    dynamic_ready=bool(influence_mode and influence_mode[0] and
+                       influence_mode[1]>0)
     influence = db.execute(
         """SELECT i.x,i.y,i.controller_account_id,a.username,i.observed_at
            FROM map_influence_cells i
@@ -69,11 +76,28 @@ def world_overview(db: psycopg.Connection, account_id: UUID, world_id: str) -> d
                  AND d.viewer_account_id=%s))
            ORDER BY i.x,i.y LIMIT 10000""",(world_id,account_id,account_id),
     ).fetchall()
+    if dynamic_ready:
+        # Map fog of war stays private: own cells are visible; enemy
+        # coordinates are visible ONLY through explicit per-cell grants.
+        influence=db.execute(
+            """SELECT i.x,i.y,i.owner_account_id,COALESCE(a.username,'Contestée'),i.refreshed_at
+               FROM world_influence_cells i
+               LEFT JOIN accounts a ON a.account_id=i.owner_account_id
+               WHERE i.world_id=%s AND (
+                 i.owner_account_id=%s OR EXISTS(
+                   SELECT 1 FROM world_influence_visibility d
+                   WHERE d.world_id=i.world_id AND d.x=i.x AND d.y=i.y
+                     AND d.viewer_account_id=%s))
+               ORDER BY i.x,i.y LIMIT 10000""",
+            (world_id,account_id,account_id),
+        ).fetchall()
     return {
         "world_id": world_id,
         "name": world["name"],
         "world_size": world["world_size"],
         "topology": "torus",
+        "influence_mode":"experimental_dynamic" if dynamic_ready else "qualified_manual",
+        "influence_revision":influence_mode[1] if dynamic_ready else None,
         "known_scope": "owned_and_discovered" if (discovered or sites or influence) else "owned_cities_only",
         "cities": cities,
         "enemy_positions_exposed": bool(discovered),
@@ -88,7 +112,8 @@ def world_overview(db: psycopg.Connection, account_id: UUID, world_id: str) -> d
         ],
         "visible_influence": [
             {"x":r[0],"y":r[1],"controller":r[3],
-             "is_mine":r[2]==account_id,"observed_at":r[4].isoformat()}
+             "is_mine":r[2]==account_id,
+             "observed_at":r[4].isoformat()}
             for r in influence
         ],
     }

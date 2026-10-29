@@ -25,6 +25,7 @@ from .pve_missions import advance_pve_missions
 from .caravans import run_caravan_batch
 from .caravan_programs import run_program_batch
 from .colonization import run_colonization_batch
+from .dynamic_influence import run_influence_batch
 from .db import connect
 from .economy import run_economy_batch
 
@@ -85,6 +86,7 @@ def iteration(
     caravan_fn: Callable=run_caravan_batch,
     program_fn: Callable=run_program_batch,
     colonization_fn: Callable=run_colonization_batch,
+    influence_fn: Callable=run_influence_batch,
 ) -> dict:
     """Isolate failure of the economic engine from construction processing.
 
@@ -125,6 +127,11 @@ def iteration(
     except Exception:
         colonies=0
         errors.append("colonization")
+    try:
+        influence_count=len(influence_fn(db,max_worlds=1))
+    except Exception:
+        influence_count=0
+        errors.append("influence")
     # On an invalid/closed connection, the heartbeat fails and the outer
     # supervisor will reopen it. Fail closed, don't report healthy.
     update_heartbeat(
@@ -139,7 +146,8 @@ def iteration(
             "error_kinds":errors,"mission_transitions":mission_count,
             "caravan_transitions":caravan_count,
             "program_transitions":program_count,
-            "colony_transitions":colonies}
+            "colony_transitions":colonies,
+            "influence_transitions":influence_count}
 
 
 def _log(item: dict) -> None:
