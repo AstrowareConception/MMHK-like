@@ -30,7 +30,7 @@ export function CityDistrict({city,catalog,initialSelection,tavernArtwork}:{
     window.history.replaceState(window.history.state,"",url.pathname+url.search+url.hash);
     if(code&&window.matchMedia("(max-width: 980px)").matches)
       window.requestAnimationFrame(()=>inspectorRef.current?.scrollIntoView({
-        behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"instant":"smooth",
+        behavior:window.matchMedia("(prefers-reduced-motion: reduce)").matches?"auto":"smooth",
         block:"start"
       }));
   };
