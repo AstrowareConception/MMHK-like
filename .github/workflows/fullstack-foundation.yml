@@ -25,6 +25,8 @@ on:
       - 'demarrer.bat'
       - 'demarrer.sh'
       - 'tools/e2e/**'
+      - 'tools/prepare-private-historical.mjs'
+      - 'tools/tests/prepare-private-historical.test.mjs'
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
