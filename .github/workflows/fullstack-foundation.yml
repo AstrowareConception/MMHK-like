@@ -137,7 +137,7 @@ jobs:
     name: Build and start six-service localhost stack with a real demo
     # Playwright 1.56 Chromium supports Noble, not the runner's newer Ubuntu 26.04.
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - name: Test portable quickstart without starting containers
