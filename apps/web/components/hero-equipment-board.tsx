@@ -92,10 +92,11 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
       },
       onDrop:(e:DragEvent<HTMLElement>)=>{
         e.preventDefault();e.stopPropagation();setHover(null);
-        const id=e.dataTransfer.getData(MIME)||
-          e.dataTransfer.getData("text/plain")||selected;
-        if(id)move(target,id);
-        else setError("Déposez un objet depuis la besace ou le coffre de cette cité.");
+        // Never treat an arbitrary file/text drop as a selected artifact.
+        // Tactile/keyboard selection is handled by the destination click.
+        const id=e.dataTransfer.getData(MIME);
+        if(id&&inventory.artifacts.some(a=>a.artifact_id===id))move(target,id);
+        else setError("Déposez un artefact depuis ce plateau.");
       },
       onClick:()=>{
         if(suppressClick.current){suppressClick.current=false;return;}
