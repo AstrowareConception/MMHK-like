@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { mkdtempSync,mkdirSync,readFileSync,writeFileSync,rmSync } from 'node:fs';
+import { mkdtempSync,mkdirSync,readFileSync,writeFileSync,rmSync,statSync,chmodSync } from 'node:fs';
 import { join,dirname,resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { execFileSync } from 'node:child_process';
@@ -20,6 +20,14 @@ test('preparation is local, idempotent and refuses modifications to existing his
     assert.deepEqual(readFileSync(destination),readFileSync(source));
     const manifest=JSON.parse(readFileSync(join(root,'data/assets-private-original/manifest.json'),'utf8'));
     assert.equal(manifest['building.haven.tavern.1'],'4.1.27-MTR/img/city/HAVEN/TAVERN.gif');
+    assert.ok(statSync(join(root,'data/assets-private-original/manifest.json')).mode & 0o004,
+      'The non-root Node.js Web container must be able to read the path-only manifest');
+    // Existing private packs created by older versions have a 0600 manifest.
+    const manifestFile=join(root,'data/assets-private-original/manifest.json');
+    chmodSync(manifestFile,0o600);
+    execFileSync(process.execPath,[script,'--root',root],{stdio:'pipe'});
+    assert.equal(statSync(manifestFile).mode & 0o777,0o644,
+      'Repair private manifest permissions without touching historical binaries');
     writeFileSync(destination,'different');
     assert.throws(()=>execFileSync(process.execPath,[script,'--root',root],{stdio:'pipe'}));
   }finally{rmSync(root,{recursive:true,force:true});}
