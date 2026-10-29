@@ -224,7 +224,8 @@ def _approved_site(db:psycopg.Connection,*,world_id:str,owner:UUID,
     # still remains mandatory; dynamic influence alone creates NO terrain.
     authority=db.execute(
         """SELECT enabled,revision FROM world_influence_policies
-           WHERE world_id=%s""",(world_id,),
+           WHERE world_id=%s""" + (" FOR SHARE" if lock else ""),
+        (world_id,),
     ).fetchone()
     if authority and authority[0]:
         if authority[1]==0 or not db.execute(
@@ -638,6 +639,19 @@ def run_colonization_batch(
                 """SELECT 1 FROM map_world_sites WHERE world_id=%s AND x=%s AND y=%s""",
                 (world,x,y),
             ).fetchone()
+            # Revalidate *calculated* territory at arrival too: a changed
+            # border must never create a city on a rival-owned square.
+            current_policy=db.execute(
+                """SELECT enabled,revision FROM world_influence_policies
+                   WHERE world_id=%s FOR SHARE""",(world,),
+            ).fetchone()
+            if current_policy and current_policy[0]:
+                region_owned=bool(current_policy[1]>0 and db.execute(
+                    """SELECT 1 FROM world_influence_cells WHERE world_id=%s
+                       AND x=%s AND y=%s AND state='controlled'
+                       AND owner_account_id=%s""",
+                    (world,x,y,owner),
+                ).fetchone())
             if (not source_owned or hero_state!=("colonizing",source)
                 or not region_owned or not site_present or occupied or special):
                 result.append(_block(db,row,now,"founding_site_or_rights_changed"))

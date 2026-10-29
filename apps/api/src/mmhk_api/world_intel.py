@@ -66,3 +66,20 @@ def reveal_influence(db:psycopg.Connection,*,world_id:str,x:int,y:int,viewer:UUI
                       (world_id,x,y)).fetchone():raise ValueError("Influence cell not known")
     db.execute("""INSERT INTO map_influence_discoveries(world_id,x,y,viewer_account_id)
                   VALUES(%s,%s,%s,%s) ON CONFLICT DO NOTHING""",(world_id,x,y,viewer))
+
+
+def reveal_dynamic_influence(db:psycopg.Connection,*,world_id:str,
+                             x:int,y:int,viewer:UUID)->None:
+    """Trusted scouting/operator write only; not a public reveal-anywhere API."""
+    _coords(db,world_id,x,y)
+    _member(db,world_id,viewer)
+    if not db.execute(
+        """SELECT 1 FROM world_influence_cells
+           WHERE world_id=%s AND x=%s AND y=%s""",(world_id,x,y),
+    ).fetchone():
+        raise ValueError("No calculated territorial cell at that coordinate")
+    db.execute(
+        """INSERT INTO world_influence_visibility(world_id,x,y,viewer_account_id)
+           VALUES(%s,%s,%s,%s) ON CONFLICT DO NOTHING""",
+        (world_id,x,y,viewer),
+    )

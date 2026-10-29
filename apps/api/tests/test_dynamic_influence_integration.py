@@ -111,7 +111,7 @@ def test_opt_in_worker_projection_private_world_and_recalculation(map_fixture):
         enemy=client.get("/api/v1/me/worlds/"+f["world"]+"/overview",
                          headers=foreign_h).json()
         assert all(c["is_mine"] for c in enemy["visible_influence"])
-        assert client.get("/api/v1/me/worlds/"+f["otherworld"]+"/influence",
+        assert client.get("/api/v1/me/worlds/"+"other-"+f["world"]+"/influence",
                           headers=owner_h).status_code==404
         # Disable the profile then the old authoritative manually recorded
         # information becomes visible again, without loss or mutation.
@@ -145,7 +145,7 @@ def test_one_day_sample_missing_days_zero_filled_and_owner_not_transferred(map_f
     with psycopg.connect(URL) as db:
         # No forged owner transfer: old source snapshots cannot be inherited.
         db.execute(
-            "UPDATE cities SET owner_account_id=%s WHERE city_id=%s",
+            "UPDATE cities SET owner_account_id=%s,first_city=false WHERE city_id=%s",
             (f["foreign"],f["city"]),
         )
         db.execute(
@@ -159,7 +159,7 @@ def test_one_day_sample_missing_days_zero_filled_and_owner_not_transferred(map_f
     finally:
         # Shared test fixture must be able to delete the player's own city.
         with psycopg.connect(URL) as db:
-            db.execute("UPDATE cities SET owner_account_id=%s WHERE city_id=%s",
+            db.execute("UPDATE cities SET owner_account_id=%s,first_city=true WHERE city_id=%s",
                        (f["owner"],f["city"]))
 
 
@@ -219,8 +219,9 @@ def test_active_dynamic_border_prevents_outdated_manual_colonization_site(map_fi
         _record(db,f,cid=f["city"],owner=f["owner"],at=now,power=30000)
     try:
         with psycopg.connect(URL) as db:
-            assert _approved_site(db,world_id=f["world"],owner=f["owner"],
-                                  x=10,y=10)[0]==["crystal","gold","ore","wood"]
+            with pytest.raises(ColonizationConflict):
+                # A world with an enabled but uncalculated policy fails closed.
+                _approved_site(db,world_id=f["world"],owner=f["owner"],x=10,y=10)
         _run(now)
         with psycopg.connect(URL) as db:
             with pytest.raises(ColonizationConflict):

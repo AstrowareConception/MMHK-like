@@ -230,12 +230,14 @@ def influence_for_world(db,*,owner,world_id):
            WHERE world_id=%s AND owner_account_id=%s AND state='controlled'""",
         (world_id,owner),
     ).fetchone()[0]
+    active=bool(policy and policy[1] and policy[2]>0)
     return {"world_id":world_id,"policy_id":policy[0] if policy else None,
             "enabled":bool(policy and policy[1]),
             "revision":policy[2] if policy else 0,
             "last_refresh_at":policy[3].isoformat() if policy and policy[3] else None,
             "next_refresh_at":policy[4].isoformat() if policy else None,
-            "lookback_days":LOOKBACK_DAYS,"owned_cells":count,
+            "lookback_days":LOOKBACK_DAYS,
+            "owned_cells":count if active else 0,
             "cities":[{
                 "city_id":str(cid),"name":name,
                 "military_average":str(models[cid]["military_average"]) if cid in models else None,

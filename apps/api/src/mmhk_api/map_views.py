@@ -80,7 +80,7 @@ def world_overview(db: psycopg.Connection, account_id: UUID, world_id: str) -> d
         # Map fog of war stays private: own cells are visible; enemy
         # coordinates are visible ONLY through explicit per-cell grants.
         influence=db.execute(
-            """SELECT i.x,i.y,i.owner_account_id,a.username,i.refreshed_at
+            """SELECT i.x,i.y,i.owner_account_id,COALESCE(a.username,'Contestée'),i.refreshed_at
                FROM world_influence_cells i
                LEFT JOIN accounts a ON a.account_id=i.owner_account_id
                WHERE i.world_id=%s AND (
