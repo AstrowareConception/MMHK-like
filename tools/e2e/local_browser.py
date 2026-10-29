@@ -121,10 +121,19 @@ def main() -> int:
             helm=page.locator("#hero-bag .artifact-card").filter(has_text="Heaume de bronze")
             helmet=page.locator('.mmhk-equip-target[data-slot="head"]')
             expect(helm).to_be_visible()
-            helm.drag_to(helmet)
-            expect(page.get_by_text("Artefact déplacé : les inventaires ont été mis à jour.")).to_be_visible(timeout=20000)
-            expect(page.locator(".equipment-slot.filled")).to_have_count(1)
             os.makedirs("test-output/visuals",exist_ok=True)
+            helm.drag_to(helmet)
+            page.screenshot(path="test-output/visuals/artifact-after-native-drop.png",full_page=True)
+            try:
+                expect(page.get_by_text("Artefact déplacé : les inventaires ont été mis à jour.")).to_be_visible(timeout=20000)
+            except AssertionError:
+                print("Artifact drag diagnostics:",
+                      "url=",page.url,
+                      "selected=",page.locator(".mmhk-selection-hint").all_text_contents(),
+                      "errors=",page.locator(".mmhk-equipment .error").all_text_contents(),
+                      "inventory=",page.locator(".mmhk-item").all_text_contents())
+                raise
+            expect(page.locator(".equipment-slot.filled")).to_have_count(1)
             page.screenshot(path="test-output/visuals/hero-equipment-desktop.png",full_page=True)
             page.get_by_role("link", name="Ville", exact=True).click()
             expect(page.get_by_role("heading", level=1, name="Premier Havre")).to_be_visible()
