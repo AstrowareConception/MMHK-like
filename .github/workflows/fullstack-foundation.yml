@@ -5,8 +5,6 @@ on:
   push:
     branches:
       - main
-      # Single PR #40 release-candidate validation; remove after the full CI succeeds.
-      - feat/immersive-hero-artifacts-garrison-ui
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
