@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+      # One-time PR #41 full release-candidate matrix; remove before merge.
+      - feat/immersive-haven-city-building-workbench
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
