@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {notFound,redirect} from "next/navigation";
 import {GameShell} from "../../../../components/game-shell/game-shell";
+import {resolveAssetUrl} from "../../../../lib/assets/runtime";
 import {CityForcesPanel} from "../../../../components/city-forces-panel";
 import {privateApi,sessionToken,type CityDetail,type CityForces} from "../../../../lib/server-api";
 export const dynamic="force-dynamic";
@@ -30,6 +31,14 @@ export default async function ForcesPage({params,searchParams}:{
       <Link href={"/cities/"+cityId+"/heroes"}>Fiches de héros et artefacts</Link>
       <Link href={"/cities/"+cityId+"/region"}>Région et rencontres</Link>
     </nav>
-    <CityForcesPanel cityId={cityId} forces={forces.data} message={query}/>
+    <CityForcesPanel cityId={cityId} forces={forces.data} message={query}
+      visuals={{
+        portrait:{
+          might:resolveAssetUrl("hero.portrait.might")??"/themes/public-safe/hero-vanguard.svg",
+          magic:resolveAssetUrl("hero.portrait.magic")??"/themes/public-safe/hero-arcanist.svg"
+        },
+        garrison:resolveAssetUrl("army.garrison.background"),
+        tavern:resolveAssetUrl("army.tavern.background")
+      }}/>
   </GameShell>;
 }

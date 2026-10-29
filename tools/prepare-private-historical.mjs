@@ -26,6 +26,31 @@ const recipes=[{
   "data/assets-recovered/cdn-bulk/4.1.13-MTR/"+asset,
   "data/assets-recovered/ubisoft-archive/4.1.13-MTR/"+asset
 ]}))];
+
+const uiRecipes=[
+  ["hero.background.haven","hero/equipementBg_Haven.jpg"],
+  ["hero.portrait.might","hero/green.jpg"],
+  ["hero.portrait.magic","hero/purple.jpg"],
+  ["hero.frame","hero/management/hero_frame_container_bg.gif"],
+  ["hero.backpack","hero/backpackBg.gif"],
+  ["hero.slot.head","hero/management/headSelected.gif"],
+  ["hero.slot.neck","hero/management/necklaceSelected.gif"],
+  ["hero.slot.chest","hero/management/chestSelected.gif"],
+  ["hero.slot.weapon","hero/management/rightHandSelected.gif"],
+  ["hero.slot.shield","hero/management/leftHandSelected.gif"],
+  ["hero.slot.hands","hero/management/leftHandSelected.gif"],
+  ["hero.slot.feet","hero/management/feetSelected.gif"],
+  ["hero.slot.ring","hero/management/ringSelected.gif"],
+  ["hero.artifact.backdrop","hero/management/artefactTrash.jpg"],
+  ["hero.artifact.icon","calculator/bonusArtefactIcon.gif"],
+  ["army.garrison.background","recruit/recruitUnitStackBg.jpg"],
+  ["army.tavern.background","recruit/recruitTownHeroBg.gif"]
+].map(([id,asset])=>({
+  id,relative:"4.1.13-MTR/img/"+asset,
+  sources:["data/assets-recovered/cdn-bulk/4.1.13-MTR/img/"+asset,
+           "data/assets-recovered/ubisoft-archive/4.1.13-MTR/img/"+asset]
+}));
+recipes.push(...uiRecipes);
 const sha=filename=>createHash('sha256').update(readFileSync(filename)).digest('hex');
 const manifestFile=join(target,'manifest.json');
 const existing=existsSync(manifestFile)?JSON.parse(readFileSync(manifestFile,'utf8')):{};

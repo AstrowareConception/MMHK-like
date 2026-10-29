@@ -116,10 +116,27 @@ def main() -> int:
             expect(page.get_by_text("Aldric du Havre", exact=True).first).to_be_visible()
             expect(page.get_by_text("Heaume de bronze")).to_be_visible()
             expect(page.get_by_text("Sceau des anciens")).to_be_visible()
-            helm=page.locator(".artifact-card").filter(has_text="Heaume de bronze")
-            helm.get_by_role("button", name="Équiper").click()
-            expect(page.get_by_text("Artefact déplacé : les inventaires ont été mis à jour.")).to_be_visible(timeout=20000)
+            # Authentic gameplay affordance: native mouse DnD from the
+            # hero's bag to the helmet slot. The mutation is PostgreSQL-backed.
+            expect(page.get_by_test_id("hero-equipment-board")).to_have_attribute(
+                "data-ready","true",timeout=15000)
+            helm=page.locator("#hero-bag .artifact-card").filter(has_text="Heaume de bronze")
+            helmet=page.locator('.mmhk-equip-target[data-slot="head"]')
+            expect(helm).to_be_visible()
+            os.makedirs("test-output/visuals",exist_ok=True)
+            helm.drag_to(helmet)
+            page.screenshot(path="test-output/visuals/artifact-after-native-drop.png",full_page=True)
+            try:
+                expect(page.get_by_text("Artefact déplacé : les inventaires ont été mis à jour.")).to_be_visible(timeout=20000)
+            except AssertionError:
+                print("Artifact drag diagnostics:",
+                      "url=",page.url,
+                      "selected=",page.locator(".mmhk-selection-hint").all_text_contents(),
+                      "errors=",page.locator(".mmhk-equipment .error").all_text_contents(),
+                      "inventory=",page.locator(".mmhk-item").all_text_contents())
+                raise
             expect(page.locator(".equipment-slot.filled")).to_have_count(1)
+            page.screenshot(path="test-output/visuals/hero-equipment-desktop.png",full_page=True)
             page.get_by_role("link", name="Ville", exact=True).click()
             expect(page.get_by_role("heading", level=1, name="Premier Havre")).to_be_visible()
 
@@ -248,16 +265,50 @@ def main() -> int:
             militia.get_by_role("button", name="Recruter").click()
             expect(page.get_by_text("Recrutement confirmé.", exact=False)).to_be_visible(timeout=20000)
             expect(page.get_by_text("3 soldats", exact=False)).to_be_visible()
-            page.locator(".hero-transfer-box summary").click()
-            transfer = page.locator('form.hero-transfer-row:has(input[name="direction"][value="to_hero"])').first
-            transfer.locator('input[name="quantity"]').fill("2")
-            transfer.get_by_role("button", name="Affecter").click()
-            expect(page.get_by_text("Transfert confirmé", exact=False)).to_be_visible(timeout=20000)
-            expect(page.get_by_text("Miliciens du Havre : 2")).to_be_visible()
+            # Real drag of a garrison troop card onto the idle hero.
+            # A game-like quantity confirmation replaces the old admin form.
+            expect(page.get_by_test_id("troop-deployment-board")).to_have_attribute(
+                "data-ready","true",timeout=15000)
+            troop=page.locator('[data-testid="troop-stack"][data-holder="garrison"][data-unit-code="militia"]')
+            recipient=page.locator('[data-testid="hero-drop-zone"]').first
+            expect(troop).to_be_visible()
+            troop.drag_to(recipient)
+            confirmation=page.get_by_test_id("transfer-confirmation")
+            expect(confirmation).to_be_visible()
+            confirmation.locator('input[type="number"]').fill("2")
+            confirmation.get_by_role("button",name="Confirmer le transfert").click()
+            expect(page.get_by_text("Transfert confirmé",exact=False)).to_be_visible(timeout=20000)
+            expect(page.locator('[data-testid="troop-stack"][data-holder="garrison"][data-unit-code="militia"]')).to_contain_text("1")
+            expect(page.locator('[data-testid="troop-stack"][data-unit-code="militia"]').filter(has_text="2")).to_have_count(1)
+            page.screenshot(path="test-output/visuals/garrison-deployment-desktop.png",full_page=True)
             # Prepare seven-slot army without changing real soldier counts.
             page.locator('a[href$="/heroes"]').first.click()
-            expect(page.get_by_role("heading", name="Les sept positions de l'armée")).to_be_visible()
+            # The immersive hero page renamed the heading; assert the real
+            # interactive seven-position board, not obsolete editorial copy.
+            expect(page.get_by_test_id("formation-visual-board")).to_be_visible(timeout=20000)
             expect(page.locator(".formation-slot")).to_have_count(7)
+            # Reorder actual seven Jactari positions using the illustrated
+            # troop cards, not select/quantity administration fields.
+            expect(page.get_by_test_id("formation-visual-board")).to_have_attribute(
+                "data-ready","true",timeout=15000)
+            source_slot=page.locator(".mmhk-formation-tile").nth(0)
+            target_slot=page.locator(".mmhk-formation-tile").nth(1)
+            expect(source_slot).to_contain_text("Miliciens du Havre")
+            # An unrelated native drop must not parse an empty payload as
+            # slot index zero, which would silently rearrange the formation.
+            page.evaluate("""() => {
+              const tile=document.querySelectorAll('.mmhk-formation-tile')[1];
+              const foreign=new DataTransfer();
+              foreign.setData('text/plain','outside-the-game');
+              tile.dispatchEvent(new DragEvent('drop',{
+                bubbles:true,cancelable:true,dataTransfer:foreign
+              }));
+            }""")
+            expect(source_slot).to_contain_text("Miliciens du Havre")
+            expect(target_slot).not_to_contain_text("Miliciens du Havre")
+            source_slot.drag_to(target_slot)
+            expect(target_slot).to_contain_text("Miliciens du Havre")
+            page.screenshot(path="test-output/visuals/seven-slot-formation-desktop.png",full_page=True)
             page.get_by_role("button", name="Enregistrer les sept positions").click()
             expect(page.get_by_text("Formation de combat enregistrée", exact=False)).to_be_visible(timeout=20000)
             page.locator('a[href$="/region"]').first.click()

@@ -1,125 +1,217 @@
 "use client";
-import {useEffect,useMemo,useState} from "react";
+import {useEffect,useMemo,useRef,useState} from "react";
+import type {DragEvent,PointerEvent} from "react";
 import {saveHeroFormation} from "../app/actions";
 import type {HeroFormation} from "../lib/server-api";
 
 type Cell={unit_code:string;quantity:number};
 const empty=():Cell=>({unit_code:"",quantity:0});
-function hydrate(initial:HeroFormation):Cell[] {
-  const rows=Array.from({length:7},empty);
-  for(const slot of initial.positions){
-    if(slot.position>=1&&slot.position<=7)
-      rows[slot.position-1]={unit_code:slot.unit_code,quantity:slot.quantity};
-  }
-  return rows;
+const ART:Record<string,string>={
+  militia:"/themes/public-safe/haven-militia.svg",
+  archers:"/themes/public-safe/haven-archer.svg"
+};
+function hydrate(initial:HeroFormation):Cell[]{
+  const result=Array.from({length:7},empty);
+  for(const p of initial.positions)
+    if(p.position>=1&&p.position<=7)
+      result[p.position-1]={unit_code:p.unit_code,quantity:p.quantity};
+  return result;
 }
+
 export function HeroFormationEditor({cityId,formation}:{
   cityId:string;formation:HeroFormation;
-}) {
+}){
+  const [ready,setReady]=useState(false);
   const [rows,setRows]=useState<Cell[]>(()=>hydrate(formation));
+  const [selected,setSelected]=useState<number|null>(null);
+  const [dragging,setDragging]=useState<number|null>(null);
+  const pointerStart=useRef<{index:number;x:number;y:number}|null>(null);
+  const suppressClick=useRef(false);
   const [touched,setTouched]=useState(false);
-  useEffect(()=>{setRows(hydrate(formation));setTouched(false);},[formation]);
+  useEffect(()=>{setReady(true);},[]);
+  useEffect(()=>{setRows(hydrate(formation));setSelected(null);setTouched(false);},[formation]);
   const totals=useMemo(()=>{
-    const map=new Map<string,number>();
-    rows.forEach(r=>{if(r.unit_code)map.set(r.unit_code,(map.get(r.unit_code)??0)+r.quantity);});
-    return map;
+    const m=new Map<string,number>();
+    for(const r of rows)if(r.unit_code)m.set(r.unit_code,(m.get(r.unit_code)??0)+r.quantity);
+    return m;
   },[rows]);
-  const remaining=formation.available_units.map(unit=>({
-    ...unit,remaining:unit.quantity-(totals.get(unit.unit_code)??0)
+  const remaining=formation.available_units.map(u=>({
+    ...u,remaining:u.quantity-(totals.get(u.unit_code)??0),
   }));
-  const allCorrect=remaining.every(u=>u.remaining===0) &&
-    rows.every(r=>!r.unit_code||Number.isSafeInteger(r.quantity)&&r.quantity>=1&&r.quantity<=1000000);
-  const update=(position:number,patch:Partial<Cell>)=>{
-    setTouched(true);setRows(prev=>prev.map((row,i)=>i===position?{...row,...patch}:row));
-  };
-  const swap=(a:number,b:number)=>{
-    setTouched(true);setRows(prev=>{
-      const next=[...prev];
+  // Totals alone must not certify an unknown or now-invalid unit type.
+  const knownCodes=new Set(formation.available_units.map(u=>u.unit_code));
+  const balanced=remaining.every(u=>u.remaining===0)&&
+    rows.every(r=>r.unit_code
+      ?knownCodes.has(r.unit_code)&&Number.isSafeInteger(r.quantity)&&
+        r.quantity>0&&r.quantity<=1000000
+      :r.quantity===0);
+  const editable=ready&&formation.status==="idle";
+  const unit=(code:string)=>formation.available_units.find(u=>u.unit_code===code);
+
+  function swap(a:number,b:number){
+    if(!editable||a===b||a<0||a>=7||b<0||b>=7)return;
+    setRows(prev=>{
+      const next=prev.map(v=>({...v}));
       [next[a],next[b]]=[next[b],next[a]];
       return next;
     });
-  };
-  const split=(index:number)=>{
-    const src=rows[index];
-    const target=rows.findIndex(r=>!r.unit_code);
-    if(target<0||src.quantity<2)return;
-    const transfer=Math.floor(src.quantity/2);
+    setTouched(true);setSelected(null);setDragging(null);
+  }
+  function split(i:number){
+    const original=rows[i],target=rows.findIndex(r=>!r.unit_code);
+    if(!editable||!original.unit_code||original.quantity<2||target<0)return;
+    const n=Math.floor(original.quantity/2);
+    setRows(prev=>prev.map((v,k)=>k===i?{...v,quantity:v.quantity-n}:
+      k===target?{unit_code:original.unit_code,quantity:n}:v));
     setTouched(true);
-    setRows(prev=>prev.map((r,i)=>i===index?{...r,quantity:r.quantity-transfer}:
-      i===target?{unit_code:src.unit_code,quantity:transfer}:r));
-  };
-  const fuse=(index:number)=>{
-    const origin=rows[index];
-    const other=rows.findIndex((r,i)=>i!==index&&r.unit_code===origin.unit_code&&r.unit_code);
-    if(other<0||origin.quantity+rows[other].quantity>1000000)return;
+  }
+  function merge(i:number){
+    const src=rows[i],target=rows.findIndex((v,k)=>k!==i&&
+      v.unit_code&&v.unit_code===src.unit_code);
+    if(!editable||!src.unit_code||target<0||
+       src.quantity+rows[target].quantity>1000000)return;
+    setRows(prev=>prev.map((v,k)=>k===i?{...v,quantity:v.quantity+prev[target].quantity}:
+      k===target?empty():v));
     setTouched(true);
-    setRows(prev=>prev.map((r,i)=>i===index?{...r,quantity:r.quantity+prev[other].quantity}:
-      i===other?empty():r));
-  };
-  const available=formation.available_units;
-  return <section id="hero-formation" className="formation-editor" aria-label="Formation de combat du héros">
-    <header>
-      <div><span className="eyebrow">US-ARM-009 À 012 · PRÉPARATION DES PELOTONS</span>
-        <h3>Les sept positions de l'armée</h3>
-        <p>Les emplacements correspondent aux indices ordinaires 2 à 8 du calculateur Jactari.
-          Divisez, fusionnez ou changez l'ordre sans créer ni perdre d'unités.</p>
+  }
+  function drop(e:DragEvent<HTMLButtonElement>,to:number){
+    e.preventDefault();e.stopPropagation();
+    // Number("") is 0: without checking the MIME payload, dropping an
+    // unrelated file could incorrectly move the first real army stack.
+    const payload=e.dataTransfer.getData("application/x-mmhk-slot");
+    if(!editable||!/^[0-6]$/.test(payload))return;
+    const from=Number(payload);
+    if(!rows[from]?.unit_code)return;
+    swap(from,to);
+  }
+  function edit(index:number,patch:Partial<Cell>){
+    setRows(prev=>prev.map((v,i)=>i===index?{...v,...patch}:v));
+    setTouched(true);
+  }
+  return <section id="hero-formation" className="formation-editor mmhk-formation-board"
+    aria-label="Formation de combat du héros" data-testid="formation-visual-board"
+    data-ready={ready?"true":"false"}>
+    <header className="mmhk-board-heading">
+      <div><span className="eyebrow">CHAMP DE BATAILLE · SEPT PELOTONS</span>
+        <h3>Formation de combat</h3>
+        <p>Glissez un peloton sur un autre emplacement pour les permuter.
+          Au clavier ou au tactile : sélectionnez un peloton, puis une destination.</p>
       </div>
-      <span className="formation-state">{formation.saved&&!touched?"Formation sauvegardée":touched?"Modifications locales":"Proposition non validée"}</span>
+      <span className="formation-state">{formation.saved&&!touched?
+        "Formation sauvegardée":touched?"Disposition modifiée":"Formation proposée"}</span>
     </header>
-    {formation.status!=="idle"&&<p className="formation-warning">Le héros est en mission.
-      Sa formation est verrouillée jusqu'à son retour effectif.</p>}
+    {!editable&&<p className="formation-warning">
+      Le héros est absent : impossible de réorganiser les troupes jusqu'à son retour.</p>}
     {formation.needs_configuration&&<p className="formation-warning">
-      Plus de sept types d'unités sont actuellement affectés à ce héros.
-      La formation ne peut être enregistrée sans réduire les types distincts.</p>}
-    <form action={saveHeroFormation}>
-      <input name="cityId" type="hidden" value={cityId}/>
-      <input name="heroId" type="hidden" value={formation.hero_id}/>
+      Plus de sept types d'unités : répartissez vos pelotons avant d'enregistrer.</p>}
+    <div className="mmhk-battle-ground" aria-label="Positions des sept unités">
+      <div className="mmhk-battle-ranks" aria-hidden="true">
+        <span>FLANC GAUCHE</span><span>CENTRE</span><span>FLANC DROIT</span>
+      </div>
       <div className="formation-slots">
-        {rows.map((r,i)=><div className="formation-slot" key={i}>
-          <div className="formation-slot-number"><strong>{i+1}</strong><small>Jactari {i+2}</small></div>
-          <label>Type d'unité
-            <select name={"unit-"+(i+1)} value={r.unit_code}
-              disabled={formation.status!=="idle"}
-              onChange={event=>update(i,{unit_code:event.target.value,
-                quantity:event.target.value?(r.quantity||1):0})}>
-              <option value="">Emplacement libre</option>
-              {available.map(unit=><option key={unit.unit_code} value={unit.unit_code}>
-                {unit.name} ({unit.quantity})</option>)}
+        {rows.map((r,i)=>{
+          const u=unit(r.unit_code);
+          return <div className={"formation-slot mmhk-formation-slot "+
+              (selected===i?"selected ":"")+(dragging===i?"dragging ":"")+
+              (r.unit_code?"filled":"empty")} key={i} data-position={i+1}>
+            <button type="button" className="mmhk-formation-tile"
+              aria-label={"Position "+(i+1)+": "+(u?.name??"vide")+
+                (r.quantity?" x"+r.quantity:"")}
+              aria-pressed={selected===i}
+              disabled={!editable}
+              draggable={editable&&Boolean(r.unit_code)}
+              onPointerDown={e=>{
+                if(editable&&r.unit_code&&e.button===0)
+                  pointerStart.current={index:i,x:e.clientX,y:e.clientY};
+              }}
+              onPointerCancel={()=>{pointerStart.current=null;}}
+              onPointerUp={(e:PointerEvent<HTMLButtonElement>)=>{
+                const src=pointerStart.current;
+                pointerStart.current=null;
+                if(!src||!editable)return;
+                if(Math.hypot(e.clientX-src.x,e.clientY-src.y)<12)return;
+                suppressClick.current=true;
+                swap(src.index,i);
+              }}
+              onDragStart={e=>{
+                pointerStart.current=null; // native HTML drag owns this gesture
+                e.dataTransfer.setData("application/x-mmhk-slot",String(i));
+                e.dataTransfer.effectAllowed="move";setDragging(i);
+              }}
+              onDragEnd={()=>setDragging(null)}
+              onDragOver={e=>{
+                if(editable&&Array.from(e.dataTransfer.types).includes("application/x-mmhk-slot"))
+                  e.preventDefault();
+              }}
+              onDrop={e=>drop(e,i)}
+              onClick={()=>{
+                if(suppressClick.current){suppressClick.current=false;return;}
+                if(selected!==null&&selected!==i)swap(selected,i);
+                else setSelected(selected===i?null:i);
+              }}>
+              <span className="formation-slot-number">0{i+1}</span>
+              <span className="mmhk-formation-art">
+                {r.unit_code&&ART[r.unit_code]?
+                  <img src={ART[r.unit_code]} width={90} height={90} alt="" draggable={false}/>:
+                  <span aria-hidden="true">{r.unit_code?"⚔":"+"}</span>}
+              </span>
+              <strong>{u?.name??(r.unit_code||"Emplacement libre")}</strong>
+              <span className="mmhk-formation-qty">{r.unit_code?
+                "×"+r.quantity.toLocaleString("fr-FR"):"Disponible"}</span>
+              <small>Jactari {i+2}</small>
+            </button>
+            {r.unit_code&&editable&&<div className="mmhk-formation-tools">
+              <button type="button" onClick={()=>split(i)}
+                disabled={r.quantity<2||!rows.some(v=>!v.unit_code)}
+                aria-label={"Diviser le peloton "+(i+1)}>½ Diviser</button>
+              <button type="button" onClick={()=>merge(i)}
+                disabled={!rows.some((v,k)=>k!==i&&v.unit_code===r.unit_code)}
+                aria-label={"Fusionner le peloton "+(i+1)}>⇄ Fusionner</button>
+            </div>}
+          </div>;
+        })}
+      </div>
+    </div>
+    <form action={saveHeroFormation} className="mmhk-formation-save">
+      <input type="hidden" name="cityId" value={cityId}/>
+      <input type="hidden" name="heroId" value={formation.hero_id}/>
+      {rows.map((r,i)=><div key={i}>
+        <input type="hidden" name={"unit-"+(i+1)} value={r.unit_code}/>
+        <input type="hidden" name={"quantity-"+(i+1)} value={r.quantity}/>
+      </div>)}
+      <details className="mmhk-formation-advanced">
+        <summary>Ajuster finement les effectifs</summary>
+        <p>Pour fractionner un même type sur plusieurs positions,
+          modifiez les quantités. La somme doit rester égale aux soldats
+          réellement affectés au héros.</p>
+        <div className="mmhk-formation-edit-grid">
+          {rows.map((r,i)=><label key={i}>Position {i+1}
+            <select disabled={!editable} value={r.unit_code} onChange={e=>edit(i,{
+              unit_code:e.target.value,quantity:e.target.value?(r.quantity||1):0
+            })}>
+              <option value="">Vide</option>
+              {formation.available_units.map(u=><option key={u.unit_code}
+                value={u.unit_code}>{u.name}</option>)}
             </select>
-          </label>
-          <label>Effectif
-            <input name={"quantity-"+(i+1)} type="number" min="1" max="1000000"
-              disabled={!r.unit_code||formation.status!=="idle"}
-              value={r.unit_code?r.quantity:""}
-              onChange={event=>update(i,{quantity:Number(event.target.value)})}/>
-          </label>
-          <div className="formation-slot-actions">
-            <button type="button" disabled={i===0||formation.status!=="idle"}
-              onClick={()=>swap(i,i-1)} aria-label={"Monter la position "+(i+1)}>↑</button>
-            <button type="button" disabled={i===6||formation.status!=="idle"}
-              onClick={()=>swap(i,i+1)} aria-label={"Descendre la position "+(i+1)}>↓</button>
-            <button type="button" disabled={!r.unit_code||r.quantity<2||
-              !rows.some(x=>!x.unit_code)||formation.status!=="idle"}
-              onClick={()=>split(i)}>Diviser</button>
-            <button type="button" disabled={!r.unit_code||
-              !rows.some((x,j)=>j!==i&&x.unit_code===r.unit_code)||
-              formation.status!=="idle"} onClick={()=>fuse(i)}>Fusionner</button>
-          </div>
-        </div>)}
-      </div>
+            <input type="number" min="1" max="1000000" disabled={!editable||!r.unit_code}
+              value={r.unit_code?r.quantity:""} onChange={e=>edit(i,{quantity:Number(e.target.value)})}/>
+          </label>)}
+        </div>
+      </details>
       <div className="formation-totals">
-        {remaining.map(u=><span key={u.unit_code} className={u.remaining===0?"balanced":"unbalanced"}>
-          {u.unit_code} : {totals.get(u.unit_code)??0} / {u.quantity}
-          {u.remaining!==0?" (écart "+u.remaining+")":""}</span>)}
+        {remaining.map(u=><span key={u.unit_code} className={
+          u.remaining===0?"balanced":"unbalanced"}>
+          {u.name} : {totals.get(u.unit_code)??0} / {u.quantity}
+          {u.remaining!==0?" · écart "+u.remaining:" · complet"}
+        </span>)}
       </div>
-      <div className="formation-footer">
-        <small>Le simulateur PvE actuel ne résout encore qu'un peloton à la fois.
-          Cette formation est sauvegardée et photographiée au départ de la mission,
-          mais ne modifie pas artificiellement les résultats du moteur.</small>
-        <button type="submit" disabled={!allCorrect||formation.status!=="idle"}>
+      <footer className="formation-footer">
+        <p>Les effectifs ne changent pas lorsque vous réorganisez les positions.
+          Seule la formation préparée est enregistrée auprès du serveur.</p>
+        <button type="submit" disabled={!balanced||!editable}>
           Enregistrer les sept positions
         </button>
-      </div>
+      </footer>
     </form>
   </section>;
 }
