@@ -45,3 +45,38 @@ test('historic hero and formation visuals remain private after opt-in preparatio
     assert.equal(result.unavailable.includes('hero.portrait.might'),true);
   }finally{rmSync(root,{recursive:true,force:true});}
 });
+
+
+test('five original MMHK faction portrait sheets and Haven troops are copied only to private pack',()=>{
+  const root=mkdtempSync(join(tmpdir(),'mmhk-heros-95-'));
+  const entries=[
+    ['hero.sheet.haven','Hero_HAVEN_2.jpg'],
+    ['hero.sheet.academy','Hero_ACADEMY_2.jpg'],
+    ['hero.sheet.inferno','Hero_INFERNO_2.jpg'],
+    ['hero.sheet.necropolis','Hero_NECROPOLIS_2.jpg'],
+    ['hero.sheet.sylvan','Hero_SYLVAN_2.jpg'],
+    ['army.sheet.haven','BattleUnitStack_HAVEN.jpg'],
+    ['army.sheet.haven.small','UnitStack_HAVEN.png'],
+    ['hero.slot.sheet.haven','emplacements-artefacts.png']
+  ];
+  try {
+    for(const [,filename] of entries){
+      const original=join(root,'data/Jactari/src/images',filename);
+      mkdirSync(dirname(original),{recursive:true});
+      writeFileSync(original,Buffer.from('ORIGINAL-SHEET-'+filename));
+    }
+    const first=JSON.parse(execFileSync(process.execPath,[script,'--root',root],{encoding:'utf8'}));
+    assert.equal(first.copied,entries.length);
+    const manifest=JSON.parse(readFileSync(join(root,'data/assets-private-original/manifest.json'),'utf8'));
+    for(const [id,filename] of entries){
+      assert.equal(manifest[id],'jactari/mmhk/'+filename);
+      assert.deepEqual(
+        readFileSync(join(root,'data/assets-private-original/jactari/mmhk',filename)),
+        readFileSync(join(root,'data/Jactari/src/images',filename))
+      );
+    }
+    const repeat=JSON.parse(execFileSync(process.execPath,[script,'--root',root],{encoding:'utf8'}));
+    assert.equal(repeat.reused,entries.length);
+    assert.equal(repeat.copied,0);
+  }finally {rmSync(root,{recursive:true,force:true});}
+});
