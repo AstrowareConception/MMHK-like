@@ -20,6 +20,8 @@ export const ASSETS = {
   // Historic sprite sheets; never public URLs. The fallback assets below
   // are redistributable placeholders when private opt-in is disabled.
   "hero.sheet.haven": { publicPath: null },
+  "hero.painting.might": { publicPath: null },
+  "hero.painting.magic": { publicPath: null },
   "hero.sheet.academy": { publicPath: null },
   "hero.sheet.inferno": { publicPath: null },
   "hero.sheet.necropolis": { publicPath: null },
