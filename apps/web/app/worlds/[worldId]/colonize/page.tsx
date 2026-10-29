@@ -143,6 +143,7 @@ export default async function ColonizePage({params,searchParams}:{
             String(selectedSite.x)+":"+String(selectedSite.y):""}>
             {colony.qualified_sites.map(p=><option key={p.x+":"+p.y} value={p.x+":"+p.y}>
               Région ({p.x}, {p.y}) · mines déclarées : {p.mine_types.join(", ")}
+              {p.qualification==="terrain_registry"?" · terrain qualifié":""}
             </option>)}
           </select>
         </label>
@@ -175,6 +176,9 @@ export default async function ColonizePage({params,searchParams}:{
       </div>}
       {quote?<div className="colony-quote">
         <h3>Devis serveur — {selectedSite?.x}, {selectedSite?.y}</h3>
+        <p>Terrain qualifié par : <strong>{quote.site_qualification==="terrain_registry"?
+          "registre indépendant de l'influence":"ancien profil opérateur territorial"}</strong>.
+          La domination réelle reste obligatoire jusqu'à l'arrivée.</p>
         <p>Contrat : <strong>{quote.policy_id}</strong> ·
           distance torique : <strong>{quote.distance_steps} case(s)</strong> ·
           durée d'expédition : <strong>{quote.travel_seconds} secondes</strong>.</p>
