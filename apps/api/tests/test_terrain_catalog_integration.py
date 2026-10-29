@@ -10,7 +10,7 @@ import pytest
 from test_colonization_integration import (
     colony,unlocked,order,send,route,advance,stock
 )
-from test_construction_integration import URL,client,headers
+from test_construction_integration import URL,client,headers,city
 from mmhk_api.dynamic_influence import (
     configure_influence,record_daily_domination,run_influence_batch
 )
