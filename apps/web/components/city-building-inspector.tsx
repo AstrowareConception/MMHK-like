@@ -1,26 +1,20 @@
+"use client";
+import {useState} from "react";
 import Link from "next/link";
 import { startUrbanConstruction } from "../app/actions";
 import type { CityDetail, ConstructionCatalog } from "../lib/server-api";
+import { buildingName } from "../lib/city-buildings";
 
-const NAMES: Record<string,string> = {
-  village_hall:"Hôtel du village",town_hall:"Hôtel de ville",
-  marketplace:"Marché",resource_silo:"Silos",tavern:"Taverne",
-  recruit_t1:"Demeure des miliciens",recruit_t2:"Demeure des archers",
-  fort:"Fortifications",blacksmith:"Forge",mage_guild:"Guilde des mages",
-  stables:"Écuries",watchtower:"Tour de guet",
-};
 const RESOURCES = [
   ["gold","or"],["wood","bois"],["ore","minerai"],["crystal","cristal"],
   ["gems","gemmes"],["sulfur","soufre"],["mercury","mercure"]
 ] as const;
-export function buildingName(code:string):string{
-  return Object.prototype.hasOwnProperty.call(NAMES,code)?NAMES[code]:code;
-}
-
 /** Selection is navigation only; owner-scoped records and payments stay on FastAPI. */
-export function CityBuildingInspector({city,catalog,selectedBuilding}:{
+export function CityBuildingInspector({city,catalog,selectedBuilding,onClose,onSelect}:{
   city:CityDetail;catalog?:ConstructionCatalog;selectedBuilding?:string;
+  onClose?:()=>void;onSelect?:(code:string)=>void;
 }){
+  const [selectedMode,setSelectedMode]=useState<"normal"|"rapid"|"economic">("normal");
   const code=selectedBuilding && /^[a-z][a-z0-9_]{1,47}$/.test(selectedBuilding) &&
     catalog && (catalog.options.some(o=>o.building_code===selectedBuilding)||
       catalog.buildings.some(b=>b.building_code===selectedBuilding)||
@@ -30,6 +24,9 @@ export function CityBuildingInspector({city,catalog,selectedBuilding}:{
   const next=code?catalog?.options.find(o=>o.building_code===code):undefined;
   const active=code && catalog?.active?.building_code===code?catalog.active:null;
   const records=code?(catalog?.history??[]).filter(h=>h.building_code===code).slice(0,3):[];
+  const currentMode=next?.modes.some(mode=>mode.mode===selectedMode)
+    ?selectedMode:next?.modes[0]?.mode;
+  const modeLabel=(mode:string)=>mode==="normal"?"Standard":mode==="rapid"?"Rapide":"Économique";
   return <section id="city-inspector" className="city-building-inspector"
     aria-label="Fiche du bâtiment sélectionné" data-selected-building={code??""}>
     {!selectedBuilding?<>
@@ -48,7 +45,9 @@ export function CityBuildingInspector({city,catalog,selectedBuilding}:{
           <p>{built?"Niveau "+built.level+" · "+(built.active?"opérationnel":"inactif"):
             active?"En construction":"Pas encore construit"}</p>
         </div>
-        <Link href={"/cities/"+city.city_id+"#city-scene"}>Fermer la fiche</Link>
+        {onClose?<button type="button" onClick={onClose} className="mmhk-inspect-close"
+          aria-label="Fermer la fiche du bâtiment">Fermer ×</button>:
+          <Link href={"/cities/"+city.city_id+"#city-scene"}>Fermer la fiche</Link>}
       </div>
       {built&&Object.keys(built.prerequisites).length>0&&
         <p>Prérequis du niveau actuel : {Object.entries(built.prerequisites)
@@ -65,8 +64,14 @@ export function CityBuildingInspector({city,catalog,selectedBuilding}:{
           Prérequis manquants : {next.missing_prerequisites.map(buildingName).join(", ")}.</p>}
         {catalog.active&&!active&&<p className="city-inspector-blocked">
           Un autre chantier est en cours dans la cité : attendez son achèvement.</p>}
+        <div className="mmhk-build-modes" role="group" aria-label="Mode de construction">
+          {next.modes.map(mode=><button key={mode.mode} type="button"
+            className={mode.mode===currentMode?"selected":""}
+            aria-pressed={mode.mode===currentMode}
+            onClick={()=>setSelectedMode(mode.mode)}>{modeLabel(mode.mode)}</button>)}
+        </div>
         <div className="city-inspector-quotes">
-          {next.modes.map(mode=>{
+          {next.modes.filter(mode=>mode.mode===currentMode).map(mode=>{
             const lines=RESOURCES.filter(([resource])=>(mode.costs[resource]??0)>0);
             const canPay=lines.every(([resource])=>
               typeof city.stocks[resource]==="number"&&city.stocks[resource]>=mode.costs[resource]);
@@ -76,7 +81,7 @@ export function CityBuildingInspector({city,catalog,selectedBuilding}:{
               <input type="hidden" name="cityId" value={city.city_id}/>
               <input type="hidden" name="buildingCode" value={code}/>
               <input type="hidden" name="mode" value={mode.mode}/>
-              <strong>{mode.mode==="normal"?"Standard":mode.mode==="rapid"?"Rapide":"Économique"}</strong>
+              <strong>{modeLabel(mode.mode)} · niveau {next.target_level}</strong>
               <small>Durée : {Math.ceil(mode.duration_seconds/60)} min</small>
               <ul>
                 {lines.length===0&&<li>Sans coût de ressources dans le profil de test</li>}
@@ -102,8 +107,11 @@ export function CityBuildingInspector({city,catalog,selectedBuilding}:{
           lors du paiement transactionnel. L'affichage ne réserve aucune ressource.</p>
       </>:!active&&<p>Aucun niveau supplémentaire n'est proposé dans le catalogue expérimental.</p>}
       {code==="village_hall"&&catalog.options.some(o=>o.building_code==="town_hall")&&
-        <p>Administration : <Link href={"/cities/"+city.city_id+"?inspect=town_hall#city-inspector"}>
-          examiner l'Hôtel de ville</Link>.</p>}
+        <p>Administration : {onSelect?
+          <button type="button" className="mmhk-inspect-select"
+            onClick={()=>onSelect("town_hall")}>examiner l'Hôtel de ville</button>:
+          <Link href={"/cities/"+city.city_id+"?inspect=town_hall#city-inspector"}>
+            examiner l'Hôtel de ville</Link>}.</p>}
       {["recruit_t1","recruit_t2","tavern"].includes(code)&&
         <p><Link href={"/cities/"+city.city_id+"/forces"}>Accéder à la garnison et à la taverne</Link></p>}
       {code==="marketplace"&&

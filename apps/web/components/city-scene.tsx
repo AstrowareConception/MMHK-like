@@ -1,5 +1,6 @@
+"use client";
 import Link from "next/link";
-import {resolveAssetUrl} from "../lib/assets/runtime";
+import type {MouseEvent} from "react";
 import type {ConstructionCatalog,CityDetail} from "../lib/server-api";
 
 /** These anchors are cross-referenced against CITYVIEW_CONF 4.1.3-MTR.
@@ -82,13 +83,19 @@ function OriginalSprite({style,level,disabled}:{
   </g>;
 }
 
-export function CityScene({city,catalog,selectedBuilding}:{
+export function CityScene({city,catalog,selectedBuilding,onSelect,tavernArtwork}:{
   city:CityDetail;catalog?:ConstructionCatalog;selectedBuilding?:string;
+  onSelect?:(code:string)=>void;tavernArtwork:string|null;
 }){
   const buildings=catalog?.buildings??[];
   const options=catalog?.options??[];
   const active=catalog?.active;
-  const tavern=resolveAssetUrl("building.haven.tavern.1");
+  const tavern=tavernArtwork;
+  function inspect(event:MouseEvent<HTMLAnchorElement>,code:string){
+    // Keep a real URL as progressive enhancement / middle-click fallback.
+    if(!onSelect||event.button!==0||event.ctrlKey||event.metaKey||event.altKey||event.shiftKey)return;
+    event.preventDefault();onSelect(code);
+  }
   // A Town Hall visually upgrades the Village Hall, not a second building
   // standing on top of it. One centre survives at a time.
   const hallUpgraded=buildings.some(b=>b.building_code==="town_hall"&&b.active);
@@ -132,6 +139,7 @@ export function CityScene({city,catalog,selectedBuilding}:{
             data-building-code={spot.code}
             aria-current={selectedBuilding===spot.code?"location":undefined}
             aria-label={"Examiner "+spot.label+" — "+status}
+            onClick={event=>inspect(event,spot.code)}
             tabIndex={0}>
             <title>{spot.label+" · "+status+(done?" · niveau "+done.level:"")}</title>
             <g transform={"translate("+spot.x+" "+spot.y+")"}>

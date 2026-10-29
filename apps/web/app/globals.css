@@ -1354,3 +1354,96 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   .mmhk-item,.mmhk-roster-choice,.mmhk-equip-target,
   .mmhk-garrison-keep,.mmhk-deployment-hero{transition:none;}
 }
+
+
+/* US-CIT / US-UIX : immersive Haven building workbench (PR #41).
+   The landscape and game commands own the first viewport. The old full
+   construction register remains available, but no longer drives the UX. */
+.mmhk-city-district {margin:5px 0 22px;}
+.mmhk-city-district-heading {display:flex;align-items:center;justify-content:space-between;
+  gap:16px;padding:14px 19px 17px;border:1px solid #9f8557;
+  background:radial-gradient(ellipse at 90% 20%,#88703f45,transparent 52%),
+    linear-gradient(135deg,#36484b,#162b32 70%);
+  box-shadow:inset 0 0 24px #0008,0 4px 16px #0005;}
+.mmhk-city-district-heading h2 {margin:2px 0 5px;font:small-caps clamp(25px,3vw,35px) Georgia,serif;}
+.mmhk-city-district-heading p {margin:0;color:#d0cbc0;font:13px/1.6 Georgia,serif;}
+.mmhk-district-seal {display:grid;place-items:center;flex:none;width:56px;height:56px;
+  border:3px double #dec793;border-radius:50%;font:29px Georgia,serif;color:#ffedbb;
+  background:radial-gradient(circle,#6c6350,#192b35 80%);box-shadow:0 4px 15px #0008;}
+.mmhk-city-workbench {display:grid;grid-template-columns:minmax(0,1.34fr) minmax(340px,.9fr);
+  gap:12px;margin-top:12px;align-items:start;}
+.mmhk-city-scene-column,.mmhk-city-inspector-column {min-width:0;}
+.mmhk-city-workbench .city-scene-section {margin:0;}
+.mmhk-city-workbench .city-scene-header {margin:0 0 10px;align-items:center;}
+.mmhk-city-workbench .city-scene-header h2 {font-size:27px;}
+.mmhk-city-workbench .city-scene-header p {font-size:12px;}
+.mmhk-city-workbench .city-scene-frame {border:3px ridge #d0b981;}
+.mmhk-city-workbench .haven-city-svg {width:100%;height:auto;display:block;}
+.mmhk-city-workbench .haven-plot {cursor:pointer;outline:none;}
+.mmhk-city-workbench .haven-plot:focus-visible {filter:drop-shadow(0 0 13px #fff0a9);}
+.mmhk-city-workbench .haven-plot:hover rect {stroke:#f9e5a7;stroke-width:2;}
+.mmhk-city-workbench .haven-plot:hover {filter:drop-shadow(0 0 7px #efd18a);}
+.mmhk-city-workbench .haven-scene-key {font-size:11px;}
+.mmhk-city-inspector-column {position:relative;scroll-margin-top:18px;}
+.mmhk-city-workbench .city-building-inspector {margin:0;min-height:440px;
+  border:3px ridge #baa170;padding:17px 18px;background:
+  radial-gradient(circle at 80% 6%,#98734a30,transparent 47%),
+  linear-gradient(153deg,#324447,#11242d 63%,#203139);
+  box-shadow:inset 0 0 32px #0009,0 8px 24px #0008;}
+.mmhk-city-workbench .city-inspector-heading h3 {font-size:clamp(24px,2.7vw,32px);}
+.mmhk-city-workbench .city-inspector-heading p {font-size:12px;}
+.mmhk-city-workbench .city-inspector-quotes {grid-template-columns:minmax(0,1fr);margin:10px 0;}
+.mmhk-city-workbench .city-inspector-quote {padding:14px 15px;gap:8px;
+  background:linear-gradient(145deg,#293d40,#0f202a);border:2px ridge #a48d64;}
+.mmhk-city-workbench .city-inspector-quote ul {display:flex;flex-wrap:wrap;list-style:none;
+  gap:5px;margin:0;padding:0;}
+.mmhk-city-workbench .city-inspector-quote li {border:1px solid #9d86625a;
+  padding:5px 7px;background:#101f25;font-size:11px;}
+.mmhk-city-workbench .city-inspector-quote button {width:100%;min-height:42px;}
+.mmhk-build-modes {display:flex;gap:6px;flex-wrap:wrap;margin:13px 0;}
+.kingdom-screen-content .mmhk-build-modes button {flex:1 1 100px;padding:8px 5px;
+  border:1px solid #a58e68;background:#21343e;color:#dbc99f;
+  font:700 12px Georgia,serif;cursor:pointer;}
+.kingdom-screen-content .mmhk-build-modes button.selected,
+.kingdom-screen-content .mmhk-build-modes button:focus-visible {background:#d9be85;
+  color:#202b2b;border-color:#fae8b7;box-shadow:0 0 0 2px #3e5051;}
+.kingdom-screen-content .mmhk-inspect-close {padding:5px 9px;min-height:32px;
+  background:#233840;color:#f1d9a4;border:1px solid #bd9e69;font:12px Georgia,serif;}
+.kingdom-screen-content .mmhk-inspect-select {padding:4px 7px;
+  color:#242d2e;font:700 12px Georgia,serif;}
+.city-plan-ribbon {margin:12px 0 0;padding:11px 12px 12px;border:1px solid #9d855d;
+  background:linear-gradient(170deg,#2d4145,#162831);}
+.city-plan-ribbon-list {display:flex;gap:7px;margin-top:9px;overflow-x:auto;padding-bottom:5px;
+  scrollbar-width:thin;}
+.kingdom-screen-content .city-plan-ribbon-list button {flex:0 0 auto;min-width:126px;
+  max-width:190px;display:flex;flex-direction:column;justify-content:center;gap:3px;
+  padding:8px 10px;text-align:left;background:linear-gradient(#3c5054,#24363e);
+  color:#efe2c2;border:1px solid #988158;font:small-caps 15px Georgia,serif;cursor:pointer;}
+.city-plan-ribbon-list button small {color:#b9c6c1;font:10px system-ui,sans-serif;}
+.kingdom-screen-content .city-plan-ribbon-list button.selected,
+.kingdom-screen-content .city-plan-ribbon-list button:focus-visible {color:#201d18;
+  border-color:#fce4a2;background:linear-gradient(#e7d7ac,#b99761);}
+.city-plan-ribbon-list button.selected small {color:#3a3833;}
+.mmhk-city-directory {border:1px solid #ae9365;background:#152932;margin:12px 0 17px;}
+.mmhk-city-directory>summary {padding:13px 17px;cursor:pointer;
+  font:700 15px Georgia,serif;color:#f0d9aa;list-style-position:inside;}
+.mmhk-city-directory>summary:hover,.mmhk-city-directory>summary:focus-visible {
+  background:#2c4247;outline:2px solid #e6d49e;outline-offset:-3px;}
+.mmhk-city-directory .build-options {padding:12px;}
+.mmhk-city-district .city-scene-unmapped {margin-bottom:6px;}
+@media(max-width:1100px){
+  .mmhk-city-workbench {grid-template-columns:minmax(0,1fr);}
+  .mmhk-city-workbench .city-building-inspector {min-height:0;}
+  .mmhk-city-workbench .city-inspector-quotes {grid-template-columns:minmax(0,1fr);}
+}
+@media(max-width:600px){
+  .mmhk-city-district-heading {padding:11px;}
+  .mmhk-district-seal {width:40px;height:40px;font-size:20px;}
+  .mmhk-city-workbench .city-scene-header {align-items:flex-start;}
+  .mmhk-city-workbench .city-scene-header h2 {font-size:22px;}
+  .mmhk-city-workbench .city-building-inspector {padding:12px;}
+  .mmhk-build-modes {gap:4px;}
+}
+@media(prefers-reduced-motion:reduce){
+  .mmhk-city-workbench .haven-plot {transition:none;}
+}

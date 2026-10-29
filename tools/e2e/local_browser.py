@@ -107,8 +107,27 @@ def main() -> int:
             expect(page.get_by_role("heading", name="Réserves de la ville")).to_be_visible()
             expect(page.get_by_role("link", name="Héros et artefacts").first).to_be_visible()
             expect(page.get_by_role("link", name="Garnison et recrutement").first).to_be_visible()
+            expect(page.get_by_test_id("city-interactive-district")).to_be_visible()
+            assert page.locator(".city-plan-ribbon-list button").count() >= 8
+            expect(page.locator(".city-plan-ribbon-list button").filter(
+                has_text="Demeure des miliciens")).to_be_visible()
+            # The long technical directory is opt-in; it never dominates the game screen.
+            directory=page.get_by_test_id("construction-directory")
+            expect(directory).not_to_have_attribute("open", "")
+            directory.locator("summary").click()
             assert page.locator(".building-plan").count() >= 8, "Expanded Haven catalogue not provisioned"
-            expect(page.get_by_text("Demeure des miliciens", exact=True)).to_be_visible()
+            directory.locator("summary").click()
+            # A building with no certified scene anchor remains accessible
+            # through the same in-game blueprint ribbon.
+            page.locator(".city-plan-ribbon-list button").filter(
+                has_text="Tour de guet").click()
+            expect(page.locator("#city-inspector")).to_have_attribute(
+                "data-selected-building","watchtower")
+            assert "inspect=watchtower" in page.url, page.url
+            page.locator("#city-inspector").get_by_role(
+                "button",name="Fermer la fiche du bâtiment").click()
+            expect(page.locator("#city-inspector")).to_have_attribute(
+                "data-selected-building","")
 
             # US-ART-001/003/006: hero inventory is a separate readable screen.
             page.get_by_role("link", name="Héros et artefacts").first.click()
@@ -146,17 +165,44 @@ def main() -> int:
             # then submit the construction order from its contextual inspector.
             page.locator(".haven-plot[data-building-code='village_hall']").click()
             inspector=page.locator("#city-inspector")
+            expect(page.get_by_test_id("city-interactive-district")).to_be_visible()
+            assert "inspect=village_hall" in page.url, page.url
             expect(inspector).to_have_attribute("data-selected-building","village_hall")
             expect(inspector.get_by_role("heading",name="Hôtel du village")).to_be_visible()
             expect(inspector.get_by_text("Projet proposé : niveau 1")).to_be_visible()
-            expect(inspector.locator(".city-inspector-quote")).to_have_count(3)
+            expect(inspector.locator(".city-inspector-quote")).to_have_count(1)
+            inspector.get_by_role("button", name="Rapide", exact=True).click()
+            expect(inspector.get_by_role("button",name="Rapide",exact=True)).to_have_attribute(
+                "aria-pressed","true")
+            os.makedirs("test-output/visuals",exist_ok=True)
+            page.screenshot(path="test-output/visuals/haven-city-building-inspector.png",
+                            full_page=True)
             rapid = inspector.locator(
                 "form.city-inspector-quote:has(input[name='buildingCode'][value='village_hall'])"
                 ":has(input[name='mode'][value='rapid'])"
             )
             expect(rapid.get_by_role("button", name="Lancer le chantier")).to_be_enabled()
+            construction_responses=[]
+            page.on("response",lambda response:construction_responses.append({
+                "status":response.status,"url":response.url,
+                "method":response.request.method
+            }) if response.request.method=="POST" else None)
             rapid.get_by_role("button", name="Lancer le chantier").click()
-            expect(page.get_by_text("Chantier enregistré et ressources payées.")).to_be_visible(timeout=20000)
+            try:
+                expect(page.get_by_text("Chantier enregistré et ressources payées.")).to_be_visible(timeout=20000)
+            except AssertionError:
+                os.makedirs("test-output/visuals",exist_ok=True)
+                page.screenshot(path="test-output/visuals/haven-city-construction-error.png",full_page=True)
+                print("BUILD DIAGNOSTICS",{
+                    "url":page.url,
+                    "responses":construction_responses[-6:],
+                    "notices":page.locator(".construction-notice,.error").all_text_contents(),
+                    "inspector":page.locator("#city-inspector").all_text_contents()[:1],
+                    "browser_errors":errors[:3],
+                },flush=True)
+                raise
+            page.screenshot(path="test-output/visuals/haven-city-active-project.png",
+                            full_page=True)
             expect(page.locator("#city-history .construction-history-entry")).to_have_count(1)
             expect(page.locator("#city-history .construction-history-entry").first).to_contain_text("Hôtel du village")
             snap = page.request.get(root + "/api/game-timeline?hours=12")
@@ -168,7 +214,7 @@ def main() -> int:
                   "clusters", page.locator(".timeline-cluster").count(),
                   "message", page.locator(".kingdom-timeline").inner_text()[:180], flush=True)
             expect(page.locator(".timeline-event")).to_have_count(1, timeout=20000)
-            expect(page.get_by_text("En construction", exact=False)).to_be_visible()
+            expect(page.locator(".active-project")).to_contain_text("En construction")
             # One active site, no queue and no second payment option.
             assert page.locator("form.build-option").count() == 0
 
@@ -192,6 +238,8 @@ def main() -> int:
             page.get_by_role("link", name="Voir le bâtiment Marché").click()
             expect(page.locator("#city-inspector")).to_have_attribute(
                 "data-selected-building", "marketplace")
+            page.locator("#city-inspector").get_by_role(
+                "button",name="Rapide",exact=True).click()
             market_job=page.locator(
                 "form.city-inspector-quote:has(input[name='buildingCode'][value='marketplace'])"
                 ":has(input[name='mode'][value='rapid'])"
@@ -238,13 +286,18 @@ def main() -> int:
             expect(page.get_by_role("heading",level=1,name="Premier Havre")).to_be_visible()
             # Progression: after exchanging resources, build the first dwelling
             # and recruit the army used by the next journey.
-            tier_one = page.locator(
-                "form.build-option:has(input[name='buildingCode'][value='recruit_t1'])"
+            page.locator(".city-plan-ribbon-list button").filter(
+                has_text="Demeure des miliciens").click()
+            inspector=page.locator("#city-inspector")
+            expect(inspector).to_have_attribute("data-selected-building","recruit_t1")
+            inspector.get_by_role("button",name="Rapide",exact=True).click()
+            tier_one=inspector.locator(
+                "form.city-inspector-quote:has(input[name='buildingCode'][value='recruit_t1'])"
                 ":has(input[name='mode'][value='rapid'])"
             )
-            expect(tier_one.get_by_role("button", name="Lancer ce chantier")).to_be_enabled()
-            # Build the first actual dwelling: no pre-existing units are fabricated.
-            tier_one.get_by_role("button", name="Lancer ce chantier").click()
+            expect(tier_one.get_by_role("button",name="Lancer le chantier")).to_be_enabled()
+            # Build the first actual dwelling via the in-scene inspector.
+            tier_one.get_by_role("button",name="Lancer le chantier").click()
             expect(page.get_by_text("Chantier enregistré et ressources payées.")).to_be_visible(timeout=20000)
             next_ready = page.get_by_text("recruit_t1 niveau 1", exact=False)
             deadline = time.monotonic() + 125
