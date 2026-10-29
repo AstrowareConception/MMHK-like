@@ -30,12 +30,22 @@ def main():
             options=page.locator("select[name='plot'] option")
             verified=options.filter(has_text="terrain qualifié")
             expect(verified).not_to_have_count(0)
-            plot=verified.first.get_attribute("value")
-            assert plot and ":" in plot
-            page.locator("select[name='plot']").select_option(plot)
-            page.get_by_role("button",name="Examiner l'emplacement").click()
+            selected=None
+            # Earlier E2E scenarios may already have founded a second or
+            # third city on one of the prepared laboratory squares. Select
+            # the first remaining allowed plot instead of assuming index 0.
+            for item in verified.all():
+                plot=item.get_attribute("value")
+                if not plot or ":" not in plot:
+                    continue
+                page.locator("select[name='plot']").select_option(plot)
+                page.get_by_role("button",name="Examiner l'emplacement").click()
+                start=page.get_by_role("button",name="Engager le héros et réserver les ressources")
+                if start.count() and start.is_enabled():
+                    selected=plot
+                    break
+            assert selected, "No unoccupied operator-qualified plot remains"
             expect(page.get_by_text("registre indépendant de l'influence")).to_be_visible(timeout=15000)
-            start=page.get_by_role("button",name="Engager le héros et réserver les ressources")
             expect(start).to_be_enabled()
             page.locator('input[name="colonyName"]').fill("Territoire qualifié de la Brume")
             start.click()
