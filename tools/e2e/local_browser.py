@@ -197,7 +197,7 @@ def main() -> int:
                   "clusters", page.locator(".timeline-cluster").count(),
                   "message", page.locator(".kingdom-timeline").inner_text()[:180], flush=True)
             expect(page.locator(".timeline-event")).to_have_count(1, timeout=20000)
-            expect(page.get_by_text("En construction", exact=False)).to_be_visible()
+            expect(page.locator(".active-project")).to_contain_text("En construction")
             # One active site, no queue and no second payment option.
             assert page.locator("form.build-option").count() == 0
 
