@@ -1727,6 +1727,13 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
     padding:7px 7px;font-size:11px;}
 }
 
+/* Original Jactari eight-icon equipment sheet, not fantasy glyphs. */
+.mmhk-heritage-inventory .mmhk-slot-symbol.has-heritage-slot {
+  display:block!important;width:38px!important;height:40px!important;
+  min-height:40px!important;min-width:38px;font-size:0!important;
+  line-height:0!important;
+}
+
 /* Local-only full-height archival hero paintings. The exact face and name
    of laboratory heroes are not claimed to be historical matches. */
 .mmhk-heritage-inventory .mmhk-hero-portrait[data-historical-painting="true"] {
