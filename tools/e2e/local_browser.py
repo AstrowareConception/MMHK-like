@@ -129,6 +129,7 @@ def main() -> int:
             expect(page.locator("#city-inspector")).to_have_attribute(
                 "data-selected-building","")
 
+            print("E2E MILESTONE: world and city navigation OK",flush=True)
             # US-ART-001/003/006: hero inventory is a separate readable screen.
             page.get_by_role("link", name="Héros et artefacts").first.click()
             expect(page.get_by_role("heading", level=1, name="Héros et équipement")).to_be_visible()
@@ -156,6 +157,7 @@ def main() -> int:
                 raise
             expect(page.locator(".equipment-slot.filled")).to_have_count(1)
             page.screenshot(path="test-output/visuals/hero-equipment-desktop.png",full_page=True)
+            print("E2E MILESTONE: hero equipment drag persisted",flush=True)
             page.get_by_role("link", name="Ville", exact=True).click()
             expect(page.get_by_role("heading", level=1, name="Premier Havre")).to_be_visible()
 
