@@ -4,10 +4,11 @@
 
 ## Installer et lancer le prototype sur son ordinateur portable
 
-**Prérequis :** Git, Python 3.10 ou plus et Docker Desktop **déjà démarré**
-(Windows ou macOS), ou Docker Engine + Compose v2 sous Linux. Docker
-doit disposer d'environ **4 Go de RAM disponibles** ; le port local
-**3000** doit être libre. Aucun Node.js ni PostgreSQL local à installer.
+**Prérequis :** Git, Python 3.10 ou plus, **Node.js 22+ pour préparer
+les ressources graphiques historiques privées**, et Docker Desktop
+**déjà démarré** (Windows ou macOS), ou Docker Engine + Compose v2
+sous Linux. Docker doit disposer d'environ **4 Go de RAM disponibles** ;
+le port local **3000** doit être libre. Aucun PostgreSQL à installer.
 
 Depuis un terminal, clonez le dépôt :
 
@@ -33,6 +34,19 @@ crée le compte `joueurdemo` et le monde `local-sandbox` **uniquement
 s'ils n'existent pas déjà**. Il affiche une seule fois le mot de passe
 aléatoire du compte et ouvre `http://localhost:3000` dans le navigateur.
 **Sauvegardez le mot de passe : les démarrages suivants ne le réinitialisent pas.**
+
+Les lanceurs `demarrer.bat` et `demarrer.sh` activent le **thème MMHK
+historique uniquement sur votre machine**, en copiant dans le dossier
+gitignored `data/assets-private-original` les planches de héros
+issues de Jactari (95 portraits vérifiés, cinq factions), les unités
+Havre et les images historiques déjà disponibles. Les originaux
+ne sont jamais copiés dans le client Web public ni déployés sur un serveur.
+Le thème reste accessible uniquement sur localhost après connexion.
+Pour lancer volontairement la version aux dessins redistribuables,
+utilisez `python tools/local/stack.py start` sans `--historical`.
+Les noms de héros du laboratoire ne sont pas une correspondance certifiée
+aux visages historiques : les portraits sont des illustrations de faction.
+
 
 Pour relancer une installation existante, répétez exactement la même
 commande ; les ressources, bâtiments et données PostgreSQL sont conservés.
