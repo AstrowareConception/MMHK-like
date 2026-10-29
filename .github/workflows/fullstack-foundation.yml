@@ -5,8 +5,6 @@ on:
   push:
     branches:
       - main
-      # Temporary: validate hydration ready and Chromium UI PR40.
-      - feat/immersive-hero-artifacts-garrison-ui
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
@@ -34,7 +32,6 @@ permissions:
   contents: read
 jobs:
   api-python-and-js-oracle:
-    if: github.ref == 'refs/heads/main' # one-off UI revalidation
     name: FastAPI contract and Python/JS Jactari differential
     runs-on: ubuntu-latest
     services:
@@ -97,7 +94,6 @@ jobs:
         run: npm run typecheck
 
   private-preview-build:
-    if: github.ref == 'refs/heads/main' # one-off UI revalidation
     name: Check SSH-only preview ports and build API/Next images
     runs-on: ubuntu-latest
     env:
