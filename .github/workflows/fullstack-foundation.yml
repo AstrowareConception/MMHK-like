@@ -5,8 +5,6 @@ on:
   push:
     branches:
       - main
-      # Final consolidated E2E verification of corrected PR 37.
-      - feat/colonization-multicity-protected-world
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
