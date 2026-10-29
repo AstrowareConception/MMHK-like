@@ -24,7 +24,7 @@ ORDER_COLUMNS = """order_id,world_id,source_city_id,owner_account_id,hero_id,
   new_city_id,colony_name,x,y,policy_id,applied_costs,mine_types,rates_per_day,
   stock_capacities,tick_seconds,site_source_ref,travel_seconds,started_at,
   due_at,status,completed_at,blocked_at,blocked_reason,refunded_at,refund_order_id,
-  city_recruitment,city_hero_offers"""
+  city_recruitment,city_hero_offers,site_qualification"""
 
 
 class ColonizationNotFound(Exception):
@@ -205,7 +205,41 @@ def _active_policy(db:psycopg.Connection,world_id:str,*,lock:bool=False)->dict|N
 
 def _approved_site(db:psycopg.Connection,*,world_id:str,owner:UUID,
                    x:int,y:int,lock:bool=False)->tuple:
-    row=db.execute(
+    """Authorize only proven terrain UNDER the current control regime.
+
+    Legacy worlds keep the existing operator-influence-qualified profiles.
+    Dynamic worlds additionally accept a separate verified terrain registry
+    (which is independent of a player's ownership), but only where their
+    latest calculated territory is unambiguously under this owner's control.
+    """
+    authority=db.execute(
+        """SELECT enabled,revision FROM world_influence_policies
+           WHERE world_id=%s""" + (" FOR SHARE" if lock else ""),
+        (world_id,),
+    ).fetchone()
+    dynamic=bool(authority and authority[0])
+    if dynamic:
+        if authority[1]<1 or not db.execute(
+            """SELECT 1 FROM world_influence_cells
+               WHERE world_id=%s AND x=%s AND y=%s
+                 AND state='controlled' AND owner_account_id=%s""",
+            (world_id,x,y,owner),
+        ).fetchone():
+            raise ColonizationConflict("Region not controlled by your current territory")
+        terrain=db.execute(
+            """SELECT mine_types,rates_per_day,stock_capacities,tick_seconds,
+                      source_ref
+               FROM world_colonizable_terrain
+               WHERE world_id=%s AND x=%s AND y=%s AND enabled""" +
+            (" FOR SHARE" if lock else ""),
+            (world_id,x,y),
+        ).fetchone()
+        if terrain:
+            return (*terrain,"terrain_registry")
+    # Existing manually verified sites remain available only if the original
+    # explicit manual controller is still the requester. No terrain registry
+    # is silently used when a world has no active dynamic influence.
+    manual=db.execute(
         """SELECT p.mine_types,p.rates_per_day,p.stock_capacities,
                   p.tick_seconds,p.source_ref
            FROM colonization_site_profiles p
@@ -216,26 +250,9 @@ def _approved_site(db:psycopg.Connection,*,world_id:str,owner:UUID,
         (" FOR SHARE OF p,i" if lock else ""),
         (world_id,x,y,owner),
     ).fetchone()
-    if not row:
-        raise ColonizationConflict("Region is not an approved location under your own influence")
-    # Once a world actively uses a calculated territory revision, a founder
-    # must ALSO own the square according to that revision. A stale manual
-    # claim cannot bypass a lost dynamic border. Qualified site profile
-    # still remains mandatory; dynamic influence alone creates NO terrain.
-    authority=db.execute(
-        """SELECT enabled,revision FROM world_influence_policies
-           WHERE world_id=%s""" + (" FOR SHARE" if lock else ""),
-        (world_id,),
-    ).fetchone()
-    if authority and authority[0]:
-        if authority[1]==0 or not db.execute(
-            """SELECT 1 FROM world_influence_cells
-               WHERE world_id=%s AND x=%s AND y=%s
-                 AND state='controlled' AND owner_account_id=%s""",
-            (world_id,x,y,owner),
-        ).fetchone():
-            raise ColonizationConflict("Region not controlled by your current territory")
-    return row
+    if not manual:
+        raise ColonizationConflict("No authorized, qualified colonial terrain at this position")
+    return (*manual,"legacy_operator")
 
 
 def _site_clear(db:psycopg.Connection,*,world_id:str,x:int,y:int)->bool:
@@ -315,13 +332,14 @@ def _order(db:psycopg.Connection,order_id:UUID,*,lock:bool=False)->tuple|None:
 def _receipt(row:tuple,*,replayed:bool=False)->dict:
     (oid,world,source,owner,hero,new_id,name,x,y,policy,costs,mines,rates,caps,
      tick,source_ref,travel,started,due,status,finished,blocked,reason,
-     refunded,refund_id,recruitment,offers)=row
+     refunded,refund_id,recruitment,offers,qualification)=row
     return {
         "order_id":str(oid),"world_id":world,
         "source_city_id":str(source),"hero_id":str(hero),
         "new_city_id":str(new_id) if status=="founded" else None,
         "colony_name":name,"x":x,"y":y,"policy_id":policy,
         "applied_costs":costs,"mine_types":mines,"travel_seconds":travel,
+        "site_qualification":qualification,
         "available_recruitment":recruitment,"paid_hero_offers":offers,
         "started_at":started.isoformat(),"due_at":due.isoformat(),
         "status":status,"completed_at":finished.isoformat() if finished else None,
@@ -362,6 +380,39 @@ def colonies_for_world(db:psycopg.Connection,*,owner:UUID,world_id:str)->dict:
            WHERE p.world_id=%s AND p.enabled AND i.controller_account_id=%s
            ORDER BY p.x,p.y LIMIT 100""",(world_id,owner),
     ).fetchall()
+    # Only qualified terrain owned by the current calculated controller can
+    # be presented. The terrain registry itself never leaks enemy plots.
+    authority=db.execute(
+        """SELECT enabled,revision FROM world_influence_policies
+           WHERE world_id=%s""",(world_id,),
+    ).fetchone()
+    if authority and authority[0]:
+        if authority[1]<1:
+            sites=[]
+        else:
+            allowed=set(db.execute(
+                """SELECT x,y FROM world_influence_cells
+                   WHERE world_id=%s AND state='controlled'
+                     AND owner_account_id=%s""",
+                (world_id,owner),
+            ).fetchall())
+            manual={((x,y)):(x,y,mines,ref,"legacy_operator")
+                    for x,y,mines,ref in sites if (x,y) in allowed}
+            terrain=db.execute(
+                """SELECT t.x,t.y,t.mine_types,t.source_ref
+                   FROM world_colonizable_terrain t
+                   JOIN world_influence_cells i
+                     ON i.world_id=t.world_id AND i.x=t.x AND i.y=t.y
+                   WHERE t.world_id=%s AND t.enabled
+                     AND i.state='controlled' AND i.owner_account_id=%s
+                   ORDER BY t.x,t.y LIMIT 100""",
+                (world_id,owner),
+            ).fetchall()
+            for x,y,mines,ref in terrain:
+                manual[(x,y)]=(x,y,mines,ref,"terrain_registry")
+            sites=sorted(manual.values(),key=lambda t:(t[0],t[1]))[:100]
+    else:
+        sites=[(x,y,mines,ref,"legacy_operator") for x,y,mines,ref in sites]
     orders=db.execute(
         """SELECT """+ORDER_COLUMNS+"""
            FROM colonization_orders
@@ -404,8 +455,9 @@ def colonies_for_world(db:psycopg.Connection,*,owner:UUID,world_id:str)->dict:
                   for cid,name,x,y,first in cities],
         "heroes":[{"hero_id":str(hid),"city_id":str(cid),"name":name,"status":status}
                   for hid,cid,name,status in heroes],
-        "qualified_sites":[{"x":x,"y":y,"mine_types":mines,"source_ref":ref}
-                            for x,y,mines,ref in sites],
+        "qualified_sites":[{"x":x,"y":y,"mine_types":mines,
+                            "source_ref":ref,"qualification":origin}
+                            for x,y,mines,ref,origin in sites],
         "expeditions":histories,
         "historically_certified":False,
         "influence_source":"operator_qualified_record_only",
@@ -418,7 +470,7 @@ def quote_colony(db:psycopg.Connection,*,owner:UUID,world_id:str,
     if type(x) is not int or type(y) is not int or not 1<=x<=size or not 1<=y<=size:
         raise ColonizationConflict("Coordinates outside your campaign world")
     source=_source(db,world_id=world_id,owner=owner,city_id=source_city_id)
-    _approved_site(db,world_id=world_id,owner=owner,x=x,y=y)
+    *_,qualification=_approved_site(db,world_id=world_id,owner=owner,x=x,y=y)
     policy=_active_policy(db,world_id)
     if not policy:
         raise ColonizationConflict("Colonization policy is not enabled for this world")
@@ -447,6 +499,7 @@ def quote_colony(db:psycopg.Connection,*,owner:UUID,world_id:str,
         "world_id":world_id,"source_city_id":str(source_city_id),
         "hero_id":str(hero_id),"x":x,"y":y,
         "policy_id":policy["policy_id"],"applied_costs":costs,
+        "site_qualification":qualification,
         "distance_steps":distance,"travel_seconds":duration,
         "protection_until":until.isoformat(),"protected":now<until,
         "current_cities":current,"pending_expeditions":pending,
@@ -500,7 +553,7 @@ def start_colonization(db:psycopg.Connection,*,owner:UUID,world_id:str,
         distance=_distance(source,x,y,size)
         if not 1<=distance<=policy["max_distance_steps"]:
             raise ColonizationConflict("The colony is outside your permitted local influence")
-        mines,rates,caps,tick,site_ref=_approved_site(
+        mines,rates,caps,tick,site_ref,qualification=_approved_site(
             db,world_id=world_id,owner=owner,x=x,y=y,lock=True,
         )
         if not _site_clear(db,world_id=world_id,x=x,y=y):
@@ -530,13 +583,14 @@ def start_colonization(db:psycopg.Connection,*,owner:UUID,world_id:str,
               new_city_id,colony_name,x,y,policy_id,applied_costs,
               mine_types,rates_per_day,stock_capacities,tick_seconds,
               site_source_ref,travel_seconds,started_at,due_at,status,
-              city_recruitment,city_hero_offers)
+              city_recruitment,city_hero_offers,site_qualification)
               VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,
-                     'traveling',%s,%s)""",
+                     'traveling',%s,%s,%s)""",
             (order_id,world_id,source_city_id,owner,hero_id,next_id,name,x,y,
              policy["policy_id"],Jsonb(costs),Jsonb(mines),Jsonb(rates),
              Jsonb(caps),tick,site_ref,duration,now,due,
-             Jsonb(policy["city_recruitment"]),Jsonb(policy["city_hero_offers"])),
+             Jsonb(policy["city_recruitment"]),Jsonb(policy["city_hero_offers"]),
+             qualification),
         )
         db.execute(
             """UPDATE city_heroes SET status='colonizing'
@@ -602,7 +656,7 @@ def run_colonization_batch(
             (oid,world,source,owner,hero,new_city_id,name,x,y,policy,costs,
              mines,rates,caps,tick,site_ref,seconds,started,due,status,
              completed,blocked,blocked_reason,refunded,refund_order,
-             recruitment,offers)=row
+             recruitment,offers,qualification)=row
             db.execute("SELECT world_id FROM worlds WHERE world_id=%s FOR UPDATE",
                        (world,)).fetchone()
             # Lock both sources; cross-world / operator ownership changes must
@@ -625,12 +679,20 @@ def run_colonization_batch(
                    AND x=%s AND y=%s AND controller_account_id=%s""",
                 (world,x,y,owner),
             ).fetchone()
-            site_present=db.execute(
-                """SELECT 1 FROM colonization_site_profiles
-                   WHERE world_id=%s AND x=%s AND y=%s
-                     AND enabled AND source_ref=%s""",
-                (world,x,y,site_ref),
-            ).fetchone()
+            if qualification=="terrain_registry":
+                site_present=db.execute(
+                    """SELECT 1 FROM world_colonizable_terrain
+                       WHERE world_id=%s AND x=%s AND y=%s
+                         AND enabled AND source_ref=%s""",
+                    (world,x,y,site_ref),
+                ).fetchone()
+            else:
+                site_present=db.execute(
+                    """SELECT 1 FROM colonization_site_profiles
+                       WHERE world_id=%s AND x=%s AND y=%s
+                         AND enabled AND source_ref=%s""",
+                    (world,x,y,site_ref),
+                ).fetchone()
             occupied=db.execute(
                 """SELECT 1 FROM cities WHERE world_id=%s AND x=%s AND y=%s""",
                 (world,x,y),
