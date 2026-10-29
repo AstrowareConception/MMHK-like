@@ -16,7 +16,7 @@ if not errorlevel 1 (
         echo et cochez l'option d'ajout au PATH.
         goto :end
     )
-    python tools\local\stack.py start %*
+    python tools\local\stack.py start --historical %*
 )
 if errorlevel 1 (
     echo.
