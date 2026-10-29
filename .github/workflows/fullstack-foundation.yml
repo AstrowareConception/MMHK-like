@@ -189,9 +189,12 @@ jobs:
           PY
           curl --fail --silent --show-error http://127.0.0.1:3000/ | grep -q 'API FastAPI joignable'
           echo "Browser-to-API and sandbox login verified"
-          MMHK_E2E_URL="http://127.0.0.1:3000" \
-          MMHK_E2E_USERNAME="demo_ci" \
-          MMHK_E2E_PASSWORD="$password" \
+          # Share the same authenticated demo login with BOTH journeys.
+          # A per-command shell environment does not persist after the first
+          # Python process and was leaving local_browser without username.
+          export MMHK_E2E_URL="http://127.0.0.1:3000"
+          export MMHK_E2E_USERNAME="demo_ci"
+          export MMHK_E2E_PASSWORD="$password"
           python3 tools/e2e/visual_drag_smoke.py
           python3 tools/e2e/local_browser.py
           # Explicit localhost-only exception for exercising a second owned
