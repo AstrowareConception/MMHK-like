@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+      # Single consolidated qualification for independently qualified colonial terrain.
+      - feat/qualified-terrain-colonization
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
