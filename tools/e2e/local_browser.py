@@ -283,7 +283,9 @@ def main() -> int:
             page.screenshot(path="test-output/visuals/garrison-deployment-desktop.png",full_page=True)
             # Prepare seven-slot army without changing real soldier counts.
             page.locator('a[href$="/heroes"]').first.click()
-            expect(page.get_by_role("heading", name="Les sept positions de l'armée")).to_be_visible()
+            # The immersive hero page renamed the heading; assert the real
+            # interactive seven-position board, not obsolete editorial copy.
+            expect(page.get_by_test_id("formation-visual-board")).to_be_visible(timeout=20000)
             expect(page.locator(".formation-slot")).to_have_count(7)
             # Reorder actual seven Jactari positions using the illustrated
             # troop cards, not select/quantity administration fields.
