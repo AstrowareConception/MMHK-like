@@ -38,8 +38,13 @@ export function HeroFormationEditor({cityId,formation}:{
   const remaining=formation.available_units.map(u=>({
     ...u,remaining:u.quantity-(totals.get(u.unit_code)??0),
   }));
+  // Totals alone must not certify an unknown or now-invalid unit type.
+  const knownCodes=new Set(formation.available_units.map(u=>u.unit_code));
   const balanced=remaining.every(u=>u.remaining===0)&&
-    rows.every(r=>!r.unit_code||Number.isSafeInteger(r.quantity)&&r.quantity>0&&r.quantity<=1000000);
+    rows.every(r=>r.unit_code
+      ?knownCodes.has(r.unit_code)&&Number.isSafeInteger(r.quantity)&&
+        r.quantity>0&&r.quantity<=1000000
+      :r.quantity===0);
   const editable=ready&&formation.status==="idle";
   const unit=(code:string)=>formation.available_units.find(u=>u.unit_code===code);
 
@@ -70,8 +75,14 @@ export function HeroFormationEditor({cityId,formation}:{
     setTouched(true);
   }
   function drop(e:DragEvent<HTMLButtonElement>,to:number){
-    e.preventDefault();const from=Number(e.dataTransfer.getData("application/x-mmhk-slot"));
-    if(Number.isInteger(from))swap(from,to);
+    e.preventDefault();e.stopPropagation();
+    // Number("") is 0: without checking the MIME payload, dropping an
+    // unrelated file could incorrectly move the first real army stack.
+    const payload=e.dataTransfer.getData("application/x-mmhk-slot");
+    if(!editable||!/^[0-6]$/.test(payload))return;
+    const from=Number(payload);
+    if(!rows[from]?.unit_code)return;
+    swap(from,to);
   }
   function edit(index:number,patch:Partial<Cell>){
     setRows(prev=>prev.map((v,i)=>i===index?{...v,...patch}:v));
@@ -128,7 +139,10 @@ export function HeroFormationEditor({cityId,formation}:{
                 e.dataTransfer.effectAllowed="move";setDragging(i);
               }}
               onDragEnd={()=>setDragging(null)}
-              onDragOver={e=>{if(editable)e.preventDefault();}}
+              onDragOver={e=>{
+                if(editable&&Array.from(e.dataTransfer.types).includes("application/x-mmhk-slot"))
+                  e.preventDefault();
+              }}
               onDrop={e=>drop(e,i)}
               onClick={()=>{
                 if(suppressClick.current){suppressClick.current=false;return;}
