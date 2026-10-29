@@ -24,6 +24,7 @@ from .construction import run_construction_batch
 from .pve_missions import advance_pve_missions
 from .caravans import run_caravan_batch
 from .caravan_programs import run_program_batch
+from .colonization import run_colonization_batch
 from .db import connect
 from .economy import run_economy_batch
 
@@ -83,6 +84,7 @@ def iteration(
     mission_fn: Callable=advance_pve_missions,
     caravan_fn: Callable=run_caravan_batch,
     program_fn: Callable=run_program_batch,
+    colonization_fn: Callable=run_colonization_batch,
 ) -> dict:
     """Isolate failure of the economic engine from construction processing.
 
@@ -118,6 +120,11 @@ def iteration(
     except Exception:
         caravan_count=0
         errors.append("caravans")
+    try:
+        colonies=len(colonization_fn(db,max_orders=max_orders))
+    except Exception:
+        colonies=0
+        errors.append("colonization")
     # On an invalid/closed connection, the heartbeat fails and the outer
     # supervisor will reopen it. Fail closed, don't report healthy.
     update_heartbeat(
@@ -131,7 +138,8 @@ def iteration(
             "counts":counts,"state":"degraded" if errors else "healthy",
             "error_kinds":errors,"mission_transitions":mission_count,
             "caravan_transitions":caravan_count,
-            "program_transitions":program_count}
+            "program_transitions":program_count,
+            "colony_transitions":colonies}
 
 
 def _log(item: dict) -> None:

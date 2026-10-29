@@ -308,3 +308,54 @@ export type CaravanProgram={
   last_departed_at:string|null;closed_at:string|null;
   replayed:boolean;historically_certified:false;
 };
+
+
+/** Operator-qualified colony sites. No unverified terrain is rendered. */
+export type ColonizationPolicy={
+  policy_id:string;costs:Record<string,number>;
+  max_owned_cities:number;max_distance_steps:number;
+  seconds_per_step:number;
+};
+export type ColonizationHero={
+  hero_id:string;city_id:string;name:string;status:string;
+};
+export type ColonizationExpedition={
+  order_id:string;world_id:string;
+  source_city_id:string;hero_id:string;new_city_id:string|null;
+  colony_name:string;x:number;y:number;
+  policy_id:string;applied_costs:Record<string,number>;
+  mine_types:string[];travel_seconds:number;
+  started_at:string;due_at:string;
+  status:"traveling"|"founded"|"blocked"|"refunded";
+  completed_at:string|null;blocked_at:string|null;
+  blocked_reason:string|null;refunded_at:string|null;
+  replayed:boolean;historically_certified:false;
+  source_city_name?:string;hero_name?:string;
+  events?:{phase:"departed"|"founded"|"blocked"|"refunded";
+    occurred_at:string;details:Record<string,unknown>}[];
+};
+export type ColonizationCatalog={
+  world_id:string;world_size:number;server_now:string;
+  protection_until:string;newbie_protected:boolean;
+  newbie_protection_days:7;protection_cannot_be_cancelled:true;
+  colonization_policy:ColonizationPolicy|null;
+  owned_cities:number;pending_expeditions:number;
+  cities:City[];heroes:ColonizationHero[];
+  qualified_sites:{x:number;y:number;mine_types:string[];source_ref:string}[];
+  expeditions:ColonizationExpedition[];
+  historically_certified:false;
+  influence_source:"operator_qualified_record_only";
+};
+export type ColonizationQuote={
+  world_id:string;source_city_id:string;hero_id:string;x:number;y:number;
+  policy_id:string;applied_costs:Record<string,number>;
+  distance_steps:number;travel_seconds:number;protection_until:string;
+  protected:boolean;current_cities:number;pending_expeditions:number;
+  max_owned_cities:number;hero_available:boolean;
+  missing_resources:Record<string,number>;
+  can_start:boolean;
+  blocking_reasons:(
+    "newbie_protection"|"city_cap"|"hero_busy"|"resources"
+  )[];
+  historically_certified:false;
+};

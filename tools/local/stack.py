@@ -137,6 +137,12 @@ def main() -> int:
     )
     convoy_demo.add_argument("--username",default="joueurdemo")
     convoy_demo.add_argument("--enable-second-city",action="store_true")
+    colony_demo = sub.add_parser(
+        "colony-demo",help="Opt-in LAB colony plots; optional synthetic 8-day membership"
+    )
+    colony_demo.add_argument("--username",default="joueurdemo")
+    colony_demo.add_argument("--enable-colony-laboratory",action="store_true")
+    colony_demo.add_argument("--age-membership-for-test",action="store_true")
     sub.add_parser("stop", help="Stop containers without destroying persistent data")
     sub.add_parser("down", help="Remove containers but retain PostgreSQL volume")
     reset = sub.add_parser("reset", help="DANGER: delete all LOCAL PostgreSQL data")
@@ -215,6 +221,14 @@ def main() -> int:
             parser.error("convoy-demo requires --enable-second-city")
         run("exec","-T","api","python","-m","mmhk_api.caravan_demo",
             "--username",args.username,"--enable-second-city")
+    elif args.command == "colony-demo":
+        if not args.enable_colony_laboratory:
+            parser.error("colony-demo requires --enable-colony-laboratory")
+        command=("exec","-T","api","python","-m","mmhk_api.colony_demo",
+                 "--username",args.username,"--enable-colony-laboratory")
+        if args.age_membership_for_test:
+            command+=("--age-membership-for-test",)
+        run(*command)
     elif args.command == "stop":
         run("stop")
     elif args.command == "down":

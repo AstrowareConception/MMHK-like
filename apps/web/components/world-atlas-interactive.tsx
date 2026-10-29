@@ -357,7 +357,14 @@ export function WorldAtlasInteractive({world,cities,detailBackground,politicalBa
         :selectedSite
         ?<span>{kindLabels[selectedSite.kind]} : {selectedSite.label} · emplacement découvert</span>
         :selectedInfluence
-        ?<span>Influence connue : {selectedInfluence.controller} · {selectedInfluence.observed_at.slice(0,10)}</span>
+        ?<span>Influence connue : {selectedInfluence.controller} ·
+          {" "}{selectedInfluence.observed_at.slice(0,10)}
+          {selectedInfluence.is_mine&&selected&&
+            <Link className="world-colony-link"
+              href={"/worlds/"+world.world_id+"/colonize?x="+selected.x+"&y="+selected.y}>
+              Examiner pour colonisation
+            </Link>}
+          </span>
         :<span>Contenu non découvert : aucune information géographique ou militaire supposée.</span>}
     </div>
     <div className="world-layer-legend">

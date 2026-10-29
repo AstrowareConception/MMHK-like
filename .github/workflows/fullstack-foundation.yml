@@ -200,6 +200,14 @@ jobs:
           MMHK_E2E_USERNAME="demo_ci" \
           MMHK_E2E_PASSWORD="$password" \
           python3 tools/e2e/caravans_browser.py
+          # Opt-in LAB foundation: age only this isolated synthetic player's
+          # world membership; the seven-day production restriction stays on.
+          python3 tools/local/stack.py colony-demo --username demo_ci \
+            --enable-colony-laboratory --age-membership-for-test
+          MMHK_E2E_URL="http://127.0.0.1:3000" \
+          MMHK_E2E_USERNAME="demo_ci" \
+          MMHK_E2E_PASSWORD="$password" \
+          python3 tools/e2e/colonization_browser.py
       - name: Verify local PostgreSQL backup is readable
         run: |
           python3 tools/local/stack.py backup
