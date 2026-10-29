@@ -37,6 +37,8 @@ export default async function ForcesPage({params,searchParams}:{
           might:resolveAssetUrl("hero.portrait.might")??"/themes/public-safe/hero-vanguard.svg",
           magic:resolveAssetUrl("hero.portrait.magic")??"/themes/public-safe/hero-arcanist.svg"
         },
+        portraitSheet:resolveAssetUrl("hero.sheet.haven"),
+        unitSheet:resolveAssetUrl("army.sheet.haven"),
         garrison:resolveAssetUrl("army.garrison.background"),
         tavern:resolveAssetUrl("army.tavern.background")
       }}/>
