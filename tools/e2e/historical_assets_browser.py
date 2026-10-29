@@ -28,7 +28,8 @@ def main() -> None:
         expect(page.get_by_role("heading",name="Mes mondes")).to_be_visible(timeout=20000)
         for key in ("hero.sheet.haven","hero.sheet.academy",
                     "hero.sheet.inferno","hero.sheet.necropolis",
-                    "hero.sheet.sylvan","army.sheet.haven"):
+                    "hero.sheet.sylvan","army.sheet.haven",
+                    "hero.painting.might","hero.painting.magic"):
             res = page.request.get(root+"/api/theme-assets/"+key)
             assert res.status == 200, (key,res.status)
             assert res.headers.get("content-type","").startswith("image/jpeg"),key
@@ -42,6 +43,9 @@ def main() -> None:
         face=board.locator(".heritage-portrait-sprite").first
         expect(face).to_be_visible()
         assert "/api/theme-assets/hero.sheet.haven" in face.get_attribute("style")
+        painting=board.locator('.mmhk-hero-portrait[data-historical-painting="true"]')
+        expect(painting).to_be_visible()
+        assert "/api/theme-assets/hero.painting." in painting.get_attribute("style")
         print("PASS: five MMHK portrait sheets, Haven units, hero UI and private access",flush=True)
         browser.close()
 
