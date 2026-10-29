@@ -96,7 +96,7 @@ parce que son endpoint renvoie 200.**
 - Une dépose étrangère (fichier ou texte sans MIME MMHK) ne peut plus
   équiper un objet seulement parce qu'il était sélectionné au clavier.
 - Sur la formation à sept positions, un MIME absent ne peut plus être
-  interprété comme le numéro zéro (\`Number(\"\"\`) = 0) : seuls les indices
+  interprété comme le numéro zéro (`Number("")` = 0) : seuls les indices
   0 à 6 issus d'un véritable glissement de peloton sont acceptés.
 - Le bouton de sauvegarde ne valide plus une formation contenant un type
   d'unité inconnu ou une quantité résiduelle sur une case vide.
@@ -104,7 +104,7 @@ parce que son endpoint renvoie 200.**
   étrangère avant le vrai déplacement afin de détecter les régressions.
 
 **Validation encore requise :** relancer manuellement le workflow complet
-\`fullstack-foundation.yml\` sur la branche de la PR. Le dernier run vert
-\`40877270285\` ne couvrait que le parcours local six services ; les trois
+`fullstack-foundation.yml` sur la branche de la PR. Le dernier run vert
+`40877270285` ne couvrait que le parcours local six services ; les trois
 jobs API/PostgreSQL, TypeScript/Next et image preview étaient ignorés.
 Il précède également les corrections de la présente revue. La PR reste ouverte.
