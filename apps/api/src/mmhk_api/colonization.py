@@ -162,6 +162,56 @@ def configure_colony_site(
         )
 
 
+def configure_terrain_catalog_site(
+    db:psycopg.Connection,*,world_id:str,x:int,y:int,source_ref:str,
+    mines:list[str],rates_per_day:dict,capacities:dict,tick_seconds:int,
+    influence_policy_id:str,enabled:bool=True,
+)->None:
+    """Trusted terrain qualification BEFORE ownership, never an influence grant.
+
+    This is a prequalified cartographic resource profile, NOT generated from
+    heuristics or submitted by a player. Admission requires an opted-in dynamic
+    world profile. There is intentionally no corresponding public HTTP route.
+    """
+    if (not isinstance(world_id,str) or not 1<=len(world_id)<=64
+        or type(x) is not int or type(y) is not int
+        or not isinstance(source_ref,str) or not 3<=len(source_ref)<=255
+        or not isinstance(influence_policy_id,str)
+        or not 3<=len(influence_policy_id)<=100
+        or type(tick_seconds) is not int or not 1<=tick_seconds<=86400
+        or type(enabled) is not bool):
+        raise ValueError("Invalid operator terrain qualification")
+    resources,rates,caps=_validate_site(mines,rates_per_day,capacities)
+    with db.transaction():
+        policy=db.execute(
+            """SELECT w.world_size
+               FROM worlds w JOIN world_influence_policies p
+                 ON p.world_id=w.world_id
+               WHERE w.world_id=%s AND p.policy_id=%s AND p.enabled
+               FOR SHARE OF w,p""",
+            (world_id,influence_policy_id),
+        ).fetchone()
+        if not policy or not 1<=x<=policy[0] or not 1<=y<=policy[0]:
+            raise ValueError("Terrain catalog requires an enabled opted-in world and in-bounds cell")
+        if (db.execute(
+            """SELECT 1 FROM cities WHERE world_id=%s AND x=%s AND y=%s""",
+            (world_id,x,y),
+        ).fetchone() or db.execute(
+            """SELECT 1 FROM map_world_sites WHERE world_id=%s AND x=%s AND y=%s""",
+            (world_id,x,y),
+        ).fetchone()):
+            raise ValueError("Cannot prequalify an already occupied city or special site")
+        # Insert-only means conflicting versions are never silently replaced.
+        db.execute(
+            """INSERT INTO colonization_site_profiles
+               (world_id,x,y,source_ref,mine_types,rates_per_day,
+                stock_capacities,tick_seconds,enabled,qualification_mode)
+               VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,'operator_terrain')""",
+            (world_id,x,y,source_ref,Jsonb(resources),Jsonb(rates),
+             Jsonb(caps),tick_seconds,enabled),
+        )
+
+
 def _membership(db:psycopg.Connection,world_id:str,owner:UUID,
                 *,lock:bool=False)->tuple[datetime,int]:
     row=db.execute(
@@ -205,54 +255,41 @@ def _active_policy(db:psycopg.Connection,world_id:str,*,lock:bool=False)->dict|N
 
 def _approved_site(db:psycopg.Connection,*,world_id:str,owner:UUID,
                    x:int,y:int,lock:bool=False)->tuple:
-    """Authorize only proven terrain UNDER the current control regime.
-
-    Legacy worlds keep the existing operator-influence-qualified profiles.
-    Dynamic worlds additionally accept a separate verified terrain registry
-    (which is independent of a player's ownership), but only where their
-    latest calculated territory is unambiguously under this owner's control.
-    """
+    # Mine composition is a separate QUALIFICATION, which cannot confer any
+    # player ownership. A dynamic world uses its current revision, never an
+    # old operator-inserted manual controller. A non-dynamic world preserves
+    # its pre-existing manual ownership requirement.
+    row=db.execute(
+        """SELECT p.mine_types,p.rates_per_day,p.stock_capacities,
+                  p.tick_seconds,p.source_ref
+           FROM colonization_site_profiles p
+           WHERE p.world_id=%s AND p.x=%s AND p.y=%s AND p.enabled""" +
+        (" FOR SHARE OF p" if lock else ""),
+        (world_id,x,y),
+    ).fetchone()
+    if not row:
+        raise ColonizationConflict("Region is not an approved qualified colony site")
     authority=db.execute(
         """SELECT enabled,revision FROM world_influence_policies
            WHERE world_id=%s""" + (" FOR SHARE" if lock else ""),
         (world_id,),
     ).fetchone()
-    dynamic=bool(authority and authority[0])
-    if dynamic:
-        if authority[1]<1 or not db.execute(
+    if authority and authority[0]:
+        if authority[1]==0 or not db.execute(
             """SELECT 1 FROM world_influence_cells
                WHERE world_id=%s AND x=%s AND y=%s
                  AND state='controlled' AND owner_account_id=%s""",
             (world_id,x,y,owner),
         ).fetchone():
             raise ColonizationConflict("Region not controlled by your current territory")
-        terrain=db.execute(
-            """SELECT mine_types,rates_per_day,stock_capacities,tick_seconds,
-                      source_ref
-               FROM world_colonizable_terrain
-               WHERE world_id=%s AND x=%s AND y=%s AND enabled""" +
-            (" FOR SHARE" if lock else ""),
-            (world_id,x,y),
-        ).fetchone()
-        if terrain:
-            return (*terrain,"terrain_registry")
-    # Existing manually verified sites remain available only if the original
-    # explicit manual controller is still the requester. No terrain registry
-    # is silently used when a world has no active dynamic influence.
-    manual=db.execute(
-        """SELECT p.mine_types,p.rates_per_day,p.stock_capacities,
-                  p.tick_seconds,p.source_ref
-           FROM colonization_site_profiles p
-           JOIN map_influence_cells i
-             ON i.world_id=p.world_id AND i.x=p.x AND i.y=p.y
-           WHERE p.world_id=%s AND p.x=%s AND p.y=%s AND p.enabled
-             AND i.controller_account_id=%s""" +
-        (" FOR SHARE OF p,i" if lock else ""),
+    elif not db.execute(
+        """SELECT 1 FROM map_influence_cells
+           WHERE world_id=%s AND x=%s AND y=%s
+             AND controller_account_id=%s""",
         (world_id,x,y,owner),
-    ).fetchone()
-    if not manual:
-        raise ColonizationConflict("No authorized, qualified colonial terrain at this position")
-    return (*manual,"legacy_operator")
+    ).fetchone():
+        raise ColonizationConflict("Region not controlled by your qualified manual influence")
+    return row
 
 
 def _site_clear(db:psycopg.Connection,*,world_id:str,x:int,y:int)->bool:
@@ -370,16 +407,46 @@ def colonies_for_world(db:psycopg.Connection,*,owner:UUID,world_id:str)->dict:
            ORDER BY h.city_id,h.hired_at,h.hero_id""",
         (world_id,owner,owner),
     ).fetchall()
-    # Site list needs BOTH an operator-qualified plot and its current *own*
-    # influence. A foreign city on it does not expose hidden details.
-    sites=db.execute(
-        """SELECT p.x,p.y,p.mine_types,p.source_ref
-           FROM colonization_site_profiles p
-           JOIN map_influence_cells i
-             ON i.world_id=p.world_id AND i.x=p.x AND i.y=p.y
-           WHERE p.world_id=%s AND p.enabled AND i.controller_account_id=%s
-           ORDER BY p.x,p.y LIMIT 100""",(world_id,owner),
-    ).fetchall()
+    # List only plots currently owned under the one active authority:
+    # a calculated revision for dynamic worlds, manual proven controller for
+    # other worlds. Qualification is never itself an ownership privilege.
+    dynamic=db.execute(
+        """SELECT enabled,revision FROM world_influence_policies
+           WHERE world_id=%s""",(world_id,),
+    ).fetchone()
+    if dynamic and dynamic[0]:
+        sites=db.execute(
+            """SELECT p.x,p.y,p.mine_types,p.source_ref
+               FROM colonization_site_profiles p
+               JOIN world_influence_cells i ON i.world_id=p.world_id
+                 AND i.x=p.x AND i.y=p.y
+               WHERE p.world_id=%s AND p.enabled
+                 AND i.state='controlled' AND i.owner_account_id=%s
+                 AND NOT EXISTS(SELECT 1 FROM cities c
+                   WHERE c.world_id=p.world_id AND c.x=p.x AND c.y=p.y)
+                 AND NOT EXISTS(SELECT 1 FROM map_world_sites w
+                   WHERE w.world_id=p.world_id AND w.x=p.x AND w.y=p.y)
+                 AND NOT EXISTS(SELECT 1 FROM colonization_orders o
+                   WHERE o.world_id=p.world_id AND o.x=p.x AND o.y=p.y
+                     AND o.status='traveling')
+               ORDER BY p.x,p.y LIMIT 100""",(world_id,owner),
+        ).fetchall() if dynamic[1]>0 else []
+    else:
+        sites=db.execute(
+            """SELECT p.x,p.y,p.mine_types,p.source_ref
+               FROM colonization_site_profiles p
+               JOIN map_influence_cells i ON i.world_id=p.world_id
+                 AND i.x=p.x AND i.y=p.y
+               WHERE p.world_id=%s AND p.enabled AND i.controller_account_id=%s
+                 AND NOT EXISTS(SELECT 1 FROM cities c
+                   WHERE c.world_id=p.world_id AND c.x=p.x AND c.y=p.y)
+                 AND NOT EXISTS(SELECT 1 FROM map_world_sites w
+                   WHERE w.world_id=p.world_id AND w.x=p.x AND w.y=p.y)
+                 AND NOT EXISTS(SELECT 1 FROM colonization_orders o
+                   WHERE o.world_id=p.world_id AND o.x=p.x AND o.y=p.y
+                     AND o.status='traveling')
+               ORDER BY p.x,p.y LIMIT 100""",(world_id,owner),
+        ).fetchall()
     # Only qualified terrain owned by the current calculated controller can
     # be presented. The terrain registry itself never leaks enemy plots.
     authority=db.execute(
