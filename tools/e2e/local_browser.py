@@ -182,8 +182,25 @@ def main() -> int:
                 ":has(input[name='mode'][value='rapid'])"
             )
             expect(rapid.get_by_role("button", name="Lancer le chantier")).to_be_enabled()
+            construction_responses=[]
+            page.on("response",lambda response:construction_responses.append({
+                "status":response.status,"url":response.url,
+                "method":response.request.method
+            }) if response.request.method=="POST" else None)
             rapid.get_by_role("button", name="Lancer le chantier").click()
-            expect(page.get_by_text("Chantier enregistré et ressources payées.")).to_be_visible(timeout=20000)
+            try:
+                expect(page.get_by_text("Chantier enregistré et ressources payées.")).to_be_visible(timeout=20000)
+            except AssertionError:
+                os.makedirs("test-output/visuals",exist_ok=True)
+                page.screenshot(path="test-output/visuals/haven-city-construction-error.png",full_page=True)
+                print("BUILD DIAGNOSTICS",{
+                    "url":page.url,
+                    "responses":construction_responses[-6:],
+                    "notices":page.locator(".construction-notice,.error").all_text_contents(),
+                    "inspector":page.locator("#city-inspector").all_text_contents()[:1],
+                    "browser_errors":errors[:3],
+                },flush=True)
+                raise
             page.screenshot(path="test-output/visuals/haven-city-active-project.png",
                             full_page=True)
             expect(page.locator("#city-history .construction-history-entry")).to_have_count(1)
