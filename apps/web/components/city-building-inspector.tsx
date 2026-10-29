@@ -3,22 +3,12 @@ import {useState} from "react";
 import Link from "next/link";
 import { startUrbanConstruction } from "../app/actions";
 import type { CityDetail, ConstructionCatalog } from "../lib/server-api";
+import { buildingName } from "../lib/city-buildings";
 
-const NAMES: Record<string,string> = {
-  village_hall:"Hôtel du village",town_hall:"Hôtel de ville",
-  marketplace:"Marché",resource_silo:"Silos",tavern:"Taverne",
-  recruit_t1:"Demeure des miliciens",recruit_t2:"Demeure des archers",
-  fort:"Fortifications",blacksmith:"Forge",mage_guild:"Guilde des mages",
-  stables:"Écuries",watchtower:"Tour de guet",
-};
 const RESOURCES = [
   ["gold","or"],["wood","bois"],["ore","minerai"],["crystal","cristal"],
   ["gems","gemmes"],["sulfur","soufre"],["mercury","mercure"]
 ] as const;
-export function buildingName(code:string):string{
-  return Object.prototype.hasOwnProperty.call(NAMES,code)?NAMES[code]:code;
-}
-
 /** Selection is navigation only; owner-scoped records and payments stay on FastAPI. */
 export function CityBuildingInspector({city,catalog,selectedBuilding,onClose,onSelect}:{
   city:CityDetail;catalog?:ConstructionCatalog;selectedBuilding?:string;
