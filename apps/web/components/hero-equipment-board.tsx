@@ -9,6 +9,10 @@ type Hero=CityForces["heroes"][number];
 type Target={place:"slot"|"bag"|"reserve"|"hero";slot?:string;heroId?:string};
 const slotNames:Record<string,string>={head:"Heaume",neck:"Collier",chest:"Armure",
   weapon:"Arme",shield:"Bouclier",hands:"Gants",feet:"Bottes",ring:"Anneau"};
+const historicSlotCoords:Record<string,[number,number]>={
+  head:[0,0],neck:[1,0],ring:[2,0],shield:[3,0],
+  chest:[0,1],weapon:[1,1],feet:[2,1],hands:[3,1],
+};
 const slotGlyphs:Record<string,string>={head:"♛",neck:"◇",chest:"⬡",weapon:"⚔",
   shield:"◈",hands:"✥",feet:"♜",ring:"◉"};
 const MIME="application/x-mmhk-artifact";
@@ -16,7 +20,7 @@ type Move="equip"|"unequip"|"to_reserve"|"to_bag"|"to_hero";
 
 export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
   cityId:string;hero:Hero;heroes:Hero[];inventory:ArtifactInventory;
-  art:{portrait:string|null;portraitSheet:string|null;painting:string|null;equipment:string|null;frame:string|null;
+  art:{portrait:string|null;portraitSheet:string|null;slotSheet:string|null;painting:string|null;equipment:string|null;frame:string|null;
     backpack:string|null;artifactIcon:string|null;slots:Record<string,string|null>};
 }){
   const [ready,setReady]=useState(false);
@@ -191,9 +195,14 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
             (chosen&&allowed(chosen,target)?" can-drop":"")}
             data-slot={slot} data-testid="equipment-drop-zone"
             {...makeTarget(target,label)}>
-            <span className="mmhk-slot-symbol"
-              style={art.slots[slot]?{backgroundImage:"url("+JSON.stringify(art.slots[slot])+")"}:undefined}
-              aria-hidden="true">{slotGlyphs[slot]??"✦"}</span>
+            <span className={"mmhk-slot-symbol"+(art.slotSheet?" has-heritage-slot":"")}
+              style={art.slotSheet&&historicSlotCoords[slot]?{
+                backgroundImage:"url("+JSON.stringify(art.slotSheet)+")",
+                backgroundPosition:"-"+(38*historicSlotCoords[slot][0])+"px -"+
+                  (40*historicSlotCoords[slot][1])+"px",
+                backgroundSize:"152px 80px",backgroundRepeat:"no-repeat"
+              }:art.slots[slot]?{backgroundImage:"url("+JSON.stringify(art.slots[slot])+")"}:undefined}
+              aria-hidden="true">{art.slotSheet?"":slotGlyphs[slot]??"✦"}</span>
             <span className="equipment-slot-name">{label}</span>
             {item?tile(item):<span className="mmhk-empty-slot">Emplacement libre</span>}
           </div>;
