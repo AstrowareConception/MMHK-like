@@ -32,6 +32,7 @@ export const ASSETS = {
   "army.garrison.background": { publicPath: null },
   "army.tavern.background": { publicPath: null },
   "hero.artifact.backdrop": { publicPath: null },
+  "hero.artifact.icon": { publicPath: null },
   "timeline.construction": { publicPath: null },
   "timeline.hero_return": { publicPath: null },
   "timeline.attack_incoming": { publicPath: null }

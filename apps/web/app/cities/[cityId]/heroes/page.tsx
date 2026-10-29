@@ -99,6 +99,7 @@ export default async function HeroesPage({params,searchParams}:{
             equipment:resolveAssetUrl("hero.background.haven"),
             frame:resolveAssetUrl("hero.frame"),
             backpack:resolveAssetUrl("hero.backpack"),
+            artifactIcon:resolveAssetUrl("hero.artifact.icon"),
             slots:gearSlots,
           }}/>
         {query.formation&&<p role={query.formation==="ok"?"status":"alert"}

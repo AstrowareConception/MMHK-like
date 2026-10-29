@@ -42,6 +42,7 @@ const uiRecipes=[
   ["hero.slot.feet","hero/management/feetSelected.gif"],
   ["hero.slot.ring","hero/management/ringSelected.gif"],
   ["hero.artifact.backdrop","hero/management/artefactTrash.jpg"],
+  ["hero.artifact.icon","calculator/bonusArtefactIcon.gif"],
   ["army.garrison.background","recruit/recruitUnitStackBg.jpg"],
   ["army.tavern.background","recruit/recruitTownHeroBg.gif"]
 ].map(([id,asset])=>({

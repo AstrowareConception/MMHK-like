@@ -16,7 +16,7 @@ type Move="equip"|"unequip"|"to_reserve"|"to_bag"|"to_hero";
 export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
   cityId:string;hero:Hero;heroes:Hero[];inventory:ArtifactInventory;
   art:{portrait:string|null;equipment:string|null;frame:string|null;
-    backpack:string|null;slots:Record<string,string|null>};
+    backpack:string|null;artifactIcon:string|null;slots:Record<string,string|null>};
 }){
   const [selected,setSelected]=useState<string|null>(null);
   const [hover,setHover]=useState<string|null>(null);
@@ -101,7 +101,9 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
       onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){
         e.stopPropagation();e.preventDefault();setSelected(isSelected?null:item.artifact_id);
       }}}>
-      <span className="mmhk-item-jewel" aria-hidden="true">✦</span>
+      <span className="mmhk-item-jewel" aria-hidden="true">
+        {art.artifactIcon?<img src={art.artifactIcon} alt="" width={26} height={26}/>: "✦"}
+      </span>
       <strong>{item.name}</strong>
       <small>{slotNames[item.slot]??item.slot} · niv. {item.required_level}</small>
     </div>;
