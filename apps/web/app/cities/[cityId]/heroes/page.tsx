@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {notFound,redirect} from "next/navigation";
 import {HeroEquipmentBoard} from "../../../../components/hero-equipment-board";
+import {HeritagePortrait} from "../../../../components/heritage-art";
 import {HeroFormationEditor} from "../../../../components/hero-formation-editor";
 import {GameShell} from "../../../../components/game-shell/game-shell";
 import {resolveAssetUrl} from "../../../../lib/assets/runtime";
@@ -33,6 +34,8 @@ export default async function HeroesPage({params,searchParams}:{
     "/api/v1/me/cities/"+cityId+"/heroes/"+selected.hero_id+"/formation",token):null;
   const portrait=(type:"might"|"magic")=>resolveAssetUrl(
     type==="magic"?"hero.portrait.magic":"hero.portrait.might");
+  const portraitSheet=resolveAssetUrl("hero.sheet.haven");
+  const unitSheet=resolveAssetUrl("army.sheet.haven");
   const gearSlots=Object.fromEntries(inventory.slots.map(slot=>[
     slot,resolveAssetUrl(("hero.slot."+slot) as "hero.slot.head")
   ]));
@@ -54,7 +57,7 @@ export default async function HeroesPage({params,searchParams}:{
       <h2>Aucun héros dans cette cité</h2>
       <p>Ouvrez la taverne pour engager votre premier compagnon.</p>
       <Link href={"/cities/"+cityId+"/forces"}>Aller à la taverne</Link>
-    </section>:<div className="hero-management mmhk-hero-management">
+    </section>:<div className="hero-management mmhk-hero-management mmhk-heritage-heroes" data-testid="heritage-heroes">
       <aside className="hero-pick-list mmhk-roster">
         <div className="mmhk-roster-heading"><small className="eyebrow">MES COMPAGNONS</small>
           <h2>Les héros</h2></div>
@@ -62,27 +65,26 @@ export default async function HeroesPage({params,searchParams}:{
           href={"/cities/"+cityId+"/heroes?hero="+h.hero_id}
           aria-current={h.hero_id===selected.hero_id?"page":undefined}
           className={"hero-pick mmhk-roster-choice "+(h.hero_id===selected.hero_id?"selected":"")}>
-          <img className="mmhk-roster-mini" src={portrait(h.archetype)??"/themes/public-safe/hero-vanguard.svg"}
-            alt="" width={70} height={80}/>
+          <HeritagePortrait heroId={h.hero_id} archetype={h.archetype}
+            sheet={portraitSheet} fallback={portrait(h.archetype)??"/themes/public-safe/hero-vanguard.svg"}/>
           <span><strong>{h.name}</strong><small>Niveau {h.level} ·
             {" "}{h.status==="idle"?"Au château":h.status==="on_mission"?"En mission":h.status}</small>
           </span>
         </Link>)}
         <div className="hero-explanation">
-          <strong>Trésor du royaume</strong>
-          <p>Huit emplacements, une besace personnelle et un coffre commun.
-            Faites glisser les objets pour les équiper, ou sélectionnez-les au toucher.</p>
+          <strong>Héros de la cité</strong>
+          <p>Choisissez un portrait pour consulter ses artefacts et préparer ses troupes.</p>
         </div>
       </aside>
       <div className="hero-workspace mmhk-hero-workspace">
-        <nav className="hero-subnav" aria-label="Sections de la fiche du héros">
-          <a href="#hero-equipment">Équipement</a>
-          <a href="#hero-bag">Besace</a>
-          <a href="#hero-reserve">Trésor</a>
+        <nav className="hero-subnav mmhk-original-tabs" aria-label="Onglets de la gestion du héros">
+          <a href="#hero-equipment" aria-current="page">Inventaire</a>
           <a href="#hero-formation">Formation</a>
           <a href="#hero-army">Armée</a>
+          <span aria-label="Talents non encore disponibles">Talents · à venir</span>
+          <span aria-label="Sorts non encore disponibles">Sorts · à venir</span>
         </nav>
-        <div className="hero-workspace-header mmhk-hero-banner">
+        <div className="hero-workspace-header mmhk-hero-banner mmhk-heritage-title">
           <div><span className="eyebrow">SALLE DES HÉROS</span>
             <h2>{selected.name}</h2>
             <p>{selected.archetype==="magic"?"Voie de la Magie":"Voie de la Force"}
@@ -96,6 +98,7 @@ export default async function HeroesPage({params,searchParams}:{
           heroes={forces.heroes} inventory={inventory}
           art={{
             portrait:portrait(selected.archetype),
+            portraitSheet,
             equipment:resolveAssetUrl("hero.background.haven"),
             frame:resolveAssetUrl("hero.frame"),
             backpack:resolveAssetUrl("hero.backpack"),
@@ -109,7 +112,7 @@ export default async function HeroesPage({params,searchParams}:{
         </p>}
         {formation?.ok&&formation.data&&
           <HeroFormationEditor key={selected.hero_id+"-formation"} cityId={cityId}
-            formation={formation.data}/>}
+            formation={formation.data} sheet={unitSheet}/>}
         <div className="hero-army-summary mmhk-hero-army-summary" id="hero-army">
           <h3>Armée du héros</h3>
           {forces.hero_armies.filter(u=>u.hero_id===selected.hero_id).length?
