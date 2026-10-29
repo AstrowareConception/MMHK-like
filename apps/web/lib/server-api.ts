@@ -332,6 +332,7 @@ export type ColonizationExpedition={
   completed_at:string|null;blocked_at:string|null;
   blocked_reason:string|null;refunded_at:string|null;
   replayed:boolean;historically_certified:false;
+  site_qualification:"legacy_operator"|"terrain_registry";
   source_city_name?:string;hero_name?:string;
   events?:{phase:"departed"|"founded"|"blocked"|"refunded";
     occurred_at:string;details:Record<string,unknown>}[];
@@ -343,7 +344,8 @@ export type ColonizationCatalog={
   colonization_policy:ColonizationPolicy|null;
   owned_cities:number;pending_expeditions:number;
   cities:City[];heroes:ColonizationHero[];
-  qualified_sites:{x:number;y:number;mine_types:string[];source_ref:string}[];
+  qualified_sites:{x:number;y:number;mine_types:string[];source_ref:string;
+    qualification:"legacy_operator"|"terrain_registry"}[];
   expeditions:ColonizationExpedition[];
   historically_certified:false;
   influence_source:"operator_qualified_record_only";
@@ -359,6 +361,7 @@ export type ColonizationQuote={
   blocking_reasons:(
     "newbie_protection"|"city_cap"|"hero_busy"|"resources"
   )[];
+  site_qualification:"legacy_operator"|"terrain_registry";
   historically_certified:false;
 };
 

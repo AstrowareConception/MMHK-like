@@ -1,0 +1,59 @@
+{
+  "world_id": "local-sandbox",
+  "source_ref": "LAB-QUALIFIED-TERRAIN-2026-V1",
+  "coordinate_mode": "relative_to_first_city",
+  "plots": [
+    {
+      "dx": 2,
+      "dy": 0,
+      "mines": [
+        "gold",
+        "wood",
+        "ore",
+        "crystal"
+      ],
+      "rates_per_day": {
+        "gold": 24,
+        "wood": 12,
+        "ore": 12,
+        "crystal": 6
+      },
+      "capacities": {
+        "gold": 1000,
+        "wood": 1000,
+        "ore": 1000,
+        "crystal": 1000,
+        "gems": 1000,
+        "sulfur": 1000,
+        "mercury": 1000
+      },
+      "tick_seconds": 60
+    },
+    {
+      "dx": 0,
+      "dy": 2,
+      "mines": [
+        "gold",
+        "wood",
+        "ore",
+        "gems"
+      ],
+      "rates_per_day": {
+        "gold": 24,
+        "wood": 12,
+        "ore": 12,
+        "gems": 6
+      },
+      "capacities": {
+        "gold": 1000,
+        "wood": 1000,
+        "ore": 1000,
+        "crystal": 1000,
+        "gems": 1000,
+        "sulfur": 1000,
+        "mercury": 1000
+      },
+      "tick_seconds": 60
+    }
+  ]
+}
