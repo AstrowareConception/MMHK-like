@@ -294,6 +294,18 @@ def main() -> int:
             source_slot=page.locator(".mmhk-formation-tile").nth(0)
             target_slot=page.locator(".mmhk-formation-tile").nth(1)
             expect(source_slot).to_contain_text("Miliciens du Havre")
+            # An unrelated native drop must not parse an empty payload as
+            # slot index zero, which would silently rearrange the formation.
+            page.evaluate("""() => {
+              const tile=document.querySelectorAll('.mmhk-formation-tile')[1];
+              const foreign=new DataTransfer();
+              foreign.setData('text/plain','outside-the-game');
+              tile.dispatchEvent(new DragEvent('drop',{
+                bubbles:true,cancelable:true,dataTransfer:foreign
+              }));
+            }""")
+            expect(source_slot).to_contain_text("Miliciens du Havre")
+            expect(target_slot).not_to_contain_text("Miliciens du Havre")
             source_slot.drag_to(target_slot)
             expect(target_slot).to_contain_text("Miliciens du Havre")
             page.screenshot(path="test-output/visuals/seven-slot-formation-desktop.png",full_page=True)
