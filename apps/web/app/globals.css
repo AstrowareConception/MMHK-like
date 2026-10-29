@@ -1726,3 +1726,13 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   .mmhk-heritage-heroes .mmhk-original-tabs a,.mmhk-heritage-heroes .mmhk-original-tabs span{
     padding:7px 7px;font-size:11px;}
 }
+
+/* Local-only full-height archival hero paintings. The exact face and name
+   of laboratory heroes are not claimed to be historical matches. */
+.mmhk-heritage-inventory .mmhk-hero-portrait[data-historical-painting="true"] {
+  background-color:#d1b898!important;
+}
+.mmhk-heritage-inventory .mmhk-hero-portrait[data-historical-painting="true"] .mmhk-portrait-sky,
+.mmhk-heritage-inventory .mmhk-hero-portrait[data-historical-painting="true"]>.mmhk-hero-master-portrait {
+  display:none!important;
+}
