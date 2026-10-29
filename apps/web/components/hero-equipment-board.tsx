@@ -16,7 +16,7 @@ type Move="equip"|"unequip"|"to_reserve"|"to_bag"|"to_hero";
 
 export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
   cityId:string;hero:Hero;heroes:Hero[];inventory:ArtifactInventory;
-  art:{portrait:string|null;portraitSheet:string|null;equipment:string|null;frame:string|null;
+  art:{portrait:string|null;portraitSheet:string|null;painting:string|null;equipment:string|null;frame:string|null;
     backpack:string|null;artifactIcon:string|null;slots:Record<string,string|null>};
 }){
   const [ready,setReady]=useState(false);
@@ -165,7 +165,13 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
     <div className="mmhk-equipment-stage"
       style={art.equipment?{backgroundImage:"linear-gradient(#131e25a0,#131e25a0),url("+JSON.stringify(art.equipment)+")"}:undefined}>
       <div className="mmhk-hero-portrait"
-        style={art.frame?{backgroundImage:"url("+JSON.stringify(art.frame)+")"}:undefined}>
+        data-historical-painting={art.painting?"true":"false"}
+        style={art.painting?{
+          backgroundImage:"url("+JSON.stringify(art.painting)+")",
+          backgroundSize:hero.archetype==="magic"?"930px auto":"1440px auto",
+          backgroundPosition:hero.archetype==="magic"?"-24px -123px":"-200px -227px",
+          backgroundRepeat:"no-repeat"
+        }:art.frame?{backgroundImage:"url("+JSON.stringify(art.frame)+")"}:undefined}>
         <div className="mmhk-portrait-sky" aria-hidden="true"/>
         <HeritagePortrait heroId={hero.hero_id} archetype={hero.archetype}
           sheet={art.portraitSheet} scale={2.25}
