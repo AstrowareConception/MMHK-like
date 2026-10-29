@@ -51,6 +51,25 @@ const uiRecipes=[
            "data/assets-recovered/ubisoft-archive/4.1.13-MTR/img/"+asset]
 }));
 recipes.push(...uiRecipes);
+// The old hero/green.jpg and purple.jpg are decorative BACKGROUNDS, not
+// portraits. Source the verified 71x72 MMHK faces from Jactari's 2013
+// original sprite sheets. The 95 selectable positions are documented in
+// data/analysis/sprite-manifest.json. Copies stay ignored and localhost-only.
+const jactariRecipes=[
+  ["hero.sheet.haven","Hero_HAVEN_2.jpg"],
+  ["hero.sheet.academy","Hero_ACADEMY_2.jpg"],
+  ["hero.sheet.inferno","Hero_INFERNO_2.jpg"],
+  ["hero.sheet.necropolis","Hero_NECROPOLIS_2.jpg"],
+  ["hero.sheet.sylvan","Hero_SYLVAN_2.jpg"],
+  ["army.sheet.haven","BattleUnitStack_HAVEN.jpg"],
+  ["army.sheet.haven.small","UnitStack_HAVEN.png"],
+  ["hero.slot.sheet.haven","emplacements-artefacts.png"]
+].map(([id,name])=>({
+  id,relative:"jactari/mmhk/"+name,
+  sources:["data/Jactari/src/images/"+name]
+}));
+recipes.push(...jactariRecipes);
+
 const sha=filename=>createHash('sha256').update(readFileSync(filename)).digest('hex');
 const manifestFile=join(target,'manifest.json');
 const existing=existsSync(manifestFile)?JSON.parse(readFileSync(manifestFile,'utf8')):{};
