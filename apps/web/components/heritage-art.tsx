@@ -43,9 +43,10 @@ export function HeritageUnitArt({unitCode,sheet,fallback,scale=1}:{
   unitCode:string;sheet:string|null;fallback?:string;scale?:number;
 }){
   const index=unitCode==="archers"?2:0;
+  const historic=sheet&&["militia","archers"].includes(unitCode);
   return <span className="heritage-unit-art" style={{width:51*scale,height:52*scale}}
     role="img" aria-label="Illustration de peloton issue de la collection Havre">
-    {sheet?<span style={{display:"block",width:51,height:52,
+    {historic?<span style={{display:"block",width:51,height:52,
       backgroundImage:`url(${JSON.stringify(sheet)})`,
       backgroundPosition:`-${51*index}px 0`,
       backgroundRepeat:"no-repeat",transform:`scale(${scale})`,
