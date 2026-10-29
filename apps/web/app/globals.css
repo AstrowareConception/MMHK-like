@@ -1447,3 +1447,282 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
 @media(prefers-reduced-motion:reduce){
   .mmhk-city-workbench .haven-plot {transition:none;}
 }
+
+
+/* PR42 — MMHK 2009–2013 fidelity pass. Source comparisons:
+   Vue héros/might-magic-heroes-kingdoms_2123145.jpg
+   Vue héros/sc13rc4.jpg / Vue combat/sc13rc1.jpg.
+   Heritage art is served only via localhost private theme; never CSS URLs. */
+.heritage-portrait,.heritage-unit-art{display:inline-block;position:relative;flex:none;
+  overflow:hidden;vertical-align:middle;line-height:0;background:#c6af8b;}
+.heritage-portrait-sprite{display:block;position:absolute;top:0;left:0;}
+.heritage-portrait>img,.heritage-unit-art>img{display:block;width:100%;height:100%;object-fit:cover;}
+.mmhk-heritage-heroes{display:grid!important;grid-template-columns:minmax(0,1fr) 214px!important;
+  gap:12px!important;align-items:start;margin:8px 0 18px!important;}
+.mmhk-heritage-heroes .mmhk-hero-workspace{grid-column:1;grid-row:1;min-width:0;}
+.mmhk-heritage-heroes .mmhk-roster{grid-column:2;grid-row:1;min-width:0;
+  padding:8px!important;border:2px solid #846344;background:#ecdfc5;
+  box-shadow:inset 0 0 14px #8d694933;}
+.mmhk-heritage-heroes .mmhk-roster h2{font:bold 16px/1.3 Arial,sans-serif;
+  color:#533425;margin:0 0 7px;}
+.mmhk-heritage-heroes .mmhk-roster-heading{border-bottom:2px solid #b19b80;margin:0 0 8px;}
+.mmhk-heritage-heroes .mmhk-roster .eyebrow{color:#795c42;letter-spacing:.08em;}
+.mmhk-heritage-heroes .mmhk-roster-choice{background:#f8f0df;border:1px solid #b19a7d;
+  box-shadow:none;gap:6px;padding:5px!important;min-height:78px;}
+.mmhk-heritage-heroes .mmhk-roster-choice.selected,
+.mmhk-heritage-heroes .mmhk-roster-choice:hover{background:#bb6e40;border-color:#81431f;}
+.mmhk-heritage-heroes .mmhk-roster-choice>.heritage-portrait{border:1px solid #76583e;}
+.mmhk-heritage-heroes .mmhk-roster-choice>span:last-child{display:grid;gap:4px;}
+.mmhk-heritage-heroes .mmhk-roster-choice strong{font:bold 12px/1.3 Arial,sans-serif;
+  color:#503c2d;overflow-wrap:anywhere;}
+.mmhk-heritage-heroes .mmhk-roster-choice small{font:11px/1.3 Arial,sans-serif;color:#795d49;}
+.mmhk-heritage-heroes .mmhk-roster-choice.selected strong,
+.mmhk-heritage-heroes .mmhk-roster-choice.selected small{color:#fff6e5;}
+.mmhk-heritage-heroes .hero-explanation{color:#6b4c38;font:11px/1.5 Arial,sans-serif;
+  border-top:1px solid #b59e86;margin-top:10px;}
+.mmhk-heritage-heroes .hero-explanation strong{color:#66402a;}
+.mmhk-heritage-heroes .hero-explanation p{color:#745e4f;}
+.mmhk-heritage-heroes .mmhk-heritage-title{margin:0;border:2px solid #8a6d5c;
+  border-bottom:0;padding:8px 14px;background:linear-gradient(#9a8075,#8a6b5d);
+  box-shadow:none;display:flex;align-items:center;}
+.mmhk-heritage-heroes .mmhk-heritage-title .eyebrow{color:#f5e9d9;}
+.mmhk-heritage-heroes .mmhk-heritage-title h2{color:#fff5df;
+  font:bold 22px/1.2 Arial,sans-serif;text-shadow:0 1px #493c31;margin:0;}
+.mmhk-heritage-heroes .mmhk-heritage-title p{margin:4px 0 0;color:#ffeed7;
+  font:11px Arial,sans-serif;}
+.mmhk-heritage-heroes .mmhk-hero-seal{width:36px;height:36px;border:1px solid #e6d6ae;
+  font-size:20px;background:#93745c;}
+.mmhk-heritage-heroes .mmhk-original-tabs{display:flex;gap:2px;flex-wrap:wrap;
+  align-items:end;order:0;margin:0;background:#c8b5a5;border:2px solid #8b6e5a;
+  border-bottom:0;padding:3px 8px 0;min-height:37px;}
+.mmhk-heritage-heroes .mmhk-hero-workspace{display:flex;flex-direction:column;}
+.mmhk-heritage-heroes .mmhk-heritage-title{order:-1;}
+.mmhk-heritage-heroes .mmhk-original-tabs a,
+.mmhk-heritage-heroes .mmhk-original-tabs span{font:12px/1.2 Arial,sans-serif;
+  color:#593f33;text-decoration:none;padding:8px 11px 7px;border:1px solid #9e816d;
+  border-radius:5px 5px 0 0;background:linear-gradient(#d8c8b9,#c0aa9a);}
+.mmhk-heritage-heroes .mmhk-original-tabs a[aria-current="page"]{background:#f9f6ec;
+  border-bottom-color:#f9f6ec;color:#342c28;font-weight:bold;}
+.mmhk-heritage-heroes .mmhk-original-tabs span{opacity:.57;cursor:not-allowed;}
+.mmhk-heritage-heroes .mmhk-heritage-inventory{order:1;margin:0 0 9px;
+  border:2px solid #967967;background:#f4ebd9;box-shadow:none;border-radius:0;color:#423328;}
+.mmhk-heritage-inventory .mmhk-board-heading{background:#f8f6ec;min-height:48px;
+  border-bottom:1px solid #ab9780;padding:7px 13px;}
+.mmhk-heritage-inventory .mmhk-board-heading .eyebrow{color:#947452;font-size:9px;}
+.mmhk-heritage-inventory .mmhk-board-heading h3{color:#513a2a;font:bold 17px Arial,sans-serif;
+  text-shadow:none;margin:2px 0;}
+.mmhk-heritage-inventory .mmhk-board-heading p{color:#766456;font:11px Arial,sans-serif;margin:0;}
+.mmhk-heritage-inventory .mmhk-budget{border-left:1px solid #c6b6a1;padding:0 0 0 9px;}
+.mmhk-heritage-inventory .mmhk-budget span,.mmhk-heritage-inventory .mmhk-budget strong{color:#684d3a;}
+.mmhk-heritage-inventory .mmhk-budget strong{font:bold 16px Arial,sans-serif;}
+.mmhk-heritage-inventory .mmhk-equipment-stage{display:grid;grid-template-columns:40% 60%;
+  min-height:350px;overflow:hidden;background:#f7f4e9!important;isolation:isolate;}
+.mmhk-heritage-inventory .mmhk-equipment-stage::before{inset:5px;border:0;}
+.mmhk-heritage-inventory .mmhk-hero-portrait{position:relative;top:auto;left:auto;
+  transform:none;grid-column:1;grid-row:1;width:100%;height:350px;min-width:0;
+  border:0;border-right:2px solid #a88b73;border-radius:0;box-shadow:none;
+  background:radial-gradient(ellipse at 50% 38%,#e1c593,#8eaaad 42%,#657c8f 100%);}
+.mmhk-heritage-inventory .mmhk-hero-portrait::after{box-shadow:inset 0 0 36px #61492e66;}
+.mmhk-heritage-inventory .mmhk-portrait-sky{position:absolute;inset:0;
+  background:linear-gradient(180deg,#92aeca,#d0bb93 65%,#a07a58);opacity:.6;}
+.mmhk-heritage-inventory .mmhk-hero-portrait>.heritage-portrait{display:block;
+  position:relative!important;margin:45px auto 0;height:162px!important;
+  border:5px ridge #bca581;box-shadow:0 6px 19px #3e382b77;}
+.mmhk-heritage-inventory .mmhk-hero-portrait>.heritage-portrait img{
+  width:100%;height:100%;object-fit:cover;}
+.mmhk-heritage-inventory .mmhk-portrait-label{padding:17px 8px 13px;
+  background:linear-gradient(#e2cfaaec,#e9d9bd);border-top:2px solid #977451;
+  color:#423324;gap:4px;}
+.mmhk-heritage-inventory .mmhk-portrait-label strong{color:#4a3024;
+  font:bold 18px/1.2 Arial,sans-serif;text-transform:none;font-variant:normal;}
+.mmhk-heritage-inventory .mmhk-portrait-label small,.mmhk-hero-xp{
+  color:#634936;font:12px Arial,sans-serif;}
+.mmhk-heritage-inventory .mmhk-equipped-areas{grid-column:2;grid-row:1;min-height:0;
+  height:350px;padding:13px 9px;grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-rows:repeat(4,minmax(0,1fr));gap:6px;
+  grid-template-areas:". head neck ." "weapon . . shield"
+     "hands . . chest" ". feet ring .";
+  background:radial-gradient(ellipse at 50%,#d7cfb8a0,transparent 53%),#f8f6ee;}
+.mmhk-heritage-inventory .mmhk-equip-target,.mmhk-heritage-inventory .mmhk-equip-target.slot-head,
+.mmhk-heritage-inventory .mmhk-equip-target.slot-feet{width:100%;min-width:0;max-width:87px;
+  min-height:73px!important;padding:3px!important;border:1px solid #b4a28c!important;
+  border-radius:3px;background:linear-gradient(#f2e7cf,#d8c8ad);box-shadow:0 1px 3px #8f705c66;
+  color:#4c382b;gap:1px;}
+.mmhk-heritage-inventory .mmhk-equip-target.can-drop,
+.mmhk-heritage-inventory .mmhk-equip-target:hover,
+.mmhk-heritage-inventory .mmhk-equip-target:focus-visible{border:2px solid #af742b!important;
+  background:#ffdd9c;outline:0;}
+.mmhk-heritage-inventory .mmhk-slot-symbol{height:20px;min-height:20px;line-height:20px;
+  color:#785c3e;font-size:17px;}
+.mmhk-heritage-inventory .mmhk-equip-target .equipment-slot-name{font:bold 9px Arial,sans-serif;
+  color:#594434;text-transform:none;font-variant:normal;}
+.mmhk-heritage-inventory .mmhk-empty-slot{color:#967f68;font-size:9px;text-align:center;}
+.mmhk-heritage-inventory .mmhk-item{min-width:0;max-width:none;min-height:52px;
+  padding:3px;border:1px solid #ad986c;background:linear-gradient(#fbf1d3,#dbc4a1);
+  box-shadow:inset 0 1px #fff7da;gap:2px;color:#503826;border-radius:2px;}
+.mmhk-heritage-inventory .mmhk-item strong{font:bold 10px/1.15 Arial,sans-serif;color:#4e3327;}
+.mmhk-heritage-inventory .mmhk-item small{color:#755642;font-size:9px;}
+.mmhk-heritage-inventory .mmhk-item-jewel{color:#8f5e2c;}
+.mmhk-heritage-inventory .mmhk-storage{display:grid;grid-template-columns:1fr;
+  gap:0;padding:0;background:#e9dec9;}
+.mmhk-heritage-inventory .mmhk-storage-room{min-height:75px;padding:8px 12px!important;
+  border:0;border-top:2px solid #c7b49a;background:#f6efe1!important;color:#564333;}
+.mmhk-heritage-inventory .mmhk-storage-room:hover,
+.mmhk-heritage-inventory .mmhk-storage-room.hover{outline:2px solid #ce9a55;outline-offset:-2px;}
+.mmhk-heritage-inventory .mmhk-storage-room h4{margin:0;color:#633b29;
+  font:bold 13px Arial,sans-serif;}
+.mmhk-heritage-inventory .mmhk-storage-room h4 span{padding:2px 6px;
+  background:#b89d78;color:#372c22;}
+.mmhk-heritage-inventory .mmhk-storage-room p{display:none;}
+.mmhk-heritage-inventory .mmhk-storage-items{min-height:33px;display:flex;flex-wrap:wrap;
+  align-items:center;gap:5px;margin:6px 0 0;}
+.mmhk-heritage-inventory .mmhk-storage-items .mmhk-item{min-height:50px;width:102px;}
+.mmhk-heritage-inventory .mmhk-quiet{color:#7d6550;border-color:#bcad93;
+  padding:7px 11px;font:10px Arial,sans-serif;}
+.mmhk-heritage-inventory .mmhk-hero-recipient{border-color:#ad967a;margin:0;padding:8px;
+  background:#eadfca;}
+.mmhk-heritage-inventory .mmhk-hero-recipient h4,.mmhk-heritage-inventory .mmhk-recipient strong{
+  color:#66442d;font:bold 13px Arial,sans-serif;}
+.mmhk-heritage-inventory .mmhk-recipient{background:#f3e6d1;border-color:#cbb28e;color:#4b3428;}
+.mmhk-heritage-inventory .mmhk-recipient small{color:#80654f;}
+.mmhk-heritage-heroes .mmhk-heritage-formation{order:2;margin:8px 0 12px;
+  border:2px solid #927560;background:#f8f2e7;box-shadow:none;color:#423127;}
+.mmhk-heritage-formation .mmhk-board-heading{background:#ddc8ac;padding:9px 13px;
+  border-bottom:1px solid #bca482;}
+.mmhk-heritage-formation .mmhk-board-heading h3{color:#4a3025;text-shadow:none;
+  font:bold 17px Arial,sans-serif;}
+.mmhk-heritage-formation .mmhk-board-heading p{font:11px Arial,sans-serif;color:#705640;}
+.mmhk-heritage-formation .mmhk-battle-ground{background:#f1e7d6!important;padding:8px!important;}
+.mmhk-heritage-formation .mmhk-battle-ranks{color:#795b44;margin:4px 0 7px;}
+.mmhk-heritage-formation .formation-slots{grid-template-columns:repeat(7,minmax(0,1fr));gap:3px;}
+.mmhk-heritage-formation .mmhk-formation-tile{min-height:115px;grid-template-rows:15px 54px 24px 18px 13px;
+  padding:3px;border:1px solid #b29b80;background:#f9f4e8;color:#4e3426;}
+.mmhk-heritage-formation .mmhk-formation-art{width:55px;height:54px;
+  background:#f3ebd8;border:1px solid #bdad94;}
+.mmhk-heritage-formation .mmhk-formation-tile .formation-slot-number{color:#7c5031;
+  font:12px Arial,sans-serif;}
+.mmhk-heritage-formation .mmhk-formation-tile strong{color:#523b2b;font:bold 9px Arial,sans-serif;}
+.mmhk-heritage-formation .mmhk-formation-qty{color:#6b4b33;font:bold 12px Arial,sans-serif;}
+.mmhk-heritage-formation .mmhk-formation-tile small{color:#967b61;font-size:9px;}
+.mmhk-heritage-formation .mmhk-formation-tools button{background:#e0cba8;color:#513827;
+  border:1px solid #a88b60;}
+.mmhk-heritage-formation .mmhk-formation-save{background:#f1e7d6!important;padding:10px!important;}
+.mmhk-heritage-formation .mmhk-formation-advanced{border-color:#b29b7e;color:#65462f;}
+.mmhk-heritage-formation .mmhk-formation-advanced summary{color:#62452e;}
+.mmhk-heritage-formation .mmhk-formation-advanced p,
+.mmhk-heritage-formation .formation-footer p{color:#735d48;}
+.mmhk-heritage-formation .mmhk-formation-edit-grid label{color:#614632;}
+.mmhk-heritage-formation .mmhk-formation-edit-grid input,
+.mmhk-heritage-formation .mmhk-formation-edit-grid select{background:#fffbf0;color:#543c2c;}
+.mmhk-heritage-formation .formation-footer button{background:#d9bd88;color:#38291d;}
+.mmhk-heritage-heroes .mmhk-hero-army-summary{order:3;margin:0 0 8px;
+  border:1px solid #92775b;background:#eee2cb;padding:10px 14px;}
+.mmhk-heritage-heroes .mmhk-hero-army-summary h3{font:bold 15px Arial,sans-serif;color:#573726;}
+.mmhk-heritage-heroes .mmhk-hero-army-summary p{color:#5b4633;font-size:12px;}
+.mmhk-heritage-heroes .mmhk-hero-army-summary a{color:#70452a;}
+.mmhk-heritage-heroes .notice{order:4;color:#a49b88;font-size:10px;}
+.mmhk-heritage-armies .mmhk-war-banner{padding:10px 15px;background:linear-gradient(#a18b7c,#806d61);
+  border:2px solid #785747;box-shadow:none;}
+.mmhk-heritage-armies .mmhk-war-banner h2{margin:2px 0;
+  font:bold 21px Arial,sans-serif;color:#fff2e4;}
+.mmhk-heritage-armies .mmhk-war-banner p{margin:3px 0;color:#f2e6d4;font:11px Arial,sans-serif;}
+.mmhk-heritage-armies .mmhk-war-emblem{width:40px;height:40px;font-size:20px;
+  border:1px solid #cfb89a;background:#8b7261;}
+.mmhk-heritage-armies .mmhk-war-room{margin:9px 0;background:#f3e8d3;
+  border:2px solid #a98c70;box-shadow:none;color:#543d2c;}
+.mmhk-heritage-armies .mmhk-war-room .mmhk-board-heading{background:#e1cdb1;
+  padding:10px 13px;border-bottom:1px solid #b7a089;}
+.mmhk-heritage-armies .mmhk-war-room .mmhk-board-heading h3{margin:3px 0;
+  color:#50382b;text-shadow:none;font:bold 18px Arial,sans-serif;}
+.mmhk-heritage-armies .mmhk-war-room .mmhk-board-heading p{margin:0;color:#795c48;}
+.mmhk-heritage-armies .mmhk-war-count strong{font:bold 25px Arial,sans-serif;color:#563825;}
+.mmhk-heritage-armies .mmhk-war-count small{color:#6d5543;}
+.mmhk-heritage-armies .mmhk-deployment-field{grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);
+  padding:9px;gap:7px;align-items:start;background:#f6efde!important;}
+.mmhk-heritage-armies .mmhk-garrison-keep,
+.mmhk-heritage-armies .mmhk-deployment-hero{min-height:178px;padding:8px;
+  background:#efe3cf;border:1px solid #a68a69;box-shadow:none;color:#583e2d;}
+.mmhk-heritage-armies .mmhk-keep-heading{padding-bottom:6px;border-bottom:2px solid #beaa90;}
+.mmhk-heritage-armies .mmhk-keep-heading>span{color:#8e6744;font-size:22px;}
+.mmhk-heritage-armies .mmhk-keep-heading h4{font:bold 15px Arial,sans-serif;color:#613e28;}
+.mmhk-heritage-armies .mmhk-keep-heading small{color:#7c634f;}
+.mmhk-heritage-armies .mmhk-deployment-arrow{color:#ad764b;font-size:23px;padding-top:65px;}
+.mmhk-heritage-armies .mmhk-battle-stacks{display:grid;grid-template-columns:repeat(auto-fill,minmax(99px,1fr));
+  align-items:start;gap:5px;padding:8px 0;}
+.mmhk-heritage-armies .mmhk-unit-stack{width:100%;min-height:112px;
+  grid-template-rows:58px 25px 12px;gap:2px;border:1px solid #b69c75;
+  background:linear-gradient(#fbf5e7,#e4d2b3);color:#513b2c;box-shadow:none;}
+.mmhk-heritage-armies .mmhk-stack-art{width:55px;height:55px;border:1px solid #ab9879;
+  background:#f3e5ce;}
+.mmhk-heritage-armies .mmhk-unit-stack>strong{font:bold 10px Arial,sans-serif;color:#553826;}
+.mmhk-heritage-armies .mmhk-unit-stack>small{color:#806a59;font-size:9px;}
+.mmhk-heritage-armies .mmhk-stack-count{top:40px;background:#925832;
+  right:3px;color:#fff1d2;font-size:11px;border-color:#d0ad7a;}
+.mmhk-heritage-armies .mmhk-hero-card-head{gap:8px;padding-bottom:6px;
+  border-bottom:2px solid #ba9f7a;}
+.mmhk-heritage-armies .mmhk-hero-card-head>.heritage-portrait{border:1px solid #86684c;}
+.mmhk-heritage-armies .mmhk-hero-card-head strong{color:#583622;font:bold 15px Arial,sans-serif;}
+.mmhk-heritage-armies .mmhk-hero-card-head span,
+.mmhk-heritage-armies .mmhk-hero-card-head small{color:#76543d;font:11px Arial,sans-serif;}
+.mmhk-heritage-armies .mmhk-deployment-heroes{gap:7px;}
+.mmhk-heritage-armies .mmhk-deployment-hero:hover,
+.mmhk-heritage-armies .mmhk-garrison-keep:hover{border-color:#b9753e;background:#f9edcf;}
+.mmhk-heritage-armies .mmhk-troop-picked{background:#e7d4b3;color:#67442a;}
+.mmhk-heritage-armies .mmhk-troop-picked strong{color:#5b301e;}
+.mmhk-heritage-armies .mmhk-quantity-dialog input{background:#fff9e9;color:#4b3223;}
+.mmhk-heritage-armies .mmhk-quiet{color:#705743;font:10px Arial,sans-serif;border-color:#c6af8c;}
+.mmhk-heritage-armies .mmhk-military-market{grid-template-columns:1fr 1fr;gap:9px;margin:9px 0;}
+.mmhk-heritage-armies .mmhk-recruit-hall,.mmhk-heritage-armies .mmhk-tavern-hall{
+  background:#efe4d1!important;padding:10px!important;border:1px solid #a68a72;color:#644832;}
+.mmhk-heritage-armies .mmhk-recruit-hall h3,.mmhk-heritage-armies .mmhk-tavern-hall h3{
+  color:#613e2b;font:bold 17px Arial,sans-serif;}
+.mmhk-heritage-armies .mmhk-recruit-hall header p,
+.mmhk-heritage-armies .mmhk-tavern-hall header p{color:#7f6148;font:11px Arial,sans-serif;}
+.mmhk-heritage-armies .mmhk-recruit-card,.mmhk-heritage-armies .mmhk-tavern-offer{
+  grid-template-columns:65px minmax(0,1fr);gap:7px;padding:7px!important;
+  border:1px solid #bda486;background:#f7efdf;}
+.mmhk-heritage-armies .mmhk-recruit-unit-art{width:64px;height:64px;
+  background:#eee1cb;border:1px solid #baa07c;}
+.mmhk-heritage-armies .mmhk-recruit-card .unit-recruit-info strong,
+.mmhk-heritage-armies .mmhk-tavern-offer strong{color:#5e3a25;font:bold 13px Arial,sans-serif;}
+.mmhk-heritage-armies .mmhk-recruit-card .unit-recruit-info span,
+.mmhk-heritage-armies .mmhk-recruit-card small,
+.mmhk-heritage-armies .mmhk-tavern-offer small{color:#82664e;}
+.mmhk-heritage-armies .mmhk-recruit-action label{color:#59402b;}
+.mmhk-heritage-armies .mmhk-recruit-action input{background:#fff7e5;color:#583c2b;}
+.mmhk-heritage-armies .mmhk-tavern-offer>.heritage-portrait{border:1px solid #886747;}
+.mmhk-heritage-armies .mmhk-tavern-offer span{color:#75452c;}
+.mmhk-heritage-armies .mmhk-tavern-capacity,
+.mmhk-heritage-armies .mmhk-locked-tavern{color:#684a35;}
+@media(max-width:1040px){
+  .mmhk-heritage-heroes{grid-template-columns:minmax(0,1fr)!important;}
+  .mmhk-heritage-heroes .mmhk-roster{grid-column:1;grid-row:1;display:flex!important;
+    flex-wrap:wrap;gap:6px;align-items:center;}
+  .mmhk-heritage-heroes .mmhk-roster-heading{width:100%;}
+  .mmhk-heritage-heroes .mmhk-roster-choice{max-width:240px;flex:1 1 175px;}
+  .mmhk-heritage-heroes .mmhk-hero-workspace{grid-column:1;grid-row:2;}
+}
+@media(max-width:660px){
+  .mmhk-heritage-inventory .mmhk-equipment-stage{grid-template-columns:1fr;}
+  .mmhk-heritage-inventory .mmhk-hero-portrait{height:245px;grid-column:1;grid-row:1;
+    border:0;border-bottom:2px solid #a68a6b;}
+  .mmhk-heritage-inventory .mmhk-hero-portrait>.heritage-portrait{margin-top:8px; }
+  .mmhk-heritage-inventory .mmhk-equipped-areas{grid-column:1;grid-row:2;
+    height:auto;min-height:300px;grid-template-columns:repeat(4,minmax(0,1fr));
+    grid-template-rows:repeat(4,minmax(0,1fr));grid-template-areas:". head neck ."
+    "weapon . . shield" "hands . . chest" ". feet ring .";gap:4px;}
+  .mmhk-heritage-inventory .mmhk-equip-target.slot-head,
+  .mmhk-heritage-inventory .mmhk-equip-target.slot-weapon,
+  .mmhk-heritage-inventory .mmhk-equip-target.slot-shield,
+  .mmhk-heritage-inventory .mmhk-equip-target.slot-hands,
+  .mmhk-heritage-inventory .mmhk-equip-target.slot-chest,
+  .mmhk-heritage-inventory .mmhk-equip-target.slot-neck,
+  .mmhk-heritage-inventory .mmhk-equip-target.slot-ring,
+  .mmhk-heritage-inventory .mmhk-equip-target.slot-feet{width:100%;max-width:100%;}
+  .mmhk-heritage-formation .formation-slots{grid-template-columns:repeat(4,minmax(0,1fr));}
+  .mmhk-heritage-armies .mmhk-deployment-field{grid-template-columns:1fr;}
+  .mmhk-heritage-armies .mmhk-deployment-arrow{padding:0;}
+  .mmhk-heritage-armies .mmhk-military-market{grid-template-columns:1fr;}
+  .mmhk-heritage-heroes .mmhk-original-tabs a,.mmhk-heritage-heroes .mmhk-original-tabs span{
+    padding:7px 7px;font-size:11px;}
+}
