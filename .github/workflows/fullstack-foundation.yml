@@ -5,8 +5,6 @@ on:
   push:
     branches:
       - main
-      # One-off PR 38 territorial influence qualification; restore immediately.
-      - feat/dynamic-influence-four-day-lab
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
