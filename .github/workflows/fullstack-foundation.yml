@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+      # One-off visual UX qualification PR 40 (restore immediately).
+      - feat/immersive-hero-artifacts-garrison-ui
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
