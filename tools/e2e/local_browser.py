@@ -118,6 +118,8 @@ def main() -> int:
             expect(page.get_by_text("Sceau des anciens")).to_be_visible()
             # Authentic gameplay affordance: native mouse DnD from the
             # hero's bag to the helmet slot. The mutation is PostgreSQL-backed.
+            expect(page.get_by_test_id("hero-equipment-board")).to_have_attribute(
+                "data-ready","true",timeout=15000)
             helm=page.locator("#hero-bag .artifact-card").filter(has_text="Heaume de bronze")
             helmet=page.locator('.mmhk-equip-target[data-slot="head"]')
             expect(helm).to_be_visible()
@@ -265,6 +267,8 @@ def main() -> int:
             expect(page.get_by_text("3 soldats", exact=False)).to_be_visible()
             # Real drag of a garrison troop card onto the idle hero.
             # A game-like quantity confirmation replaces the old admin form.
+            expect(page.get_by_test_id("troop-deployment-board")).to_have_attribute(
+                "data-ready","true",timeout=15000)
             troop=page.locator('[data-testid="troop-stack"][data-holder="garrison"][data-unit-code="militia"]')
             recipient=page.locator('[data-testid="hero-drop-zone"]').first
             expect(troop).to_be_visible()
@@ -283,6 +287,8 @@ def main() -> int:
             expect(page.locator(".formation-slot")).to_have_count(7)
             # Reorder actual seven Jactari positions using the illustrated
             # troop cards, not select/quantity administration fields.
+            expect(page.get_by_test_id("formation-visual-board")).to_have_attribute(
+                "data-ready","true",timeout=15000)
             source_slot=page.locator(".mmhk-formation-tile").nth(0)
             target_slot=page.locator(".mmhk-formation-tile").nth(1)
             expect(source_slot).to_contain_text("Miliciens du Havre")

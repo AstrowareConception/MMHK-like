@@ -31,6 +31,7 @@ def main():
             page.get_by_role("link",name="Héros et artefacts").first.click()
             board=page.get_by_test_id("hero-equipment-board")
             expect(board).to_be_visible()
+            expect(board).to_have_attribute("data-ready","true",timeout=15000)
             bag=page.locator("#hero-bag .artifact-card").filter(has_text="Heaume de bronze")
             slot=page.locator('[data-testid="equipment-drop-zone"][data-slot="head"]')
             expect(bag).to_be_visible()

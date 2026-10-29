@@ -1,5 +1,5 @@
 "use client";
-import {useState,useTransition} from "react";
+import {useEffect,useState,useTransition} from "react";
 import type {DragEvent,KeyboardEvent} from "react";
 import {transferHeroUnits} from "../app/actions";
 import type {CityForces} from "../lib/server-api";
@@ -19,6 +19,8 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
   portrait:{might:string;magic:string};
   backdrop:string|null;
 }){
+  const [ready,setReady]=useState(false);
+  useEffect(()=>setReady(true),[]);
   const [selected,setSelected]=useState<Stack|null>(null);
   const [destination,setDestination]=useState<Destination|null>(null);
   const [quantity,setQuantity]=useState(1);
@@ -29,7 +31,7 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
   const byHero=(id:string):Stack[]=>forces.hero_armies.filter(
     u=>u.hero_id===id&&u.quantity>0).map(u=>({...u,heroId:id}));
   function approve(src:Stack|null,dest:Destination){
-    if(pending||!src)return false;
+    if(pending||!ready||!src)return false;
     if(src.heroId===dest.heroId)return false;
     if(dest.heroId){
       return src.heroId===null&&forces.heroes.some(
@@ -54,7 +56,7 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
       data-testid="troop-stack"
       data-unit-code={item.unit_code}
       data-holder={item.heroId??"garrison"}
-      draggable={!pending&&(!item.heroId||forces.heroes.some(
+      draggable={ready&&!pending&&(!item.heroId||forces.heroes.some(
         h=>h.hero_id===item.heroId&&h.status==="idle"))}
       onDragStart={event=>{
         const value=JSON.stringify({unit:item.unit_code,hero:item.heroId});
@@ -97,7 +99,7 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
       "aria-label":dest.heroId?"Déposer le peloton sur ce héros":
         "Rapatrier le peloton sélectionné à la garnison",
       onDragOver:(event:DragEvent<HTMLElement>)=>{
-        if(!pending){event.preventDefault();event.dataTransfer.dropEffect="move";setHover(key);}
+        if(!pending&&ready){event.preventDefault();event.dataTransfer.dropEffect="move";setHover(key);}
       },
       onDragLeave:()=>setHover(""),
       onDrop:(event:DragEvent<HTMLElement>)=>drop(event,dest),
@@ -128,7 +130,8 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
     Number.isSafeInteger(quantity)&&quantity>=1&&quantity<=1000&&
     quantity<=selected.quantity);
   return <section className="mmhk-war-room" data-testid="troop-deployment-board"
-    aria-label="Salle de déploiement des armées" aria-busy={pending}>
+    aria-label="Salle de déploiement des armées" aria-busy={pending}
+    data-ready={ready?"true":"false"}>
     <header className="mmhk-board-heading">
       <div><span className="eyebrow">GRAND HALL DES ARMÉES</span>
         <h3>Déployer la garnison</h3>
@@ -139,6 +142,7 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
           forces.hero_armies.reduce((n,u)=>n+u.quantity,0))
       }</strong><small>soldats au total</small></div>
     </header>
+    {!ready&&<p className="mmhk-hydrating" role="status">Chargement des commandes militaires…</p>}
     {error&&<p className="error" role="alert">{error}</p>}
     <div className="mmhk-deployment-field"
       style={backdrop?{backgroundImage:"linear-gradient(#16222cbe,#111b25e0),url("+JSON.stringify(backdrop)+")"}:undefined}>

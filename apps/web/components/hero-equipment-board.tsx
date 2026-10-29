@@ -1,5 +1,5 @@
 "use client";
-import {useState,useTransition} from "react";
+import {useEffect,useState,useTransition} from "react";
 import type {DragEvent,KeyboardEvent} from "react";
 import {moveCityArtifact} from "../app/actions";
 import type {ArtifactInventory,ArtifactItem,CityForces} from "../lib/server-api";
@@ -18,6 +18,8 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
   art:{portrait:string|null;equipment:string|null;frame:string|null;
     backpack:string|null;artifactIcon:string|null;slots:Record<string,string|null>};
 }){
+  const [ready,setReady]=useState(false);
+  useEffect(()=>setReady(true),[]);
   const [selected,setSelected]=useState<string|null>(null);
   const [hover,setHover]=useState<string|null>(null);
   const [error,setError]=useState("");
@@ -29,7 +31,7 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
   const cost=equipped.reduce((n,item)=>n+item.required_level,0);
   const idle=hero.status==="idle";
   function allowed(item:ArtifactItem,target:Target):{op:Move;heroId:string|null}|null {
-    if(!idle||pending)return null;
+    if(!idle||pending||!ready)return null;
     if(item.location!=="reserve"&&item.hero_id!==hero.hero_id)return null;
     if(target.place==="slot"){
       if(item.location!=="bag"||item.slot!==target.slot||
@@ -69,7 +71,7 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
       role:"button" as const,tabIndex:0,
       "aria-label":"Déposer l'artefact sélectionné dans "+label,
       onDragOver:(e:DragEvent<HTMLElement>)=>{
-        if(!pending){e.preventDefault();e.dataTransfer.dropEffect="move";setHover(label);}
+        if(!pending&&ready){e.preventDefault();e.dataTransfer.dropEffect="move";setHover(label);}
       },
       onDragLeave:()=>setHover(null),
       onDrop:(e:DragEvent<HTMLElement>)=>{
@@ -90,9 +92,9 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
     return <div key={item.artifact_id}
       data-testid="artifact-tile" data-artifact-id={item.artifact_id}
       className={"artifact-card mmhk-item "+(isSelected?"selected":"")}
-      draggable={idle&&!pending}
+      draggable={ready&&idle&&!pending}
       onDragStart={e=>{
-        if(!idle||pending){e.preventDefault();return;}
+        if(!idle||pending||!ready){e.preventDefault();return;}
         e.dataTransfer.setData(MIME,item.artifact_id);
         e.dataTransfer.setData("text/plain",item.artifact_id);
         e.dataTransfer.effectAllowed="move";setSelected(item.artifact_id);
@@ -113,6 +115,7 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
   }
   return <section className="mmhk-equipment" id="hero-equipment"
     aria-label={"Équipement de "+hero.name} data-testid="hero-equipment-board"
+    data-ready={ready?"true":"false"}
     aria-busy={pending}>
     <header className="mmhk-board-heading">
       <div><span className="eyebrow">CHAMBRE DU HÉROS · INVENTAIRE</span>
@@ -124,6 +127,7 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
         <meter min="0" max={Math.max(1,hero.level)}
           value={Math.min(cost,hero.level)}/></div>
     </header>
+    {!ready&&<p className="mmhk-hydrating" role="status">Chargement des commandes d'équipement…</p>}
     {hero.status!=="idle"&&<p className="formation-warning">
       Héros en déplacement : équipement verrouillé jusqu'à son retour.</p>}
     {error&&<p role="alert" className="error">{error}</p>}

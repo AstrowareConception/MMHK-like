@@ -21,10 +21,12 @@ function hydrate(initial:HeroFormation):Cell[]{
 export function HeroFormationEditor({cityId,formation}:{
   cityId:string;formation:HeroFormation;
 }){
+  const [ready,setReady]=useState(false);
   const [rows,setRows]=useState<Cell[]>(()=>hydrate(formation));
   const [selected,setSelected]=useState<number|null>(null);
   const [dragging,setDragging]=useState<number|null>(null);
   const [touched,setTouched]=useState(false);
+  useEffect(()=>{setReady(true);},[]);
   useEffect(()=>{setRows(hydrate(formation));setSelected(null);setTouched(false);},[formation]);
   const totals=useMemo(()=>{
     const m=new Map<string,number>();
@@ -36,7 +38,7 @@ export function HeroFormationEditor({cityId,formation}:{
   }));
   const balanced=remaining.every(u=>u.remaining===0)&&
     rows.every(r=>!r.unit_code||Number.isSafeInteger(r.quantity)&&r.quantity>0&&r.quantity<=1000000);
-  const editable=formation.status==="idle";
+  const editable=ready&&formation.status==="idle";
   const unit=(code:string)=>formation.available_units.find(u=>u.unit_code===code);
 
   function swap(a:number,b:number){
@@ -74,7 +76,8 @@ export function HeroFormationEditor({cityId,formation}:{
     setTouched(true);
   }
   return <section id="hero-formation" className="formation-editor mmhk-formation-board"
-    aria-label="Formation de combat du héros" data-testid="formation-visual-board">
+    aria-label="Formation de combat du héros" data-testid="formation-visual-board"
+    data-ready={ready?"true":"false"}>
     <header className="mmhk-board-heading">
       <div><span className="eyebrow">CHAMP DE BATAILLE · SEPT PELOTONS</span>
         <h3>Formation de combat</h3>
