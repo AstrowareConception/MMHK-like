@@ -31,6 +31,12 @@ def main():
             page.get_by_role("link",name="Héros et artefacts").first.click()
             board=page.get_by_test_id("hero-equipment-board")
             expect(board).to_be_visible()
+            # A quiet demo has no pending orders: its chronicle must occupy
+            # only one compact bar rather than a large empty game header.
+            timeline=page.locator(".kingdom-timeline")
+            if "Aucune échéance annoncée" in timeline.inner_text():
+                expect(timeline).to_have_class(re.compile(r"kingdom-timeline--quiet"))
+                expect(timeline.locator(".timeline-track")).to_be_hidden()
             expect(board).to_have_attribute("data-ready","true",timeout=15000)
             bag=page.locator("#hero-bag .artifact-card").filter(has_text="Heaume de bronze")
             slot=page.locator('[data-testid="equipment-drop-zone"][data-slot="head"]')
