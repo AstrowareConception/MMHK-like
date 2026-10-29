@@ -74,8 +74,10 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
       onDragLeave:()=>setHover(null),
       onDrop:(e:DragEvent<HTMLElement>)=>{
         e.preventDefault();e.stopPropagation();setHover(null);
-        const id=e.dataTransfer.getData(MIME);
+        const id=e.dataTransfer.getData(MIME)||
+          e.dataTransfer.getData("text/plain")||selected;
         if(id)move(target,id);
+        else setError("Déposez un objet depuis la besace ou le coffre de cette cité.");
       },
       onClick:()=>{if(chosen)move(target);},
       onKeyDown:(e:KeyboardEvent<HTMLElement>)=>{
@@ -92,6 +94,7 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
       onDragStart={e=>{
         if(!idle||pending){e.preventDefault();return;}
         e.dataTransfer.setData(MIME,item.artifact_id);
+        e.dataTransfer.setData("text/plain",item.artifact_id);
         e.dataTransfer.effectAllowed="move";setSelected(item.artifact_id);
       }}
       onDragEnd={()=>setHover(null)}
