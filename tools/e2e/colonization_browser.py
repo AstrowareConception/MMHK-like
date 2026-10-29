@@ -61,7 +61,9 @@ def main():
             expect(dest).to_contain_text("Nouvel Havre des Brumes")
             page.locator('a[href="/worlds/local-sandbox"]').first.click()
             world_cities=page.locator(".world-city-link")
-            assert world_cities.count()==3,world_cities.all_text_contents()
+            # Next.js RSC navigation can commit after click's browser event.
+            # Wait for the authoritative world city list to finish rendering.
+            expect(world_cities).to_have_count(3,timeout=20000)
             expect(world_cities.filter(has_text="Nouvel Havre des Brumes")).to_have_count(1)
             if errors:
                 raise AssertionError("Browser script failures: "+repr(errors[:4]))
