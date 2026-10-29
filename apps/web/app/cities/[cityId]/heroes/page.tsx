@@ -99,6 +99,7 @@ export default async function HeroesPage({params,searchParams}:{
           art={{
             portrait:portrait(selected.archetype),
             portraitSheet,
+            painting:resolveAssetUrl(selected.archetype==="magic"?"hero.painting.magic":"hero.painting.might"),
             equipment:resolveAssetUrl("hero.background.haven"),
             frame:resolveAssetUrl("hero.frame"),
             backpack:resolveAssetUrl("hero.backpack"),
