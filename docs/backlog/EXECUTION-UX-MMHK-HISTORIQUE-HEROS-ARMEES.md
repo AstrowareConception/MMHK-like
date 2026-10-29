@@ -55,3 +55,13 @@ sans personnages historiques.
 - Chromium complet : équipements, transferts, sept positions sauvegardées,
   et captures desktop, à confronter aux références citées.
 - Pas de fusion sans revue des captures réelles.
+
+### Portrait grand format : source et limites
+
+Deux captures d'écran MMHK conservées dans `data/Screenshots/Vue héros`
+servent d'**illustrations d'époque recadrées en CSS, dans le thème privé** :
+`might-magic-heroes-kingdoms_2123145.jpg` (guerrier illustratif) et
+`HMMKingdoms_4.jpg` (mage illustratif). Ce ne sont ni des fichiers officiels
+individuels de personnages ni une attribution vérifiée aux héros du laboratoire.
+Le vrai visage individuel (19 choix Havre) reste présent dans la liste des héros.
+Les originaux sont copiés localement, **jamais dans le bundle public**.
