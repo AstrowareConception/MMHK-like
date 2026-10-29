@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+      # One-off UX drag/drop focused browser validation, restore immediately.
+      - feat/immersive-hero-artifacts-garrison-ui
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
@@ -32,6 +34,7 @@ permissions:
   contents: read
 jobs:
   api-python-and-js-oracle:
+    if: github.ref == 'refs/heads/main' # temporary UX browser-only rerun
     name: FastAPI contract and Python/JS Jactari differential
     runs-on: ubuntu-latest
     services:
@@ -72,6 +75,7 @@ jobs:
         run: docker run --rm mmhk-worker-ci python -m mmhk_api.supervised_worker --help
 
   next-build:
+    if: github.ref == 'refs/heads/main' # temporary UX browser-only rerun
     name: Next.js production build and strict TypeScript
     runs-on: ubuntu-latest
     defaults:
@@ -94,6 +98,7 @@ jobs:
         run: npm run typecheck
 
   private-preview-build:
+    if: github.ref == 'refs/heads/main' # temporary UX browser-only rerun
     name: Check SSH-only preview ports and build API/Next images
     runs-on: ubuntu-latest
     env:
