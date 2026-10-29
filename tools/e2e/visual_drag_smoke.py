@@ -36,15 +36,51 @@ def main():
             slot=page.locator('[data-testid="equipment-drop-zone"][data-slot="head"]')
             expect(bag).to_be_visible()
             page.screenshot(path="test-output/visuals/hero-before-drag.png",full_page=True)
+            page.evaluate("""() => {
+              window.__mmhkDragTrace = [];
+              for (const type of ['dragstart','dragenter','dragover','drop','dragend','pointerdown','pointerup','click']) {
+                document.addEventListener(type, event => {
+                  const element=event.target;
+                  if(window.__mmhkDragTrace.length < 100)
+                    window.__mmhkDragTrace.push({
+                      type,cls:String(element?.className??'').slice(0,120),
+                      tag:element?.tagName,
+                      target:element?.closest?.('[data-slot]')?.dataset.slot,
+                      kinds:event.dataTransfer?.types?Array.from(event.dataTransfer.types):[]
+                    });
+                },true);
+              }
+            }""")
+            post_requests=[]
+            page.on("request",lambda req:post_requests.append(req.url) if req.method=="POST" else None)
             bag.drag_to(slot)
             page.screenshot(path="test-output/visuals/hero-after-drag.png",full_page=True)
             print("EQUIP DEBUG",{
                 "url":page.url,"selection":page.locator(".mmhk-selection-hint").all_text_contents(),
                 "error":page.locator(".mmhk-equipment .error").all_text_contents(),
                 "slots":page.locator(".equipment-slot.filled").count(),
-                "bag":page.locator("#hero-bag .artifact-card").count()
+                "bag":page.locator("#hero-bag .artifact-card").count(),
+                "trace":page.evaluate("window.__mmhkDragTrace"),
+                "post_requests":post_requests
             },flush=True)
-            expect(page.get_by_text("Artefact déplacé : les inventaires ont été mis à jour.")).to_be_visible(timeout=15000)
+            try:
+                expect(page.get_by_text("Artefact déplacé : les inventaires ont été mis à jour.")).to_be_visible(timeout=8000)
+            except AssertionError:
+                print("CLICK-FALLBACK CHECK: attempting selection + target",flush=True)
+                still=page.locator("#hero-bag .artifact-card").filter(has_text="Heaume de bronze")
+                if still.count():
+                    still.click()
+                    print("CLICK SELECTED",page.locator(".mmhk-selection-hint").all_text_contents(),flush=True)
+                    slot.click()
+                    try:
+                        expect(page.get_by_text("Artefact déplacé : les inventaires ont été mis à jour.")).to_be_visible(timeout=8000)
+                        print("CLICK FALLBACK SUCCEEDED, NATIVE DRAG DID NOT",flush=True)
+                    except AssertionError:
+                        print("CLICK FALLBACK ALSO FAILED",
+                            "url",page.url,
+                            "errors",page.locator(".mmhk-equipment .error").all_text_contents(),
+                            flush=True)
+                raise AssertionError("Native artifact drag did not submit a real server order")
             expect(page.locator(".equipment-slot.filled")).to_have_count(1)
             equipped=page.locator('.mmhk-equip-target[data-slot="head"] .artifact-card')
             expect(equipped).to_be_visible()
