@@ -2483,3 +2483,31 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   color:#853322!important;background:#f9e0d5!important;
   border-color:#cf9e8b!important;
 }
+
+
+/* The actual tactical cards must be legible as game pieces. Never show
+   internal Jactari row indices or spill split buttons across adjacent slots. */
+.gui-game-stage[data-game-screen="heroes"] .mmhk-formation-tile{
+  grid-template-rows:18px 65px minmax(28px,auto) 22px!important;
+  row-gap:2px!important;justify-content:stretch!important;
+  overflow:hidden;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-formation-tile strong{
+  text-align:center;font:700 10px/1.15 Arial,sans-serif!important;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+  overflow:hidden;max-width:100%;padding:0 1px;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-formation-tile .mmhk-formation-qty{
+  font:700 13px/1.2 Arial,sans-serif!important;color:#684325!important;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-formation-tools{
+  display:flex!important;flex-direction:column;align-items:stretch;
+  gap:2px!important;margin-top:4px!important;width:100%;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-formation-tools button{
+  min-height:22px!important;width:100%!important;max-width:100%!important;
+  padding:3px 2px!important;
+  white-space:nowrap;text-overflow:ellipsis;overflow:hidden;
+  font:10px/1.2 Arial,sans-serif!important;
+  background:#e5cfad!important;color:#624126!important;
+}
