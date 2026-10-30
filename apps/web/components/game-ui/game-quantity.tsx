@@ -12,6 +12,7 @@ type Props={
   name?:string;
   disabled?:boolean;
   allowMaximum?:boolean;
+  quickAdjust?:boolean;
   testId?:string;
 };
 
@@ -19,7 +20,7 @@ type Props={
  * Server still validates every order: this is purely a UI affordance.
  */
 export function GameQuantity({label,min=1,max,initial=1,value,onChange,name,
-  disabled=false,allowMaximum=true,testId}:Props){
+  disabled=false,allowMaximum=true,quickAdjust=true,testId}:Props){
   const id=useId();
   const floor=Math.max(0,Math.trunc(min));
   const ceiling=Math.max(floor,Math.trunc(max));
@@ -45,6 +46,17 @@ export function GameQuantity({label,min=1,max,initial=1,value,onChange,name,
         Max
       </button>}
     </div>
-    <small>Maximum autorisé : {ceiling.toLocaleString("fr-FR")}</small>
+    {quickAdjust&&ceiling-floor>=10&&<div className="gui-quantity-quick" role="group"
+      aria-label={"Ajustements rapides : "+label}>
+      <button type="button" disabled={locked||current<=floor}
+        onClick={()=>set(current-10)}>−10</button>
+      <button type="button" disabled={locked||current>=ceiling}
+        onClick={()=>set(current+10)}>+10</button>
+      <button type="button" disabled={locked}
+        onClick={()=>set(Math.max(floor,Math.round(ceiling/4)))}>25 %</button>
+      <button type="button" disabled={locked}
+        onClick={()=>set(Math.max(floor,Math.round(ceiling/2)))}>50 %</button>
+    </div>}
+    <small aria-live="polite">{current.toLocaleString("fr-FR")} / {ceiling.toLocaleString("fr-FR")} disponibles</small>
   </div>;
 }
