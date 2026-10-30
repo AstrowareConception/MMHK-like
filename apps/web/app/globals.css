@@ -1958,3 +1958,24 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
 @media(prefers-reduced-motion:reduce){
   .gui-game-stage .kingdom-screen-content{scroll-behavior:auto;}
 }
+
+/* Information comes to the player, rather than sending them to another page. */
+.gui-hint{position:relative;display:inline-flex;vertical-align:middle;z-index:8;}
+.kingdom-shell .gui-hint>button{width:22px;height:22px;min-height:22px;
+  border-radius:50%;padding:0;background:#f4e3bf;color:#5c3a25;
+  border:1px solid #a77c46;font:700 12px Georgia,serif;cursor:help;}
+.gui-hint>button:hover,.gui-hint>button:focus-visible{outline:2px solid #d9ad5e;}
+.gui-hint-content{position:absolute;bottom:calc(100% + 7px);left:50%;
+  transform:translateX(-50%);z-index:100;width:min(300px,75vw);
+  display:grid;gap:5px;padding:12px 14px;
+  background:#fff8e8;color:#513927;border:2px ridge #b69063;
+  box-shadow:0 6px 22px #0009;text-align:left;}
+.gui-hint-content strong{font:bold 13px Arial,sans-serif;}
+.gui-hint-content>span{font:11px/1.5 Arial,sans-serif;color:#795e48;}
+.gui-quantity-quick{display:flex;flex-wrap:wrap;gap:4px;}
+.gui-quantity-quick>button{border:1px solid #ae926b;background:#ead8b8;
+  color:#523b27;cursor:pointer;padding:5px 9px;
+  font:700 11px Arial,sans-serif;border-radius:2px;}
+.gui-quantity-quick>button:hover:not(:disabled){background:#f8e7ca;}
+.gui-quantity-quick>button:disabled{opacity:.4;cursor:not-allowed;}
+@media(max-width:470px){.gui-hint-content{left:auto;right:0;transform:none;}}
