@@ -117,6 +117,12 @@ def main():
         page.get_by_role("link",name="Héros et artefacts").first.click()
         expect(page.get_by_test_id("hero-game-screen")).to_be_visible()
         tabs=page.get_by_role("tablist",name="Écrans du héros")
+        # The fixed activity tabs must behave like accessible game tabs.
+        tabs.get_by_role("tab",name="Inventaire").focus()
+        page.keyboard.press("ArrowRight")
+        expect(tabs.get_by_role("tab",name="Formation")).to_have_attribute("aria-selected","true")
+        page.keyboard.press("Home")
+        expect(tabs.get_by_role("tab",name="Inventaire")).to_have_attribute("aria-selected","true")
         for name,key in (("Inventaire","inventory"),("Formation","formation"),("Armée","army")):
             tabs.get_by_role("tab",name=name).click()
             expect(page.get_by_test_id("hero-"+key+"-screen")).to_be_visible()
@@ -130,6 +136,11 @@ def main():
         page.get_by_role("link",name="Armées").first.click()
         expect(page.get_by_test_id("military-game-screen")).to_be_visible()
         military=page.get_by_role("tablist",name="Écrans militaires")
+        military.get_by_role("tab",name="Garnison").focus()
+        page.keyboard.press("End")
+        expect(military.get_by_role("tab",name="Taverne")).to_have_attribute("aria-selected","true")
+        page.keyboard.press("Home")
+        expect(military.get_by_role("tab",name="Garnison")).to_have_attribute("aria-selected","true")
         for name,key in (("Garnison","garrison"),("Recrutement","recruitment"),("Taverne","tavern")):
             military.get_by_role("tab",name=name).click()
             expect(page.get_by_test_id("military-"+key+"-screen")).to_be_visible()

@@ -18,6 +18,8 @@ def main():
     with sync_playwright() as pw:
         browser=pw.chromium.launch(headless=True)
         page=browser.new_page(viewport={"width":1220,"height":900})
+        page.set_default_timeout(12000)
+        page.set_default_navigation_timeout(25000)
         failures=[]
         page.on("pageerror",lambda e:failures.append(str(e)))
         try:
@@ -200,16 +202,26 @@ def main():
                             "errors",page.locator(".mmhk-equipment .error").all_text_contents(),
                             flush=True)
                 raise AssertionError("Native artifact drag did not submit a real server order")
+            print("E2E DND: server accepted helmet equip; checking reverse operation",flush=True)
             expect(page.locator(".equipment-slot.filled")).to_have_count(1)
             equipped=page.locator('.mmhk-equip-target[data-slot="head"] .artifact-card')
             expect(equipped).to_be_visible()
-            equipped.drag_to(page.locator("#hero-bag"))
-            expect(page.locator(".equipment-slot.filled")).to_have_count(0,timeout=20000)
+            # A separate timeout is mandatory: this used to hang until the
+            # entire 35-minute Docker job was cancelled, hiding the cause.
+            print("E2E DND: native reverse drag starting",flush=True)
+            equipped.drag_to(page.locator("#hero-bag .mmhk-storage-items"),timeout=15000)
+            print("E2E DND: native reverse drag dispatched",flush=True)
+            expect(page.locator(".equipment-slot.filled")).to_have_count(0,timeout=15000)
             expect(page.locator("#hero-bag .artifact-card").filter(
                 has_text="Heaume de bronze")).to_be_visible()
+            print("E2E DND: verifying persistence after page reload",flush=True)
+            page.reload(wait_until="domcontentloaded",timeout=25000)
+            expect(page.locator("#hero-bag .artifact-card").filter(
+                has_text="Heaume de bronze")).to_be_visible(timeout=12000)
             assert not failures,failures[:3]
-            print("PASS: helmet drag -> server equip -> drag back -> server unequip",flush=True)
+            print("PASS: helmet drag -> server equip -> native reverse drag -> persisted unequip",flush=True)
         finally:
+            print("E2E DND: browser shutdown",flush=True)
             browser.close()
 
 if __name__=="__main__":

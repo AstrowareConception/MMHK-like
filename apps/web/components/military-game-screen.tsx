@@ -27,9 +27,18 @@ export function MilitaryGameScreen({garrison,recruitment,tavern,heroesCount=0,
         <small>{heroesCount} héros présents dans la cité</small>
       </div>
       <div role="tablist" aria-label="Écrans militaires" className="mmhk-command-tabs">
-        {tabs.map(tab=><button key={tab.id} id={"military-tab-"+tab.id}
+        {tabs.map((tab,i)=><button key={tab.id} id={"military-tab-"+tab.id}
           type="button" role="tab" aria-selected={screen===tab.id}
+          tabIndex={screen===tab.id?0:-1}
           aria-controls={"military-panel-"+tab.id}
+          onKeyDown={e=>{
+            if(!["ArrowRight","ArrowLeft","Home","End"].includes(e.key))return;
+            e.preventDefault();
+            const next=e.key==="Home"?0:e.key==="End"?tabs.length-1:
+              (i+(e.key==="ArrowRight"?1:-1)+tabs.length)%tabs.length;
+            setScreen(tabs[next].id);
+            e.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]')[next]?.focus();
+          }}
           onClick={()=>setScreen(tab.id)}>{tab.label}</button>)}
       </div>
     </header>

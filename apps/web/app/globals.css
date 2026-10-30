@@ -2533,3 +2533,104 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   display:flex!important;flex-direction:column!important;
   width:100%!important;max-width:100%!important;min-width:0!important;
 }
+
+
+
+/* PR #45 – visual finishing pass from actual Chromium screenshots.
+   The game room fills the stage; the inventory, troop and offer lists alone
+   own a scrollbar. All UI decorations are public-safe CSS, not archived art. */
+.gui-game-stage[data-game-screen="forces"] .mmhk-recruit-hall{
+  background:radial-gradient(ellipse at 50% 100%,#e3d1af 0%,#f4ead9 70%)!important;
+}
+.gui-game-stage[data-game-screen="forces"] .mmhk-recruit-list{
+  grid-template-columns:repeat(auto-fit,minmax(min(340px,100%),1fr));
+  gap:15px;padding:10px 5px 22px;align-items:start;
+}
+.gui-game-stage[data-game-screen="forces"] .mmhk-recruit-card{
+  box-sizing:border-box;display:grid!important;
+  grid-template-columns:94px minmax(0,1fr)!important;
+  grid-template-rows:minmax(118px,auto) auto;
+  min-height:226px;padding:14px!important;gap:11px!important;
+  background:linear-gradient(150deg,#fff9eb,#e8d7b8)!important;
+  border:2px ridge #a78c67!important;
+  box-shadow:0 3px 9px #6c4d3030,inset 0 1px #fff8e8;
+}
+.gui-game-stage[data-game-screen="forces"] .mmhk-recruit-card:focus-within{
+  outline:2px solid #946629;outline-offset:2px;
+}
+.gui-game-stage[data-game-screen="forces"] .mmhk-recruit-unit-art{
+  width:90px!important;height:105px!important;min-width:0;
+  display:grid;place-items:center;align-self:start;
+  border:2px double #ad8956!important;background:radial-gradient(#f9f0dc,#d6bc90)!important;
+}
+.gui-game-stage[data-game-screen="forces"] .mmhk-recruit-card .unit-recruit-info{
+  min-width:0;display:flex;flex-direction:column;align-items:start;gap:7px;
+}
+.gui-game-stage[data-game-screen="forces"] .mmhk-recruit-card .unit-recruit-info strong{
+  font:bold 17px/1.2 Georgia,serif!important;color:#4a2e1c!important;
+}
+.gui-game-stage[data-game-screen="forces"] .mmhk-recruit-card .unit-recruit-info span{
+  font:700 12px/1.3 Arial,sans-serif;color:#76512b;
+}
+.gui-game-stage[data-game-screen="forces"] .mmhk-recruit-card .unit-recruit-info small{
+  font:11px/1.4 Arial,sans-serif;color:#644b35!important;overflow-wrap:anywhere;
+}
+.gui-game-stage[data-game-screen="forces"] .mmhk-recruit-card .mmhk-recruit-action{
+  grid-column:1/-1;display:flex;flex-wrap:wrap;align-items:end;
+  justify-content:space-between;gap:10px;min-width:0;
+  border-top:1px solid #c1a77f;padding-top:10px;
+}
+.gui-game-stage[data-game-screen="forces"] .mmhk-recruit-action button[type="submit"]{
+  min-height:38px;min-width:108px;font-weight:700;
+}
+.gui-game-stage[data-game-screen="forces"] .mmhk-tavern-hall{
+  background:radial-gradient(ellipse at 50% 65%,#e3d2b5 0%,#f1e5d0 72%)!important;
+}
+.gui-game-stage[data-game-screen="forces"] .mmhk-tavern-hall:has(+ .mmhk-tavern-empty){
+  background:
+    linear-gradient(90deg,transparent 0 12%,#bda77c36 12.2%,transparent 12.4% 87.6%,#bda77c36 87.8%,transparent 88%),
+    radial-gradient(ellipse at 50% 54%,#dfc8a2,#efe2ca 65%)!important;
+}
+.gui-game-stage[data-game-screen="forces"] .mmhk-tavern-empty{
+  top:55%;width:min(560px,86%);min-height:224px;
+  padding:23px 28px;border:3px double #a2855e;
+  background:linear-gradient(145deg,#fff8e8 0%,#ead8b5 100%);
+}
+.gui-game-stage[data-game-screen="forces"] .mmhk-garrison-empty{
+  width:min(440px,65%);bottom:7%;min-height:166px;
+  padding:15px 20px;box-shadow:0 6px 18px #5b433044;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-army-empty-state{
+  width:min(650px,88%);max-width:none;
+  background:radial-gradient(ellipse at 50% 50%,#f0e0c4 0%,#f7efdf00 68%);
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-army-empty-state strong{
+  font:small-caps 26px/1.15 Georgia,serif;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-formation-slot:focus-within{
+  outline:2px solid #bd8943;outline-offset:2px;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-formation-tools button:disabled{
+  opacity:.52;cursor:not-allowed;
+}
+.kingdom-shell .mmhk-command-tabs [role="tab"]:focus-visible{
+  outline:3px solid #f3ce75;outline-offset:1px;position:relative;z-index:2;
+}
+@media(max-width:700px){
+  .gui-game-stage[data-game-screen="forces"] .mmhk-recruit-list{
+    grid-template-columns:minmax(0,1fr);
+  }
+  .gui-game-stage[data-game-screen="forces"] .mmhk-recruit-card{
+    grid-template-columns:75px minmax(0,1fr)!important;min-height:200px;
+    padding:10px!important;
+  }
+  .gui-game-stage[data-game-screen="forces"] .mmhk-recruit-unit-art{
+    width:72px!important;height:86px!important;
+  }
+  .gui-game-stage[data-game-screen="forces"] .mmhk-tavern-empty{
+    width:92%;padding:12px;min-height:0;
+  }
+  .gui-game-stage[data-game-screen="forces"] .mmhk-garrison-empty{
+    width:90%;bottom:3%;min-height:0;
+  }
+}

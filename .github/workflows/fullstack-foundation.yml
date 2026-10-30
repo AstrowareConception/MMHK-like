@@ -222,7 +222,10 @@ jobs:
           export MMHK_E2E_URL="http://127.0.0.1:3000"
           export MMHK_E2E_USERNAME="demo_ci"
           export MMHK_E2E_PASSWORD="$(cat .ci-e2e-password)"
-          python3 tools/e2e/visual_drag_smoke.py
+          # Isolate hangs in native DnD from the full 35-minute integration
+          # campaign. A failure here remains red; never silently skip the test.
+          timeout --signal=TERM --kill-after=10s 105s \
+            python3 -u tools/e2e/visual_drag_smoke.py
       - name: Complete full authenticated Chromium campaign
         run: |
           password="$(cat .ci-e2e-password)"
@@ -235,7 +238,8 @@ jobs:
           docker compose --env-file .env.local -f compose.local.yaml -f compose.historical.yaml up -d --wait --no-build --no-deps --force-recreate web
           python3 tools/e2e/historical_assets_browser.py
           docker compose --env-file .env.local -f compose.local.yaml up -d --wait --no-build --no-deps --force-recreate web
-          python3 tools/e2e/local_browser.py
+          timeout --signal=TERM --kill-after=10s 360s \
+            python3 -u tools/e2e/local_browser.py
           # Explicit localhost-only exception for exercising a second owned
           # city. The real game MUST still enforce seven-day newbie protection.
           python3 tools/local/stack.py convoy-demo --username demo_ci --enable-second-city

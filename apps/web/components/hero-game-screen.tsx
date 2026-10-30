@@ -57,10 +57,18 @@ export function HeroGameScreen({cityId,hero,heroes,initialTab,
           {" · Niveau "+hero.level+" · "+hero.experience.toLocaleString("fr-FR")+" XP"}</small>
       </div>
       <div className="mmhk-command-tabs" role="tablist" aria-label="Écrans du héros">
-        {sections.map(item=><button key={item.id} type="button" role="tab"
+        {sections.map((item,i)=><button key={item.id} type="button" role="tab"
           id={"hero-screen-tab-"+item.id}
-          aria-selected={tab===item.id}
+          aria-selected={tab===item.id} tabIndex={tab===item.id?0:-1}
           aria-controls={"hero-screen-panel-"+item.id}
+          onKeyDown={e=>{
+            if(!["ArrowRight","ArrowLeft","Home","End"].includes(e.key))return;
+            e.preventDefault();
+            const next=e.key==="Home"?0:e.key==="End"?sections.length-1:
+              (i+(e.key==="ArrowRight"?1:-1)+sections.length)%sections.length;
+            select(sections[next].id);
+            e.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]')[next]?.focus();
+          }}
           onClick={()=>select(item.id)}>{item.label}</button>)}
         <span className="mmhk-locked-tab" title="Fonction non encore développée">Talents</span>
         <span className="mmhk-locked-tab" title="Fonction non encore développée">Sorts</span>
