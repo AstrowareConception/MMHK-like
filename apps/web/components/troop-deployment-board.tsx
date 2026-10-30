@@ -1,11 +1,15 @@
 "use client";
 import {useEffect,useRef,useState,useTransition} from "react";
-import type {DragEvent,KeyboardEvent,PointerEvent} from "react";
+import type {DragEvent,KeyboardEvent,MouseEvent,PointerEvent} from "react";
 import {transferHeroUnits} from "../app/actions";
+import {HeritagePortrait,HeritageUnitArt} from "./heritage-art";
+import {GameDialog} from "./game-ui/game-dialog";
+import {GameQuantity} from "./game-ui/game-quantity";
+import {GameHint} from "./game-ui/game-hint";
 import type {CityForces} from "../lib/server-api";
 
 type Hero=CityForces["heroes"][number];
-type Stack={unit_code:string;name:string;quantity:number;tier:number;heroId:string|null};
+type Stack={unit_code:string;name:string;quantity:number;tier:number;heroId:string|null;portion?:number};
 type Destination={heroId:string|null};
 const MIME="application/x-mmhk-troop";
 const IMAGES:Record<string,string>={
@@ -14,10 +18,10 @@ const IMAGES:Record<string,string>={
 };
 const nice=(n:number)=>n.toLocaleString("fr-FR");
 
-export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
+export function TroopDeploymentBoard({cityId,forces,portrait,portraitSheet,unitSheet,backdrop}:{
   cityId:string;forces:CityForces;
-  portrait:{might:string;magic:string};
-  backdrop:string|null;
+  portrait:{might:string;magic:string};portraitSheet:string|null;
+  unitSheet:string|null;backdrop:string|null;
 }){
   const [ready,setReady]=useState(false);
   useEffect(()=>setReady(true),[]);
@@ -26,12 +30,19 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
   const [quantity,setQuantity]=useState(1);
   const [error,setError]=useState("");
   const [hover,setHover]=useState("");
+  const [prepared,setPrepared]=useState<Record<string,number[]>>({});
+  const [stackToSplit,setStackToSplit]=useState<Stack|null>(null);
+  const [splitQuantity,setSplitQuantity]=useState(1);
   const [pending,startTransition]=useTransition();
   // Track a real pointer gesture when a browser does not dispatch native
   // HTML5 dragstart/drop. Never transfer a unit until the user confirms qty.
   const pointerStart=useRef<{item:Stack;x:number;y:number}|null>(null);
   const suppressClick=useRef(false);
   const roster:Stack[]=forces.garrison.filter(u=>u.quantity>0).map(u=>({...u,heroId:null}));
+  const visibleGarrison=roster.flatMap(unit=>
+    (prepared[unit.unit_code]?.reduce((a,n)=>a+n,0)===unit.quantity?
+      prepared[unit.unit_code]:[unit.quantity]).map((quantity,index)=>
+      ({...unit,quantity,portion:index})));
   const byHero=(id:string):Stack[]=>forces.hero_armies.filter(
     u=>u.hero_id===id&&u.quantity>0).map(u=>({...u,heroId:id}));
   function approve(src:Stack|null,dest:Destination){
@@ -53,9 +64,35 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
     setQuantity(Math.min(1000,src.quantity));
     setError("");
   }
+  function splitStack(item:Stack){
+    if(item.heroId!==null||item.quantity<2||pending)return;
+    setStackToSplit(item);
+    setSplitQuantity(Math.floor(item.quantity/2));
+  }
+  function confirmStackSplit(){
+    if(!stackToSplit||!Number.isSafeInteger(splitQuantity)||
+       splitQuantity<1||splitQuantity>=stackToSplit.quantity)return;
+    const base=roster.find(u=>u.unit_code===stackToSplit.unit_code);
+    if(!base)return;
+    const source=prepared[base.unit_code]?.reduce((a,n)=>a+n,0)===base.quantity?
+      prepared[base.unit_code]:[base.quantity];
+    const idx=stackToSplit.portion??0;
+    if(source[idx]!==stackToSplit.quantity)return;
+    const replacement=source.flatMap((n,i)=>i===idx?[n-splitQuantity,splitQuantity]:[n]);
+    setPrepared(prev=>({...prev,[base.unit_code]:replacement}));
+    setSelected(null);setDestination(null);setStackToSplit(null);setError("");
+  }
+  function mergeStack(item:Stack){
+    const base=roster.find(u=>u.unit_code===item.unit_code);
+    if(!base||pending)return;
+    setPrepared(prev=>({...prev,[item.unit_code]:[base.quantity]}));
+    setSelected(null);setDestination(null);
+  }
   function stack(item:Stack){
     const active=selected?.unit_code===item.unit_code&&selected.heroId===item.heroId;
-    return <div key={item.unit_code+(item.heroId??"garrison")}
+    const portions=prepared[item.unit_code];
+    const canMerge=item.heroId===null&&Boolean(portions&&portions.length>1);
+    return <div key={item.unit_code+(item.heroId??"garrison")+":"+String(item.portion??0)}
       className={"mmhk-unit-stack "+(active?"selected":"")}
       data-testid="troop-stack"
       data-unit-code={item.unit_code}
@@ -69,7 +106,7 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
       onPointerCancel={()=>{pointerStart.current=null;}}
       onDragStart={event=>{
         pointerStart.current=null; // native drag/drop takes priority
-        const value=JSON.stringify({unit:item.unit_code,hero:item.heroId});
+        const value=JSON.stringify({unit:item.unit_code,hero:item.heroId,portion:item.portion});
         event.dataTransfer.setData(MIME,value);
         event.dataTransfer.effectAllowed="move";
         setSelected(item);setDestination(null);
@@ -83,23 +120,34 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
       role="button" tabIndex={0} aria-pressed={active}
       aria-label={item.name+", "+nice(item.quantity)+" soldats. Sélectionner ou déplacer"}>
       <span className="mmhk-stack-art">
-        {IMAGES[item.unit_code]?<img src={IMAGES[item.unit_code]}
-          width={76} height={76} alt="" draggable={false}/>:
-          <span aria-hidden="true">⚔</span>}
+        <HeritageUnitArt unitCode={item.unit_code} sheet={unitSheet}
+          fallback={IMAGES[item.unit_code]} scale={1.08}/>
       </span>
       <strong>{item.name}</strong>
       <small>Rang {item.tier}</small>
       <span className="mmhk-stack-count">×{nice(item.quantity)}</span>
+      {item.heroId===null&&<span className="gui-stack-actions">
+        <button type="button" draggable={false} disabled={pending||item.quantity<2}
+          onPointerDown={event=>event.stopPropagation()}
+          onClick={event=>{event.stopPropagation();splitStack(item);}}
+          aria-label={"Diviser "+item.name+", "+item.quantity+" soldats"}>Diviser</button>
+        {canMerge&&<button type="button" draggable={false} disabled={pending}
+          onPointerDown={event=>event.stopPropagation()}
+          onClick={event=>{event.stopPropagation();mergeStack(item);}}
+          aria-label={"Fusionner les groupes de "+item.name}>Fusionner</button>}
+      </span>}
     </div>;
   }
   function drop(event:DragEvent<HTMLElement>,dest:Destination){
     event.preventDefault();event.stopPropagation();setHover("");
+    event.currentTarget.focus(); // restore keyboard focus here when the game dialog closes
     try{
       const raw=JSON.parse(event.dataTransfer.getData(MIME)) as {
-        unit:string;hero:string|null
+        unit:string;hero:string|null;portion?:number
       };
-      const src=[...roster,...forces.heroes.flatMap(h=>byHero(h.hero_id))]
-        .find(s=>s.unit_code===raw.unit&&s.heroId===raw.hero);
+      const src=[...visibleGarrison,...forces.heroes.flatMap(h=>byHero(h.hero_id))]
+        .find(s=>s.unit_code===raw.unit&&s.heroId===raw.hero&&
+          (raw.hero!==null||(s.portion??0)===(raw.portion??0)));
       if(src)choose(src,dest);
     }catch{setError("Glisser-déposer de troupe non reconnu.");}
   }
@@ -121,13 +169,13 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
         suppressClick.current=true;
         choose(gesture.item,dest);
       },
-      onClick:()=>{
+      onClick:(event:MouseEvent<HTMLElement>)=>{
         if(suppressClick.current){suppressClick.current=false;return;}
-        if(selected)choose(selected,dest);
+        if(selected){event.currentTarget.focus();choose(selected,dest);}
       },
       onKeyDown:(event:KeyboardEvent<HTMLElement>)=>{
         if(selected&&(event.key==="Enter"||event.key===" ")){
-          event.preventDefault();choose(selected,dest);
+          event.preventDefault();event.currentTarget.focus();choose(selected,dest);
         }
       }
     };
@@ -154,10 +202,13 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
     aria-label="Salle de déploiement des armées" aria-busy={pending}
     data-ready={ready?"true":"false"}>
     <header className="mmhk-board-heading">
-      <div><span className="eyebrow">GRAND HALL DES ARMÉES</span>
-        <h3>Déployer la garnison</h3>
-        <p>Glissez un peloton vers le portrait d'un héros, ou ramenez-le dans
-          le château. Une sélection puis un clic fonctionne aussi au tactile.</p></div>
+      <div><span className="eyebrow">ORGANISER VOS TROUPES</span>
+        <h3>Garnison et héros <GameHint title="Préparer vos pelotons">
+          Divisez ou fusionnez les groupes visibles pour préparer vos ordres.
+          Vos effectifs réels ne changent qu’après un transfert confirmé.
+        </GameHint></h3>
+        <p>Déplacez une troupe de la ville vers le héros, ou inversement.
+          Choisissez ensuite le nombre exact de soldats.</p></div>
       <div className="mmhk-war-count"><strong>{
         nice(forces.garrison.reduce((n,u)=>n+u.quantity,0)+
           forces.hero_armies.reduce((n,u)=>n+u.quantity,0))
@@ -171,9 +222,9 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
         data-testid="garrison-drop-zone"
         {...targetEvents({heroId:null},"garrison")}>
         <div className="mmhk-keep-heading"><span aria-hidden="true">♜</span>
-          <h4>Garnison de la cité</h4>
+          <h4>Dans la cité</h4>
           <small>{nice(roster.reduce((n,u)=>n+u.quantity,0))} soldats</small></div>
-        <div className="mmhk-battle-stacks">{roster.length?roster.map(stack):
+        <div className="mmhk-battle-stacks">{roster.length?visibleGarrison.map(stack):
           <p className="mmhk-empty-room">Aucun soldat en garnison · recrutez dans vos demeures.</p>}</div>
       </div>
       <div className="mmhk-deployment-arrow" aria-hidden="true">⇄</div>
@@ -183,8 +234,8 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
           data-testid="hero-drop-zone" data-hero-id={hero.hero_id}
           {...targetEvents({heroId:hero.hero_id},hero.hero_id)}>
           <div className="mmhk-hero-card-head hero-profile-info">
-            <img src={portrait[hero.archetype]} width={86} height={112}
-              alt="" draggable={false}/>
+            <HeritagePortrait heroId={hero.hero_id} archetype={hero.archetype}
+              sheet={portraitSheet} fallback={portrait[hero.archetype]}/>
             <div><strong>{hero.name}</strong>
               <span>Héros niveau {hero.level}</span>
               <small>{hero.status==="idle"?"Présent au château":"Indisponible pour les transferts"}</small></div>
@@ -197,24 +248,73 @@ export function TroopDeploymentBoard({cityId,forces,portrait,backdrop}:{
           Engagez un héros à la taverne pour lui confier une armée.</p>}
       </div>
     </div>
-    {selected&&<div className="mmhk-troop-picked" role="status">
-      <strong>{selected.name}</strong> · {nice(selected.quantity)} disponibles.
-      {" "}{destination?"Destination : "+destinationName:
-        "Sélectionnez une garnison ou un héros comme destination."}
-      {destination&&<div className="mmhk-quantity-dialog" data-testid="transfer-confirmation">
-        <label>Nombre à déplacer
-          <input type="number" min="1" max={Math.min(1000,selected.quantity)}
-            value={quantity} onChange={e=>setQuantity(Number(e.target.value))}/>
-        </label>
-        <button type="button" onClick={()=>setQuantity(Math.min(1000,selected.quantity))}>Maximum</button>
-        <button type="button" disabled={!buttonConfirm||pending} onClick={submit}>
-          {pending?"En cours…":"Confirmer le transfert"}
-        </button>
-      </div>}
+    {selected&&!destination&&<div className="mmhk-troop-picked" role="status">
+      <strong>{selected.name}</strong> · {nice(selected.quantity)} soldats.
+      Sélectionnez la ville ou le portrait d'un héros comme destination.
       <button type="button" className="mmhk-cancel" onClick={()=>{
         setSelected(null);setDestination(null);setError("");
       }}>Annuler la sélection</button>
     </div>}
+    <GameDialog open={stackToSplit!==null} title="Diviser le peloton"
+      eyebrow="PRÉPARER LA GARNISON" size="compact"
+      testId="garrison-split-dialog" onClose={()=>setStackToSplit(null)}
+      footer={<>
+        <button type="button" className="gui-button gui-button--secondary"
+          onClick={()=>setStackToSplit(null)}>Annuler</button>
+        <button type="button" className="gui-button gui-button--primary"
+          onClick={confirmStackSplit} disabled={!stackToSplit||pending}>
+          Diviser le peloton
+        </button>
+      </>}>
+      {stackToSplit&&<>
+        <div className="gui-stack-balance">
+          <div><small>PREMIER GROUPE</small>
+            <strong>{nice(stackToSplit.quantity-splitQuantity)}</strong></div>
+          <span aria-hidden="true">+</span>
+          <div><small>SECOND GROUPE</small>
+            <strong>{nice(splitQuantity)}</strong></div>
+          <span aria-hidden="true">=</span>
+          <div><small>TOTAL INCHANGÉ</small>
+            <strong>{nice(stackToSplit.quantity)}</strong></div>
+        </div>
+        <GameQuantity label="Soldats à détacher" min={1}
+          max={Math.max(1,stackToSplit.quantity-1)}
+          value={splitQuantity} onChange={setSplitQuantity}
+          testId="garrison-split-quantity"/>
+        <p className="gui-help">Les groupes sont préparés visuellement.
+          Le stock reste agrégé dans le château ; un transfert réel est enregistré
+          uniquement après confirmation d'un ordre.</p>
+      </>}
+    </GameDialog>
+    <GameDialog open={Boolean(selected&&destination)}
+      title="Transférer des troupes" eyebrow="ORDRE DU COMMANDANT"
+      testId="transfer-confirmation" busy={pending} size="compact"
+      onClose={()=>setDestination(null)}
+      footer={<>
+        <button type="button" className="gui-button gui-button--secondary"
+          onClick={()=>setDestination(null)} disabled={pending}>Modifier la destination</button>
+        <button type="button" className="gui-button gui-button--primary"
+          disabled={!buttonConfirm||pending} onClick={submit}>
+          {pending?"Ordre en cours…":"Confirmer le transfert"}
+        </button>
+      </>}>
+      {selected&&destination&&<div className="gui-transfer-summary">
+        <div><small>PELOTON</small>
+          <strong>{selected.name}</strong>
+          <span>{nice(selected.quantity)} soldats disponibles</span>
+        </div>
+        <span className="gui-transfer-arrow" aria-hidden="true">➜</span>
+        <div><small>DESTINATION</small>
+          <strong>{destinationName}</strong>
+          <span>{destination.heroId?"Héros dans la cité":"Garnison du château"}</span>
+        </div>
+      </div>}
+      {selected&&destination&&<GameQuantity label="Nombre à déplacer"
+        testId="transfer-quantity" max={Math.min(1000,selected.quantity)}
+        value={quantity} onChange={setQuantity}/>}
+      <p className="gui-help">L'ordre sera vérifié par le royaume : les effectifs
+        sont conservés et la formation du héros sera réinitialisée.</p>
+    </GameDialog>
     <p className="mmhk-quiet">Les déplacements ne créent aucune troupe.
       La quantité, le propriétaire et la disponibilité du héros sont vérifiés
       dans une transaction PostgreSQL. Après un changement d'effectif,

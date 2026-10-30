@@ -2,12 +2,17 @@
 import {useEffect,useRef,useState,useTransition} from "react";
 import type {DragEvent,KeyboardEvent,PointerEvent} from "react";
 import {moveCityArtifact} from "../app/actions";
+import {HeritagePortrait} from "./heritage-art";
 import type {ArtifactInventory,ArtifactItem,CityForces} from "../lib/server-api";
 
 type Hero=CityForces["heroes"][number];
 type Target={place:"slot"|"bag"|"reserve"|"hero";slot?:string;heroId?:string};
 const slotNames:Record<string,string>={head:"Heaume",neck:"Collier",chest:"Armure",
   weapon:"Arme",shield:"Bouclier",hands:"Gants",feet:"Bottes",ring:"Anneau"};
+const historicSlotCoords:Record<string,[number,number]>={
+  head:[0,0],neck:[1,0],ring:[2,0],shield:[3,0],
+  chest:[0,1],weapon:[1,1],feet:[2,1],hands:[3,1],
+};
 const slotGlyphs:Record<string,string>={head:"♛",neck:"◇",chest:"⬡",weapon:"⚔",
   shield:"◈",hands:"✥",feet:"♜",ring:"◉"};
 const MIME="application/x-mmhk-artifact";
@@ -15,7 +20,7 @@ type Move="equip"|"unequip"|"to_reserve"|"to_bag"|"to_hero";
 
 export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
   cityId:string;hero:Hero;heroes:Hero[];inventory:ArtifactInventory;
-  art:{portrait:string|null;equipment:string|null;frame:string|null;
+  art:{portrait:string|null;portraitSheet:string|null;slotSheet:string|null;painting:string|null;equipment:string|null;frame:string|null;
     backpack:string|null;artifactIcon:string|null;slots:Record<string,string|null>};
 }){
   const [ready,setReady]=useState(false);
@@ -140,15 +145,14 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
       <small>{slotNames[item.slot]??item.slot} · niv. {item.required_level}</small>
     </div>;
   }
-  return <section className="mmhk-equipment" id="hero-equipment"
+  return <section className="mmhk-equipment mmhk-heritage-inventory" id="hero-equipment"
     aria-label={"Équipement de "+hero.name} data-testid="hero-equipment-board"
     data-ready={ready?"true":"false"}
     aria-busy={pending}>
     <header className="mmhk-board-heading">
-      <div><span className="eyebrow">CHAMBRE DU HÉROS · INVENTAIRE</span>
-        <h3>Équipement de {hero.name}</h3>
-        <p>Glissez les artefacts sur la silhouette, le sac ou le coffre.
-          Au tactile : touchez une pièce puis sa destination.</p></div>
+      <div><span className="eyebrow">GESTION DU HÉROS · INVENTAIRE</span>
+        <h3>Équipement</h3>
+        <p>Sélectionnez un artefact, puis son emplacement. Glisser-déposer possible.</p></div>
       <div className="mmhk-budget"><span>Charge</span>
         <strong>{cost}/{hero.level}</strong>
         <meter min="0" max={Math.max(1,hero.level)}
@@ -165,12 +169,21 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
     <div className="mmhk-equipment-stage"
       style={art.equipment?{backgroundImage:"linear-gradient(#131e25a0,#131e25a0),url("+JSON.stringify(art.equipment)+")"}:undefined}>
       <div className="mmhk-hero-portrait"
-        style={art.frame?{backgroundImage:"url("+JSON.stringify(art.frame)+")"}:undefined}>
-        {art.portrait?<img src={art.portrait} alt={"Portrait de "+hero.name}
-          draggable={false}/>:<span aria-hidden="true">♞</span>}
+        data-historical-painting={art.painting?"true":"false"}
+        style={art.painting?{
+          backgroundImage:"url("+JSON.stringify(art.painting)+")",
+          backgroundSize:hero.archetype==="magic"?"930px auto":"1440px auto",
+          backgroundPosition:hero.archetype==="magic"?"-24px -123px":"-200px -227px",
+          backgroundRepeat:"no-repeat"
+        }:art.frame?{backgroundImage:"url("+JSON.stringify(art.frame)+")"}:undefined}>
+        <div className="mmhk-portrait-sky" aria-hidden="true"/>
+        <HeritagePortrait heroId={hero.hero_id} archetype={hero.archetype}
+          sheet={art.portraitSheet} scale={2.25}
+          fallback={art.portrait??"/themes/public-safe/hero-vanguard.svg"}
+          className="mmhk-hero-master-portrait"/>
         <div className="mmhk-portrait-label"><strong>{hero.name}</strong>
-          <small>{hero.archetype==="magic"?"Maître des arcanes":"Champion du Havre"}
-            {" "}· Niveau {hero.level}</small></div>
+          <small>{hero.archetype==="magic"?"Magie":"Force"} · Niveau {hero.level}</small>
+          <span className="mmhk-hero-xp">Expérience : {hero.experience.toLocaleString("fr-FR")}</span></div>
       </div>
       <div className="mmhk-equipped-areas">
         {inventory.slots.map(slot=>{
@@ -182,9 +195,14 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
             (chosen&&allowed(chosen,target)?" can-drop":"")}
             data-slot={slot} data-testid="equipment-drop-zone"
             {...makeTarget(target,label)}>
-            <span className="mmhk-slot-symbol"
-              style={art.slots[slot]?{backgroundImage:"url("+JSON.stringify(art.slots[slot])+")"}:undefined}
-              aria-hidden="true">{slotGlyphs[slot]??"✦"}</span>
+            <span className={"mmhk-slot-symbol"+(art.slotSheet?" has-heritage-slot":"")}
+              style={art.slotSheet&&historicSlotCoords[slot]?{
+                backgroundImage:"url("+JSON.stringify(art.slotSheet)+")",
+                backgroundPosition:"-"+(38*historicSlotCoords[slot][0])+"px -"+
+                  (40*historicSlotCoords[slot][1])+"px",
+                backgroundSize:"152px 80px",backgroundRepeat:"no-repeat"
+              }:art.slots[slot]?{backgroundImage:"url("+JSON.stringify(art.slots[slot])+")"}:undefined}
+              aria-hidden="true">{art.slotSheet?"":slotGlyphs[slot]??"✦"}</span>
             <span className="equipment-slot-name">{label}</span>
             {item?tile(item):<span className="mmhk-empty-slot">Emplacement libre</span>}
           </div>;
@@ -195,15 +213,15 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
       <section id="hero-bag" className={"mmhk-storage-room "+(hover==="Besace"?"hover":"")}
         {...makeTarget({place:"bag"},"Besace")}
         style={art.backpack?{backgroundImage:"linear-gradient(#15222aca,#15222aea),url("+JSON.stringify(art.backpack)+")"}:undefined}>
-        <h4>Besace du héros <span>{bag.length}</span></h4>
-        <p>Déposez un équipement ici pour le retirer.</p>
+        <h4>▣ Sac à dos <span>{bag.length}</span></h4>
+        <p>Équipement personnel · déposer ici pour déséquiper.</p>
         <div className="mmhk-storage-items">{bag.length?bag.map(tile):
           <span className="mmhk-empty-room">Aucune pièce</span>}</div>
       </section>
       <section id="hero-reserve" className={"mmhk-storage-room "+(hover==="Réserve"?"hover":"")}
         {...makeTarget({place:"reserve"},"Réserve")}>
-        <h4>Trésor de la cité <span>{reserve.length}</span></h4>
-        <p>Accessible aux héros présents dans cette cité.</p>
+        <h4>♜ Dans la cité <span>{reserve.length}</span></h4>
+        <p>Réserve commune · transférable aux héros présents.</p>
         <div className="mmhk-storage-items">{reserve.length?reserve.map(tile):
           <span className="mmhk-empty-room">Coffre vide</span>}</div>
       </section>

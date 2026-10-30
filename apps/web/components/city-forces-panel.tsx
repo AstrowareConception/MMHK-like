@@ -1,5 +1,8 @@
 import {hireCityHero,recruitCityUnits} from "../app/actions";
 import {TroopDeploymentBoard} from "./troop-deployment-board";
+import {HeritagePortrait,HeritageUnitArt} from "./heritage-art";
+import {GameQuantity} from "./game-ui/game-quantity";
+import {GameNotice} from "./game-ui/game-notice";
 import type {CityForces} from "../lib/server-api";
 import Link from "next/link";
 
@@ -13,25 +16,25 @@ export function CityForcesPanel({cityId,forces,message,visuals}:{
   cityId:string;forces:CityForces|null;
   message:{hero?:string;recruit?:string;transfer?:string};
   visuals:{portrait:{might:string;magic:string};
+    portraitSheet:string|null;unitSheet:string|null;
     garrison:string|null;tavern:string|null};
 }) {
   function status(kind:"hero"|"recruit",value?:string){
     if(!value)return null;
-    return <p role={value==="ok"?"status":"alert"}
-      className={value==="ok"?"construction-notice":"error"}>{
-        value==="ok"?(kind==="hero"?
-          "Héros engagé : il figure désormais dans votre royaume.":
-          "Recrutement confirmé. La garnison et les stocks ont été mis à jour."):
-        value==="conflict"?(kind==="hero"?
-          "Offre non disponible, limite atteinte ou or insuffisant.":
-          "Recrutement refusé : caserne, réserves ou recrues insuffisantes."):
-        "Ordre non confirmé : vérifiez vos effectifs avant une nouvelle tentative."
-      }</p>;
+    const message=value==="ok"?(kind==="hero"?
+      "Héros engagé : il figure désormais dans votre royaume.":
+      "Recrutement confirmé. La garnison et les stocks ont été mis à jour."):
+      value==="conflict"?(kind==="hero"?
+        "Offre non disponible, limite atteinte ou or insuffisant.":
+        "Recrutement refusé : caserne, réserves ou recrues insuffisantes."):
+      "Ordre non confirmé : vérifiez vos effectifs avant une nouvelle tentative.";
+    return <GameNotice title={message} tone={value==="ok"?"success":"error"}/>;
   }
-  return <section className="military-panel mmhk-military-panel" id="military-panel">
+  return <section className="military-panel mmhk-military-panel mmhk-heritage-armies" id="military-panel"
+    data-testid="heritage-garrison">
     <header className="military-panel-heading mmhk-war-banner">
       <div><span className="eyebrow">LE HALL DES ARMÉES · HAVRE</span>
-        <h2>Armées et héros</h2>
+        <h2>Gestion des armées</h2>
         <p>Organisez les pelotons et le commandement de votre royaume.
           Les cartes correspondent à vos véritables effectifs.</p>
         <Link href={"/cities/"+cityId+"/heroes"} className="scene-action">
@@ -41,16 +44,15 @@ export function CityForcesPanel({cityId,forces,message,visuals}:{
       <div className="mmhk-war-emblem" aria-hidden="true">⚔</div>
     </header>
     {!forces?<p className="error">Le registre de la garnison n'est pas disponible.</p>:<>
-      {message.transfer&&<p className={message.transfer==="ok"?"construction-notice":"error"}
-        role={message.transfer==="ok"?"status":"alert"}>
-        {message.transfer==="ok"?
+      {message.transfer&&<GameNotice tone={message.transfer==="ok"?"success":"error"}
+        title={message.transfer==="ok"?
           "Transfert confirmé : les effectifs sont conservés et la formation a été réinitialisée.":
-          "Transfert non confirmé : effectifs insuffisants ou héros indisponible."}
-      </p>}
+          "Transfert non confirmé : effectifs insuffisants ou héros indisponible."}/>}
       {status("hero",message.hero)}
       {status("recruit",message.recruit)}
       <TroopDeploymentBoard cityId={cityId} forces={forces}
-        portrait={visuals.portrait} backdrop={visuals.garrison}/>
+        portrait={visuals.portrait} portraitSheet={visuals.portraitSheet}
+        unitSheet={visuals.unitSheet} backdrop={visuals.garrison}/>
       <div className="mmhk-military-market">
         <section className="military-wing mmhk-recruit-hall">
           <header>
@@ -66,9 +68,8 @@ export function CityForcesPanel({cityId,forces,message,visuals}:{
               <input type="hidden" name="cityId" value={cityId}/>
               <input type="hidden" name="unitCode" value={unit.unit_code}/>
               <div className="mmhk-recruit-unit-art">
-                {ART[unit.unit_code]?<img src={ART[unit.unit_code]}
-                  alt="" width={92} height={92}/>:
-                  <span aria-hidden="true">⚔</span>}
+                <HeritageUnitArt unitCode={unit.unit_code} sheet={visuals.unitSheet}
+                  fallback={ART[unit.unit_code]} scale={1.25}/>
               </div>
               <div className="unit-recruit-info">
                 <strong>{unit.name}</strong>
@@ -79,12 +80,9 @@ export function CityForcesPanel({cityId,forces,message,visuals}:{
                   .filter(([,v])=>v>0).map(([name,count])=>money(count)+" "+name).join(" · ")}</small>
               </div>
               <div className="mmhk-recruit-action">
-                <label>Quantité
-                  <input type="number" name="quantity" min="1"
-                    max={Math.max(1,Math.min(unit.available,1000))}
-                    defaultValue={unit.available>0?1:0} required
-                    disabled={!unit.unlocked||unit.available===0}/>
-                </label>
+                <GameQuantity label="Quantité" name="quantity" allowMaximum
+                  max={Math.max(1,Math.min(unit.available,1000))} initial={1}
+                  disabled={!unit.unlocked||unit.available===0}/>
                 <button type="submit" disabled={!unit.unlocked||unit.available===0}>Recruter</button>
               </div>
             </form>)}
@@ -106,7 +104,8 @@ export function CityForcesPanel({cityId,forces,message,visuals}:{
               className="hero-offer mmhk-tavern-offer">
               <input type="hidden" name="cityId" value={cityId}/>
               <input type="hidden" name="offerId" value={offer.offer_id}/>
-              <img src={visuals.portrait[offer.archetype]} width={90} height={120} alt=""/>
+              <HeritagePortrait heroId={offer.offer_id} archetype={offer.archetype}
+                sheet={visuals.portraitSheet} fallback={visuals.portrait[offer.archetype]}/>
               <div><strong>{offer.name}</strong>
                 <small>{offer.archetype==="might"?"Voie de la Force":"Voie de la Magie"}
                   {" "}· Candidat de laboratoire</small>

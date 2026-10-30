@@ -17,6 +17,19 @@ export const ASSETS = {
   "city.haven.background": { publicPath: null },
   "building.haven.tavern.1": { publicPath: null },
   "hero.background.haven": { publicPath: null },
+  // Historic sprite sheets; never public URLs. The fallback assets below
+  // are redistributable placeholders when private opt-in is disabled.
+  "hero.sheet.haven": { publicPath: null },
+  "hero.painting.might": { publicPath: null },
+  "hero.painting.magic": { publicPath: null },
+  "hero.sheet.academy": { publicPath: null },
+  "hero.sheet.inferno": { publicPath: null },
+  "hero.sheet.necropolis": { publicPath: null },
+  "hero.sheet.sylvan": { publicPath: null },
+  "army.sheet.haven": { publicPath: null },
+  "army.sheet.haven.small": { publicPath: null },
+  "hero.slot.sheet.haven": { publicPath: null },
+
   "hero.portrait.might": { publicPath: "/themes/public-safe/hero-vanguard.svg" },
   "hero.portrait.magic": { publicPath: "/themes/public-safe/hero-arcanist.svg" },
   "hero.frame": { publicPath: null },

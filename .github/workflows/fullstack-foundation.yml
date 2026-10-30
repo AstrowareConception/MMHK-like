@@ -23,6 +23,8 @@ on:
       - 'demarrer.bat'
       - 'demarrer.sh'
       - 'tools/e2e/**'
+      - 'tools/prepare-private-historical.mjs'
+      - 'tools/tests/prepare-private-historical.test.mjs'
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -88,6 +90,11 @@ jobs:
         run: node --experimental-strip-types --test ../../tools/tests/map-geometry.test.mjs
       - name: Install pinned top-level dependencies
         run: npm install --no-audit --no-fund
+      - name: Audit historical portraits and private-only Jactari sheets
+        run: |
+          node --test ../../tools/tests/prepare-private-historical.test.mjs
+          node ../../tools/prepare-private-historical.mjs > /tmp/mmhk-portraits.json
+          node -e 'const r=require("/tmp/mmhk-portraits.json"); const keys=["hero.sheet.haven","hero.sheet.academy","hero.sheet.inferno","hero.sheet.necropolis","hero.sheet.sylvan","army.sheet.haven"]; if(keys.some(k=>!r.manifest_keys.includes(k))) process.exit(1);'
       - name: Build frontend without a running API
         run: npm run build
       - name: Check frontend types
@@ -130,7 +137,7 @@ jobs:
     name: Build and start six-service localhost stack with a real demo
     # Playwright 1.56 Chromium supports Noble, not the runner's newer Ubuntu 26.04.
     runs-on: ubuntu-24.04
-    timeout-minutes: 20
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - name: Test portable quickstart without starting containers
@@ -196,6 +203,12 @@ jobs:
           export MMHK_E2E_USERNAME="demo_ci"
           export MMHK_E2E_PASSWORD="$password"
           python3 tools/e2e/visual_drag_smoke.py
+          # Validate the local, authenticated historical theme FIRST. Then
+          # restore the public-safe theme before any screenshots are recorded.
+          node tools/prepare-private-historical.mjs > /tmp/mmhk-private-setup.json
+          docker compose --env-file .env.local -f compose.local.yaml -f compose.historical.yaml up -d --wait --no-build --no-deps --force-recreate web
+          python3 tools/e2e/historical_assets_browser.py
+          docker compose --env-file .env.local -f compose.local.yaml up -d --wait --no-build --no-deps --force-recreate web
           python3 tools/e2e/local_browser.py
           # Explicit localhost-only exception for exercising a second owned
           # city. The real game MUST still enforce seven-day newbie protection.
@@ -228,6 +241,7 @@ jobs:
           MMHK_E2E_USERNAME="demo_ci" \
           MMHK_E2E_PASSWORD="$password" \
           python3 tools/e2e/terrain_browser.py
+
       - name: Diagnose SSR failure after authenticated browser navigation
         if: failure()
         run: |
