@@ -33,7 +33,8 @@ export function CityForcesPanel({cityId,forces,message,visuals}:{
   return <section className="military-panel mmhk-military-panel mmhk-heritage-armies" id="military-panel"
     data-testid="heritage-garrison">
     {!forces?<p className="error">Le registre de la garnison n'est pas disponible.</p>:
-      <MilitaryGameScreen heroesCount={forces.heroes.length} garrison={<>
+      <MilitaryGameScreen heroesCount={forces.heroes.length}
+        initialTab={message.hero?"tavern":message.recruit?"recruitment":"garrison"} garrison={<>
       {message.transfer&&<GameNotice tone={message.transfer==="ok"?"success":"error"}
         title={message.transfer==="ok"?
           "Transfert confirmé : les effectifs sont conservés et la formation a été réinitialisée.":
