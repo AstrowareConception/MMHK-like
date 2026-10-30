@@ -5,6 +5,7 @@ import {saveHeroFormation} from "../app/actions";
 import {HeritageUnitArt} from "./heritage-art";
 import {GameDialog} from "./game-ui/game-dialog";
 import {GameQuantity} from "./game-ui/game-quantity";
+import {GameHint} from "./game-ui/game-hint";
 import type {HeroFormation} from "../lib/server-api";
 
 type Cell={unit_code:string;quantity:number};
@@ -106,7 +107,10 @@ export function HeroFormationEditor({cityId,formation,sheet}:{
     data-ready={ready?"true":"false"}>
     <header className="mmhk-board-heading">
       <div><span className="eyebrow">ORGANISER VOS TROUPES · POSITIONS 2–8</span>
-        <h3>Formation de combat</h3>
+        <h3>Formation de combat <GameHint title="Sept positions tactiques">
+          Divisez et fusionnez les unités sans créer de soldats.
+          La disposition est enregistrée pour le héros seulement après validation.
+        </GameHint></h3>
         <p>Sept positions réelles · glissez une unité pour la permuter.
           Au clavier ou au tactile, sélectionnez deux emplacements.</p>
       </div>
