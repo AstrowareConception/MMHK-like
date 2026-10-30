@@ -153,7 +153,7 @@ def main():
                 assert metrics["gameExtra"]<=3 and metrics["panelExtra"]<=3,(key,metrics)
                 assert metrics["panelWidth"]>=750,(key,metrics)
                 if key=="panorama":
-                    assert metrics["sceneHeight"]>=130,(key,metrics)
+                    assert metrics["sceneHeight"]>=215,(key,metrics)
                     assert metrics["svgHeight"]<=metrics["sceneHeight"]+2,(key,metrics)
                     assert metrics["sceneBottom"]<=metrics["panelBottom"]-3,(key,metrics)
                     assert metrics["inspectorHeight"]>=200,(key,metrics)

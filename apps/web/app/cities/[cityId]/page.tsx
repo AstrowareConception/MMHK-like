@@ -107,7 +107,7 @@ export default async function CityPage({
         </div>}
         construction={<div className="mmhk-city-collection">
           <div className="construction-panel" id="urban-construction">
-          <span className="eyebrow">CHANTIERS URBAINS · PROFILS EXPÉRIMENTAUX</span>
+          <span className="eyebrow">PLANS ET ÉDIFICES DE LA CITÉ</span>
           <h2>Registre des chantiers</h2>
           <p>Pour construire, sélectionnez un édifice sur le panorama : les modes et les coûts réels sont présentés dans sa fiche. Le registre détaillé reste disponible ci-dessous.</p>
           {buildingAnswer.ok && buildingAnswer.data ? (
@@ -127,7 +127,7 @@ export default async function CityPage({
                 </article>
               ) : buildingAnswer.data.options.length ? (
                 <details open className="mmhk-city-directory" data-testid="construction-directory">
-                  <summary>Ouvrir le catalogue détaillé des {buildingAnswer.data.options.length} projets</summary>
+                  <summary>Catalogue des {buildingAnswer.data.options.length} projets · afficher ou masquer les plans</summary>
                 <div className="build-options">
                   {buildingAnswer.data.options.slice()
                     .sort((a,b)=>Number(b.available)-Number(a.available) ||
@@ -154,7 +154,7 @@ export default async function CityPage({
                           <span className="building-plan-rank">NIV. {o.target_level}</span>
                         </div>
                         {!o.available&&<p className="building-blockers">
-                          Nécessite : {o.missing_prerequisites.join(", ")}</p>}
+                          Nécessite : {o.missing_prerequisites.map(buildingName).join(", ")}</p>}
                         <div className="building-plan-modes">
                           {o.modes.map(mode=><form action={startUrbanConstruction}
                             key={o.building_code+"-"+mode.mode} className="build-option">

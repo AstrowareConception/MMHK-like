@@ -3021,3 +3021,101 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
     width:38px!important;height:38px!important;font-size:19px;
   }
 }
+
+
+/* Final city composition: remove redundant headings, give the actual city
+   scenery room, and present the original SVG as a framed map rather than
+   a thumbnail surrounded by empty charcoal bars. */
+@media(min-width:901px){
+  .gui-game-stage[data-game-screen="city"] .kingdom-masthead{
+    min-height:54px;padding:5px 12px;
+  }
+  .gui-game-stage[data-game-screen="city"] .kingdom-emblem{
+    height:40px;width:40px;font-size:23px;
+  }
+  .gui-game-stage[data-game-screen="city"] .kingdom-brand strong{
+    font-size:26px;
+  }
+  .gui-game-stage[data-game-screen="city"] .mmhk-city-district-heading{
+    display:none!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .city-scene-header{
+    height:25px!important;min-height:25px!important;gap:5px;
+  }
+  .gui-game-stage[data-game-screen="city"] .city-scene-header .eyebrow{
+    display:none;
+  }
+  .gui-game-stage[data-game-screen="city"] .city-scene-header h2{
+    margin:0!important;font-size:15px!important;white-space:nowrap;
+  }
+  .gui-game-stage[data-game-screen="city"] .haven-scene-key{
+    max-height:23px;white-space:nowrap;overflow:hidden;
+    gap:9px!important;margin:2px 0 0!important;
+    font-size:10px!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .haven-scene-key span:last-child{
+    display:none!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .city-plan-ribbon{
+    margin-top:2px!important;padding:0 2px!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .city-plan-ribbon-list{
+    gap:3px!important;padding:2px!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .city-plan-ribbon-list button{
+    min-height:31px!important;max-height:32px!important;
+    display:flex;align-items:center;justify-content:center;
+    flex-direction:column;gap:0;padding:2px 5px!important;
+    font-size:10px!important;line-height:1.1!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .city-plan-ribbon-list button small{
+    font-size:9px!important;line-height:1.1!important;
+  }
+}
+.gui-game-stage[data-game-screen="city"] .city-scene-frame::before{
+  content:"";position:absolute;inset:-16px;pointer-events:none;
+  background:url("/themes/public-safe/haven-landscape.svg") center/cover no-repeat;
+  filter:blur(13px);opacity:.45;z-index:0;
+}
+.gui-game-stage[data-game-screen="city"] .city-scene-frame::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,#152c3860,transparent 22%,transparent 78%,#152c3860);
+  z-index:2;
+}
+.gui-game-stage[data-game-screen="city"] .city-scene-frame .haven-city-svg{
+  z-index:1;filter:drop-shadow(0 0 10px #1a332caa);
+}
+.gui-game-stage[data-game-screen="city"] .city-inspector-heading{
+  margin-bottom:5px!important;padding-bottom:5px!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-inspector-heading h3{
+  font-size:19px!important;line-height:1.1!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-building-inspector p{
+  margin:5px 0!important;font-size:11px!important;line-height:1.35!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-building-inspector h4{
+  font-size:16px!important;margin:7px 0 4px!important;
+}
+.gui-game-stage[data-game-screen="city"] .mmhk-build-modes{
+  margin:7px 0!important;gap:4px!important;
+}
+.gui-game-stage[data-game-screen="city"] .mmhk-build-modes button{
+  padding:6px 4px!important;min-height:30px!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-inspector-quotes{
+  margin:6px 0!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-inspector-quote{
+  padding:8px 10px!important;gap:5px!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-inspector-quote ul{
+  gap:3px!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-inspector-quote li{
+  padding:3px 5px!important;font-size:10px!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-inspector-quote button[type="submit"]{
+  min-height:34px!important;padding:6px!important;
+  font-size:12px!important;
+}
