@@ -5,10 +5,6 @@ on:
   push:
     branches:
       - main
-      # One focused PR42 full-matrix validation; remove before merge.
-      - feat/mmhk-historical-heroes-garrisons-42
-      # One PR43 candidate test before integration with historical UI.
-      - feat/game-ui-kit-dialogs-command-43
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
