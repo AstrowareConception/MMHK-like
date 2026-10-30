@@ -5,6 +5,7 @@ import {transferHeroUnits} from "../app/actions";
 import {HeritagePortrait,HeritageUnitArt} from "./heritage-art";
 import {GameDialog} from "./game-ui/game-dialog";
 import {GameQuantity} from "./game-ui/game-quantity";
+import {GameHint} from "./game-ui/game-hint";
 import type {CityForces} from "../lib/server-api";
 
 type Hero=CityForces["heroes"][number];
@@ -202,7 +203,10 @@ export function TroopDeploymentBoard({cityId,forces,portrait,portraitSheet,unitS
     data-ready={ready?"true":"false"}>
     <header className="mmhk-board-heading">
       <div><span className="eyebrow">ORGANISER VOS TROUPES</span>
-        <h3>Garnison et héros</h3>
+        <h3>Garnison et héros <GameHint title="Préparer vos pelotons">
+          Divisez ou fusionnez les groupes visibles pour préparer vos ordres.
+          Vos effectifs réels ne changent qu’après un transfert confirmé.
+        </GameHint></h3>
         <p>Déplacez une troupe de la ville vers le héros, ou inversement.
           Choisissez ensuite le nombre exact de soldats.</p></div>
       <div className="mmhk-war-count"><strong>{
