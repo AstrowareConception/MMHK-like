@@ -7,6 +7,8 @@ on:
       - main
       # Temporary release-candidate trigger, remove before merging.
       - feat/true-fixed-game-screens-44
+      # Stacked city-screen visual release candidate, remove before merge.
+      - feat/city-fixed-activity-screens-47
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
