@@ -26,6 +26,8 @@ Emplacement : `apps/web/components/game-ui/`.
 | GameTabs | Onglets cohérents, sections existantes, fonctions futures désactivées plutôt que simulées |
 | GamePanel | Panneau de jeu ornemental standard, avec en-tête, contenu, pied et ancre |
 | GameViewportControls | Plein écran du royaume, mode normal/compact persistant localement |
+| GameHint | Aide de jeu au survol, au focus et au toucher, avec fermeture Échap |
+| GameNotice | Retour d'action confirmé par le serveur : succès, information, refus, avertissement |
 
 ### Expérience écran
 
@@ -40,6 +42,8 @@ est explicite et révocable.
 
 ### Interactions déjà branchées
 
+- Quantités : saisie exacte et pas ±1, ±10, valeurs rapides 25 % / 50 %,
+  maximum ; retour instantané sur les bornes et valeurs sélectionnées.
 - Transfert d'unités : un dialogue de confirmation en véritable fenêtre,
   avec source, destination, précision des quantités et état d'attente.
   Échap ferme sans ordre, les boutons désactivent une action impossible,
@@ -89,3 +93,9 @@ la barre d'événements, les palettes de ressources, le fractionnement
 persistant des garnisons (migration sécurisée) et les dialogues de
 marché/caravanes. Unifier les raccourcis clavier et les retours
 d'erreur avant de supprimer les derniers formulaires administratifs.
+
+## Ticket de persistance des piles
+
+Suivi de la migration et des invariants sur [l'issue #44](https://github.com/AstrowareConception/MMHK-like/issues/44).
+Les tests E2E de ce lot vérifient déjà 3 → 1 + 2 → 3 soldats, sans débit,
+ainsi que la fermeture Échap du transfert et la restitution du focus.
