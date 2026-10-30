@@ -128,7 +128,12 @@ def main():
             expect(page.get_by_test_id("military-"+key+"-screen")).to_be_visible()
             capture(page,f"PLAYER-{key}-1440x950.png")
             if key=="garrison":
-                expect(page.get_by_role("button",name="Ouvrir le recrutement")).to_be_visible()
+                to_recruit=page.get_by_role("button",name="Ouvrir le recrutement")
+                expect(to_recruit).to_be_visible()
+                to_recruit.click()
+                expect(page.get_by_test_id("military-recruitment-screen")).to_be_visible()
+                military.get_by_role("tab",name="Garnison").click()
+                expect(page.get_by_test_id("military-garrison-screen")).to_be_visible()
             if key=="tavern":
                 expect(page.get_by_role("link",name="Examiner le chantier de la taverne")).to_be_visible()
         print("PASS: early read-only Chromium player visual capture",flush=True)
