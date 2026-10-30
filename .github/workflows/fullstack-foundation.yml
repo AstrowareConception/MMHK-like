@@ -198,13 +198,31 @@ jobs:
           PY
           curl --fail --silent --show-error http://127.0.0.1:3000/ | grep -q 'API FastAPI joignable'
           echo "Browser-to-API and sandbox login verified"
-          # Share the same authenticated demo login with BOTH journeys.
-          # A per-command shell environment does not persist after the first
-          # Python process and was leaving local_browser without username.
+          # Keep the random ephemeral CI password out of logs and artifact
+          # uploads; each test step reads it from this runner-local file.
+          echo "::add-mask::$password"
+          printf '%s\\n' "$password" > .ci-e2e-password
+          chmod 600 .ci-e2e-password
+      - name: VISUAL GATE — actual Chromium screenshots before game campaign
+        run: |
+          export MMHK_E2E_URL="http://127.0.0.1:3000"
+          export MMHK_E2E_USERNAME="demo_ci"
+          export MMHK_E2E_PASSWORD="$(cat .ci-e2e-password)"
+          python3 tools/e2e/visual_drag_smoke.py
+      - name: Publish player visual QA captures immediately
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mmhk-player-visual-qa
+          path: test-output/visuals/*.png
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Complete full authenticated Chromium campaign
+        run: |
+          password="$(cat .ci-e2e-password)"
           export MMHK_E2E_URL="http://127.0.0.1:3000"
           export MMHK_E2E_USERNAME="demo_ci"
           export MMHK_E2E_PASSWORD="$password"
-          python3 tools/e2e/visual_drag_smoke.py
           # Validate the local, authenticated historical theme FIRST. Then
           # restore the public-safe theme before any screenshots are recorded.
           node tools/prepare-private-historical.mjs > /tmp/mmhk-private-setup.json
@@ -276,3 +294,4 @@ jobs:
             docker compose --env-file .env.local -f compose.local.yaml down -v --remove-orphans
             rm -f .env.local
           fi
+          rm -f .ci-e2e-password
