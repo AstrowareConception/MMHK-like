@@ -2408,3 +2408,53 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
     grid-template-columns:minmax(0,1fr)!important;
   }
 }
+
+
+/* Player-facing contextual states — blank parchment is not a game UI.
+   No invented resources, no fake recruitment, no automatic orders. */
+.mmhk-military-active-screen>[role="tabpanel"]{position:relative;}
+.mmhk-screen-empty{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:9px;max-width:min(480px,calc(100% - 30px));
+  text-align:center;padding:16px 20px;
+  border:2px ridge #a98c64;background:linear-gradient(#fff7e8,#e7d6b6);
+  box-shadow:0 7px 22px #6e4c3040,inset 0 0 14px #b8966933;
+  color:#543924;z-index:3;
+}
+.mmhk-screen-empty>.mmhk-empty-symbol{
+  display:grid;place-items:center;width:47px;height:47px;
+  border:2px double #a8874f;border-radius:50%;background:#f3e4c7;
+  color:#875732;font:28px Georgia,serif;
+}
+.mmhk-screen-empty strong{font:bold 18px/1.2 Georgia,serif;color:#563826;}
+.mmhk-screen-empty p{font:12px/1.5 Arial,sans-serif;color:#735740;margin:0;max-width:340px;}
+.kingdom-shell .mmhk-screen-empty a,.kingdom-shell .mmhk-screen-empty button{
+  display:block;min-height:35px;padding:9px 15px;background:linear-gradient(#e6ce94,#bf9759);
+  color:#3e2c1e;border:1px solid #987143;text-decoration:none;
+  font:bold 12px Arial,sans-serif;cursor:pointer;
+}
+.kingdom-shell .mmhk-screen-empty button:hover,
+.kingdom-shell .mmhk-screen-empty a:hover{filter:brightness(1.08);}
+.mmhk-garrison-empty{position:absolute;left:50%;bottom:8%;transform:translateX(-50%);}
+.mmhk-tavern-empty{position:absolute;left:50%;top:54%;transform:translate(-50%,-50%);}
+.mmhk-military-active-screen .mmhk-tavern-hall:has(+ .mmhk-tavern-empty)
+  .mmhk-locked-tavern{display:none;}
+.mmhk-army-empty-state{
+  display:flex;flex-direction:column;justify-content:center;align-items:center;
+  gap:11px;text-align:center;min-height:240px;
+  height:100%;max-width:540px;margin:auto;color:#5b3d27;
+}
+.mmhk-army-empty-state>span{
+  display:grid;place-items:center;width:68px;height:68px;border-radius:50%;
+  background:#ead9b9;border:3px double #b99a6e;color:#8b5a36;
+  font:36px Georgia,serif;
+}
+.mmhk-army-empty-state strong{font:bold 23px Georgia,serif;color:#603b28;}
+.mmhk-army-empty-state p{font:13px/1.6 Georgia,serif;color:#755840;
+  margin:0;max-width:400px;}
+@media(max-width:800px){
+  .mmhk-screen-empty{padding:10px 12px;max-width:95%;gap:6px;}
+  .mmhk-garrison-empty{bottom:4%;}
+  .mmhk-screen-empty strong{font-size:15px;}
+  .mmhk-screen-empty p{font-size:11px;}
+}
