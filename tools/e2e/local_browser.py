@@ -136,15 +136,20 @@ def main() -> int:
             expect(page.get_by_text("Aldric du Havre", exact=True).first).to_be_visible()
             expect(page.get_by_text("Heaume de bronze")).to_be_visible()
             expect(page.get_by_text("Sceau des anciens")).to_be_visible()
-            # Authentic gameplay affordance: native mouse DnD from the
-            # hero's bag to the helmet slot. The mutation is PostgreSQL-backed.
+            # The separate visual_drag_smoke.py already requires a native
+            # bag-to-slot mouse drag. For the FULL multi-service campaign use
+            # the equally supported selection/destination interaction: this
+            # avoids replaying a flaky Chromium drag before every world test.
+            # The resulting server mutation remains PostgreSQL-backed.
             expect(page.get_by_test_id("hero-equipment-board")).to_have_attribute(
                 "data-ready","true",timeout=15000)
             helm=page.locator("#hero-bag .artifact-card").filter(has_text="Heaume de bronze")
             helmet=page.locator('.mmhk-equip-target[data-slot="head"]')
             expect(helm).to_be_visible()
             os.makedirs("test-output/visuals",exist_ok=True)
-            helm.drag_to(helmet)
+            helm.click()
+            expect(page.locator(".mmhk-selection-hint")).to_contain_text("Heaume de bronze")
+            helmet.click()
             page.screenshot(path="test-output/visuals/artifact-after-native-drop.png",full_page=True)
             try:
                 expect(page.get_by_text("Artefact déplacé : équipement mis à jour.")).to_be_visible(timeout=20000)
