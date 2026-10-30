@@ -8,7 +8,7 @@ import {GameQuantity} from "./game-ui/game-quantity";
 import type {CityForces} from "../lib/server-api";
 
 type Hero=CityForces["heroes"][number];
-type Stack={unit_code:string;name:string;quantity:number;tier:number;heroId:string|null};
+type Stack={unit_code:string;name:string;quantity:number;tier:number;heroId:string|null;portion?:number};
 type Destination={heroId:string|null};
 const MIME="application/x-mmhk-troop";
 const IMAGES:Record<string,string>={
@@ -29,12 +29,19 @@ export function TroopDeploymentBoard({cityId,forces,portrait,portraitSheet,unitS
   const [quantity,setQuantity]=useState(1);
   const [error,setError]=useState("");
   const [hover,setHover]=useState("");
+  const [prepared,setPrepared]=useState<Record<string,number[]>>({});
+  const [stackToSplit,setStackToSplit]=useState<Stack|null>(null);
+  const [splitQuantity,setSplitQuantity]=useState(1);
   const [pending,startTransition]=useTransition();
   // Track a real pointer gesture when a browser does not dispatch native
   // HTML5 dragstart/drop. Never transfer a unit until the user confirms qty.
   const pointerStart=useRef<{item:Stack;x:number;y:number}|null>(null);
   const suppressClick=useRef(false);
   const roster:Stack[]=forces.garrison.filter(u=>u.quantity>0).map(u=>({...u,heroId:null}));
+  const visibleGarrison=roster.flatMap(unit=>
+    (prepared[unit.unit_code]?.reduce((a,n)=>a+n,0)===unit.quantity?
+      prepared[unit.unit_code]:[unit.quantity]).map((quantity,index)=>
+      ({...unit,quantity,portion:index})));
   const byHero=(id:string):Stack[]=>forces.hero_armies.filter(
     u=>u.hero_id===id&&u.quantity>0).map(u=>({...u,heroId:id}));
   function approve(src:Stack|null,dest:Destination){
@@ -56,9 +63,35 @@ export function TroopDeploymentBoard({cityId,forces,portrait,portraitSheet,unitS
     setQuantity(Math.min(1000,src.quantity));
     setError("");
   }
+  function splitStack(item:Stack){
+    if(item.heroId!==null||item.quantity<2||pending)return;
+    setStackToSplit(item);
+    setSplitQuantity(Math.floor(item.quantity/2));
+  }
+  function confirmStackSplit(){
+    if(!stackToSplit||!Number.isSafeInteger(splitQuantity)||
+       splitQuantity<1||splitQuantity>=stackToSplit.quantity)return;
+    const base=roster.find(u=>u.unit_code===stackToSplit.unit_code);
+    if(!base)return;
+    const source=prepared[base.unit_code]?.reduce((a,n)=>a+n,0)===base.quantity?
+      prepared[base.unit_code]:[base.quantity];
+    const idx=stackToSplit.portion??0;
+    if(source[idx]!==stackToSplit.quantity)return;
+    const replacement=source.flatMap((n,i)=>i===idx?[n-splitQuantity,splitQuantity]:[n]);
+    setPrepared(prev=>({...prev,[base.unit_code]:replacement}));
+    setSelected(null);setDestination(null);setStackToSplit(null);setError("");
+  }
+  function mergeStack(item:Stack){
+    const base=roster.find(u=>u.unit_code===item.unit_code);
+    if(!base||pending)return;
+    setPrepared(prev=>({...prev,[item.unit_code]:[base.quantity]}));
+    setSelected(null);setDestination(null);
+  }
   function stack(item:Stack){
     const active=selected?.unit_code===item.unit_code&&selected.heroId===item.heroId;
-    return <div key={item.unit_code+(item.heroId??"garrison")}
+    const portions=prepared[item.unit_code];
+    const canMerge=item.heroId===null&&Boolean(portions&&portions.length>1);
+    return <div key={item.unit_code+(item.heroId??"garrison")+":"+String(item.portion??0)}
       className={"mmhk-unit-stack "+(active?"selected":"")}
       data-testid="troop-stack"
       data-unit-code={item.unit_code}
@@ -72,7 +105,7 @@ export function TroopDeploymentBoard({cityId,forces,portrait,portraitSheet,unitS
       onPointerCancel={()=>{pointerStart.current=null;}}
       onDragStart={event=>{
         pointerStart.current=null; // native drag/drop takes priority
-        const value=JSON.stringify({unit:item.unit_code,hero:item.heroId});
+        const value=JSON.stringify({unit:item.unit_code,hero:item.heroId,portion:item.portion});
         event.dataTransfer.setData(MIME,value);
         event.dataTransfer.effectAllowed="move";
         setSelected(item);setDestination(null);
@@ -92,6 +125,16 @@ export function TroopDeploymentBoard({cityId,forces,portrait,portraitSheet,unitS
       <strong>{item.name}</strong>
       <small>Rang {item.tier}</small>
       <span className="mmhk-stack-count">×{nice(item.quantity)}</span>
+      {item.heroId===null&&<span className="gui-stack-actions">
+        <button type="button" draggable={false} disabled={pending||item.quantity<2}
+          onPointerDown={event=>event.stopPropagation()}
+          onClick={event=>{event.stopPropagation();splitStack(item);}}
+          aria-label={"Diviser "+item.name+", "+item.quantity+" soldats"}>Diviser</button>
+        {canMerge&&<button type="button" draggable={false} disabled={pending}
+          onPointerDown={event=>event.stopPropagation()}
+          onClick={event=>{event.stopPropagation();mergeStack(item);}}
+          aria-label={"Fusionner les groupes de "+item.name}>Fusionner</button>}
+      </span>}
     </div>;
   }
   function drop(event:DragEvent<HTMLElement>,dest:Destination){
@@ -99,10 +142,11 @@ export function TroopDeploymentBoard({cityId,forces,portrait,portraitSheet,unitS
     event.currentTarget.focus(); // restore keyboard focus here when the game dialog closes
     try{
       const raw=JSON.parse(event.dataTransfer.getData(MIME)) as {
-        unit:string;hero:string|null
+        unit:string;hero:string|null;portion?:number
       };
-      const src=[...roster,...forces.heroes.flatMap(h=>byHero(h.hero_id))]
-        .find(s=>s.unit_code===raw.unit&&s.heroId===raw.hero);
+      const src=[...visibleGarrison,...forces.heroes.flatMap(h=>byHero(h.hero_id))]
+        .find(s=>s.unit_code===raw.unit&&s.heroId===raw.hero&&
+          (raw.hero!==null||(s.portion??0)===(raw.portion??0)));
       if(src)choose(src,dest);
     }catch{setError("Glisser-déposer de troupe non reconnu.");}
   }
@@ -176,7 +220,7 @@ export function TroopDeploymentBoard({cityId,forces,portrait,portraitSheet,unitS
         <div className="mmhk-keep-heading"><span aria-hidden="true">♜</span>
           <h4>Dans la cité</h4>
           <small>{nice(roster.reduce((n,u)=>n+u.quantity,0))} soldats</small></div>
-        <div className="mmhk-battle-stacks">{roster.length?roster.map(stack):
+        <div className="mmhk-battle-stacks">{roster.length?visibleGarrison.map(stack):
           <p className="mmhk-empty-room">Aucun soldat en garnison · recrutez dans vos demeures.</p>}</div>
       </div>
       <div className="mmhk-deployment-arrow" aria-hidden="true">⇄</div>
@@ -207,6 +251,37 @@ export function TroopDeploymentBoard({cityId,forces,portrait,portraitSheet,unitS
         setSelected(null);setDestination(null);setError("");
       }}>Annuler la sélection</button>
     </div>}
+    <GameDialog open={stackToSplit!==null} title="Diviser le peloton"
+      eyebrow="PRÉPARER LA GARNISON" size="compact"
+      testId="garrison-split-dialog" onClose={()=>setStackToSplit(null)}
+      footer={<>
+        <button type="button" className="gui-button gui-button--secondary"
+          onClick={()=>setStackToSplit(null)}>Annuler</button>
+        <button type="button" className="gui-button gui-button--primary"
+          onClick={confirmStackSplit} disabled={!stackToSplit||pending}>
+          Diviser le peloton
+        </button>
+      </>}>
+      {stackToSplit&&<>
+        <div className="gui-stack-balance">
+          <div><small>PREMIER GROUPE</small>
+            <strong>{nice(stackToSplit.quantity-splitQuantity)}</strong></div>
+          <span aria-hidden="true">+</span>
+          <div><small>SECOND GROUPE</small>
+            <strong>{nice(splitQuantity)}</strong></div>
+          <span aria-hidden="true">=</span>
+          <div><small>TOTAL INCHANGÉ</small>
+            <strong>{nice(stackToSplit.quantity)}</strong></div>
+        </div>
+        <GameQuantity label="Soldats à détacher" min={1}
+          max={Math.max(1,stackToSplit.quantity-1)}
+          value={splitQuantity} onChange={setSplitQuantity}
+          testId="garrison-split-quantity"/>
+        <p className="gui-help">Les groupes sont préparés visuellement.
+          Le stock reste agrégé dans le château ; un transfert réel est enregistré
+          uniquement après confirmation d'un ordre.</p>
+      </>}
+    </GameDialog>
     <GameDialog open={Boolean(selected&&destination)}
       title="Transférer des troupes" eyebrow="ORDRE DU COMMANDANT"
       testId="transfer-confirmation" busy={pending} size="compact"
