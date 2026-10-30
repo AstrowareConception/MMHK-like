@@ -315,7 +315,7 @@ def main() -> int:
             expect(next_ready.first).to_be_visible(timeout=5000)
             # Recruitment is now isolated in the military workspace.
             page.get_by_role("link", name="Garnison et recrutement").first.click()
-            expect(page.get_by_role("heading", name="Gestion des armées")).to_be_visible()
+            expect(page.get_by_role("heading", name="Forces et garnisons")).to_be_visible()
             expect(page.locator(".hero-profile-info").get_by_text("Aldric du Havre")).to_be_visible()
             expect(page.get_by_test_id("military-garrison-screen")).to_be_visible()
             page.get_by_role("tab",name="Recrutement").click()
