@@ -70,7 +70,9 @@ export default async function HeroesPage({params,searchParams}:{
         art={{
           portrait:portrait(selected.archetype),portraitSheet,
           slotSheet:resolveAssetUrl("hero.slot.sheet.haven"),
-          painting:resolveAssetUrl(selected.archetype==="magic"?"hero.painting.magic":"hero.painting.might"),
+          // The archived files are UI screenshots, not portraits. Never crop a
+          // screenshot of MMHK chrome into the hero painting panel.
+          painting:null,
           equipment:resolveAssetUrl("hero.background.haven"),
           frame:resolveAssetUrl("hero.frame"),backpack:resolveAssetUrl("hero.backpack"),
           artifactIcon:resolveAssetUrl("hero.artifact.icon"),slots:gearSlots
