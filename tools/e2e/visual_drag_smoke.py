@@ -139,7 +139,7 @@ def main():
                 "post_requests":post_requests
             },flush=True)
             try:
-                expect(page.get_by_text("Artefact déplacé : les inventaires ont été mis à jour.")).to_be_visible(timeout=8000)
+                expect(page.get_by_text("Artefact déplacé : équipement mis à jour.")).to_be_visible(timeout=8000)
             except AssertionError:
                 print("CLICK-FALLBACK CHECK: attempting selection + target",flush=True)
                 still=page.locator("#hero-bag .artifact-card").filter(has_text="Heaume de bronze")
@@ -148,7 +148,7 @@ def main():
                     print("CLICK SELECTED",page.locator(".mmhk-selection-hint").all_text_contents(),flush=True)
                     slot.click()
                     try:
-                        expect(page.get_by_text("Artefact déplacé : les inventaires ont été mis à jour.")).to_be_visible(timeout=8000)
+                        expect(page.get_by_text("Artefact déplacé : équipement mis à jour.")).to_be_visible(timeout=8000)
                         print("CLICK FALLBACK SUCCEEDED, NATIVE DRAG DID NOT",flush=True)
                     except AssertionError:
                         print("CLICK FALLBACK ALSO FAILED",
