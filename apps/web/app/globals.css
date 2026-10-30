@@ -1852,3 +1852,109 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   .gui-window-body{padding:12px;}
 }
 @media(prefers-reduced-motion:reduce){.gui-window{animation:none;}}
+
+
+/* PLAYER VIEWPORT — the game lives in one framed stage. Menus, resource
+   treasury and the clock stay in place; the world scrolls INSIDE the stage.
+   Narrow screens gracefully return to document flow for touch access. */
+@media(min-width:901px){
+  body:has(.gui-game-stage){height:100dvh;overflow:hidden;}
+  .gui-game-stage.kingdom-shell{
+    width:min(1180px,calc(100% - 24px));height:calc(100dvh - 16px);
+    min-height:570px;margin:8px auto;padding:8px 10px;
+    overflow:hidden;display:flex;flex-direction:column;
+  }
+  .gui-game-stage .kingdom-frame{
+    height:100%;min-height:0;display:flex;flex-direction:column;
+    overflow:hidden;width:100%;
+  }
+  .gui-game-stage .kingdom-timeline,
+  .gui-game-stage .kingdom-masthead,
+  .gui-game-stage .kingdom-navbar,
+  .gui-game-stage .kingdom-treasury,
+  .gui-game-stage .kingdom-footer,
+  .gui-game-stage .kingdom-city-switcher{flex:0 0 auto;}
+  .gui-game-stage .kingdom-main-panel{
+    display:flex;flex-direction:column;flex:1 1 auto;min-height:0;
+    padding:8px 10px 10px;overflow:hidden;
+  }
+  .gui-game-stage .kingdom-screen-heading{
+    flex:0 0 auto;padding:9px 10px;margin-bottom:7px;
+  }
+  .gui-game-stage .kingdom-screen-heading h1{font-size:clamp(23px,2.5vw,35px);}
+  .gui-game-stage .kingdom-screen-content{
+    flex:1 1 auto;min-height:0;min-width:0;overflow:auto;
+    scrollbar-gutter:stable;
+    overscroll-behavior:contain;
+    scroll-behavior:smooth;
+    scrollbar-color:#a28b60 #1c2a30;
+    padding:12px 15px;
+  }
+  .gui-game-stage .kingdom-masthead{min-height:66px;padding:8px 14px;}
+  .gui-game-stage .kingdom-emblem{height:48px;width:48px;font-size:28px;}
+  .gui-game-stage .kingdom-brand strong{font-size:clamp(24px,2.7vw,33px);}
+  .gui-game-stage .kingdom-brand span{font-size:9px;}
+  .gui-game-stage .kingdom-resource{min-height:38px;padding:3px 5px;}
+  .gui-game-stage .kingdom-resource strong{font-size:13px;}
+  .gui-game-stage .kingdom-resource img{width:23px;height:23px;}
+  .gui-game-stage .kingdom-treasury{padding:4px 6px;}
+  .gui-game-stage .kingdom-navbar{min-height:36px;padding:4px 6px;}
+  .gui-game-stage .kingdom-navbar a,
+  .gui-game-stage .kingdom-navbar button{min-height:30px;padding:5px 9px;font-size:11px;}
+  .gui-game-stage .kingdom-footer{padding:5px;}
+  .gui-game-stage[data-game-density="compact"] .kingdom-masthead{min-height:52px;padding:4px 10px;}
+  .gui-game-stage[data-game-density="compact"] .kingdom-brand strong{font-size:25px;}
+  .gui-game-stage[data-game-density="compact"] .kingdom-emblem{width:38px;height:38px;font-size:22px;}
+  .gui-game-stage[data-game-density="compact"] .kingdom-resource{min-height:31px;}
+  .gui-game-stage[data-game-density="compact"] .kingdom-screen-heading{padding:5px;margin-bottom:4px;}
+  .gui-game-stage[data-game-density="compact"] .kingdom-screen-heading h1{font-size:25px;}
+  .gui-game-stage[data-game-density="compact"] .kingdom-screen-heading p{font-size:11px;}
+  .gui-game-stage[data-game-density="compact"] .kingdom-main-panel{padding:5px;}
+  .gui-game-stage[data-game-density="compact"] .kingdom-screen-content{padding:8px 11px;}
+}
+.gui-game-stage:fullscreen{width:100vw!important;height:100dvh!important;max-width:none!important;
+  margin:0!important;padding:5px 8px!important;min-height:0;}
+.gui-game-stage:fullscreen .kingdom-frame{height:100%;min-height:0;}
+.gui-stage-actions{margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap;
+  justify-content:flex-end;}
+.gui-stage-actions .kingdom-realm-badge{margin:0;min-width:105px;}
+.gui-viewport-controls{display:flex;gap:2px;align-items:center;
+  border:1px solid #9e845f;padding:3px;background:#1a3038c9;color:#ddcba7;}
+.gui-viewport-controls>span{font:700 9px Georgia,serif;padding:0 5px;}
+.kingdom-shell .gui-viewport-controls button{
+  padding:5px 6px;min-height:28px;background:linear-gradient(#566360,#24353a);
+  border:1px solid #927e5c;color:#e9daaa;border-radius:1px;
+  font:11px Georgia,serif;cursor:pointer;}
+.kingdom-shell .gui-viewport-controls button:hover,
+.kingdom-shell .gui-viewport-controls button[aria-pressed="true"]{
+  color:#201c14;background:linear-gradient(#ebd7a6,#bd9d69);
+  border-color:#f0d7a3;}
+.gui-stack-actions{display:flex;flex-wrap:wrap;gap:3px;justify-content:center;
+  margin-top:3px;max-width:100%;}
+.kingdom-shell .gui-stack-actions>button{
+  background:#e5caa0!important;color:#4e3324!important;border:1px solid #b29263!important;
+  padding:3px 5px;min-height:22px;font:700 10px Arial,sans-serif;cursor:pointer;}
+.gui-stack-actions>button:disabled{opacity:.42;cursor:not-allowed;}
+.mmhk-heritage-armies .mmhk-unit-stack{min-height:148px;grid-template-rows:53px 24px 13px auto;}
+.gui-stack-balance{display:flex;gap:8px;align-items:center;
+  margin:10px 0 18px;flex-wrap:wrap;}
+.gui-stack-balance>div{display:grid;gap:4px;flex:1 1 76px;
+  min-width:68px;text-align:center;background:#f6ead1;border:1px solid #b69971;
+  padding:8px 5px;}
+.gui-stack-balance>div>small{font:700 9px Arial,sans-serif;color:#826344;}
+.gui-stack-balance>div>strong{font:bold 20px Georgia,serif;color:#593821;}
+.gui-stack-balance>span{font:bold 18px Georgia,serif;color:#9e7446;}
+.kingdom-shell .gui-formation-reset{
+  padding:9px 12px;color:#543b26;background:#e4d6b8;border:1px solid #b29a74;
+  font:700 12px Arial,sans-serif;}
+@media(max-width:900px){
+  .gui-game-stage.kingdom-shell{width:min(100%,calc(100% - 12px));min-height:0;
+    padding:6px 8px;overflow:visible;}
+  .gui-game-stage .kingdom-frame{min-height:0;}
+  .gui-stage-actions{width:100%;margin-left:0;justify-content:flex-start;}
+  .gui-viewport-controls{flex-wrap:wrap;}
+  .gui-window{max-height:calc(100dvh - 20px);}
+}
+@media(prefers-reduced-motion:reduce){
+  .gui-game-stage .kingdom-screen-content{scroll-behavior:auto;}
+}
