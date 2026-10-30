@@ -43,10 +43,13 @@ def main() -> None:
         face=board.locator(".heritage-portrait-sprite").first
         expect(face).to_be_visible()
         assert "/api/theme-assets/hero.sheet.haven" in face.get_attribute("style")
-        painting=board.locator('.mmhk-hero-portrait[data-historical-painting="true"]')
-        expect(painting).to_be_visible()
-        assert "/api/theme-assets/hero.painting." in painting.get_attribute("style")
-        print("PASS: five MMHK portrait sheets, Haven units, hero UI and private access",flush=True)
+        # UI screenshots are never presented as a hero's face: the genuine
+        # sprite sheet above must be used instead. Painting files may remain
+        # private assets on disk but must not be pasted behind the portrait.
+        portrait=board.locator(".mmhk-hero-portrait")
+        expect(portrait).to_have_attribute("data-historical-painting","false")
+        assert "/api/theme-assets/hero.painting." not in (portrait.get_attribute("style") or "")
+        print("PASS: private sprite sheets, no archived UI screenshots as portraits, access isolation",flush=True)
         browser.close()
 
 if __name__ == "__main__":
