@@ -115,6 +115,6 @@ export function CityForcesPanel({cityId,forces,message,visuals}:{
             {forces.heroes.length}/{forces.hero_capacity} places de héros occupées
           </div>
         </section>
-      </>}/>
+      </>}/>} 
   </section>;
 }
