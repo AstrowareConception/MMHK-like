@@ -115,6 +115,8 @@ def main():
             expect(page.get_by_test_id("hero-"+key+"-screen")).to_be_visible()
             metrics=capture(page,f"PLAYER-{key}-1220x900.png")
             assert_dimensions(metrics,key)
+            if key=="army":
+                expect(page.get_by_text("Ce héros attend son armée")).to_be_visible()
         page.set_viewport_size({"width":1440,"height":950})
         tabs.get_by_role("tab",name="Inventaire").click()
         capture(page,"PLAYER-inventory-1440x950.png")
@@ -125,6 +127,10 @@ def main():
             military.get_by_role("tab",name=name).click()
             expect(page.get_by_test_id("military-"+key+"-screen")).to_be_visible()
             capture(page,f"PLAYER-{key}-1440x950.png")
+            if key=="garrison":
+                expect(page.get_by_role("button",name="Ouvrir le recrutement")).to_be_visible()
+            if key=="tavern":
+                expect(page.get_by_role("link",name="Examiner le chantier de la taverne")).to_be_visible()
         print("PASS: early read-only Chromium player visual capture",flush=True)
         context.close()
         browser.close()
