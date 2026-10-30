@@ -96,6 +96,7 @@ export function TroopDeploymentBoard({cityId,forces,portrait,portraitSheet,unitS
   }
   function drop(event:DragEvent<HTMLElement>,dest:Destination){
     event.preventDefault();event.stopPropagation();setHover("");
+    event.currentTarget.focus(); // restore keyboard focus here when the game dialog closes
     try{
       const raw=JSON.parse(event.dataTransfer.getData(MIME)) as {
         unit:string;hero:string|null
@@ -123,13 +124,13 @@ export function TroopDeploymentBoard({cityId,forces,portrait,portraitSheet,unitS
         suppressClick.current=true;
         choose(gesture.item,dest);
       },
-      onClick:()=>{
+      onClick:(event:React.MouseEvent<HTMLElement>)=>{
         if(suppressClick.current){suppressClick.current=false;return;}
-        if(selected)choose(selected,dest);
+        if(selected){event.currentTarget.focus();choose(selected,dest);}
       },
       onKeyDown:(event:KeyboardEvent<HTMLElement>)=>{
         if(selected&&(event.key==="Enter"||event.key===" ")){
-          event.preventDefault();choose(selected,dest);
+          event.preventDefault();event.currentTarget.focus();choose(selected,dest);
         }
       }
     };
