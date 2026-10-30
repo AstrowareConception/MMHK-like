@@ -2,6 +2,7 @@ import {hireCityHero,recruitCityUnits} from "../app/actions";
 import {TroopDeploymentBoard} from "./troop-deployment-board";
 import {HeritagePortrait,HeritageUnitArt} from "./heritage-art";
 import {GameQuantity} from "./game-ui/game-quantity";
+import {GameNotice} from "./game-ui/game-notice";
 import type {CityForces} from "../lib/server-api";
 import Link from "next/link";
 
@@ -20,16 +21,14 @@ export function CityForcesPanel({cityId,forces,message,visuals}:{
 }) {
   function status(kind:"hero"|"recruit",value?:string){
     if(!value)return null;
-    return <p role={value==="ok"?"status":"alert"}
-      className={value==="ok"?"construction-notice":"error"}>{
-        value==="ok"?(kind==="hero"?
-          "Héros engagé : il figure désormais dans votre royaume.":
-          "Recrutement confirmé. La garnison et les stocks ont été mis à jour."):
-        value==="conflict"?(kind==="hero"?
-          "Offre non disponible, limite atteinte ou or insuffisant.":
-          "Recrutement refusé : caserne, réserves ou recrues insuffisantes."):
-        "Ordre non confirmé : vérifiez vos effectifs avant une nouvelle tentative."
-      }</p>;
+    const message=value==="ok"?(kind==="hero"?
+      "Héros engagé : il figure désormais dans votre royaume.":
+      "Recrutement confirmé. La garnison et les stocks ont été mis à jour."):
+      value==="conflict"?(kind==="hero"?
+        "Offre non disponible, limite atteinte ou or insuffisant.":
+        "Recrutement refusé : caserne, réserves ou recrues insuffisantes."):
+      "Ordre non confirmé : vérifiez vos effectifs avant une nouvelle tentative.";
+    return <GameNotice title={message} tone={value==="ok"?"success":"error"}/>;
   }
   return <section className="military-panel mmhk-military-panel mmhk-heritage-armies" id="military-panel"
     data-testid="heritage-garrison">
@@ -45,12 +44,10 @@ export function CityForcesPanel({cityId,forces,message,visuals}:{
       <div className="mmhk-war-emblem" aria-hidden="true">⚔</div>
     </header>
     {!forces?<p className="error">Le registre de la garnison n'est pas disponible.</p>:<>
-      {message.transfer&&<p className={message.transfer==="ok"?"construction-notice":"error"}
-        role={message.transfer==="ok"?"status":"alert"}>
-        {message.transfer==="ok"?
+      {message.transfer&&<GameNotice tone={message.transfer==="ok"?"success":"error"}
+        title={message.transfer==="ok"?
           "Transfert confirmé : les effectifs sont conservés et la formation a été réinitialisée.":
-          "Transfert non confirmé : effectifs insuffisants ou héros indisponible."}
-      </p>}
+          "Transfert non confirmé : effectifs insuffisants ou héros indisponible."}/>
       {status("hero",message.hero)}
       {status("recruit",message.recruit)}
       <TroopDeploymentBoard cityId={cityId} forces={forces}
