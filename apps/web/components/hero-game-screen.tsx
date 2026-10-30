@@ -48,7 +48,7 @@ export function HeroGameScreen({cityId,hero,heroes,initialTab,
     window.history.replaceState(window.history.state,"",
       window.location.pathname+window.location.search+destination);
   }
-  return <div className="mmhk-single-hero-screen" data-testid="hero-game-screen"
+  return <div className="mmhk-single-hero-screen mmhk-heritage-heroes" data-testid="hero-game-screen"
     data-active-screen={tab}>
     <header className="mmhk-hero-command-header">
       <div className="mmhk-command-hero-heading">
