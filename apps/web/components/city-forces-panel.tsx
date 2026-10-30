@@ -34,6 +34,10 @@ export function CityForcesPanel({cityId,forces,message,visuals}:{
     data-testid="heritage-garrison">
     {!forces?<p className="error">Le registre de la garnison n'est pas disponible.</p>:
       <MilitaryGameScreen heroesCount={forces.heroes.length}
+        garrisonEmpty={forces.garrison.every(u=>u.quantity===0)&&
+          forces.hero_armies.every(u=>u.quantity===0)}
+        tavernLocked={!forces.tavern_unlocked}
+        cityHref={"/cities/"+cityId+"?inspect=tavern#city-inspector"}
         initialTab={message.hero?"tavern":message.recruit?"recruitment":"garrison"} garrison={<>
       {message.transfer&&<GameNotice tone={message.transfer==="ok"?"success":"error"}
         title={message.transfer==="ok"?
