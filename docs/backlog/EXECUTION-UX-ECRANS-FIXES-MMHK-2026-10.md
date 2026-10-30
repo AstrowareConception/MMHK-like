@@ -50,3 +50,50 @@ les commandes et le plateau ne défilent pas.
 
 La fidélité de MMHK est la référence ; le critère n'est pas seulement
 un style parcheminé, mais un **parcours de joueur sans lecture verticale**.
+
+## Postmortem de la revue visuelle Chromium
+
+Les captures utilisateur 1220 × 900 révélaient deux défauts que la CI
+fonctionnelle ne détectait pas :
+
+- Une ancienne classe `mmhk-heritage-heroes` imposait encore une grille
+  restrictive ; le jeu n'utilisait que la moitié de son panneau, malgré
+  le respect apparent des dimensions du viewport.
+- Une règle historique `.formation-slot` conservait **quatre colonnes
+  administratives** dont la première avait 55 px. Les sept cartes tactiques
+  étaient donc compressées dans des cases minuscules et leurs boutons
+  pouvaient empiéter sur les cases voisines.
+
+La PR rétablit la largeur du plateau, isole les cartes de formation
+dans des cellules flexibles et retire les mentions techniques de chaque
+position. L'import de captures de l'ancienne interface MMHK comme
+« grand portrait » a également été désactivé : seul un vrai sprite
+de personnage est désormais utilisé, ou son substitut public-safe.
+
+### Nouveau contrat qualité non négociable
+
+1. **Chromium en lecture seule d'abord**, avant de recruter ou de déplacer
+   un objet : captures des six écrans aux résolutions 1220 × 900 et
+   1440 × 950. Les images doivent être publiées en artefact immédiatement.
+2. Analyse géométrique : utilisation horizontale >= 97 % du cadre,
+   panneau principal >= 70 %, aucun chevauchement ni artefact hors case.
+3. Les sept cartes de formation doivent occuper réellement la largeur
+   disponible (largeur minimale 85 px à 1220 × 900), et non simplement
+   ne pas déborder.
+4. Revue **humaine** des captures avant fusion : pas de grande région vide
+   sans action guidée, contrastes suffisants, libellés lisibles, portraits
+   authentiques en mode privé.
+5. Ensuite seulement : **vrai parcours Chromium avec soldats recrutés**.
+   Les commandes de division/fusion doivent rester dans leur propre cellule,
+   aucun chevauchement entre positions, puis enregistrement PostgreSQL.
+6. Tout écran momentanément vide doit proposer une **action de progression
+   réelle** : recrutement de garnison, affectation d'armée ou construction
+   de taverne, sans inventer de règles métier.
+
+Captures réellement inspectées :
+- [Premier audit six écrans (run #41062806003)](https://github.com/AstrowareConception/MMHK-like/actions/runs/41062806003)
+- [Audit après actions contextuelles (run #41063756541)](https://github.com/AstrowareConception/MMHK-like/actions/runs/41063756541)
+- [Audit des cartes tactiques corrigées (run #41065493026)](https://github.com/AstrowareConception/MMHK-like/actions/runs/41065493026)
+
+La PR ne sera pas fusionnée sur le seul statut « 4 jobs verts » si la
+revue visuelle effective n'est pas satisfaisante.
