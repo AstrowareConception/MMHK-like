@@ -114,6 +114,59 @@ def main():
         expect(page.get_by_role("heading",name="Mes mondes")).to_be_visible()
         page.get_by_role("link",name="Royaume de démonstration",exact=False).click()
         page.get_by_role("link",name="Entrer en ville").first.click()
+        expect(page.get_by_test_id("city-game-screen")).to_be_visible()
+        citytabs=page.get_by_role("tablist",name="Écrans de la cité")
+        citytabs.get_by_role("tab",name="Panorama").focus()
+        page.keyboard.press("ArrowRight")
+        expect(citytabs.get_by_role("tab",name="Réserves")).to_have_attribute("aria-selected","true")
+        page.keyboard.press("Home")
+        expect(citytabs.get_by_role("tab",name="Panorama")).to_have_attribute("aria-selected","true")
+        # Four exclusive city activities, each rendered at both requested sizes.
+        for width,height in ((1220,900),(1440,950)):
+            page.set_viewport_size({"width":width,"height":height})
+            for name,key in (("Panorama","panorama"),("Réserves","reserves"),
+                             ("Chantiers","construction"),("Historique","history")):
+                citytabs.get_by_role("tab",name=name).click()
+                expect(page.get_by_test_id("city-"+key+"-screen")).to_be_visible()
+                metrics=page.evaluate("""() => {
+                    const shell=document.querySelector('.kingdom-screen-content');
+                    const game=document.querySelector('.mmhk-city-game-screen');
+                    const panel=document.querySelector('.mmhk-city-active-screen>[role="tabpanel"]:not([hidden])');
+                    const scene=document.querySelector('.city-scene-frame');
+                    const inspector=document.querySelector('.mmhk-city-inspector-column');
+                    const rect=x=>x?.getBoundingClientRect();
+                    return {overflow:getComputedStyle(shell).overflowY,
+                      shellExtra:shell.scrollHeight-shell.clientHeight,
+                      gameExtra:game.scrollHeight-game.clientHeight,
+                      panelExtra:panel.scrollHeight-panel.clientHeight,
+                      panelWidth:Math.round(rect(panel).width),
+                      sceneHeight:scene?Math.round(rect(scene).height):0,
+                      inspectorExtra:inspector?inspector.scrollHeight-inspector.clientHeight:0,
+                      inspectorHeight:inspector?Math.round(rect(inspector).height):0};
+                }""")
+                print("CITY VISUAL QA",key,width,height,metrics,flush=True)
+                assert metrics["overflow"]=="hidden" and metrics["shellExtra"]<=2,(key,metrics)
+                assert metrics["gameExtra"]<=3 and metrics["panelExtra"]<=3,(key,metrics)
+                assert metrics["panelWidth"]>=750,(key,metrics)
+                if key=="panorama":
+                    assert metrics["sceneHeight"]>=130,(key,metrics)
+                    assert metrics["inspectorHeight"]>=200,(key,metrics)
+                page.screenshot(path=str(ARTIFACTS/f"CITY-{key}-{width}x{height}.png"),
+                                full_page=False,animations="disabled")
+            citytabs.get_by_role("tab",name="Panorama").click()
+            page.locator(".city-plan-ribbon-list button").filter(
+                has_text="Hôtel du village").click()
+            inspector=page.locator("#city-inspector")
+            expect(inspector).to_have_attribute("data-selected-building","village_hall")
+            inspector.get_by_role("button",name="Rapide",exact=True).click()
+            submit=inspector.get_by_role("button",name="Lancer le chantier")
+            expect(submit).to_be_enabled()
+            submit.scroll_into_view_if_needed()
+            expect(submit).to_be_visible()
+            page.screenshot(path=str(ARTIFACTS/f"CITY-inspector-quote-{width}x{height}.png"),
+                            full_page=False,animations="disabled")
+        page.set_viewport_size({"width":1220,"height":900})
+        print("PASS: city panorama, reserves, construction, history and real inspector",flush=True)
         page.get_by_role("link",name="Héros et artefacts").first.click()
         expect(page.get_by_test_id("hero-game-screen")).to_be_visible()
         tabs=page.get_by_role("tablist",name="Écrans du héros")
@@ -164,7 +217,7 @@ def main():
             expect(page.get_by_test_id("military-"+key+"-screen")).to_be_visible()
             metrics=capture(page,f"PLAYER-{key}-1220x900.png")
             assert_dimensions(metrics,key)
-        print("PASS: 12 real Chromium captures, both resolutions, keyboard tabs and layout invariants",flush=True)
+        print("PASS: 22 real Chromium captures (city + heroes + military), both resolutions",flush=True)
         context.close()
         browser.close()
 
