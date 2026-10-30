@@ -312,6 +312,10 @@ def main() -> int:
             page.get_by_role("link", name="Garnison et recrutement").first.click()
             expect(page.get_by_role("heading", name="Gestion des armées")).to_be_visible()
             expect(page.locator(".hero-profile-info").get_by_text("Aldric du Havre")).to_be_visible()
+            expect(page.get_by_test_id("military-garrison-screen")).to_be_visible()
+            page.get_by_role("tab",name="Recrutement").click()
+            expect(page.get_by_test_id("military-recruitment-screen")).to_be_visible()
+            expect(page.get_by_test_id("military-garrison-screen")).to_be_hidden()
             assert page.locator(".unit-recruit-offer").count() == 2
             # Recruit units and transfer a subset to the starting hero.
             militia = page.locator("form.unit-recruit-offer:has(input[name='unitCode'][value='militia'])")
@@ -319,6 +323,7 @@ def main() -> int:
             militia.locator('input[name="quantity"]').fill("3")
             militia.get_by_role("button", name="Recruter").click()
             expect(page.get_by_text("Recrutement confirmé.", exact=False)).to_be_visible(timeout=20000)
+            page.get_by_role("tab",name="Garnison").click()
             expect(page.get_by_text("3 soldats", exact=False)).to_be_visible()
             # Real drag of a garrison troop card onto the idle hero.
             # A game-like quantity confirmation replaces the old admin form.
