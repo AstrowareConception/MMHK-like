@@ -3,6 +3,8 @@ import {useEffect,useRef,useState,useTransition} from "react";
 import type {DragEvent,KeyboardEvent,PointerEvent} from "react";
 import {transferHeroUnits} from "../app/actions";
 import {HeritagePortrait,HeritageUnitArt} from "./heritage-art";
+import {GameDialog} from "./game-ui/game-dialog";
+import {GameQuantity} from "./game-ui/game-quantity";
 import type {CityForces} from "../lib/server-api";
 
 type Hero=CityForces["heroes"][number];
@@ -197,24 +199,42 @@ export function TroopDeploymentBoard({cityId,forces,portrait,portraitSheet,unitS
           Engagez un héros à la taverne pour lui confier une armée.</p>}
       </div>
     </div>
-    {selected&&<div className="mmhk-troop-picked" role="status">
-      <strong>{selected.name}</strong> · {nice(selected.quantity)} disponibles.
-      {" "}{destination?"Destination : "+destinationName:
-        "Sélectionnez une garnison ou un héros comme destination."}
-      {destination&&<div className="mmhk-quantity-dialog" data-testid="transfer-confirmation">
-        <label>Nombre à déplacer
-          <input type="number" min="1" max={Math.min(1000,selected.quantity)}
-            value={quantity} onChange={e=>setQuantity(Number(e.target.value))}/>
-        </label>
-        <button type="button" onClick={()=>setQuantity(Math.min(1000,selected.quantity))}>Maximum</button>
-        <button type="button" disabled={!buttonConfirm||pending} onClick={submit}>
-          {pending?"En cours…":"Confirmer le transfert"}
-        </button>
-      </div>}
+    {selected&&!destination&&<div className="mmhk-troop-picked" role="status">
+      <strong>{selected.name}</strong> · {nice(selected.quantity)} soldats.
+      Sélectionnez la ville ou le portrait d'un héros comme destination.
       <button type="button" className="mmhk-cancel" onClick={()=>{
         setSelected(null);setDestination(null);setError("");
       }}>Annuler la sélection</button>
     </div>}
+    <GameDialog open={Boolean(selected&&destination)}
+      title="Transférer des troupes" eyebrow="ORDRE DU COMMANDANT"
+      testId="transfer-confirmation" busy={pending} size="compact"
+      onClose={()=>setDestination(null)}
+      footer={<>
+        <button type="button" className="gui-button gui-button--secondary"
+          onClick={()=>setDestination(null)} disabled={pending}>Modifier la destination</button>
+        <button type="button" className="gui-button gui-button--primary"
+          disabled={!buttonConfirm||pending} onClick={submit}>
+          {pending?"Ordre en cours…":"Confirmer le transfert"}
+        </button>
+      </>}>
+      {selected&&destination&&<div className="gui-transfer-summary">
+        <div><small>PELOTON</small>
+          <strong>{selected.name}</strong>
+          <span>{nice(selected.quantity)} soldats disponibles</span>
+        </div>
+        <span className="gui-transfer-arrow" aria-hidden="true">➜</span>
+        <div><small>DESTINATION</small>
+          <strong>{destinationName}</strong>
+          <span>{destination.heroId?"Héros dans la cité":"Garnison du château"}</span>
+        </div>
+      </div>}
+      {selected&&destination&&<GameQuantity label="Nombre à déplacer"
+        testId="transfer-quantity" max={Math.min(1000,selected.quantity)}
+        value={quantity} onChange={setQuantity}/>}
+      <p className="gui-help">L'ordre sera vérifié par le royaume : les effectifs
+        sont conservés et la formation du héros sera réinitialisée.</p>
+    </GameDialog>
     <p className="mmhk-quiet">Les déplacements ne créent aucune troupe.
       La quantité, le propriétaire et la disponibilité du héros sont vérifiés
       dans une transaction PostgreSQL. Après un changement d'effectif,
