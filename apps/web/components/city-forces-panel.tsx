@@ -47,7 +47,7 @@ export function CityForcesPanel({cityId,forces,message,visuals}:{
       {message.transfer&&<GameNotice tone={message.transfer==="ok"?"success":"error"}
         title={message.transfer==="ok"?
           "Transfert confirmé : les effectifs sont conservés et la formation a été réinitialisée.":
-          "Transfert non confirmé : effectifs insuffisants ou héros indisponible."}/>
+          "Transfert non confirmé : effectifs insuffisants ou héros indisponible."}/>}
       {status("hero",message.hero)}
       {status("recruit",message.recruit)}
       <TroopDeploymentBoard cityId={cityId} forces={forces}
