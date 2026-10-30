@@ -1743,3 +1743,112 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
 .mmhk-heritage-inventory .mmhk-hero-portrait[data-historical-painting="true"]>.mmhk-hero-master-portrait {
   display:none!important;
 }
+
+
+/* GAME UI KIT — shared player-facing controls, not browser-default forms.
+   Match MMHK's framed parchment dialogs without distributing original art. */
+.gui-modal-overlay{position:fixed;inset:0;z-index:10000;display:grid;
+  place-items:center;padding:clamp(10px,3vw,28px);overflow:auto;
+  background:radial-gradient(ellipse at center,#0f1415a6,#050709e8);
+  backdrop-filter:blur(3px);}
+.gui-window{position:relative;display:flex;flex-direction:column;
+  width:min(100%,660px);max-height:min(90dvh,850px);overflow:hidden;
+  border:4px ridge #927058;outline:2px solid #30261f;outline-offset:-9px;
+  background:linear-gradient(#fff9e9,#e7d8bc 75%,#d6c09e);
+  box-shadow:0 0 0 1px #e7d3a6,0 18px 65px #000b,inset 0 0 0 2px #cbb28d;
+  color:#4b3527;animation:gui-window-appear .14s ease-out;}
+.gui-window--compact{width:min(100%,500px);}
+.gui-window--wide{width:min(100%,860px);}
+@keyframes gui-window-appear{
+  from{opacity:.75;transform:translateY(9px) scale(.985);}
+  to{opacity:1;transform:none;}
+}
+.gui-window-header{display:flex;align-items:center;gap:12px;
+  background:linear-gradient(#b69b83,#866d5e);border-bottom:2px solid #705444;
+  padding:9px 12px 9px 14px;color:#fff1d9;}
+.gui-window-header>div{min-width:0;flex:1;}
+.gui-window-crest{font:26px Georgia,serif;color:#f6e2a8;}
+.gui-eyebrow{display:block;font:700 10px/1.4 Georgia,serif;
+  letter-spacing:.12em;color:#eedac0;}
+.gui-window-header h2{margin:1px 0 0!important;font:bold clamp(17px,2.4vw,23px)/1.2 Arial,sans-serif!important;
+  color:#fff7eb!important;text-shadow:0 1px 2px #433024;}
+.kingdom-screen-content .gui-window-close,.gui-window-close{
+  margin-left:auto;width:35px;height:35px;display:grid;place-items:center;
+  border:2px solid #e5c99a;border-radius:50%;padding:0;
+  background:linear-gradient(#ae614e,#743629);color:#fff4df;
+  font:28px/1 Arial,sans-serif;cursor:pointer;flex:none;}
+.gui-window-close:hover:not(:disabled),.gui-window-close:focus-visible{
+  background:#a23e30;outline:3px solid #f5d78b;outline-offset:2px;}
+.gui-window-body{padding:clamp(13px,2vw,23px);overflow-y:auto;min-height:0;
+  overscroll-behavior:contain;}
+.gui-window-footer{display:flex;flex-wrap:wrap;justify-content:flex-end;
+  gap:9px;padding:12px 18px;background:#e3d2b4;border-top:1px solid #a98c6e;}
+.gui-window .gui-button{min-height:40px;cursor:pointer;
+  padding:8px 14px;border:1px solid #77583c;border-radius:3px;
+  font:bold 13px/1.4 Arial,sans-serif;}
+.gui-window .gui-button--primary{background:linear-gradient(#e8c780,#b68e4b);color:#3a2b1e;}
+.gui-window .gui-button--secondary{background:linear-gradient(#f7efe0,#d5bea1);color:#513829;}
+.gui-window .gui-button:hover:not(:disabled){filter:brightness(1.06);outline:2px solid #ba8d46;}
+.gui-window button:disabled{cursor:not-allowed;opacity:.55;}
+.gui-transfer-summary{display:grid;grid-template-columns:minmax(0,1fr) 28px minmax(0,1fr);
+  align-items:center;gap:10px;margin:0 0 17px;}
+.gui-transfer-summary>div{display:grid;gap:5px;padding:12px;min-height:88px;
+  border:1px solid #b99e7c;background:#f8f0de;}
+.gui-transfer-summary small{color:#896747;font:700 10px Arial,sans-serif;letter-spacing:.1em;}
+.gui-transfer-summary strong{font:bold 15px Arial,sans-serif;overflow-wrap:anywhere;}
+.gui-transfer-summary span:not(.gui-transfer-arrow){color:#735b45;font:11px Arial,sans-serif;}
+.gui-transfer-arrow{text-align:center;color:#865729;font-size:24px;}
+.gui-help{font:11px/1.55 Arial,sans-serif;color:#755c45;margin:15px 0 0;}
+.gui-quantity{display:grid;gap:7px;min-width:0;}
+.gui-quantity-label{font:700 13px Arial,sans-serif;color:#63442e;}
+.gui-quantity-controls{display:flex;gap:5px;align-items:stretch;max-width:340px;min-width:0;}
+.gui-quantity-controls>button{min-width:34px;min-height:36px;cursor:pointer;
+  background:linear-gradient(#e9d9bc,#c6a77a);border:1px solid #977751;
+  color:#4d3221;border-radius:2px;font:bold 16px Arial,sans-serif;}
+.gui-quantity-controls>button:hover:not(:disabled){background:#f3dab0;}
+.gui-quantity-controls input{min-width:52px;width:78px;height:36px;flex:1 1 70px;
+  padding:5px;color:#403024;text-align:center;background:#fff9ed;
+  border:1px solid #a68b66;font:bold 15px Arial,sans-serif;}
+.gui-quantity-controls .gui-quantity-max{font-size:12px;padding:0 10px;}
+.gui-quantity>small{font:10px Arial,sans-serif;color:#866b55;}
+.gui-tabs{display:flex;flex-wrap:wrap;gap:2px;align-items:end;
+  padding:4px 9px 0;min-height:38px;
+  border:2px solid #8b6e5a;border-bottom:0;background:#c8b5a5;}
+.gui-tab{display:inline-block;min-height:30px;padding:8px 11px 7px;
+  border:1px solid #9e816d;border-radius:5px 5px 0 0;
+  background:linear-gradient(#d8c8b9,#c0aa9a);color:#593f33!important;
+  text-decoration:none;font:12px/1.2 Arial,sans-serif;}
+.gui-tab--active{background:#f9f6ec!important;border-bottom-color:#f9f6ec;
+  color:#342c28!important;font-weight:bold;}
+.gui-tab:not(.gui-tab--disabled):hover,.gui-tab:focus-visible{
+  background:#f5e6c8;outline:2px solid #93613b;outline-offset:-2px;}
+.gui-tab--disabled{opacity:.56;cursor:not-allowed;}
+.mmhk-heritage-heroes .gui-tabs{order:0;}
+.gui-panel{border:2px solid #93745c;background:#f0e4ce;color:#4d3326;}
+.gui-panel-title{display:flex;align-items:center;gap:11px;padding:10px 13px;
+  border-bottom:1px solid #ad926f;background:linear-gradient(#efe0c5,#d2b895);}
+.gui-panel-title>span{font:23px Georgia,serif;color:#80502e;}
+.gui-panel-title small{color:#785539;display:block;font:700 10px Arial,sans-serif;
+  letter-spacing:.1em;}
+.gui-panel-title h2{font:bold 17px Arial,sans-serif!important;margin:0!important;
+  color:#553924!important;}
+.gui-panel-content{padding:13px;}
+.gui-panel-footer{padding:9px 13px;background:#dfc9a8;border-top:1px solid #aa8a62;}
+.mmhk-heritage-heroes .gui-panel.mmhk-hero-army-summary{padding:0;margin:0 0 8px;}
+.mmhk-heritage-heroes .gui-panel.mmhk-hero-army-summary p{color:#5b4633;font:12px Arial,sans-serif;}
+.mmhk-heritage-heroes .gui-panel.mmhk-hero-army-summary a{color:#70452a;}
+.mmhk-heritage-armies .gui-quantity{max-width:250px;gap:4px;}
+.mmhk-heritage-armies .gui-quantity-controls{max-width:250px;}
+.mmhk-heritage-armies .gui-quantity-controls input{background:#fff9ed!important;
+  color:#473324!important;width:52px!important;padding:5px!important;}
+.mmhk-heritage-armies .gui-quantity-label{color:#59402b;}
+.mmhk-heritage-armies .gui-quantity-controls button{background:#d6b989!important;
+  color:#533920!important;min-width:28px!important;}
+@media(max-width:470px){
+  .gui-window-footer{flex-direction:column-reverse;}
+  .gui-window-footer>.gui-button{width:100%;}
+  .gui-transfer-summary{grid-template-columns:1fr;gap:4px;}
+  .gui-transfer-arrow{transform:rotate(90deg);font-size:19px;}
+  .gui-window-body{padding:12px;}
+}
+@media(prefers-reduced-motion:reduce){.gui-window{animation:none;}}
