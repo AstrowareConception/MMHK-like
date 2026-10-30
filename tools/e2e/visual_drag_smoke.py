@@ -17,7 +17,7 @@ def main():
     os.makedirs("test-output/visuals",exist_ok=True)
     with sync_playwright() as pw:
         browser=pw.chromium.launch(headless=True)
-        page=browser.new_page(viewport={"width":1440,"height":950})
+        page=browser.new_page(viewport={"width":1220,"height":900})
         failures=[]
         page.on("pageerror",lambda e:failures.append(str(e)))
         try:
@@ -38,13 +38,54 @@ def main():
             expect(tabs.get_by_role("tab",name="Inventaire")).to_have_attribute("aria-selected","true")
             expect(page.get_by_test_id("hero-inventory-screen")).to_be_visible()
             expect(page.get_by_test_id("hero-formation-screen")).to_be_hidden()
+            # Visual regression gate at the same 1220x900 viewport as the
+            # player's supplied screenshots. Detect large blank content
+            # regions, clipped slots, overlapping assets and the old mistake
+            # of using screenshots of MMHK UI as character portraits.
+            layout=page.evaluate("""() => {
+              const rect=selector=>document.querySelector(selector)?.getBoundingClientRect();
+              const outer=rect('.mmhk-single-hero-screen');
+              const grid=rect('.mmhk-hero-screen-grid');
+              const workspace=rect('.mmhk-hero-active-screen');
+              const portrait=document.querySelector('.mmhk-hero-portrait');
+              const targets=Array.from(document.querySelectorAll('.mmhk-equip-target'));
+              const boxes=targets.map(x=>x.getBoundingClientRect());
+              const inside=targets.every(t=>{
+                const a=t.getBoundingClientRect();
+                return Array.from(t.querySelectorAll('.mmhk-item')).every(item=>{
+                  const b=item.getBoundingClientRect();
+                  return b.left>=a.left-1 && b.right<=a.right+1 &&
+                         b.top>=a.top-1 && b.bottom<=a.bottom+1;
+                });
+              });
+              let overlaps=0;
+              for(let i=0;i<boxes.length;i++)for(let j=i+1;j<boxes.length;j++){
+                const a=boxes[i],b=boxes[j];
+                if(a.right>b.left+2&&b.right>a.left+2&&
+                   a.bottom>b.top+2&&b.bottom>a.top+2)overlaps++;
+              }
+              return {outerWidth:outer?.width,gridWidth:grid?.width,
+                workspaceWidth:workspace?.width,ratio:grid?.width/outer?.width,
+                workRatio:workspace?.width/outer?.width,
+                overlaps,inside,
+                screenshotPortrait:portrait?.dataset.historicalPainting==="true"};
+            }""")
+            print("HERO VISUAL GEOMETRY 1220x900:",layout,flush=True)
+            assert layout["ratio"]>=0.97, "Hero workspace leaves a giant empty side region"
+            assert layout["workRatio"]>=0.72, "Interactive hero panel is too narrow"
+            assert layout["overlaps"]==0, "Equipment slots overlap each other"
+            assert layout["inside"], "Artefact tile overflows or overlaps its equipment slot"
+            assert not layout["screenshotPortrait"], "A historic interface screenshot is NOT a hero portrait"
+            page.screenshot(path="test-output/visuals/hero-inventory-1220x900.png",
+                            full_page=False)
+            expect(page.get_by_test_id("hero-formation-screen")).to_be_hidden()
             tabs.get_by_role("tab",name="Formation").click()
             expect(page.get_by_test_id("hero-formation-screen")).to_be_visible()
             assert page.evaluate("""() => {
               const screen=document.querySelector('[data-testid="hero-formation-screen"]');
               return screen.scrollHeight<=screen.clientHeight+2;
             }"""), "Formation screen overflow: whole panels may not scroll"
-            page.screenshot(path="test-output/visuals/hero-formation-single-screen.png",full_page=False)
+            page.screenshot(path="test-output/visuals/hero-formation-1220x900.png",full_page=False)
             expect(page.get_by_test_id("hero-inventory-screen")).to_be_hidden()
             tabs.get_by_role("tab",name="Armée").click()
             expect(page.get_by_test_id("hero-army-screen")).to_be_visible()
@@ -55,6 +96,9 @@ def main():
             }"""), "Army screen overflow: only unit listings should scroll"
             tabs.get_by_role("tab",name="Inventaire").click()
             expect(page.get_by_test_id("hero-inventory-screen")).to_be_visible()
+            page.set_viewport_size({"width":1440,"height":950})
+            page.screenshot(path="test-output/visuals/hero-inventory-1440x950.png",
+                            full_page=False)
             # A game screen must fit within the viewport and not rely on a
             # page-long scroll to reach its principal command.
             assert page.evaluate("""() => {
