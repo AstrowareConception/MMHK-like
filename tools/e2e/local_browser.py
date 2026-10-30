@@ -262,7 +262,7 @@ def main() -> int:
 
             # The real worker should complete this 36s experimental job.
             # Check that Next.js refreshes it without a manual browser reload.
-            finished = page.get_by_text("village_hall niveau 1", exact=False)
+            finished = page.get_by_text("Hôtel du village niveau 1", exact=False)
             deadline = time.monotonic() + 105
             while time.monotonic() < deadline:
                 if finished.count() and finished.first.is_visible():
@@ -290,7 +290,8 @@ def main() -> int:
             expect(market_job.get_by_role("button",name="Lancer le chantier")).to_be_enabled()
             market_job.get_by_role("button",name="Lancer le chantier").click()
             expect(page.get_by_text("Chantier enregistré et ressources payées.")).to_be_visible(timeout=20000)
-            market_ready=page.get_by_text("marketplace niveau 1",exact=False)
+            page.get_by_role("tab",name="Chantiers").click()
+            market_ready=page.get_by_text("Marché niveau 1",exact=False)
             deadline=time.monotonic()+115
             while time.monotonic()<deadline:
                 if market_ready.count() and market_ready.first.is_visible():
@@ -342,7 +343,8 @@ def main() -> int:
             # Build the first actual dwelling via the in-scene inspector.
             tier_one.get_by_role("button",name="Lancer le chantier").click()
             expect(page.get_by_text("Chantier enregistré et ressources payées.")).to_be_visible(timeout=20000)
-            next_ready = page.get_by_text("recruit_t1 niveau 1", exact=False)
+            page.get_by_role("tab",name="Chantiers").click()
+            next_ready = page.get_by_text("Demeure des miliciens niveau 1", exact=False)
             deadline = time.monotonic() + 125
             while time.monotonic() < deadline:
                 if next_ready.count() and next_ready.first.is_visible():

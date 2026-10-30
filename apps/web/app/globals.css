@@ -2978,3 +2978,46 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
     font-size:19px;
   }
 }
+
+
+
+/* The old CityDistrict grid used align-items:start, so its items retained
+   intrinsic 495/546px heights even inside a 450px game panel. The frame
+   clipped the bottom of the map AND the inspector. Force a single bounded
+   row and let the detailed inspector, not the entire city, scroll. */
+@media(min-width:901px){
+  .gui-game-stage[data-game-screen="city"] .mmhk-city-active-screen
+    .mmhk-city-district{
+    height:100%!important;min-height:0!important;
+    flex:1 1 0!important;overflow:hidden!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .mmhk-city-active-screen
+    .mmhk-city-workbench{
+    flex:1 1 0!important;height:0!important;
+    min-height:0!important;max-height:100%!important;
+    align-items:stretch!important;
+    grid-template-rows:minmax(0,1fr)!important;
+    overflow:hidden!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .mmhk-city-active-screen
+    .mmhk-city-scene-column,
+  .gui-game-stage[data-game-screen="city"] .mmhk-city-active-screen
+    .mmhk-city-inspector-column{
+    min-height:0!important;height:100%!important;max-height:100%!important;
+    align-self:stretch!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .mmhk-city-active-screen
+    .city-scene-section{
+    flex:1 1 0!important;height:0!important;
+    min-height:0!important;max-height:100%!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .mmhk-city-active-screen
+    .city-scene-frame{
+    flex:1 1 0!important;height:0!important;
+    min-height:0!important;max-height:100%!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .mmhk-city-active-screen
+    .mmhk-district-seal{
+    width:38px!important;height:38px!important;font-size:19px;
+  }
+}

@@ -142,6 +142,9 @@ def main():
                       panelWidth:Math.round(rect(panel).width),
                       sceneHeight:scene?Math.round(rect(scene).height):0,
                       svgHeight:scene?Math.round(rect(scene.querySelector('svg')).height):0,
+                      sceneBottom:scene?Math.round(rect(scene).bottom):0,
+                      panelBottom:Math.round(rect(panel).bottom),
+                      inspectorBottom:inspector?Math.round(rect(inspector).bottom):0,
                       inspectorExtra:inspector?inspector.scrollHeight-inspector.clientHeight:0,
                       inspectorHeight:inspector?Math.round(rect(inspector).height):0};
                 }""")
@@ -152,7 +155,9 @@ def main():
                 if key=="panorama":
                     assert metrics["sceneHeight"]>=130,(key,metrics)
                     assert metrics["svgHeight"]<=metrics["sceneHeight"]+2,(key,metrics)
+                    assert metrics["sceneBottom"]<=metrics["panelBottom"]-3,(key,metrics)
                     assert metrics["inspectorHeight"]>=200,(key,metrics)
+                    assert metrics["inspectorBottom"]<=metrics["panelBottom"]-3,(key,metrics)
                 page.screenshot(path=str(ARTIFACTS/f"CITY-{key}-{width}x{height}.png"),
                                 full_page=False,animations="disabled")
             citytabs.get_by_role("tab",name="Panorama").click()
