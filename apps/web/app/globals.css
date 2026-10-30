@@ -2283,3 +2283,128 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   .mmhk-military-active-screen .mmhk-recruit-list,
   .mmhk-military-active-screen .mmhk-tavern-offers{grid-template-columns:1fr;}
 }
+
+
+/* PR45 visual QA revision — structural fixes based on REAL player screenshots.
+   Do not layer a full screenshot behind a portrait; no empty 45% parchment. */
+.gui-game-stage[data-game-screen="heroes"] .mmhk-single-hero-screen.mmhk-heritage-heroes{
+  align-items:stretch!important;justify-content:stretch!important;
+  grid-template-columns:none!important;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-hero-screen-grid{
+  width:100%!important;max-width:100%!important;
+  align-self:stretch!important;justify-self:stretch!important;
+  grid-template-columns:minmax(0,1fr) clamp(170px,18%,205px)!important;
+  flex:1 1 auto!important;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-hero-active-screen{
+  width:100%;min-width:0;align-self:stretch;overflow:hidden;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-hero-active-screen>[role="tabpanel"]{
+  width:100%;min-height:0;overflow:hidden;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-hero-command-header{
+  width:100%;align-self:stretch;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-single-hero-screen
+  .mmhk-inventory-work-area .mmhk-equipment-stage{
+  grid-template-columns:39% minmax(0,61%)!important;
+  width:100%;gap:0;min-height:0!important;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-hero-portrait{
+  background:linear-gradient(160deg,#a5b1a9,#e7cf9f 56%,#aa8559)!important;
+  background-image:linear-gradient(155deg,#8aa7b1,#e1d1af 62%,#be9a72)!important;
+  background-size:cover!important;background-position:center!important;
+  display:flex;justify-content:center;align-items:center;min-width:0;
+  padding-bottom:54px;overflow:hidden;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-hero-portrait .mmhk-portrait-sky{
+  display:block;opacity:.17;pointer-events:none;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-hero-portrait>.heritage-portrait{
+  width:min(162px,76%)!important;height:min(164px,62%)!important;
+  flex:none;max-height:164px!important;
+  margin:0!important;transform:none!important;
+  background-color:#927958;border:5px ridge #c9aa6d;
+  box-shadow:0 5px 15px #3e332a80;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-hero-portrait .mmhk-portrait-label{
+  min-height:52px;max-height:65px;padding:5px!important;display:grid;align-content:center;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-equipped-areas{
+  min-height:0!important;
+  display:grid!important;
+  justify-items:center;align-items:stretch;
+  grid-template-columns:repeat(4,minmax(0,1fr))!important;
+  grid-template-rows:repeat(4,minmax(0,1fr))!important;
+  gap:7px!important;padding:8px 11px!important;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-equip-target,
+.gui-game-stage[data-game-screen="heroes"] .mmhk-equip-target.slot-head,
+.gui-game-stage[data-game-screen="heroes"] .mmhk-equip-target.slot-feet{
+  box-sizing:border-box;min-width:0!important;
+  width:min(100%,75px)!important;height:100%!important;
+  max-width:75px!important;min-height:0!important;
+  max-height:none!important;overflow:hidden;
+  padding:2px!important;gap:1px!important;
+  justify-content:center;align-items:center;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-slot-symbol.has-heritage-slot{
+  width:38px!important;height:40px!important;min-width:38px!important;
+  min-height:40px!important;background-size:152px 80px!important;
+  background-repeat:no-repeat!important;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-equipped-areas .equipment-slot-name{
+  font:10px/1.1 Arial,sans-serif!important;max-width:100%;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-equipped-areas .mmhk-item{
+  box-sizing:border-box;max-width:100%;max-height:100%;
+  min-width:0;min-height:0!important;padding:1px!important;
+  overflow:hidden;display:grid;align-content:center;justify-items:center;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-equipped-areas .mmhk-item strong{
+  max-width:100%;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  font:9px/1.1 Arial,sans-serif!important;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-equipped-areas
+  .mmhk-equip-target.filled .mmhk-slot-symbol{display:none!important;}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-equipped-areas
+  .mmhk-equip-target.filled{background:#f4dea9!important;border:2px solid #aa7c42!important;}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-heritage-formation .mmhk-battle-ground{
+  display:flex;flex-direction:column;justify-content:center;
+  min-height:0;overflow:hidden;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-heritage-formation .formation-slots{
+  width:100%;margin:8px 0!important;align-items:start;
+  gap:9px!important;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-heritage-formation .mmhk-formation-tile{
+  min-height:145px!important;height:clamp(145px,21dvh,170px)!important;
+  grid-template-rows:16px 65px 28px 18px 12px!important;overflow:hidden;
+  font-size:10px;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-heritage-formation .mmhk-formation-art{
+  height:63px!important;width:min(70px,100%)!important;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-formation-tools{
+  display:flex;gap:2px;max-width:100%;min-width:0;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-formation-tools button{
+  padding:3px 2px!important;font:9px Arial,sans-serif!important;
+  min-width:0;max-width:100%;overflow:hidden;white-space:nowrap;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-formation-slot{min-width:0;}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-formation-save{
+  width:100%;overflow:hidden;
+}
+@media (max-width:900px){
+  .gui-game-stage[data-game-screen="heroes"] .mmhk-hero-screen-grid{
+    grid-template-columns:minmax(0,1fr) 155px!important;
+  }
+}
+@media (max-width:600px){
+  .gui-game-stage[data-game-screen="heroes"] .mmhk-hero-screen-grid{
+    grid-template-columns:minmax(0,1fr)!important;
+  }
+}
