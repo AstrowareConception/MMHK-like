@@ -3,6 +3,7 @@ import {useEffect,useRef,useState,useTransition} from "react";
 import type {DragEvent,KeyboardEvent,PointerEvent} from "react";
 import {moveCityArtifact} from "../app/actions";
 import {HeritagePortrait} from "./heritage-art";
+import {GameDialog} from "./game-ui/game-dialog";
 import type {ArtifactInventory,ArtifactItem,CityForces} from "../lib/server-api";
 
 type Hero=CityForces["heroes"][number];
@@ -28,6 +29,7 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
   const [selected,setSelected]=useState<string|null>(null);
   const [hover,setHover]=useState<string|null>(null);
   const [error,setError]=useState("");
+  const [recipientsOpen,setRecipientsOpen]=useState(false);
   const [pending,startTransition]=useTransition();
   // Some browsers/assistive pointer implementations send pointer events but
   // never synthesize HTML dragstart/drop. Preserve a real movement gesture
@@ -150,9 +152,8 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
     data-ready={ready?"true":"false"}
     aria-busy={pending}>
     <header className="mmhk-board-heading">
-      <div><span className="eyebrow">GESTION DU HÉROS · INVENTAIRE</span>
-        <h3>Équipement</h3>
-        <p>Sélectionnez un artefact, puis son emplacement. Glisser-déposer possible.</p></div>
+      <div><span className="eyebrow">INVENTAIRE</span>
+        <h3>Équipement du héros</h3></div>
       <div className="mmhk-budget"><span>Charge</span>
         <strong>{cost}/{hero.level}</strong>
         <meter min="0" max={Math.max(1,hero.level)}
@@ -166,6 +167,7 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
     {chosen&&<p role="status" className="mmhk-selection-hint">
       <strong>{chosen.name}</strong> sélectionné · choisissez une destination dorée.
       <button type="button" onClick={()=>setSelected(null)}>Annuler</button></p>}
+    <div className="mmhk-inventory-work-area">
     <div className="mmhk-equipment-stage"
       style={art.equipment?{backgroundImage:"linear-gradient(#131e25a0,#131e25a0),url("+JSON.stringify(art.equipment)+")"}:undefined}>
       <div className="mmhk-hero-portrait"
@@ -226,7 +228,11 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
           <span className="mmhk-empty-room">Coffre vide</span>}</div>
       </section>
     </div>
-    {heroes.length>1&&<section className="mmhk-hero-recipient">
+    </div>
+    {heroes.length>1&&<GameDialog open={recipientsOpen}
+      title="Confier un objet à un héros" eyebrow="ÉCHANGES DU ROYAUME"
+      testId="artifact-recipient-dialog" onClose={()=>setRecipientsOpen(false)}>
+      <section className="mmhk-hero-recipient">
       <h4>Confier à un autre héros</h4>
       <div className="mmhk-recipient-list">
         {heroes.filter(h=>h.hero_id!==hero.hero_id).map(h=>
@@ -236,9 +242,13 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
             <strong>{h.name}</strong><small>{h.status==="idle"?"Présent":"Indisponible"}</small>
           </div>)}
       </div>
-    </section>}
-    <p className="mmhk-quiet">Objets uniques, budget et restrictions validés par le serveur.
-      Un emplacement occupé doit d'abord être vidé ; aucun bonus de combat
-      historique non vérifié n'est appliqué.</p>
+      </section>
+    </GameDialog>}
+    <div className="mmhk-inventory-toolbar">
+      <small>Glissez un objet ou sélectionnez sa destination.</small>
+      {heroes.length>1&&<button type="button" onClick={()=>setRecipientsOpen(true)}>
+        Confier un objet à un autre héros
+      </button>}
+    </div>
   </section>;
 }
