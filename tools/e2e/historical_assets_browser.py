@@ -38,7 +38,7 @@ def main() -> None:
         page.get_by_role("link",name=re.compile("Royaume de démonstration")).click()
         page.get_by_role("link",name="Entrer en ville").first.click()
         page.get_by_role("link",name="Héros et artefacts").first.click()
-        board=page.get_by_test_id("heritage-heroes")
+        board=page.get_by_test_id("hero-game-screen")
         expect(board).to_be_visible(timeout=20000)
         face=board.locator(".heritage-portrait-sprite").first
         expect(face).to_be_visible()
