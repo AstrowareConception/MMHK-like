@@ -1,6 +1,7 @@
 "use client";
 
 import {useEffect,useState} from "react";
+import Link from "next/link";
 import type {ReactNode} from "react";
 
 type Tab="garrison"|"recruitment"|"tavern";
@@ -10,9 +11,11 @@ const tabs=[
   {id:"tavern",label:"Taverne"},
 ] as const;
 
-export function MilitaryGameScreen({garrison,recruitment,tavern,heroesCount=0,initialTab="garrison"}:{
+export function MilitaryGameScreen({garrison,recruitment,tavern,heroesCount=0,
+  initialTab="garrison",garrisonEmpty=false,tavernLocked=false,cityHref=""}:{
   garrison:ReactNode;recruitment:ReactNode;tavern:ReactNode;heroesCount?:number;
-  initialTab?:Tab;
+  initialTab?:Tab;garrisonEmpty?:boolean;tavernLocked?:boolean;
+  cityHref?:string;
 }){
   const [screen,setScreen]=useState<Tab>(initialTab);
   useEffect(()=>setScreen(initialTab),[initialTab]);
@@ -33,13 +36,33 @@ export function MilitaryGameScreen({garrison,recruitment,tavern,heroesCount=0,in
     <div className="mmhk-military-active-screen">
       <section role="tabpanel" id="military-panel-garrison"
         aria-labelledby="military-tab-garrison"
-        hidden={screen!=="garrison"} data-testid="military-garrison-screen">{garrison}</section>
+        hidden={screen!=="garrison"} data-testid="military-garrison-screen">
+        {garrison}
+        {garrisonEmpty&&<div className="mmhk-screen-empty mmhk-garrison-empty">
+          <span className="mmhk-empty-symbol" aria-hidden="true">⚔</span>
+          <strong>Vos murailles attendent leur garnison</strong>
+          <p>La cité ne compte aucun soldat. Recrutez dans une demeure,
+            puis affectez vos pelotons aux héros depuis ce plateau.</p>
+          <button type="button" onClick={()=>setScreen("recruitment")}>
+            Ouvrir le recrutement
+          </button>
+        </div>}
+      </section>
       <section role="tabpanel" id="military-panel-recruitment"
         aria-labelledby="military-tab-recruitment"
         hidden={screen!=="recruitment"} data-testid="military-recruitment-screen">{recruitment}</section>
       <section role="tabpanel" id="military-panel-tavern"
         aria-labelledby="military-tab-tavern"
-        hidden={screen!=="tavern"} data-testid="military-tavern-screen">{tavern}</section>
+        hidden={screen!=="tavern"} data-testid="military-tavern-screen">
+        {tavern}
+        {tavernLocked&&cityHref&&<div className="mmhk-screen-empty mmhk-tavern-empty">
+          <span className="mmhk-empty-symbol" aria-hidden="true">♜</span>
+          <strong>La taverne est encore fermée</strong>
+          <p>Construisez la taverne pour ouvrir les offres de compagnons.
+            Vos héros déjà engagés restent disponibles dans la salle des héros.</p>
+          <Link href={cityHref}>Examiner le chantier de la taverne</Link>
+        </div>}
+      </section>
     </div>
   </div>;
 }
