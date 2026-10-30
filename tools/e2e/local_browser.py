@@ -147,7 +147,7 @@ def main() -> int:
             helm.drag_to(helmet)
             page.screenshot(path="test-output/visuals/artifact-after-native-drop.png",full_page=True)
             try:
-                expect(page.get_by_text("Artefact déplacé : les inventaires ont été mis à jour.")).to_be_visible(timeout=20000)
+                expect(page.get_by_text("Artefact déplacé : équipement mis à jour.")).to_be_visible(timeout=20000)
             except AssertionError:
                 print("Artifact drag diagnostics:",
                       "url=",page.url,
