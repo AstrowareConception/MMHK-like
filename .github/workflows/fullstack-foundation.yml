@@ -201,7 +201,7 @@ jobs:
           # Keep the random ephemeral CI password out of logs and artifact
           # uploads; each test step reads it from this runner-local file.
           echo "::add-mask::$password"
-          printf '%s\\n' "$password" > .ci-e2e-password
+          printf '%s' "$password" > .ci-e2e-password
           chmod 600 .ci-e2e-password
       - name: VISUAL GATE — actual Chromium screenshots before game campaign
         run: |
