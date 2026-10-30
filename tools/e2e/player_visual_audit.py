@@ -65,6 +65,9 @@ METRICS = """() => {
       widthRatio:grid&&game?(grid.clientWidth/game.clientWidth):null,
       activeRatio:active&&game?(active.clientWidth/game.clientWidth):null,
       slotCollisions:collisions,clippedCards,tinyControls,
+      formationTileWidths:Array.from(document.querySelectorAll('.mmhk-formation-tile'))
+        .filter(el=>el.getClientRects().length)
+        .map(el=>Math.round(el.getBoundingClientRect().width)),
       screenshotUsedAsPortrait:portrait?.dataset.historicalPainting==='true',
       bodyScroll:getComputedStyle(document.body).overflowY,
       contentScroll:locate('.kingdom-screen-content') &&
@@ -85,6 +88,10 @@ def assert_dimensions(metrics, screen):
     assert metrics["screen"]["scrollH"] <= metrics["screen"]["clientH"] + 3, (
         screen,"screen would scroll or clip a full page",metrics
     )
+    if screen == "formation":
+        assert len(metrics["formationTileWidths"]) == 7, ("Must show seven tactical slots",metrics)
+        assert min(metrics["formationTileWidths"]) >= 85, (
+            "The inherited 55-pixel admin columns are not acceptable game cards",metrics)
     if screen == "inventory":
         assert metrics["widthRatio"] is not None and metrics["widthRatio"] > .97, (
             "Large empty area caused by grid",metrics)
