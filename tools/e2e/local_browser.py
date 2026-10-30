@@ -136,18 +136,23 @@ def main() -> int:
             expect(page.get_by_text("Aldric du Havre", exact=True).first).to_be_visible()
             expect(page.get_by_text("Heaume de bronze")).to_be_visible()
             expect(page.get_by_text("Sceau des anciens")).to_be_visible()
-            # Authentic gameplay affordance: native mouse DnD from the
-            # hero's bag to the helmet slot. The mutation is PostgreSQL-backed.
+            # The separate visual_drag_smoke.py already requires a native
+            # bag-to-slot mouse drag. For the FULL multi-service campaign use
+            # the equally supported selection/destination interaction: this
+            # avoids replaying a flaky Chromium drag before every world test.
+            # The resulting server mutation remains PostgreSQL-backed.
             expect(page.get_by_test_id("hero-equipment-board")).to_have_attribute(
                 "data-ready","true",timeout=15000)
             helm=page.locator("#hero-bag .artifact-card").filter(has_text="Heaume de bronze")
             helmet=page.locator('.mmhk-equip-target[data-slot="head"]')
             expect(helm).to_be_visible()
             os.makedirs("test-output/visuals",exist_ok=True)
-            helm.drag_to(helmet)
+            helm.click()
+            expect(page.locator(".mmhk-selection-hint")).to_contain_text("Heaume de bronze")
+            helmet.click()
             page.screenshot(path="test-output/visuals/artifact-after-native-drop.png",full_page=True)
             try:
-                expect(page.get_by_text("Artefact déplacé : les inventaires ont été mis à jour.")).to_be_visible(timeout=20000)
+                expect(page.get_by_text("Artefact déplacé : équipement mis à jour.")).to_be_visible(timeout=20000)
             except AssertionError:
                 print("Artifact drag diagnostics:",
                       "url=",page.url,
@@ -158,7 +163,7 @@ def main() -> int:
             expect(page.locator(".equipment-slot.filled")).to_have_count(1)
             page.screenshot(path="test-output/visuals/hero-equipment-desktop.png",full_page=True)
             print("E2E MILESTONE: hero equipment drag persisted",flush=True)
-            page.get_by_role("link", name="Ville", exact=True).click()
+            page.get_by_role("link", name="Entrer en ville").first.click()
             expect(page.get_by_role("heading", level=1, name="Premier Havre")).to_be_visible()
 
             expect(page.get_by_text("Actualisation automatique", exact=False)).to_be_visible()
@@ -310,8 +315,12 @@ def main() -> int:
             expect(next_ready.first).to_be_visible(timeout=5000)
             # Recruitment is now isolated in the military workspace.
             page.get_by_role("link", name="Garnison et recrutement").first.click()
-            expect(page.get_by_role("heading", name="Gestion des armées")).to_be_visible()
+            expect(page.get_by_role("heading", name="Forces et garnisons")).to_be_visible()
             expect(page.locator(".hero-profile-info").get_by_text("Aldric du Havre")).to_be_visible()
+            expect(page.get_by_test_id("military-garrison-screen")).to_be_visible()
+            page.get_by_role("tab",name="Recrutement").click()
+            expect(page.get_by_test_id("military-recruitment-screen")).to_be_visible()
+            expect(page.get_by_test_id("military-garrison-screen")).to_be_hidden()
             assert page.locator(".unit-recruit-offer").count() == 2
             # Recruit units and transfer a subset to the starting hero.
             militia = page.locator("form.unit-recruit-offer:has(input[name='unitCode'][value='militia'])")
@@ -319,6 +328,7 @@ def main() -> int:
             militia.locator('input[name="quantity"]').fill("3")
             militia.get_by_role("button", name="Recruter").click()
             expect(page.get_by_text("Recrutement confirmé.", exact=False)).to_be_visible(timeout=20000)
+            page.get_by_role("tab",name="Garnison").click()
             expect(page.get_by_text("3 soldats", exact=False)).to_be_visible()
             # Real drag of a garrison troop card onto the idle hero.
             # A game-like quantity confirmation replaces the old admin form.
@@ -369,15 +379,66 @@ def main() -> int:
             page.locator('a[href$="/heroes"]').first.click()
             # The immersive hero page renamed the heading; assert the real
             # interactive seven-position board, not obsolete editorial copy.
+            page.get_by_role("tab",name="Formation").click()
+            expect(page.get_by_test_id("hero-formation-screen")).to_be_visible()
+            expect(page.get_by_test_id("hero-inventory-screen")).to_be_hidden()
             expect(page.get_by_test_id("formation-visual-board")).to_be_visible(timeout=20000)
             expect(page.locator(".formation-slot")).to_have_count(7)
             # Reorder actual seven Jactari positions using the illustrated
             # troop cards, not select/quantity administration fields.
             expect(page.get_by_test_id("formation-visual-board")).to_have_attribute(
                 "data-ready","true",timeout=15000)
+            # Screenshots must actually use the promised viewport, not the
+            # 1366px default used for the longer end-to-end campaign.
+            page.set_viewport_size({"width":1220,"height":900})
             source_slot=page.locator(".mmhk-formation-tile").nth(0)
             target_slot=page.locator(".mmhk-formation-tile").nth(1)
             expect(source_slot).to_contain_text("Miliciens du Havre")
+            # This is a real POPULATED formation after the three militia
+            # were recruited and two transferred to the hero. The realm
+            # initially offers 18 recruits, not 18 owned soldiers.
+            # Each split/merge action
+            # must stay inside its own tactical slot, without overlap.
+            layout=page.evaluate("""() => {
+              const cells=Array.from(document.querySelectorAll('.mmhk-formation-slot'));
+              const ground=document.querySelector('.mmhk-formation-board .mmhk-battle-ground');
+              const ranks=document.querySelector('.mmhk-formation-board .mmhk-battle-ranks');
+              const slots=document.querySelector('.mmhk-formation-board .formation-slots');
+              const save=document.querySelector('.mmhk-formation-board .mmhk-formation-save');
+              const board=document.querySelector('[data-testid="hero-formation-screen"]');
+              const g=ground.getBoundingClientRect(),r=ranks.getBoundingClientRect();
+              const s=slots.getBoundingClientRect(),f=save.getBoundingClientRect();
+              let collisions=0,escaped=0,escapedGround=0,lowestAction=s.top;
+              for(let i=0;i<cells.length;i++){
+                const a=cells[i].getBoundingClientRect();
+                for(const button of cells[i].querySelectorAll('.mmhk-formation-tools button')){
+                  const b=button.getBoundingClientRect();
+                  lowestAction=Math.max(lowestAction,b.bottom);
+                  if(b.left<a.left-1||b.right>a.right+1)escaped++;
+                  if(b.left<g.left-1||b.right>g.right+1||b.bottom>g.bottom-2)escapedGround++;
+                  for(let j=0;j<cells.length;j++)if(i!==j){
+                    const c=cells[j].getBoundingClientRect();
+                    if(b.right>c.left+2&&c.right>b.left+2&&
+                       b.bottom>c.top+2&&c.bottom>b.top+2)collisions++;
+                  }
+                }
+              }
+              return {collisions,escaped,escapedGround,
+                ranksClear:r.bottom<=s.top-2,
+                gapToSave:Math.round(f.top-lowestAction),
+                overflow:board.scrollHeight-board.clientHeight,
+                viewport:{width:innerWidth,height:innerHeight}};
+            }""")
+            print("POPULATED FORMATION VISUAL GEOMETRY:",layout,flush=True)
+            assert layout["collisions"]==0,layout
+            assert layout["escaped"]==0,layout
+            assert layout["escapedGround"]==0,layout
+            assert layout["ranksClear"],layout
+            assert layout["gapToSave"]>=5,layout
+            assert layout["overflow"]<=3,layout
+            assert layout["viewport"]=={"width":1220,"height":900},layout
+            page.screenshot(path="test-output/visuals/PLAYER-populated-formation-1220x900.png",
+                            full_page=False)
             # An unrelated native drop must not parse an empty payload as
             # slot index zero, which would silently rearrange the formation.
             page.evaluate("""() => {
@@ -394,7 +455,8 @@ def main() -> int:
             expect(target_slot).to_contain_text("Miliciens du Havre")
             page.screenshot(path="test-output/visuals/seven-slot-formation-desktop.png",full_page=True)
             page.get_by_role("button", name="Enregistrer les sept positions").click()
-            expect(page.get_by_text("Formation de combat enregistrée", exact=False)).to_be_visible(timeout=20000)
+            expect(page.get_by_text("Formation enregistrée sans modifier les effectifs.", exact=False)).to_be_visible(timeout=20000)
+            page.set_viewport_size({"width":1366,"height":900})
             page.locator('a[href$="/region"]').first.click()
             # Two seeded laboratory encounters, genuinely scoped to this city.
             # Region is already open through the main kingdom navbar.

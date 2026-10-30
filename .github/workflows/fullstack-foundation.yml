@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+      # Temporary release-candidate trigger, remove before merging.
+      - feat/true-fixed-game-screens-44
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
@@ -196,20 +198,48 @@ jobs:
           PY
           curl --fail --silent --show-error http://127.0.0.1:3000/ | grep -q 'API FastAPI joignable'
           echo "Browser-to-API and sandbox login verified"
-          # Share the same authenticated demo login with BOTH journeys.
-          # A per-command shell environment does not persist after the first
-          # Python process and was leaving local_browser without username.
+          # Keep the random ephemeral CI password out of logs and artifact
+          # uploads; each test step reads it from this runner-local file.
+          echo "::add-mask::$password"
+          printf '%s' "$password" > .ci-e2e-password
+          chmod 600 .ci-e2e-password
+      - name: VISUAL GATE — actual Chromium screenshots before game campaign
+        run: |
+          export MMHK_E2E_URL="http://127.0.0.1:3000"
+          export MMHK_E2E_USERNAME="demo_ci"
+          export MMHK_E2E_PASSWORD="$(cat .ci-e2e-password)"
+          python3 tools/e2e/player_visual_audit.py
+      - name: Publish player visual QA captures immediately
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: mmhk-player-visual-qa
+          path: test-output/visuals/*.png
+          if-no-files-found: ignore
+          retention-days: 7
+      - name: Verify drag/drop and screen isolation before long gameplay
+        run: |
+          export MMHK_E2E_URL="http://127.0.0.1:3000"
+          export MMHK_E2E_USERNAME="demo_ci"
+          export MMHK_E2E_PASSWORD="$(cat .ci-e2e-password)"
+          # Isolate hangs in native DnD from the full 35-minute integration
+          # campaign. A failure here remains red; never silently skip the test.
+          timeout --signal=TERM --kill-after=10s 105s \
+            python3 -u tools/e2e/visual_drag_smoke.py
+      - name: Complete full authenticated Chromium campaign
+        run: |
+          password="$(cat .ci-e2e-password)"
           export MMHK_E2E_URL="http://127.0.0.1:3000"
           export MMHK_E2E_USERNAME="demo_ci"
           export MMHK_E2E_PASSWORD="$password"
-          python3 tools/e2e/visual_drag_smoke.py
           # Validate the local, authenticated historical theme FIRST. Then
           # restore the public-safe theme before any screenshots are recorded.
           node tools/prepare-private-historical.mjs > /tmp/mmhk-private-setup.json
           docker compose --env-file .env.local -f compose.local.yaml -f compose.historical.yaml up -d --wait --no-build --no-deps --force-recreate web
           python3 tools/e2e/historical_assets_browser.py
           docker compose --env-file .env.local -f compose.local.yaml up -d --wait --no-build --no-deps --force-recreate web
-          python3 tools/e2e/local_browser.py
+          timeout --signal=TERM --kill-after=10s 360s \
+            python3 -u tools/e2e/local_browser.py
           # Explicit localhost-only exception for exercising a second owned
           # city. The real game MUST still enforce seven-day newbie protection.
           python3 tools/local/stack.py convoy-demo --username demo_ci --enable-second-city
@@ -274,3 +304,4 @@ jobs:
             docker compose --env-file .env.local -f compose.local.yaml down -v --remove-orphans
             rm -f .env.local
           fi
+          rm -f .ci-e2e-password

@@ -1,9 +1,8 @@
 import Link from "next/link";
 import {notFound,redirect} from "next/navigation";
 import {HeroEquipmentBoard} from "../../../../components/hero-equipment-board";
-import {GameTabs} from "../../../../components/game-ui/game-tabs";
+import {HeroGameScreen,type HeroScreenTab} from "../../../../components/hero-game-screen";
 import {GamePanel} from "../../../../components/game-ui/game-panel";
-import {HeritagePortrait} from "../../../../components/heritage-art";
 import {HeroFormationEditor} from "../../../../components/hero-formation-editor";
 import {GameShell} from "../../../../components/game-shell/game-shell";
 import {resolveAssetUrl} from "../../../../lib/assets/runtime";
@@ -13,7 +12,7 @@ export const dynamic="force-dynamic";
 
 export default async function HeroesPage({params,searchParams}:{
   params:Promise<{cityId:string}>;
-  searchParams:Promise<{hero?:string;artifact?:string;formation?:string}>;
+  searchParams:Promise<{hero?:string;artifact?:string;formation?:string;screen?:string}>;
 }) {
   const {cityId}=await params,query=await searchParams;
   const token=await sessionToken();
@@ -41,95 +40,65 @@ export default async function HeroesPage({params,searchParams}:{
   const gearSlots=Object.fromEntries(inventory.slots.map(slot=>[
     slot,resolveAssetUrl(("hero.slot."+slot) as "hero.slot.head")
   ]));
-  return <GameShell token={token} title="Héros et équipement"
+  const initialTab:HeroScreenTab=query.formation?"formation":
+    query.screen==="formation"?"formation":query.screen==="army"?"army":"inventory";
+  return <GameShell token={token} title="Héros et équipement" screen="heroes"
     eyebrow="ROYAUME · SALLE DES HÉROS"
     description={"Héros, armées et artefacts · "+city.name}
     cityId={cityId} worldId={city.world_id} stocks={city.stocks}>
-    <nav className="city-shortcuts" aria-label="Sections de la ville">
-      <Link href={"/cities/"+cityId}>Ville</Link>
-      <Link href={"/cities/"+cityId+"/forces"}>Garnison et recrutement</Link>
-      <Link href={"/cities/"+cityId+"/region"}>Région</Link>
-    </nav>
-    {query.artifact&&<p role={query.artifact==="ok"?"status":"alert"}
-      className={query.artifact==="ok"?"construction-notice":"error"}>
-      {query.artifact==="ok"?"Artefact déplacé : les inventaires ont été mis à jour.":
-        "Action refusée : vérifiez le héros, le niveau et l'emplacement d'équipement."}
-    </p>}
     {!selected?<section className="mmhk-no-hero">
       <h2>Aucun héros dans cette cité</h2>
       <p>Ouvrez la taverne pour engager votre premier compagnon.</p>
       <Link href={"/cities/"+cityId+"/forces"}>Aller à la taverne</Link>
-    </section>:<div className="hero-management mmhk-hero-management mmhk-heritage-heroes" data-testid="heritage-heroes">
-      <aside className="hero-pick-list mmhk-roster">
-        <div className="mmhk-roster-heading"><small className="eyebrow">MES COMPAGNONS</small>
-          <h2>Les héros</h2></div>
-        {forces.heroes.map(h=><Link key={h.hero_id}
-          href={"/cities/"+cityId+"/heroes?hero="+h.hero_id}
-          aria-current={h.hero_id===selected.hero_id?"page":undefined}
-          className={"hero-pick mmhk-roster-choice "+(h.hero_id===selected.hero_id?"selected":"")}>
-          <HeritagePortrait heroId={h.hero_id} archetype={h.archetype}
-            sheet={portraitSheet} fallback={portrait(h.archetype)??"/themes/public-safe/hero-vanguard.svg"}/>
-          <span><strong>{h.name}</strong><small>Niveau {h.level} ·
-            {" "}{h.status==="idle"?"Au château":h.status==="on_mission"?"En mission":h.status}</small>
-          </span>
-        </Link>)}
-        <div className="hero-explanation">
-          <strong>Héros de la cité</strong>
-          <p>Choisissez un portrait pour consulter ses artefacts et préparer ses troupes.</p>
-        </div>
-      </aside>
-      <div className="hero-workspace mmhk-hero-workspace">
-        <GameTabs label="Onglets de la gestion du héros" active="inventory" items={[
-          {id:"inventory",label:"Inventaire",href:"#hero-equipment"},
-          {id:"formation",label:"Formation",href:"#hero-formation"},
-          {id:"army",label:"Armée",href:"#hero-army"},
-          {id:"talents",label:"Talents · à venir",disabled:true},
-          {id:"spells",label:"Sorts · à venir",disabled:true},
-        ]}/> 
-        <div className="hero-workspace-header mmhk-hero-banner mmhk-heritage-title">
-          <div><span className="eyebrow">SALLE DES HÉROS</span>
-            <h2>{selected.name}</h2>
-            <p>{selected.archetype==="magic"?"Voie de la Magie":"Voie de la Force"}
-              {" · Niveau "+selected.level+" · "+selected.experience+" expérience"}</p>
-          </div>
-          <div className="mmhk-hero-seal" aria-hidden="true">
-            {selected.archetype==="magic"?"✧":"⚜"}
-          </div>
-        </div>
-        <HeroEquipmentBoard key={selected.hero_id} cityId={cityId} hero={selected}
-          heroes={forces.heroes} inventory={inventory}
-          art={{
-            portrait:portrait(selected.archetype),
-            portraitSheet,
-            slotSheet:resolveAssetUrl("hero.slot.sheet.haven"),
-            painting:resolveAssetUrl(selected.archetype==="magic"?"hero.painting.magic":"hero.painting.might"),
-            equipment:resolveAssetUrl("hero.background.haven"),
-            frame:resolveAssetUrl("hero.frame"),
-            backpack:resolveAssetUrl("hero.backpack"),
-            artifactIcon:resolveAssetUrl("hero.artifact.icon"),
-            slots:gearSlots,
-          }}/>
-        {query.formation&&<p role={query.formation==="ok"?"status":"alert"}
-          className={query.formation==="ok"?"construction-notice":"error"}>
-          {query.formation==="ok"?"Formation de combat enregistrée sans modifier les effectifs.":
-            "Formation refusée : vérifiez les sept positions, les quantités ou la disponibilité du héros."}
-        </p>}
-        {formation?.ok&&formation.data&&
-          <HeroFormationEditor key={selected.hero_id+"-formation"} cityId={cityId}
-            formation={formation.data} sheet={unitSheet}/>}
-        <GamePanel title="Armée du héros" eyebrow="COMMANDEMENT"
-          id="hero-army" className="hero-army-summary mmhk-hero-army-summary" decorativeSymbol="⚔">
+    </section>:<HeroGameScreen key={selected.hero_id} cityId={cityId}
+      hero={selected} heroes={forces.heroes} initialTab={initialTab}
+      portraitSheet={portraitSheet}
+      fallbackMight={portrait("might")??"/themes/public-safe/hero-vanguard.svg"}
+      fallbackMagic={portrait("magic")??"/themes/public-safe/hero-arcanist.svg"}
+      artifactNotice={query.artifact&&<p role={query.artifact==="ok"?"status":"alert"}
+        className={query.artifact==="ok"?"construction-notice":"error"}>
+        {query.artifact==="ok"?"Artefact déplacé : équipement mis à jour.":
+          "Action refusée : niveau, emplacement ou héros indisponible."}
+      </p>}
+      formationNotice={query.formation&&<p role={query.formation==="ok"?"status":"alert"}
+        className={query.formation==="ok"?"construction-notice":"error"}>
+        {query.formation==="ok"?"Formation enregistrée sans modifier les effectifs.":
+          "Formation refusée : positions, quantités ou héros indisponible."}
+      </p>}
+      inventory={<HeroEquipmentBoard cityId={cityId} hero={selected}
+        heroes={forces.heroes} inventory={inventory}
+        art={{
+          portrait:portrait(selected.archetype),portraitSheet,
+          slotSheet:resolveAssetUrl("hero.slot.sheet.haven"),
+          // The archived files are UI screenshots, not portraits. Never crop a
+          // screenshot of MMHK chrome into the hero painting panel.
+          painting:null,
+          equipment:resolveAssetUrl("hero.background.haven"),
+          frame:resolveAssetUrl("hero.frame"),backpack:resolveAssetUrl("hero.backpack"),
+          artifactIcon:resolveAssetUrl("hero.artifact.icon"),slots:gearSlots
+        }}/>}
+      formation={formation?.ok&&formation.data?
+        <HeroFormationEditor cityId={cityId} formation={formation.data} sheet={unitSheet}/>:
+        <div className="mmhk-no-hero">Formation indisponible.</div>}
+      army={<GamePanel title="Armée du héros" eyebrow="COMMANDEMENT"
+        id="hero-army" className="hero-army-summary mmhk-hero-army-summary" decorativeSymbol="⚔">
+        <div className="mmhk-army-roster-list">
           {forces.hero_armies.filter(u=>u.hero_id===selected.hero_id).length?
             forces.hero_armies.filter(u=>u.hero_id===selected.hero_id).map(u=>
-              <p key={u.unit_code}><span>⚔</span> {u.name} :
-                {" "}<strong>{u.quantity.toLocaleString("fr-FR")}</strong></p>):
-            <p>Aucun peloton actuellement confié à ce héros.</p>}
-          <Link href={"/cities/"+cityId+"/forces"}>Ouvrir la salle de garnison</Link>
-        </GamePanel>
-        <p className="notice">Les propriétés historiques des artefacts restent à qualifier.
-          Les déplacements sont persistés dans PostgreSQL ; les bonus d'artefacts
-          ne modifient pas encore les combats Jactari.</p>
-      </div>
-    </div>}
+              <div key={u.unit_code} className="mmhk-army-row">
+                <span aria-hidden="true">⚔</span><strong>{u.name}</strong>
+                <b>× {u.quantity.toLocaleString("fr-FR")}</b>
+              </div>):
+            <div className="mmhk-army-empty-state">
+              <span aria-hidden="true">⚔</span>
+              <strong>Ce héros attend son armée</strong>
+              <p>Les pelotons disponibles se trouvent dans la garnison.
+                Rejoignez le château pour lui affecter ses premiers soldats.</p>
+            </div>}
+        </div>
+        <Link className="mmhk-hero-garrison-link" href={"/cities/"+cityId+"/forces"}>
+          Ouvrir la garnison pour affecter des soldats
+        </Link>
+      </GamePanel>}/>}
   </GameShell>;
 }
