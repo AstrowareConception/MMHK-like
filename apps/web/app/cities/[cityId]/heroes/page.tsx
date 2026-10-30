@@ -1,6 +1,8 @@
 import Link from "next/link";
 import {notFound,redirect} from "next/navigation";
 import {HeroEquipmentBoard} from "../../../../components/hero-equipment-board";
+import {GameTabs} from "../../../../components/game-ui/game-tabs";
+import {GamePanel} from "../../../../components/game-ui/game-panel";
 import {HeritagePortrait} from "../../../../components/heritage-art";
 import {HeroFormationEditor} from "../../../../components/hero-formation-editor";
 import {GameShell} from "../../../../components/game-shell/game-shell";
@@ -77,13 +79,13 @@ export default async function HeroesPage({params,searchParams}:{
         </div>
       </aside>
       <div className="hero-workspace mmhk-hero-workspace">
-        <nav className="hero-subnav mmhk-original-tabs" aria-label="Onglets de la gestion du héros">
-          <a href="#hero-equipment" aria-current="page">Inventaire</a>
-          <a href="#hero-formation">Formation</a>
-          <a href="#hero-army">Armée</a>
-          <span aria-label="Talents non encore disponibles">Talents · à venir</span>
-          <span aria-label="Sorts non encore disponibles">Sorts · à venir</span>
-        </nav>
+        <GameTabs label="Onglets de la gestion du héros" active="inventory" items={[
+          {id:"inventory",label:"Inventaire",href:"#hero-equipment"},
+          {id:"formation",label:"Formation",href:"#hero-formation"},
+          {id:"army",label:"Armée",href:"#hero-army"},
+          {id:"talents",label:"Talents · à venir",disabled:true},
+          {id:"spells",label:"Sorts · à venir",disabled:true},
+        ]}/> 
         <div className="hero-workspace-header mmhk-hero-banner mmhk-heritage-title">
           <div><span className="eyebrow">SALLE DES HÉROS</span>
             <h2>{selected.name}</h2>
@@ -115,15 +117,15 @@ export default async function HeroesPage({params,searchParams}:{
         {formation?.ok&&formation.data&&
           <HeroFormationEditor key={selected.hero_id+"-formation"} cityId={cityId}
             formation={formation.data} sheet={unitSheet}/>}
-        <div className="hero-army-summary mmhk-hero-army-summary" id="hero-army">
-          <h3>Armée du héros</h3>
+        <GamePanel title="Armée du héros" eyebrow="COMMANDEMENT"
+          id="hero-army" className="hero-army-summary mmhk-hero-army-summary" decorativeSymbol="⚔">
           {forces.hero_armies.filter(u=>u.hero_id===selected.hero_id).length?
             forces.hero_armies.filter(u=>u.hero_id===selected.hero_id).map(u=>
               <p key={u.unit_code}><span>⚔</span> {u.name} :
                 {" "}<strong>{u.quantity.toLocaleString("fr-FR")}</strong></p>):
             <p>Aucun peloton actuellement confié à ce héros.</p>}
           <Link href={"/cities/"+cityId+"/forces"}>Ouvrir la salle de garnison</Link>
-        </div>
+        </GamePanel>
         <p className="notice">Les propriétés historiques des artefacts restent à qualifier.
           Les déplacements sont persistés dans PostgreSQL ; les bonus d'artefacts
           ne modifient pas encore les combats Jactari.</p>
