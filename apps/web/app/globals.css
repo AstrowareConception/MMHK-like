@@ -2637,3 +2637,51 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
     width:90%;bottom:3%;min-height:0;
   }
 }
+
+
+
+/* Filled tactical board finishing pass.
+   The previous 170px cards plus a second tool row obscured the tactical
+   flank headings and nearly met the bottom save bar in real screenshots.
+   Keep every operation inside the actual battle ground at 1220x900. */
+.gui-game-stage[data-game-screen="heroes"]
+  .mmhk-formation-board .mmhk-battle-ground{
+  justify-content:flex-start!important;
+  padding:7px 7px 5px!important;
+  overflow:hidden;
+}
+.gui-game-stage[data-game-screen="heroes"]
+  .mmhk-formation-board .mmhk-battle-ranks{
+  display:flex;align-items:center;justify-content:space-around;
+  flex:0 0 18px;min-height:18px;
+  margin:0 0 5px!important;
+  line-height:18px!important;
+  white-space:nowrap;overflow:hidden;
+  color:#714b32!important;
+  font:small-caps 11px/18px Georgia,serif;
+}
+.gui-game-stage[data-game-screen="heroes"]
+  .mmhk-formation-board .formation-slots{
+  margin:0!important;align-items:start;gap:8px!important;
+}
+.gui-game-stage[data-game-screen="heroes"]
+  .mmhk-formation-board .mmhk-formation-tile{
+  min-height:0!important;
+  height:clamp(126px,15dvh,137px)!important;
+  padding:3px 2px!important;
+  grid-template-rows:16px 51px minmax(25px,auto) 18px!important;
+  row-gap:2px!important;
+}
+.gui-game-stage[data-game-screen="heroes"]
+  .mmhk-formation-board .mmhk-formation-art{
+  height:49px!important;width:min(55px,100%)!important;
+}
+.gui-game-stage[data-game-screen="heroes"]
+  .mmhk-formation-board .mmhk-formation-tools{
+  flex:0 0 auto;margin-top:1px!important;gap:2px!important;
+}
+.gui-game-stage[data-game-screen="heroes"]
+  .mmhk-formation-board .mmhk-formation-tools button{
+  min-height:21px!important;max-height:23px;
+  font-size:10px!important;
+}

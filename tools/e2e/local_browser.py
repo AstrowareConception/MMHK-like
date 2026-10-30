@@ -388,6 +388,9 @@ def main() -> int:
             # troop cards, not select/quantity administration fields.
             expect(page.get_by_test_id("formation-visual-board")).to_have_attribute(
                 "data-ready","true",timeout=15000)
+            # Screenshots must actually use the promised viewport, not the
+            # 1366px default used for the longer end-to-end campaign.
+            page.set_viewport_size({"width":1220,"height":900})
             source_slot=page.locator(".mmhk-formation-tile").nth(0)
             target_slot=page.locator(".mmhk-formation-tile").nth(1)
             expect(source_slot).to_contain_text("Miliciens du Havre")
@@ -398,12 +401,21 @@ def main() -> int:
             # must stay inside its own tactical slot, without overlap.
             layout=page.evaluate("""() => {
               const cells=Array.from(document.querySelectorAll('.mmhk-formation-slot'));
-              let collisions=0,escaped=0;
+              const ground=document.querySelector('.mmhk-formation-board .mmhk-battle-ground');
+              const ranks=document.querySelector('.mmhk-formation-board .mmhk-battle-ranks');
+              const slots=document.querySelector('.mmhk-formation-board .formation-slots');
+              const save=document.querySelector('.mmhk-formation-board .mmhk-formation-save');
+              const board=document.querySelector('[data-testid="hero-formation-screen"]');
+              const g=ground.getBoundingClientRect(),r=ranks.getBoundingClientRect();
+              const s=slots.getBoundingClientRect(),f=save.getBoundingClientRect();
+              let collisions=0,escaped=0,escapedGround=0,lowestAction=s.top;
               for(let i=0;i<cells.length;i++){
                 const a=cells[i].getBoundingClientRect();
                 for(const button of cells[i].querySelectorAll('.mmhk-formation-tools button')){
                   const b=button.getBoundingClientRect();
+                  lowestAction=Math.max(lowestAction,b.bottom);
                   if(b.left<a.left-1||b.right>a.right+1)escaped++;
+                  if(b.left<g.left-1||b.right>g.right+1||b.bottom>g.bottom-2)escapedGround++;
                   for(let j=0;j<cells.length;j++)if(i!==j){
                     const c=cells[j].getBoundingClientRect();
                     if(b.right>c.left+2&&c.right>b.left+2&&
@@ -411,13 +423,20 @@ def main() -> int:
                   }
                 }
               }
-              const board=document.querySelector('[data-testid="hero-formation-screen"]');
-              return {collisions,escaped,overflow:board.scrollHeight-board.clientHeight};
+              return {collisions,escaped,escapedGround,
+                ranksClear:r.bottom<=s.top-2,
+                gapToSave:Math.round(f.top-lowestAction),
+                overflow:board.scrollHeight-board.clientHeight,
+                viewport:{width:innerWidth,height:innerHeight}};
             }""")
             print("POPULATED FORMATION VISUAL GEOMETRY:",layout,flush=True)
             assert layout["collisions"]==0,layout
             assert layout["escaped"]==0,layout
+            assert layout["escapedGround"]==0,layout
+            assert layout["ranksClear"],layout
+            assert layout["gapToSave"]>=5,layout
             assert layout["overflow"]<=3,layout
+            assert layout["viewport"]=={"width":1220,"height":900},layout
             page.screenshot(path="test-output/visuals/PLAYER-populated-formation-1220x900.png",
                             full_page=False)
             # An unrelated native drop must not parse an empty payload as
@@ -437,6 +456,7 @@ def main() -> int:
             page.screenshot(path="test-output/visuals/seven-slot-formation-desktop.png",full_page=True)
             page.get_by_role("button", name="Enregistrer les sept positions").click()
             expect(page.get_by_text("Formation enregistrée sans modifier les effectifs.", exact=False)).to_be_visible(timeout=20000)
+            page.set_viewport_size({"width":1366,"height":900})
             page.locator('a[href$="/region"]').first.click()
             # Two seeded laboratory encounters, genuinely scoped to this city.
             # Region is already open through the main kingdom navbar.

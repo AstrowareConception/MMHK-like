@@ -117,3 +117,20 @@ revue visuelle effective n'est pas satisfaisante.
   leur `backgroundImage` fourni dans la vue.
 - Cette limite doit être levée avant d'affirmer que la souris fonctionne
   impeccablement dans les deux sens ; `main` demeure intacte.
+
+
+
+### Revue d'un plateau réellement occupé — dernière CI complète verte
+
+La [recette #41078640941](https://github.com/AstrowareConception/MMHK-like/actions/runs/41078640941)
+a terminé ses quatre jobs avec succès ; elle contient un écran de formation avec
+deux miliciens réellement transférés et enregistrés (pas « 18 soldats »
+effectivement possédés).
+
+L'inspection de `PLAYER-populated-formation-1220x900.png` a toutefois révélé
+deux défauts qu'un simple test de largeur ne voyait pas : intitulés de flanc
+partiellement masqués et outils Diviser/Fusionner trop proches de la barre
+d'enregistrement. Un nouveau test mesure donc les limites verticales du
+terrain, le dégagement des libellés et une séparation minimale de 5 pixels
+avant la zone de sauvegarde. La capture est désormais réellement effectuée
+à 1220×900, et non à 1366×900 sous un nom trompeur.
