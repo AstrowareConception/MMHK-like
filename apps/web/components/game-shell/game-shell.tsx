@@ -6,6 +6,7 @@ import {resolveAssetUrl} from "../../lib/assets/runtime";
 import {privateApi,type City} from "../../lib/server-api";
 import type {TimelineResponse} from "../../lib/timeline";
 import {TopTimelineBar} from "../top-timeline-bar";
+import {GameViewportControls} from "../game-ui/game-viewport-controls";
 const RESOURCE_LIST=[
   ["gold","Or"],["wood","Bois"],["ore","Minerai"],["crystal","Cristal"],
   ["gems","Gemmes"],["sulfur","Soufre"],["mercury","Mercure"]
@@ -23,7 +24,7 @@ export async function GameShell({token,title,eyebrow,description,worldId,cityId,
   const ownCities=citiesResponse?.ok?citiesResponse.data??[]:[];
   const backdrop=resolveAssetUrl("ui.page.background");
   const paper=resolveAssetUrl("ui.panel.main");
-  return <main className="shell kingdom-shell"
+  return <main id="mmhk-game-viewport" className="shell kingdom-shell gui-game-stage"
     style={backdrop?{backgroundImage:"linear-gradient(180deg,#101a21a8,#101820e8),url("+JSON.stringify(backdrop)+")"}:undefined}>
     <div className="kingdom-frame">
       <TopTimelineBar initial={response.ok?response.data??null:null}
@@ -32,7 +33,10 @@ export async function GameShell({token,title,eyebrow,description,worldId,cityId,
         <div className="kingdom-emblem" aria-hidden="true">✦</div>
         <div className="kingdom-brand"><span>MIGHT &amp; MAGIC · HEROES KINGDOMS</span>
           <strong>Le Royaume des Larmes</strong></div>
-        <span className="kingdom-realm-badge">SAISON II · RECONSTITUTION</span>
+        <div className="gui-stage-actions">
+          <span className="kingdom-realm-badge">SAISON II · RECONSTITUTION</span>
+          <GameViewportControls/>
+        </div>
       </header>
       <nav className="kingdom-navbar" aria-label="Navigation principale du royaume">
         <Link href="/">♜ Mes mondes</Link>

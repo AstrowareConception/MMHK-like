@@ -310,7 +310,7 @@ def main() -> int:
             expect(next_ready.first).to_be_visible(timeout=5000)
             # Recruitment is now isolated in the military workspace.
             page.get_by_role("link", name="Garnison et recrutement").first.click()
-            expect(page.get_by_role("heading", name="Armées et héros")).to_be_visible()
+            expect(page.get_by_role("heading", name="Gestion des armées")).to_be_visible()
             expect(page.locator(".hero-profile-info").get_by_text("Aldric du Havre")).to_be_visible()
             assert page.locator(".unit-recruit-offer").count() == 2
             # Recruit units and transfer a subset to the starting hero.
@@ -327,10 +327,39 @@ def main() -> int:
             troop=page.locator('[data-testid="troop-stack"][data-holder="garrison"][data-unit-code="militia"]')
             recipient=page.locator('[data-testid="hero-drop-zone"]').first
             expect(troop).to_be_visible()
+            # Split is a local planning gesture. It must conserve the real
+            # three soldiers until the transfer order is confirmed.
+            troop.get_by_role("button",name=re.compile("Diviser Miliciens")).click()
+            split=page.get_by_test_id("garrison-split-dialog")
+            expect(split).to_be_visible()
+            expect(split).to_have_attribute("role","dialog")
+            split.get_by_test_id("garrison-split-quantity").locator('input[type="number"]').fill("1")
+            split.get_by_role("button",name="Diviser le peloton").click()
+            expect(split).to_have_count(0)
+            expect(page.locator('[data-testid="troop-stack"][data-holder="garrison"][data-unit-code="militia"]')).to_have_count(2)
+            assert sorted(int(x.lstrip("×")) for x in page.locator(
+              '[data-testid="troop-stack"][data-holder="garrison"][data-unit-code="militia"] .mmhk-stack-count'
+              ).all_text_contents()) == [1,2]
+            page.get_by_role("button",name=re.compile("Fusionner les groupes")).first.click()
+            expect(page.locator('[data-testid="troop-stack"][data-holder="garrison"][data-unit-code="militia"]')).to_have_count(1)
             troop.drag_to(recipient)
             confirmation=page.get_by_test_id("transfer-confirmation")
             expect(confirmation).to_be_visible()
+            expect(confirmation).to_have_attribute("role","dialog")
+            expect(confirmation).to_have_attribute("aria-modal","true")
+            expect(confirmation.get_by_role("heading",name="Transférer des troupes")).to_be_visible()
+            assert page.evaluate("document.body.style.overflow") == "hidden"
+            # Closing a dialog must not send an order or consume a soldier.
+            page.keyboard.press("Escape")
+            expect(confirmation).to_have_count(0)
+            assert page.evaluate("document.body.style.overflow") != "hidden"
+            expect(page.locator('[data-testid="troop-stack"][data-holder="garrison"]')).to_contain_text("3")
+            troop.drag_to(recipient)
+            confirmation=page.get_by_test_id("transfer-confirmation")
+            expect(confirmation).to_be_visible()
+            expect(confirmation.get_by_role("button",name="Max")).to_be_disabled()
             confirmation.locator('input[type="number"]').fill("2")
+            expect(confirmation.get_by_role("button",name="Max")).to_be_enabled()
             confirmation.get_by_role("button",name="Confirmer le transfert").click()
             expect(page.get_by_text("Transfert confirmé",exact=False)).to_be_visible(timeout=20000)
             expect(page.locator('[data-testid="troop-stack"][data-holder="garrison"][data-unit-code="militia"]')).to_contain_text("1")
