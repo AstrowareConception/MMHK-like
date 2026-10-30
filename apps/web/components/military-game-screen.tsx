@@ -1,6 +1,6 @@
 "use client";
 
-import {useState} from "react";
+import {useEffect,useState} from "react";
 import type {ReactNode} from "react";
 
 type Tab="garrison"|"recruitment"|"tavern";
@@ -10,10 +10,12 @@ const tabs=[
   {id:"tavern",label:"Taverne"},
 ] as const;
 
-export function MilitaryGameScreen({garrison,recruitment,tavern,heroesCount=0}:{
+export function MilitaryGameScreen({garrison,recruitment,tavern,heroesCount=0,initialTab="garrison"}:{
   garrison:ReactNode;recruitment:ReactNode;tavern:ReactNode;heroesCount?:number;
+  initialTab?:Tab;
 }){
-  const [screen,setScreen]=useState<Tab>("garrison");
+  const [screen,setScreen]=useState<Tab>(initialTab);
+  useEffect(()=>setScreen(initialTab),[initialTab]);
   return <div className="mmhk-military-game-screen" data-testid="military-game-screen"
     data-active-screen={screen}>
     <header className="mmhk-hero-command-header">
