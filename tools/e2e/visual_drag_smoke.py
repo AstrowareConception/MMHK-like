@@ -40,12 +40,29 @@ def main():
             expect(page.get_by_test_id("hero-formation-screen")).to_be_hidden()
             tabs.get_by_role("tab",name="Formation").click()
             expect(page.get_by_test_id("hero-formation-screen")).to_be_visible()
+            assert page.evaluate("""() => {
+              const screen=document.querySelector('[data-testid="hero-formation-screen"]');
+              return screen.scrollHeight<=screen.clientHeight+2;
+            }"""), "Formation screen overflow: whole panels may not scroll"
+            page.screenshot(path="test-output/visuals/hero-formation-single-screen.png",full_page=False)
             expect(page.get_by_test_id("hero-inventory-screen")).to_be_hidden()
             tabs.get_by_role("tab",name="Armée").click()
             expect(page.get_by_test_id("hero-army-screen")).to_be_visible()
             expect(page.locator(".gui-panel#hero-army")).to_be_visible()
+            assert page.evaluate("""() => {
+              const screen=document.querySelector('[data-testid="hero-army-screen"]');
+              return screen.scrollHeight<=screen.clientHeight+2;
+            }"""), "Army screen overflow: only unit listings should scroll"
             tabs.get_by_role("tab",name="Inventaire").click()
             expect(page.get_by_test_id("hero-inventory-screen")).to_be_visible()
+            # A game screen must fit within the viewport and not rely on a
+            # page-long scroll to reach its principal command.
+            assert page.evaluate("""() => {
+              const screen=document.querySelector('.mmhk-single-hero-screen');
+              const viewport=document.querySelector('.kingdom-screen-content');
+              return screen.scrollHeight<=screen.clientHeight+2 &&
+                getComputedStyle(viewport).overflowY==='hidden';
+            }"""), "The game must not be a long page nested inside a viewport"
             # A quiet demo has no pending orders: its chronicle must occupy
             # only one compact bar rather than a large empty game header.
             timeline=page.locator(".kingdom-timeline")
