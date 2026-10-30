@@ -89,7 +89,12 @@ export default async function HeroesPage({params,searchParams}:{
                 <span aria-hidden="true">⚔</span><strong>{u.name}</strong>
                 <b>× {u.quantity.toLocaleString("fr-FR")}</b>
               </div>):
-            <p>Aucun peloton affecté à ce héros.</p>}
+            <div className="mmhk-army-empty-state">
+              <span aria-hidden="true">⚔</span>
+              <strong>Ce héros attend son armée</strong>
+              <p>Les pelotons disponibles se trouvent dans la garnison.
+                Rejoignez le château pour lui affecter ses premiers soldats.</p>
+            </div>}
         </div>
         <Link className="mmhk-hero-garrison-link" href={"/cities/"+cityId+"/forces"}>
           Ouvrir la garnison pour affecter des soldats
