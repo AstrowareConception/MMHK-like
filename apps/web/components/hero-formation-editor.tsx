@@ -173,10 +173,9 @@ export function HeroFormationEditor({cityId,formation,sheet}:{
                   fallback={ART[r.unit_code]} scale={1}/>:
                   <span aria-hidden="true">+</span>}
               </span>
-              <strong>{u?.name??(r.unit_code||"Emplacement libre")}</strong>
+              <strong>{u?.name??(r.unit_code||"Libre")}</strong>
               <span className="mmhk-formation-qty">{r.unit_code?
-                "×"+r.quantity.toLocaleString("fr-FR"):"Disponible"}</span>
-              <small>Jactari {i+2}</small>
+                "×"+r.quantity.toLocaleString("fr-FR"):""}</span>
             </button>
             {r.unit_code&&editable&&<div className="mmhk-formation-tools">
               <button type="button" onClick={()=>split(i)}
