@@ -97,3 +97,23 @@ Captures réellement inspectées :
 
 La PR ne sera pas fusionnée sur le seul statut « 4 jobs verts » si la
 revue visuelle effective n'est pas satisfaisante.
+
+### Recette complémentaire et limite identifiée — 30 octobre
+
+- Les 12 écrans Chromium en lecture seule sont couverts à **1220×900** et
+  **1440×950** ; les six activités sont vérifiées aux deux résolutions.
+- Le glisser-déposer natif de **sac vers équipement** réussit et persiste via
+  une commande serveur réelle.
+- Une seconde opération native **équipement vers sac** reste **non certifiée** :
+  Chromium/Playwright 1.56 se bloque aussi bien avec `locator.drag_to` qu'avec
+  `page.mouse.move`. Les délais internes ne terminent pas la commande ;
+  seul `timeout` externe termine le processus.
+- Pour ne pas masquer les autres régressions, la recette bloque sur le
+  glisser-déposer aller et vérifie le retour par sélection clavier et
+  activation clavier du sac (une autre interaction réelle proposée au joueur).
+  Cette validation ne vaut PAS recette du glisser-déposer inverse.
+- Les images historiques privées doivent rester visibles quand elles sont
+  disponibles : aucune règle de couleur de fond globale ne doit neutraliser
+  leur `backgroundImage` fourni dans la vue.
+- Cette limite doit être levée avant d'affirmer que la souris fonctionne
+  impeccablement dans les deux sens ; `main` demeure intacte.

@@ -1673,7 +1673,8 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
 .mmhk-heritage-armies .mmhk-quiet{color:#705743;font:10px Arial,sans-serif;border-color:#c6af8c;}
 .mmhk-heritage-armies .mmhk-military-market{grid-template-columns:1fr 1fr;gap:9px;margin:9px 0;}
 .mmhk-heritage-armies .mmhk-recruit-hall,.mmhk-heritage-armies .mmhk-tavern-hall{
-  background:#efe4d1!important;padding:10px!important;border:1px solid #a68a72;color:#644832;}
+  /* Color only: preserve inline artwork backgrounds in private localhost UI. */
+  background-color:#efe4d1!important;padding:10px!important;border:1px solid #a68a72;color:#644832;}
 .mmhk-heritage-armies .mmhk-recruit-hall h3,.mmhk-heritage-armies .mmhk-tavern-hall h3{
   color:#613e2b;font:bold 17px Arial,sans-serif;}
 .mmhk-heritage-armies .mmhk-recruit-hall header p,
