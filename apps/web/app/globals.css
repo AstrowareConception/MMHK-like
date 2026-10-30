@@ -2210,3 +2210,76 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   .mmhk-single-hero-screen .mmhk-inventory-work-area .mmhk-equipment-stage{grid-template-columns:36% 64%!important;}
   .mmhk-single-hero-screen .mmhk-hero-portrait>.heritage-portrait{transform:scale(.64);}
 }
+
+
+/* Military room follows the same ONE ACTIVITY / ONE SCREEN rule. */
+.gui-game-stage[data-game-screen="forces"] .kingdom-screen-heading{
+  display:flex;align-items:center;justify-content:center;gap:13px;
+  padding:5px 10px!important;margin-bottom:4px!important;min-height:0;
+}
+.gui-game-stage[data-game-screen="forces"] .kingdom-screen-heading .eyebrow{display:none;}
+.gui-game-stage[data-game-screen="forces"] .kingdom-screen-heading h1{
+  font:small-caps 21px/1.1 Georgia,serif!important;margin:0;}
+.gui-game-stage[data-game-screen="forces"] .kingdom-screen-heading p{
+  font:11px Georgia,serif!important;margin:0;opacity:.7;}
+.gui-game-stage[data-game-screen="forces"] .kingdom-screen-content{
+  display:flex;flex-direction:column;overflow:hidden!important;min-height:0;
+  overscroll-behavior:none;padding:6px 8px!important;}
+.gui-game-stage[data-game-screen="forces"] .mmhk-military-panel{
+  display:flex;flex-direction:column;flex:1 1 auto;min-height:0;margin:0;
+}
+.mmhk-military-game-screen{display:flex;flex-direction:column;width:100%;height:100%;
+  min-height:0;overflow:hidden;background:#f1e5d0;border:2px ridge #ad9070;}
+.mmhk-military-active-screen{display:flex;flex-direction:column;flex:1 1 auto;
+  min-height:0;overflow:hidden;}
+.mmhk-military-active-screen>[role="tabpanel"]{display:flex;flex-direction:column;
+  height:100%;min-height:0;overflow:hidden;}
+.mmhk-military-active-screen>[hidden]{display:none!important;}
+.mmhk-military-active-screen .gui-notice{padding:5px 8px;flex:0 0 auto;margin:0;}
+.mmhk-military-active-screen .mmhk-war-room{display:flex;flex-direction:column;
+  min-height:0;flex:1 1 auto;height:100%;margin:0;border:0;box-shadow:none;overflow:hidden;}
+.mmhk-military-active-screen .mmhk-war-room .mmhk-board-heading{
+  padding:5px 10px;min-height:42px;flex:0 0 auto;}
+.mmhk-military-active-screen .mmhk-war-room .mmhk-board-heading h3{font-size:15px;}
+.mmhk-military-active-screen .mmhk-war-room .mmhk-board-heading p{display:none;}
+.mmhk-military-active-screen .mmhk-war-room .mmhk-war-count strong{font-size:17px;}
+.mmhk-military-active-screen .mmhk-deployment-field{display:grid;flex:1 1 auto;
+  min-height:0;overflow:hidden;padding:7px;gap:6px;grid-template-columns:minmax(0,1fr) 24px minmax(0,1fr);}
+.mmhk-military-active-screen .mmhk-garrison-keep{display:flex;flex-direction:column;
+  min-height:0;max-height:100%;overflow:hidden;}
+.mmhk-military-active-screen .mmhk-garrison-keep .mmhk-battle-stacks{
+  flex:1 1 auto;min-height:0;overflow-y:auto;align-content:start;scrollbar-width:thin;}
+.mmhk-military-active-screen .mmhk-deployment-heroes{display:grid;
+  min-height:0;overflow-y:auto;align-content:start;scrollbar-width:thin;}
+.mmhk-military-active-screen .mmhk-deployment-hero{min-height:0;padding:7px;}
+.mmhk-military-active-screen .mmhk-deployment-hero .mmhk-battle-stacks{
+  display:flex;flex-wrap:wrap;gap:5px;max-height:185px;overflow-y:auto;}
+.mmhk-military-active-screen .mmhk-unit-stack{min-height:130px;}
+.mmhk-military-active-screen .mmhk-quiet{display:none;}
+.mmhk-military-active-screen .mmhk-formation-warning{flex:0 0 auto;}
+.mmhk-military-active-screen .mmhk-recruit-hall,
+.mmhk-military-active-screen .mmhk-tavern-hall{display:flex;flex-direction:column;
+  flex:1 1 auto;min-height:0;margin:0;border:0;padding:12px!important;overflow:hidden;}
+.mmhk-military-active-screen .mmhk-recruit-hall header,
+.mmhk-military-active-screen .mmhk-tavern-hall header{flex:0 0 auto;padding:0 4px 9px;}
+.mmhk-military-active-screen .mmhk-recruit-hall header h3,
+.mmhk-military-active-screen .mmhk-tavern-hall header h3{font-size:19px;}
+.mmhk-military-active-screen .mmhk-recruit-hall header p,
+.mmhk-military-active-screen .mmhk-tavern-hall header p{margin:0;}
+.mmhk-military-active-screen .mmhk-recruit-list,
+.mmhk-military-active-screen .mmhk-tavern-offers{
+  display:grid;align-content:start;overflow-y:auto;min-height:0;flex:1 1 auto;
+  grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:10px;
+  margin:0;scrollbar-width:thin;}
+.mmhk-military-active-screen .mmhk-tavern-capacity{flex:0 0 auto;}
+.mmhk-military-active-screen .mmhk-locked-tavern{flex:0 0 auto;}
+@media(max-width:900px){
+  .mmhk-military-game-screen{min-height:570px;}
+}
+@media(max-width:600px){
+  .mmhk-military-active-screen .mmhk-deployment-field{
+    grid-template-columns:1fr;overflow-y:auto;}
+  .mmhk-military-active-screen .mmhk-deployment-arrow{display:none;}
+  .mmhk-military-active-screen .mmhk-recruit-list,
+  .mmhk-military-active-screen .mmhk-tavern-offers{grid-template-columns:1fr;}
+}
