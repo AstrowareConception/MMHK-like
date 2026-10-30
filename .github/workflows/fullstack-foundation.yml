@@ -208,7 +208,7 @@ jobs:
           export MMHK_E2E_URL="http://127.0.0.1:3000"
           export MMHK_E2E_USERNAME="demo_ci"
           export MMHK_E2E_PASSWORD="$(cat .ci-e2e-password)"
-          python3 tools/e2e/visual_drag_smoke.py
+          python3 tools/e2e/player_visual_audit.py
       - name: Publish player visual QA captures immediately
         if: always()
         uses: actions/upload-artifact@v4
@@ -217,6 +217,12 @@ jobs:
           path: test-output/visuals/*.png
           if-no-files-found: ignore
           retention-days: 7
+      - name: Verify drag/drop and screen isolation before long gameplay
+        run: |
+          export MMHK_E2E_URL="http://127.0.0.1:3000"
+          export MMHK_E2E_USERNAME="demo_ci"
+          export MMHK_E2E_PASSWORD="$(cat .ci-e2e-password)"
+          python3 tools/e2e/visual_drag_smoke.py
       - name: Complete full authenticated Chromium campaign
         run: |
           password="$(cat .ci-e2e-password)"
