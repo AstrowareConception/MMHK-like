@@ -45,6 +45,22 @@ def main():
                 expect(timeline).to_have_class(re.compile(r"kingdom-timeline--quiet"))
                 expect(timeline.locator(".timeline-track")).to_be_hidden()
             expect(board).to_have_attribute("data-ready","true",timeout=15000)
+            # At desktop dimensions the game is one bounded viewport with
+            # scrollable interior, not an entire vertically scrolling page.
+            controls=page.get_by_test_id("game-viewport-controls")
+            expect(controls).to_be_visible()
+            screen=page.locator(".kingdom-screen-content")
+            assert page.evaluate("""() =>
+                getComputedStyle(document.querySelector('.kingdom-screen-content')).overflowY
+            """) == "auto"
+            assert page.evaluate("""() => {
+                const shell=document.querySelector('#mmhk-game-viewport');
+                return shell.getBoundingClientRect().height <= innerHeight;
+            }""")
+            controls.get_by_role("button",name="Compact").click()
+            expect(page.locator("#mmhk-game-viewport")).to_have_attribute("data-game-density","compact")
+            controls.get_by_role("button",name="Normal").click()
+            expect(page.locator("#mmhk-game-viewport")).to_have_attribute("data-game-density","comfortable")
             bag=page.locator("#hero-bag .artifact-card").filter(has_text="Heaume de bronze")
             slot=page.locator('[data-testid="equipment-drop-zone"][data-slot="head"]')
             expect(bag).to_be_visible()
