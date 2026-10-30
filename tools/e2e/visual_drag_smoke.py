@@ -33,11 +33,19 @@ def main():
             expect(board).to_be_visible()
             # The shared game UI components render real navigation and a
             # readable hero summary without fictitious Talent/Spell screens.
-            tabs=page.get_by_role("navigation",name="Onglets de la gestion du héros")
+            tabs=page.get_by_role("tablist",name="Écrans du héros")
             expect(tabs).to_be_visible()
-            expect(tabs.get_by_role("link",name="Inventaire")).to_be_visible()
-            expect(tabs.get_by_text("Talents · à venir")).to_have_attribute("aria-disabled","true")
+            expect(tabs.get_by_role("tab",name="Inventaire")).to_have_attribute("aria-selected","true")
+            expect(page.get_by_test_id("hero-inventory-screen")).to_be_visible()
+            expect(page.get_by_test_id("hero-formation-screen")).to_be_hidden()
+            tabs.get_by_role("tab",name="Formation").click()
+            expect(page.get_by_test_id("hero-formation-screen")).to_be_visible()
+            expect(page.get_by_test_id("hero-inventory-screen")).to_be_hidden()
+            tabs.get_by_role("tab",name="Armée").click()
+            expect(page.get_by_test_id("hero-army-screen")).to_be_visible()
             expect(page.locator(".gui-panel#hero-army")).to_be_visible()
+            tabs.get_by_role("tab",name="Inventaire").click()
+            expect(page.get_by_test_id("hero-inventory-screen")).to_be_visible()
             # A quiet demo has no pending orders: its chronicle must occupy
             # only one compact bar rather than a large empty game header.
             timeline=page.locator(".kingdom-timeline")
@@ -45,14 +53,22 @@ def main():
                 expect(timeline).to_have_class(re.compile(r"kingdom-timeline--quiet"))
                 expect(timeline.locator(".timeline-track")).to_be_hidden()
             expect(board).to_have_attribute("data-ready","true",timeout=15000)
-            # At desktop dimensions the game is one bounded viewport with
-            # scrollable interior, not an entire vertically scrolling page.
+            # The stage is fixed AND the current screen does not scroll.
+            # Only hero/item lists are independently scrollable.
             controls=page.get_by_test_id("game-viewport-controls")
             expect(controls).to_be_visible()
             screen=page.locator(".kingdom-screen-content")
             assert page.evaluate("""() =>
                 getComputedStyle(document.querySelector('.kingdom-screen-content')).overflowY
-            """) == "auto"
+            """) == "hidden"
+            assert page.evaluate("""() => {
+                const panel=document.querySelector('.mmhk-single-hero-screen');
+                return panel.scrollHeight<=panel.clientHeight+2;
+            }"""), "Entire hero screen must fit without vertical scrolling"
+            assert page.evaluate("""() => {
+                const board=document.querySelector('#hero-equipment');
+                return board.scrollHeight<=board.clientHeight+2;
+            }"""), "Equipment must fit in a screen, never become a long article"
             assert page.evaluate("""() => {
                 const shell=document.querySelector('#mmhk-game-viewport');
                 return shell.getBoundingClientRect().height <= innerHeight;
