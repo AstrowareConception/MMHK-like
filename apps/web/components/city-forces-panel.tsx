@@ -1,6 +1,7 @@
 import {hireCityHero,recruitCityUnits} from "../app/actions";
 import {TroopDeploymentBoard} from "./troop-deployment-board";
 import {HeritagePortrait,HeritageUnitArt} from "./heritage-art";
+import {GameQuantity} from "./game-ui/game-quantity";
 import type {CityForces} from "../lib/server-api";
 import Link from "next/link";
 
@@ -82,12 +83,9 @@ export function CityForcesPanel({cityId,forces,message,visuals}:{
                   .filter(([,v])=>v>0).map(([name,count])=>money(count)+" "+name).join(" · ")}</small>
               </div>
               <div className="mmhk-recruit-action">
-                <label>Quantité
-                  <input type="number" name="quantity" min="1"
-                    max={Math.max(1,Math.min(unit.available,1000))}
-                    defaultValue={unit.available>0?1:0} required
-                    disabled={!unit.unlocked||unit.available===0}/>
-                </label>
+                <GameQuantity label="Quantité" name="quantity" allowMaximum
+                  max={Math.max(1,Math.min(unit.available,1000))} initial={1}
+                  disabled={!unit.unlocked||unit.available===0}/>
                 <button type="submit" disabled={!unit.unlocked||unit.available===0}>Recruter</button>
               </div>
             </form>)}
