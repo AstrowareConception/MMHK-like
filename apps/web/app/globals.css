@@ -2511,3 +2511,25 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   font:10px/1.2 Arial,sans-serif!important;
   background:#e5cfad!important;color:#624126!important;
 }
+
+
+/* Player audit: legacy .formation-slot kept its four-column admin grid
+   (55px / 135px / 80px / auto), squeezing a seven-position game tile into
+   a 55px cell. Override the underlying layout, not only the tile's font. */
+.gui-game-stage[data-game-screen="heroes"] .mmhk-formation-board .formation-slots
+  >.formation-slot.mmhk-formation-slot{
+  display:flex!important;flex-direction:column!important;
+  grid-template-columns:none!important;align-items:stretch!important;
+  width:100%!important;min-width:0!important;max-width:100%!important;
+  padding:0!important;margin:0!important;gap:4px!important;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-formation-board
+  .mmhk-formation-tile{
+  display:grid!important;width:100%!important;max-width:100%!important;
+  min-width:0!important;box-sizing:border-box;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-formation-board
+  .mmhk-formation-tools{
+  display:flex!important;flex-direction:column!important;
+  width:100%!important;max-width:100%!important;min-width:0!important;
+}
