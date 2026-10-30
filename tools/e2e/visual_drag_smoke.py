@@ -209,7 +209,23 @@ def main():
             # A separate timeout is mandatory: this used to hang until the
             # entire 35-minute Docker job was cancelled, hiding the cause.
             print("E2E DND: native reverse drag starting",flush=True)
-            equipped.drag_to(page.locator("#hero-bag .mmhk-storage-items"),timeout=15000)
+            # Playwright Locator.drag_to on the freshly updated equipped tile
+            # can hang without honoring its own timeout. Use genuine Chromium
+            # mouse input (not synthetic DOM events or direct API calls).
+            receiving=page.locator("#hero-bag .mmhk-storage-items")
+            source_box=equipped.bounding_box(timeout=10000)
+            target_box=receiving.bounding_box(timeout=10000)
+            assert source_box and target_box,(source_box,target_box)
+            sx=source_box["x"]+source_box["width"]/2
+            sy=source_box["y"]+source_box["height"]/2
+            tx=target_box["x"]+target_box["width"]/2
+            ty=target_box["y"]+target_box["height"]/2
+            print("E2E DND: mouse path",{"from":(sx,sy),"to":(tx,ty)},flush=True)
+            page.mouse.move(sx,sy)
+            page.mouse.down()
+            page.mouse.move(sx+8,sy+8,steps=3)
+            page.mouse.move(tx,ty,steps=15)
+            page.mouse.up()
             print("E2E DND: native reverse drag dispatched",flush=True)
             expect(page.locator(".equipment-slot.filled")).to_have_count(0,timeout=15000)
             expect(page.locator("#hero-bag .artifact-card").filter(

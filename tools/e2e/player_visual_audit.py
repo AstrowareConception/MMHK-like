@@ -131,8 +131,11 @@ def main():
             if key=="army":
                 expect(page.get_by_text("Ce héros attend son armée")).to_be_visible()
         page.set_viewport_size({"width":1440,"height":950})
-        tabs.get_by_role("tab",name="Inventaire").click()
-        capture(page,"PLAYER-inventory-1440x950.png")
+        for name,key in (("Inventaire","inventory"),("Formation","formation"),("Armée","army")):
+            tabs.get_by_role("tab",name=name).click()
+            expect(page.get_by_test_id("hero-"+key+"-screen")).to_be_visible()
+            metrics=capture(page,f"PLAYER-{key}-1440x950.png")
+            assert_dimensions(metrics,key)
         page.get_by_role("link",name="Armées").first.click()
         expect(page.get_by_test_id("military-game-screen")).to_be_visible()
         military=page.get_by_role("tablist",name="Écrans militaires")
@@ -144,7 +147,8 @@ def main():
         for name,key in (("Garnison","garrison"),("Recrutement","recruitment"),("Taverne","tavern")):
             military.get_by_role("tab",name=name).click()
             expect(page.get_by_test_id("military-"+key+"-screen")).to_be_visible()
-            capture(page,f"PLAYER-{key}-1440x950.png")
+            metrics=capture(page,f"PLAYER-{key}-1440x950.png")
+            assert_dimensions(metrics,key)
             if key=="garrison":
                 to_recruit=page.get_by_role("button",name="Ouvrir le recrutement")
                 expect(to_recruit).to_be_visible()
@@ -154,7 +158,13 @@ def main():
                 expect(page.get_by_test_id("military-garrison-screen")).to_be_visible()
             if key=="tavern":
                 expect(page.get_by_role("link",name="Examiner le chantier de la taverne")).to_be_visible()
-        print("PASS: early read-only Chromium player visual capture",flush=True)
+        page.set_viewport_size({"width":1220,"height":900})
+        for name,key in (("Garnison","garrison"),("Recrutement","recruitment"),("Taverne","tavern")):
+            military.get_by_role("tab",name=name).click()
+            expect(page.get_by_test_id("military-"+key+"-screen")).to_be_visible()
+            metrics=capture(page,f"PLAYER-{key}-1220x900.png")
+            assert_dimensions(metrics,key)
+        print("PASS: 12 real Chromium captures, both resolutions, keyboard tabs and layout invariants",flush=True)
         context.close()
         browser.close()
 

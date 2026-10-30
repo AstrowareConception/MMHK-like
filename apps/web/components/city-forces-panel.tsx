@@ -7,6 +7,14 @@ import {GameNotice} from "./game-ui/game-notice";
 import type {CityForces} from "../lib/server-api";
 
 const money=(value:number)=>value.toLocaleString("fr-FR");
+const resourceLabels:Record<string,string>={
+  gold:"or",wood:"bois",stone:"pierre",ore:"minerai",
+  crystal:"cristal",gems:"gemmes",sulfur:"soufre",mercury:"mercure"
+};
+const dwellingLabels:Record<string,string>={
+  militia:"Demeure des miliciens à construire",
+  archers:"Demeure des archers à construire"
+};
 const ART:Record<string,string>={
   militia:"/themes/public-safe/haven-militia.svg",
   archers:"/themes/public-safe/haven-archer.svg"
@@ -70,9 +78,10 @@ export function CityForcesPanel({cityId,forces,message,visuals}:{
                 <strong>{unit.name}</strong>
                 <span>Rang {unit.tier} · {money(unit.available)} recrues</span>
                 <small>{unit.unlocked?"Demeure opérationnelle":
-                  "Construire : "+unit.dwelling_code}</small>
+                  dwellingLabels[unit.unit_code]??"Demeure à construire"}</small>
                 <small>Coût par recrue : {Object.entries(unit.unit_costs)
-                  .filter(([,v])=>v>0).map(([name,count])=>money(count)+" "+name).join(" · ")}</small>
+                  .filter(([,v])=>v>0).map(([name,count])=>
+                    money(count)+" "+(resourceLabels[name]??name)).join(" · ")}</small>
               </div>
               <div className="mmhk-recruit-action">
                 <GameQuantity label="Quantité" name="quantity" allowMaximum
@@ -106,7 +115,7 @@ export function CityForcesPanel({cityId,forces,message,visuals}:{
                 sheet={visuals.portraitSheet} fallback={visuals.portrait[offer.archetype]}/>
               <div><strong>{offer.name}</strong>
                 <small>{offer.archetype==="might"?"Voie de la Force":"Voie de la Magie"}
-                  {" "}· Candidat de laboratoire</small>
+                  {" "}· Prêt à rejoindre votre cité</small>
                 <span>{money(offer.gold_cost)} or</span></div>
               <button type="submit" disabled={!forces.tavern_unlocked||
                 forces.heroes.length>=forces.hero_capacity}>

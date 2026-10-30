@@ -386,8 +386,10 @@ def main() -> int:
             source_slot=page.locator(".mmhk-formation-tile").nth(0)
             target_slot=page.locator(".mmhk-formation-tile").nth(1)
             expect(source_slot).to_contain_text("Miliciens du Havre")
-            # This is the POPULATED 18-soldier scenario missing from the
-            # original empty world visual smoke. Each split/merge action
+            # This is a real POPULATED formation after the three militia
+            # were recruited and two transferred to the hero. The realm
+            # initially offers 18 recruits, not 18 owned soldiers.
+            # Each split/merge action
             # must stay inside its own tactical slot, without overlap.
             layout=page.evaluate("""() => {
               const cells=Array.from(document.querySelectorAll('.mmhk-formation-slot'));

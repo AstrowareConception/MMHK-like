@@ -2550,7 +2550,7 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   box-sizing:border-box;display:grid!important;
   grid-template-columns:94px minmax(0,1fr)!important;
   grid-template-rows:minmax(118px,auto) auto;
-  min-height:226px;padding:14px!important;gap:11px!important;
+  min-height:clamp(265px,32vh,315px);padding:14px!important;gap:11px!important;
   background:linear-gradient(150deg,#fff9eb,#e8d7b8)!important;
   border:2px ridge #a78c67!important;
   box-shadow:0 3px 9px #6c4d3030,inset 0 1px #fff8e8;
@@ -2584,12 +2584,14 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   min-height:38px;min-width:108px;font-weight:700;
 }
 .gui-game-stage[data-game-screen="forces"] .mmhk-tavern-hall{
-  background:radial-gradient(ellipse at 50% 65%,#e3d2b5 0%,#f1e5d0 72%)!important;
+  /* Preserve the original artwork when the private localhost theme supplies
+     an inline background image. Never overwrite it with !important. */
+  background-color:#efe2ca;
 }
 .gui-game-stage[data-game-screen="forces"] .mmhk-tavern-hall:has(+ .mmhk-tavern-empty){
   background:
     linear-gradient(90deg,transparent 0 12%,#bda77c36 12.2%,transparent 12.4% 87.6%,#bda77c36 87.8%,transparent 88%),
-    radial-gradient(ellipse at 50% 54%,#dfc8a2,#efe2ca 65%)!important;
+    radial-gradient(ellipse at 50% 54%,#dfc8a2,#efe2ca 65%);
 }
 .gui-game-stage[data-game-screen="forces"] .mmhk-tavern-empty{
   top:55%;width:min(560px,86%);min-height:224px;
