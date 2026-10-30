@@ -31,6 +31,13 @@ def main():
             page.get_by_role("link",name="Héros et artefacts").first.click()
             board=page.get_by_test_id("hero-equipment-board")
             expect(board).to_be_visible()
+            # The shared game UI components render real navigation and a
+            # readable hero summary without fictitious Talent/Spell screens.
+            tabs=page.get_by_role("navigation",name="Onglets de la gestion du héros")
+            expect(tabs).to_be_visible()
+            expect(tabs.get_by_role("link",name="Inventaire")).to_be_visible()
+            expect(tabs.get_by_text("Talents · à venir")).to_have_attribute("aria-disabled","true")
+            expect(page.locator(".gui-panel#hero-army")).to_be_visible()
             # A quiet demo has no pending orders: its chronicle must occupy
             # only one compact bar rather than a large empty game header.
             timeline=page.locator(".kingdom-timeline")
