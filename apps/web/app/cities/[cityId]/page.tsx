@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { CityDistrict } from "../../../components/city-district";
+import { CityGameScreen } from "../../../components/city-game-screen";
 import { buildingName } from "../../../lib/city-buildings";
 import { resolveAssetUrl } from "../../../lib/assets/runtime";
 import { AssetImage } from "../../../components/asset-image";
@@ -49,28 +50,27 @@ export default async function CityPage({
   const city = answer.data;
   return (
     <GameShell token={token} title={city.name}
-      eyebrow="HAVRE · VUE DE LA CITÉ"
+      screen="city" eyebrow="HAVRE · VUE DE LA CITÉ"
       description={"Région ("+city.x+", "+city.y+") · Édifices et trésorerie"}
       worldId={city.world_id} cityId={cityId} stocks={city.stocks}>
-        <nav className="city-shortcuts" aria-label="Accès rapide à la cité">
-          <a href="#city-scene">Panorama</a><a href="#city-resources">Ressources</a>
-          <a href="#urban-construction">Chantiers</a><a href="#city-history">Historique</a>
-          <Link href={`/cities/${cityId}/market`}>Marché</Link>
-          <Link href={`/worlds/${city.world_id}/colonize`}>Expansion</Link>
-          <Link href={`/cities/${cityId}/heroes`}>Héros et artefacts</Link>
-          <Link href={`/cities/${cityId}/forces`}>Armée et recrutements</Link>
-        </nav>
-        {query.build === "started" &&
+      <CityGameScreen cityId={cityId} worldId={city.world_id}
+        cityName={city.name} initialTab="panorama"
+        notices={<>
+          {query.build === "started" &&
           <p role="status" className="construction-notice">Chantier enregistré et ressources payées.</p>}
         {query.build === "conflict" &&
           <p role="alert" className="error">Construction impossible : ressources insuffisantes, chantier déjà actif ou profil indisponible.</p>}
         {query.build === "unavailable" &&
           <p role="alert" className="error">Le chantier n’a pas pu être confirmé. Consultez son état avant de réessayer.</p>}
-        <CityDistrict key={cityId} city={city} catalog={buildingAnswer.data}
+        </>}
+        panorama={<>
+          <CityDistrict key={cityId} city={city} catalog={buildingAnswer.data}
           initialSelection={query.inspect}
           tavernArtwork={resolveAssetUrl("building.haven.tavern.1")}/>
         {(city.production_active || !!buildingAnswer.data?.active) && <LiveRefresh intervalSeconds={10} />}
-        <h2 id="city-resources">Réserves de la ville</h2>
+        </>}
+        reserves={<div className="mmhk-city-collection" id="city-resources-panel">
+          <h2 id="city-resources">Réserves de la ville</h2>
         <div className="resource-grid">
           {RESOURCES.map(([key, label]) => (
             <article key={key}>
@@ -85,27 +85,23 @@ export default async function CityPage({
             </article>
           ))}
         </div>
-        <div className="city-module-cards" aria-label="Gestion du royaume">
-          <Link href={`/cities/${cityId}/market`} className="city-module-card">
-            <span aria-hidden="true" className="city-module-icon">⚖</span>
-            <span><strong>Marché et échanges</strong>
-              <small>Marchand, devis, transactions et futur comptoir de caravanes</small></span>
-            <span aria-hidden="true">›</span>
-          </Link>
-          <Link href={`/cities/${cityId}/heroes`} className="city-module-card">
-            <span aria-hidden="true" className="city-module-icon">♞</span>
-            <span><strong>Héros et artefacts</strong>
-              <small>Fiches individuelles, équipements, sacs et réserve de la cité</small></span>
-            <span aria-hidden="true">›</span>
-          </Link>
-          <Link href={`/cities/${cityId}/forces`} className="city-module-card">
-            <span aria-hidden="true" className="city-module-icon">⚔</span>
-            <span><strong>Garnison et recrutement</strong>
-              <small>Miliciens, archers, embauche de héros et transferts d'unités</small></span>
-            <span aria-hidden="true">›</span>
-          </Link>
-        </div>
-        <div className="construction-panel" id="urban-construction">
+          <p className="notice">
+          {city.production_active
+            ? <>Production expérimentale activée : crédits périodiques par worker
+                PostgreSQL, à cadence explicitement définie par l’administrateur.
+                {city.next_credit_at && (
+                  <> Prochaine échéance serveur : {new Date(city.next_credit_at).toLocaleString("fr-FR", { timeZone: "Europe/Paris" })}.</>
+                )}
+              </>
+            : <>Production inactive : l’administrateur n’a pas encore configuré
+                les cadences et capacités de cette ville.</>}
+          {" "}Les quatre mines initiales du Havre sont or, bois, minerai
+          et cristal. Les quantités et cadences historiques restent à vérifier.
+          Les stocks sont lus dans PostgreSQL, pas dans Redis.
+        </p>
+        </div>}
+        construction={<div className="mmhk-city-collection">
+          <div className="construction-panel" id="urban-construction">
           <span className="eyebrow">CHANTIERS URBAINS · PROFILS EXPÉRIMENTAUX</span>
           <h2>Registre des chantiers</h2>
           <p>Pour construire, sélectionnez un édifice sur le panorama : les modes et les coûts réels sont présentés dans sa fiche. Le registre détaillé reste disponible ci-dessous.</p>
@@ -186,6 +182,9 @@ export default async function CityPage({
               buildingAnswer.data!.effects.mine_additive_bonus,
             ).map(([resource,value]) => `${resource} +${Number(value)*100} %`).join(", ")}.</p>
           )}
+          </div>
+        </div>}
+        history={<div className="mmhk-city-collection">
           <section id="city-history" aria-labelledby="city-history-heading">
           <h3 id="city-history-heading">Historique des chantiers</h3>
           {buildingAnswer.data?.history?.length ? (
@@ -208,21 +207,8 @@ export default async function CityPage({
           La convention d'arrondi à l'entier supérieur est expérimentale, pas une règle historique certifiée.
           Le journal conserve les douze derniers ordres et leurs coûts réels.</p>
           </section>
-        </div>
-        <p className="notice">
-          {city.production_active
-            ? <>Production expérimentale activée : crédits périodiques par worker
-                PostgreSQL, à cadence explicitement définie par l’administrateur.
-                {city.next_credit_at && (
-                  <> Prochaine échéance serveur : {new Date(city.next_credit_at).toLocaleString("fr-FR", { timeZone: "Europe/Paris" })}.</>
-                )}
-              </>
-            : <>Production inactive : l’administrateur n’a pas encore configuré
-                les cadences et capacités de cette ville.</>}
-          {" "}Les quatre mines initiales du Havre sont or, bois, minerai
-          et cristal. Les quantités et cadences historiques restent à vérifier.
-          Les stocks sont lus dans PostgreSQL, pas dans Redis.
-        </p>
+        </div>}
+      />
     </GameShell>
   );
 }
