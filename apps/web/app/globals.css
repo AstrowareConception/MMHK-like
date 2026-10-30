@@ -2909,3 +2909,72 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   }
   .mmhk-city-collection{padding:10px;}
 }
+
+
+
+/* City screenshot finishing pass: the SVG's intrinsic 680×552 aspect ratio
+   previously made the drawn landscape taller than its flex frame, cropping
+   the fort and the bottom city plots. Absolute layout bounds the WHOLE map
+   to the scene window; viewBox automatically uses 'meet' to preserve art. */
+.gui-game-stage[data-game-screen="city"] .city-scene-frame{
+  position:relative!important;isolation:isolate;overflow:hidden!important;
+  background:#27414a;
+}
+.gui-game-stage[data-game-screen="city"] .city-scene-frame .haven-city-svg{
+  position:absolute!important;inset:0!important;
+  width:100%!important;height:100%!important;
+  max-width:100%!important;max-height:100%!important;
+  object-fit:contain!important;display:block!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-scene-header{
+  height:32px!important;min-height:32px!important;
+  align-items:center!important;overflow:hidden;
+  padding:0 2px!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-scene-header h2,
+.gui-game-stage[data-game-screen="city"] .city-scene-header .eyebrow{
+  color:#64452e!important;line-height:1.1!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-scene-header .scene-action{
+  min-height:27px!important;margin:0!important;
+  padding:5px 9px!important;white-space:nowrap;
+}
+.gui-game-stage[data-game-screen="city"] .mmhk-city-collection .mmhk-city-directory{
+  margin-top:10px;
+}
+.gui-game-stage[data-game-screen="city"] .mmhk-city-empty-history{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;gap:12px;
+  max-width:570px;min-height:255px;padding:18px;
+  margin:clamp(14px,5vh,55px) auto;
+  background:radial-gradient(ellipse at center,#ead8b7,#f3e8d600 75%);
+  color:#573d2c;
+}
+.gui-game-stage[data-game-screen="city"] .mmhk-city-empty-icon{
+  display:grid;place-items:center;width:70px;height:70px;
+  border:3px double #98784f;border-radius:50%;
+  background:linear-gradient(#e5cf9e,#c5a672);
+  color:#573e26;font:36px Georgia,serif;
+}
+.gui-game-stage[data-game-screen="city"] .mmhk-city-empty-history strong{
+  font:small-caps 23px/1.1 Georgia,serif;color:#573b28;
+}
+.gui-game-stage[data-game-screen="city"] .mmhk-city-empty-history p{
+  color:#75583f;max-width:440px;font:13px/1.55 Georgia,serif;margin:0;
+}
+.gui-game-stage[data-game-screen="city"] .mmhk-city-empty-history a{
+  display:block;padding:10px 16px;border:1px solid #987447;
+  background:linear-gradient(#f0dcac,#cba66e);text-decoration:none;
+  color:#47311e;font:bold 12px Arial,sans-serif;
+}
+.gui-game-stage[data-game-screen="city"] .mmhk-city-empty-history a:focus-visible{
+  outline:3px solid #a77834;outline-offset:2px;
+}
+@media(max-width:600px){
+  .gui-game-stage[data-game-screen="city"] .mmhk-city-empty-history{
+    min-height:200px;padding:12px;
+  }
+  .gui-game-stage[data-game-screen="city"] .mmhk-city-empty-history strong{
+    font-size:19px;
+  }
+}

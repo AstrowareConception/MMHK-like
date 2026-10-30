@@ -120,14 +120,17 @@ def main() -> int:
             assert page.locator(".city-plan-ribbon-list button").count() >= 8
             expect(page.locator(".city-plan-ribbon-list button").filter(
                 has_text="Demeure des miliciens")).to_be_visible()
-            # The long technical directory is opt-in; it never dominates the game screen.
+            # Dedicated chantier activity opens the project collection by
+            # default: never show a mostly empty page hiding its content.
             city_tabs.get_by_role("tab",name="Chantiers").click()
             expect(page.get_by_test_id("city-construction-screen")).to_be_visible()
             directory=page.get_by_test_id("construction-directory")
+            expect(directory).to_have_attribute("open", "")
+            assert page.locator(".building-plan").count() >= 8, "Haven catalogue not provisioned"
+            directory.locator("summary").click()
             expect(directory).not_to_have_attribute("open", "")
             directory.locator("summary").click()
-            assert page.locator(".building-plan").count() >= 8, "Expanded Haven catalogue not provisioned"
-            directory.locator("summary").click()
+            expect(directory).to_have_attribute("open", "")
             city_tabs.get_by_role("tab",name="Panorama").click()
             # A building with no certified scene anchor remains accessible
             # through the same in-game blueprint ribbon.

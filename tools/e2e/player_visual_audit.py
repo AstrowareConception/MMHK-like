@@ -141,6 +141,7 @@ def main():
                       panelExtra:panel.scrollHeight-panel.clientHeight,
                       panelWidth:Math.round(rect(panel).width),
                       sceneHeight:scene?Math.round(rect(scene).height):0,
+                      svgHeight:scene?Math.round(rect(scene.querySelector('svg')).height):0,
                       inspectorExtra:inspector?inspector.scrollHeight-inspector.clientHeight:0,
                       inspectorHeight:inspector?Math.round(rect(inspector).height):0};
                 }""")
@@ -150,6 +151,7 @@ def main():
                 assert metrics["panelWidth"]>=750,(key,metrics)
                 if key=="panorama":
                     assert metrics["sceneHeight"]>=130,(key,metrics)
+                    assert metrics["svgHeight"]<=metrics["sceneHeight"]+2,(key,metrics)
                     assert metrics["inspectorHeight"]>=200,(key,metrics)
                 page.screenshot(path=str(ARTIFACTS/f"CITY-{key}-{width}x{height}.png"),
                                 full_page=False,animations="disabled")

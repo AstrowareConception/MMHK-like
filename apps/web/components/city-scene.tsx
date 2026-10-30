@@ -1,5 +1,6 @@
 "use client";
 import Link from "next/link";
+import {buildingName} from "../lib/city-buildings";
 import type {MouseEvent} from "react";
 import type {ConstructionCatalog,CityDetail} from "../lib/server-api";
 
@@ -166,7 +167,7 @@ export function CityScene({city,catalog,selectedBuilding,onSelect,tavernArtwork}
           <rect x="460" y="18" width="205" height="34" rx="6" fill="#142932ed"
             stroke="#e0c789" strokeWidth="1.5"/>
           <text x="563" y="39" textAnchor="middle" fill="#fff0ba" fontSize="13">
-            ⚒ Chantier : {active.building_code}</text>
+            ⚒ Chantier : {buildingName(active.building_code)}</text>
         </g>}
         <rect x="14" y="516" width="315" height="24" rx="3" fill="#10252fe0" stroke="#ac9968"/>
         <text x="23" y="532" fontSize="11" fill="#efdab0">

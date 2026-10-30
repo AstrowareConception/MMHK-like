@@ -22,6 +22,11 @@ const RESOURCES = [
   ["mercury", "Mercure"],
 ] as const;
 
+const resourceName=(key:string)=>({
+  gold:"or",wood:"bois",ore:"minerai",crystal:"cristal",gems:"gemmes",
+  sulfur:"soufre",mercury:"mercure"
+} as Record<string,string>)[key]??key;
+
 export default async function CityPage({
   params,
   searchParams,
@@ -109,19 +114,19 @@ export default async function CityPage({
             <>
               {buildingAnswer.data.buildings.length > 0 && (
                 <p>Bâtiments terminés : {buildingAnswer.data.buildings.map(
-                  (b) => `${b.building_code} niveau ${b.level} (${b.active ? "actif" : "inactif — prérequis indisponible"})`,
+                  (b) => `${buildingName(b.building_code)} niveau ${b.level} (${b.active ? "actif" : "inactif — prérequis indisponible"})`,
                 ).join(", ")}.</p>
               )}
               {buildingAnswer.data.active ? (
                 <article className="active-project">
-                  <strong>{buildingAnswer.data.active.building_code} — niveau {buildingAnswer.data.active.target_level}</strong>
+                  <strong>{buildingName(buildingAnswer.data.active.building_code)} — niveau {buildingAnswer.data.active.target_level}</strong>
                   <p>En construction · fin prévue le {new Date(buildingAnswer.data.active.due_at).toLocaleString(
                     "fr-FR", {timeZone:"Europe/Paris"}
                   )}</p>
                   <small>Chantier payé au lancement. Aucun second chantier ni annulation n'est possible.</small>
                 </article>
               ) : buildingAnswer.data.options.length ? (
-                <details className="mmhk-city-directory" data-testid="construction-directory">
+                <details open className="mmhk-city-directory" data-testid="construction-directory">
                   <summary>Ouvrir le catalogue détaillé des {buildingAnswer.data.options.length} projets</summary>
                 <div className="build-options">
                   {buildingAnswer.data.options.slice()
@@ -140,7 +145,7 @@ export default async function CityPage({
                               fort:"Fortifications",blacksmith:"Forge",mage_guild:"Guilde des mages",
                               stables:"Écuries",watchtower:"Tour de guet",
                             } as Record<string,string>)[o.building_code]??o.building_code}</h3>
-                            <small>Niveau {o.target_level} · Contrat {o.policy_id}</small>
+                            <small>Niveau {o.target_level} · devis disponibles dans cette cité</small>
                             <Link className="building-inspect-link"
                               href={"/cities/"+cityId+"?inspect="+o.building_code+"#city-inspector"}>
                               Examiner le bâtiment
@@ -160,7 +165,7 @@ export default async function CityPage({
                             <small>⏳ {Math.ceil(mode.duration_seconds/60)} min</small>
                             <small>Coût : {Object.entries(mode.costs)
                               .filter(([,value])=>value>0)
-                              .map(([name,value])=>value.toLocaleString("fr-FR")+" "+name).join(" · ")||"Aucun"}</small>
+                              .map(([name,value])=>value.toLocaleString("fr-FR")+" "+resourceName(name)).join(" · ")||"Aucun"}</small>
                             <button type="submit" disabled={!o.available}>
                               {o.available?"Lancer ce chantier":"Construction verrouillée"}
                             </button>
@@ -198,11 +203,18 @@ export default async function CityPage({
                     {" "}· échéance {new Date(order.due_at).toLocaleString("fr-FR",{timeZone:"Europe/Paris"})}</small>
                   <small>Coût réellement payé : {Object.entries(order.applied_costs)
                     .filter(([,amount])=>amount>0)
-                    .map(([key,amount])=>amount.toLocaleString("fr-FR")+" "+key).join(" · ")||"aucun"}</small>
+                    .map(([key,amount])=>amount.toLocaleString("fr-FR")+" "+resourceName(key)).join(" · ")||"aucun"}</small>
                 </li>
               ))}
             </ol>
-          ) : <p>Aucun chantier enregistré dans cette cité.</p>}
+          ) : <div className="mmhk-city-empty-history">
+            <span className="mmhk-city-empty-icon" aria-hidden="true">⚒</span>
+            <strong>Les chroniques attendent leur premier chantier</strong>
+            <p>Les constructions achevées ou en cours seront inscrites ici, avec
+              leur coût réel et leur échéance. Pour commencer, examinez les plans
+              de construction proposés à votre cité.</p>
+            <a href="#urban-construction">Découvrir les chantiers disponibles</a>
+          </div>}
           <p className="notice">Une construction active par cité, débit immédiat et achèvement par worker PostgreSQL.
           La convention d'arrondi à l'entier supérieur est expérimentale, pas une règle historique certifiée.
           Le journal conserve les douze derniers ordres et leurs coûts réels.</p>
