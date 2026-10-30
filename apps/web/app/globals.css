@@ -1994,3 +1994,219 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
 .gui-notice--error .gui-notice-symbol{background:#ac4635;color:#fff;}
 .gui-notice--warning{border-left:5px solid #b1842f;}
 .gui-notice--info{border-left:5px solid #597b8d;}
+
+
+/* US-UIX-44 — MMHK is ONE SCREEN PER ACTIVITY.
+ * Do not turn the whole game work area into a long article in a fixed shell.
+ * Only actual collections (hero roster, inventory rows, large lists) scroll.
+ */
+.gui-game-stage[data-game-screen="heroes"] .kingdom-screen-heading{
+  display:flex;align-items:center;justify-content:center;gap:13px;
+  padding:5px 10px!important;margin-bottom:4px!important;min-height:0;
+}
+.gui-game-stage[data-game-screen="heroes"] .kingdom-screen-heading .eyebrow{
+  display:none;
+}
+.gui-game-stage[data-game-screen="heroes"] .kingdom-screen-heading h1{
+  font:small-caps 21px/1.1 Georgia,serif!important;margin:0;
+}
+.gui-game-stage[data-game-screen="heroes"] .kingdom-screen-heading p{
+  font:11px Georgia,serif!important;margin:0;opacity:.7;
+}
+.gui-game-stage[data-game-screen="heroes"] .kingdom-screen-content{
+  display:flex;flex-direction:column;overflow:hidden!important;
+  min-height:0;overscroll-behavior:none;padding:6px 8px!important;
+}
+.mmhk-single-hero-screen.mmhk-heritage-heroes{
+  display:flex!important;flex-direction:column!important;
+  width:100%;height:100%;min-height:0;margin:0!important;
+  gap:0!important;background:#e9ddc7;border:2px ridge #ad9070;
+  overflow:hidden;
+}
+.mmhk-hero-command-header{
+  display:flex;align-items:center;justify-content:space-between;
+  gap:9px;flex:0 0 auto;min-height:47px;
+  padding:5px 9px;background:linear-gradient(#b59c87,#877062);
+  border-bottom:2px solid #785c4a;color:#fff9e9;
+}
+.mmhk-command-hero-heading{display:flex;flex-direction:column;gap:3px;min-width:0;}
+.mmhk-command-hero-heading strong{font:bold 16px/1.2 Arial,sans-serif;color:#fff3dc;}
+.mmhk-command-hero-heading small{font:10px Arial,sans-serif;color:#ffe9c7;}
+.mmhk-command-tabs{display:flex;gap:3px;align-items:end;min-width:0;flex-wrap:wrap;}
+.kingdom-shell .mmhk-command-tabs button{
+  background:linear-gradient(#efe6da,#c8b4a0);color:#593a2c;
+  font:bold 12px/1.2 Arial,sans-serif;padding:7px 11px!important;
+  min-height:30px;border:1px solid #8f715b;border-radius:4px 4px 0 0;
+  cursor:pointer;
+}
+.kingdom-shell .mmhk-command-tabs button[aria-selected="true"]{
+  color:#31271c;background:#fff7e7;border-bottom-color:#fff7e7;
+}
+.kingdom-shell .mmhk-command-tabs button:hover,
+.kingdom-shell .mmhk-command-tabs button:focus-visible{outline:2px solid #e5c37f;}
+.mmhk-locked-tab{font:11px Arial,sans-serif;color:#e5d1b7;opacity:.56;
+  padding:6px;cursor:not-allowed;}
+.mmhk-hero-screen-grid{
+  display:grid;grid-template-columns:minmax(0,1fr) 176px;
+  gap:0;flex:1 1 auto;min-height:0;min-width:0;
+}
+.mmhk-hero-active-screen{min-width:0;min-height:0;overflow:hidden;background:#f9f3e7;}
+.mmhk-hero-active-screen>[role="tabpanel"]{
+  height:100%;width:100%;min-height:0;min-width:0;
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.mmhk-hero-active-screen>[hidden]{display:none!important;}
+.mmhk-hero-active-screen .construction-notice,
+.mmhk-hero-active-screen .error{flex:0 0 auto;padding:4px 9px;margin:0;font:11px Arial,sans-serif;}
+.mmhk-hero-screen-roster{display:flex;flex-direction:column;min-height:0;
+  background:#e5d8bd;border-left:2px solid #ac9472;padding:7px 6px;gap:7px;}
+.mmhk-roster-caption{font:bold 11px Arial,sans-serif;color:#613e29;
+  border-bottom:1px solid #b49d7e;display:flex;justify-content:space-between;padding-bottom:6px;}
+.mmhk-roster-scroll{min-height:0;overflow-y:auto;flex:1 1 auto;
+  scrollbar-width:thin;scrollbar-color:#a48c68 #e0ccb0;
+  display:flex;flex-direction:column;gap:6px;}
+.mmhk-roster-compact-choice{display:flex;align-items:center;gap:6px;min-height:68px;
+  padding:4px;background:#f7efdf;border:1px solid #b49a77;text-decoration:none;}
+.mmhk-roster-compact-choice.selected{background:#b9774d;border-color:#8c5035;}
+.mmhk-roster-compact-choice>.heritage-portrait{width:57px!important;height:57px!important;overflow:hidden;}
+.mmhk-roster-compact-choice>span:last-child{min-width:0;display:grid;gap:3px;}
+.mmhk-roster-compact-choice strong{font:bold 11px Arial,sans-serif;color:#523625;}
+.mmhk-roster-compact-choice small{font:10px Arial,sans-serif;color:#7c634e;}
+.mmhk-roster-compact-choice.selected strong,.mmhk-roster-compact-choice.selected small{color:#fff2de;}
+.mmhk-hero-garrison-link{display:block;padding:7px 9px;background:#d0ae79;
+  border:1px solid #986f43;color:#462e1d!important;text-decoration:none;
+  text-align:center;font:700 11px Arial,sans-serif;}
+/* The inventory workbench owns the screen. Bag and city chest are
+   short independent collections; the screen itself never scrolls. */
+.mmhk-single-hero-screen .mmhk-heritage-inventory{
+  display:flex;flex-direction:column;flex:1 1 auto;min-height:0;height:100%;
+  margin:0!important;border:0;box-shadow:none;
+}
+.mmhk-single-hero-screen .mmhk-heritage-inventory .mmhk-board-heading{
+  flex:0 0 auto;padding:5px 10px;min-height:42px;
+}
+.mmhk-single-hero-screen .mmhk-heritage-inventory .mmhk-board-heading h3{font-size:14px;}
+.mmhk-single-hero-screen .mmhk-heritage-inventory .mmhk-board-heading p{display:none;}
+.mmhk-single-hero-screen .mmhk-heritage-inventory .mmhk-budget{
+  display:flex;gap:7px;text-align:right;align-items:center;min-width:128px;}
+.mmhk-single-hero-screen .mmhk-heritage-inventory .mmhk-budget strong{font-size:14px;}
+.mmhk-inventory-work-area{flex:1 1 auto;min-height:0;display:flex;flex-direction:column;overflow:hidden;}
+.mmhk-single-hero-screen .mmhk-inventory-work-area .mmhk-equipment-stage{
+  display:grid!important;flex:1 1 auto;min-height:0!important;
+  height:auto!important;grid-template-columns:39% 61%!important;
+}
+.mmhk-single-hero-screen .mmhk-inventory-work-area .mmhk-hero-portrait{
+  height:100%!important;min-height:0!important;grid-column:1;grid-row:1;
+  background-position:center top!important;background-size:cover!important;
+}
+.mmhk-single-hero-screen .mmhk-hero-portrait>.heritage-portrait{
+  margin:10px auto 0!important;transform:scale(.84);transform-origin:top center;
+}
+.mmhk-single-hero-screen .mmhk-portrait-label{padding:6px 3px!important;gap:2px!important;}
+.mmhk-single-hero-screen .mmhk-portrait-label strong{font-size:13px!important;}
+.mmhk-single-hero-screen .mmhk-portrait-label small,
+.mmhk-single-hero-screen .mmhk-hero-xp{font-size:10px!important;}
+.mmhk-single-hero-screen .mmhk-inventory-work-area .mmhk-equipped-areas{
+  height:100%!important;min-height:0!important;padding:4px!important;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  grid-template-rows:repeat(4,minmax(0,1fr))!important;
+  grid-template-areas:". head neck ." "weapon . . shield"
+    "hands . . chest" ". feet ring .";
+  gap:2px;
+}
+.mmhk-single-hero-screen .mmhk-equip-target,
+.mmhk-single-hero-screen .mmhk-equip-target.slot-head,
+.mmhk-single-hero-screen .mmhk-equip-target.slot-feet{
+  min-height:0!important;height:100%!important;max-height:75px;
+  max-width:68px;padding:2px!important;gap:0;
+}
+.mmhk-single-hero-screen .mmhk-slot-symbol.has-heritage-slot{
+  width:28px!important;height:29px!important;min-height:29px!important;min-width:28px;
+  background-size:112px 59px!important;
+}
+.mmhk-single-hero-screen .mmhk-equip-target .equipment-slot-name{font-size:9px;}
+.mmhk-single-hero-screen .mmhk-equip-target .mmhk-empty-slot{display:none;}
+.mmhk-single-hero-screen .mmhk-equip-target .mmhk-item{min-height:23px;padding:0!important;gap:0;}
+.mmhk-single-hero-screen .mmhk-equip-target .mmhk-item small{display:none;}
+.mmhk-single-hero-screen .mmhk-equip-target .mmhk-item strong{font-size:9px;}
+.mmhk-single-hero-screen .mmhk-inventory-work-area .mmhk-storage{
+  display:grid;grid-template-columns:1fr 1fr;flex:0 0 107px;min-height:0;
+  overflow:hidden;background:#e9dfcd;gap:0;
+}
+.mmhk-single-hero-screen .mmhk-storage-room{
+  min-height:0!important;padding:5px 7px!important;overflow:hidden;
+  border-top:1px solid #bba48a!important;}
+.mmhk-single-hero-screen .mmhk-storage-room+.mmhk-storage-room{
+  border-left:1px solid #bba48a!important;}
+.mmhk-single-hero-screen .mmhk-storage-room h4{font-size:11px;white-space:nowrap;}
+.mmhk-single-hero-screen .mmhk-storage-items{
+  overflow-y:auto;align-content:start;min-height:0;max-height:68px;
+  gap:4px;padding:2px;scrollbar-width:thin;
+}
+.mmhk-single-hero-screen .mmhk-storage-items .mmhk-item{
+  width:74px!important;min-height:47px!important;padding:2px!important;
+}
+.mmhk-single-hero-screen .mmhk-storage-items .mmhk-item strong{font-size:9px;}
+.mmhk-single-hero-screen .mmhk-storage-items .mmhk-item small{display:none;}
+.mmhk-inventory-toolbar{flex:0 0 auto;display:flex;justify-content:space-between;align-items:center;
+  background:#e6d3b0;border-top:1px solid #b99873;padding:3px 9px;gap:7px;}
+.mmhk-inventory-toolbar small{font:10px Arial,sans-serif;color:#634a36;}
+.kingdom-shell .mmhk-inventory-toolbar button{min-height:23px;padding:3px 8px;
+  background:#d2ad75;border:1px solid #96714a;color:#4b3426;font:10px Arial,sans-serif;}
+/* Formation is its own complete tactical screen; advanced editing is a modal. */
+.mmhk-single-hero-screen .mmhk-heritage-formation{height:100%;min-height:0;
+  margin:0!important;border:0;box-shadow:none;
+  display:flex;flex-direction:column;overflow:hidden;}
+.mmhk-single-hero-screen .mmhk-heritage-formation .mmhk-board-heading{
+  flex:0 0 auto;min-height:43px;padding:5px 10px;}
+.mmhk-single-hero-screen .mmhk-heritage-formation .mmhk-board-heading h3{font-size:14px;}
+.mmhk-single-hero-screen .mmhk-heritage-formation .mmhk-board-heading p{display:none;}
+.mmhk-single-hero-screen .mmhk-heritage-formation .mmhk-battle-ground{
+  flex:1 1 auto;min-height:0;padding:7px!important;overflow:hidden;}
+.mmhk-single-hero-screen .mmhk-heritage-formation .mmhk-battle-ranks{margin:1px 0 5px;}
+.mmhk-single-hero-screen .mmhk-heritage-formation .formation-slots{
+  display:grid!important;grid-template-columns:repeat(7,minmax(0,1fr))!important;gap:4px;
+}
+.mmhk-single-hero-screen .mmhk-heritage-formation .mmhk-formation-tile{
+  min-height:0;height:120px;grid-template-rows:13px 51px 18px 15px 10px;padding:2px;
+}
+.mmhk-single-hero-screen .mmhk-formation-art{width:52px;height:50px;}
+.mmhk-single-hero-screen .mmhk-formation-tile strong{font-size:9px;}
+.mmhk-single-hero-screen .mmhk-formation-tools{display:flex;gap:2px;}
+.mmhk-single-hero-screen .mmhk-formation-tools button{font-size:9px;padding:2px 3px;}
+.mmhk-single-hero-screen .mmhk-formation-save{flex:0 0 auto;min-height:0;
+  padding:7px!important;display:flex;flex-direction:column;gap:5px;}
+.mmhk-single-hero-screen .mmhk-formation-save .formation-totals{margin:0;gap:3px;max-height:34px;overflow-y:auto;}
+.mmhk-single-hero-screen .mmhk-formation-save .formation-totals span{font-size:10px;padding:3px;}
+.mmhk-single-hero-screen .formation-footer{display:flex;gap:6px;align-items:center;}
+.mmhk-single-hero-screen .formation-footer p{display:none;}
+.mmhk-single-hero-screen .formation-footer button{font-size:11px;padding:6px 9px;}
+.kingdom-shell .gui-formation-detail{background:#e1ca9f;border:1px solid #ab8a5b;
+  color:#473422;min-height:30px;padding:5px 8px;font:700 11px Arial,sans-serif;}
+/* Army screen: only the unit list scrolls, never the tab itself. */
+.mmhk-single-hero-screen .gui-panel.mmhk-hero-army-summary{
+  display:flex;flex-direction:column;flex:1 1 auto;height:100%;min-height:0;
+  margin:0!important;overflow:hidden;border:0;}
+.mmhk-single-hero-screen .gui-panel.mmhk-hero-army-summary .gui-panel-content{
+  flex:1 1 auto;min-height:0;display:flex;flex-direction:column;gap:12px;overflow:hidden;}
+.mmhk-army-roster-list{display:grid;align-content:start;gap:7px;min-height:0;
+  overflow-y:auto;flex:1 1 auto;scrollbar-width:thin;}
+.mmhk-army-row{display:flex;align-items:center;gap:10px;padding:11px 13px;
+  background:#f9f2e0;border:1px solid #bd9d78;color:#583b2a;}
+.mmhk-army-row strong{flex:1;font:bold 13px Arial,sans-serif;}
+.mmhk-army-row b{font:700 14px Arial,sans-serif;}
+@media(max-width:900px){
+  .mmhk-single-hero-screen.mmhk-heritage-heroes{min-height:550px;}
+  .mmhk-hero-screen-grid{grid-template-columns:minmax(0,1fr) 150px;}
+  .mmhk-hero-command-header{flex-wrap:wrap;}
+  .mmhk-single-hero-screen .mmhk-inventory-work-area .mmhk-storage{flex-basis:112px;}
+}
+@media(max-width:600px){
+  .mmhk-single-hero-screen.mmhk-heritage-heroes{min-height:650px;}
+  .mmhk-hero-screen-grid{grid-template-columns:minmax(0,1fr);}
+  .mmhk-hero-screen-roster{display:none;}
+  .mmhk-command-tabs button{font-size:11px!important;padding:5px!important;}
+  .mmhk-locked-tab{display:none;}
+  .mmhk-single-hero-screen .mmhk-inventory-work-area .mmhk-equipment-stage{grid-template-columns:36% 64%!important;}
+  .mmhk-single-hero-screen .mmhk-hero-portrait>.heritage-portrait{transform:scale(.64);}
+}
