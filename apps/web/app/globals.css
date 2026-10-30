@@ -1979,3 +1979,18 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
 .gui-quantity-quick>button:hover:not(:disabled){background:#f8e7ca;}
 .gui-quantity-quick>button:disabled{opacity:.4;cursor:not-allowed;}
 @media(max-width:470px){.gui-hint-content{left:auto;right:0;transform:none;}}
+
+/* Authoritative outcome banners stay in the player's command viewport. */
+.gui-notice{display:flex;gap:12px;align-items:center;min-width:0;
+  margin:9px 0;padding:11px 15px;border:1px solid #a28a69;
+  background:linear-gradient(#f4eddd,#e2d2b5);color:#503725;}
+.gui-notice-symbol{width:30px;height:30px;flex:none;display:grid;place-items:center;
+  border:2px solid #9b8060;border-radius:50%;font:bold 17px Arial,sans-serif;}
+.gui-notice strong{font:700 13px/1.4 Arial,sans-serif;}
+.gui-notice p{font:11px/1.5 Arial,sans-serif;margin:4px 0 0;}
+.gui-notice--success{border-left:5px solid #4f854c;background:#e4ead6;}
+.gui-notice--success .gui-notice-symbol{background:#5c8b57;color:#fff;}
+.gui-notice--error{border-left:5px solid #ac4635;background:#f4ddd0;}
+.gui-notice--error .gui-notice-symbol{background:#ac4635;color:#fff;}
+.gui-notice--warning{border-left:5px solid #b1842f;}
+.gui-notice--info{border-left:5px solid #597b8d;}
