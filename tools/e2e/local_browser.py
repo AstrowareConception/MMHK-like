@@ -369,6 +369,9 @@ def main() -> int:
             page.locator('a[href$="/heroes"]').first.click()
             # The immersive hero page renamed the heading; assert the real
             # interactive seven-position board, not obsolete editorial copy.
+            page.get_by_role("tab",name="Formation").click()
+            expect(page.get_by_test_id("hero-formation-screen")).to_be_visible()
+            expect(page.get_by_test_id("hero-inventory-screen")).to_be_hidden()
             expect(page.get_by_test_id("formation-visual-board")).to_be_visible(timeout=20000)
             expect(page.locator(".formation-slot")).to_have_count(7)
             # Reorder actual seven Jactari positions using the illustrated
@@ -394,7 +397,7 @@ def main() -> int:
             expect(target_slot).to_contain_text("Miliciens du Havre")
             page.screenshot(path="test-output/visuals/seven-slot-formation-desktop.png",full_page=True)
             page.get_by_role("button", name="Enregistrer les sept positions").click()
-            expect(page.get_by_text("Formation de combat enregistrée", exact=False)).to_be_visible(timeout=20000)
+            expect(page.get_by_text("Formation enregistrée sans modifier les effectifs.", exact=False)).to_be_visible(timeout=20000)
             page.locator('a[href$="/region"]').first.click()
             # Two seeded laboratory encounters, genuinely scoped to this city.
             # Region is already open through the main kingdom navbar.
