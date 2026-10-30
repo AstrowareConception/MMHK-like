@@ -1,6 +1,6 @@
 "use client";
 import {useEffect,useRef,useState,useTransition} from "react";
-import type {DragEvent,KeyboardEvent,PointerEvent} from "react";
+import type {DragEvent,KeyboardEvent,MouseEvent,PointerEvent} from "react";
 import {transferHeroUnits} from "../app/actions";
 import {HeritagePortrait,HeritageUnitArt} from "./heritage-art";
 import {GameDialog} from "./game-ui/game-dialog";
@@ -124,7 +124,7 @@ export function TroopDeploymentBoard({cityId,forces,portrait,portraitSheet,unitS
         suppressClick.current=true;
         choose(gesture.item,dest);
       },
-      onClick:(event:React.MouseEvent<HTMLElement>)=>{
+      onClick:(event:MouseEvent<HTMLElement>)=>{
         if(suppressClick.current){suppressClick.current=false;return;}
         if(selected){event.currentTarget.focus();choose(selected,dest);}
       },
