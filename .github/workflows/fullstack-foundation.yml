@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - main
+      # Temporary release-candidate trigger, remove before merging.
+      - feat/true-fixed-game-screens-44
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
