@@ -163,7 +163,7 @@ def main() -> int:
             expect(page.locator(".equipment-slot.filled")).to_have_count(1)
             page.screenshot(path="test-output/visuals/hero-equipment-desktop.png",full_page=True)
             print("E2E MILESTONE: hero equipment drag persisted",flush=True)
-            page.get_by_role("link", name="Ville", exact=True).click()
+            page.get_by_role("link", name="Entrer en ville").first.click()
             expect(page.get_by_role("heading", level=1, name="Premier Havre")).to_be_visible()
 
             expect(page.get_by_text("Actualisation automatique", exact=False)).to_be_visible()
