@@ -386,6 +386,33 @@ def main() -> int:
             source_slot=page.locator(".mmhk-formation-tile").nth(0)
             target_slot=page.locator(".mmhk-formation-tile").nth(1)
             expect(source_slot).to_contain_text("Miliciens du Havre")
+            # This is the POPULATED 18-soldier scenario missing from the
+            # original empty world visual smoke. Each split/merge action
+            # must stay inside its own tactical slot, without overlap.
+            layout=page.evaluate("""() => {
+              const cells=Array.from(document.querySelectorAll('.mmhk-formation-slot'));
+              let collisions=0,escaped=0;
+              for(let i=0;i<cells.length;i++){
+                const a=cells[i].getBoundingClientRect();
+                for(const button of cells[i].querySelectorAll('.mmhk-formation-tools button')){
+                  const b=button.getBoundingClientRect();
+                  if(b.left<a.left-1||b.right>a.right+1)escaped++;
+                  for(let j=0;j<cells.length;j++)if(i!==j){
+                    const c=cells[j].getBoundingClientRect();
+                    if(b.right>c.left+2&&c.right>b.left+2&&
+                       b.bottom>c.top+2&&c.bottom>b.top+2)collisions++;
+                  }
+                }
+              }
+              const board=document.querySelector('[data-testid="hero-formation-screen"]');
+              return {collisions,escaped,overflow:board.scrollHeight-board.clientHeight};
+            }""")
+            print("POPULATED FORMATION VISUAL GEOMETRY:",layout,flush=True)
+            assert layout["collisions"]==0,layout
+            assert layout["escaped"]==0,layout
+            assert layout["overflow"]<=3,layout
+            page.screenshot(path="test-output/visuals/PLAYER-populated-formation-1220x900.png",
+                            full_page=False)
             # An unrelated native drop must not parse an empty payload as
             # slot index zero, which would silently rearrange the formation.
             page.evaluate("""() => {
