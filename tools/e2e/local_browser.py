@@ -104,19 +104,34 @@ def main() -> int:
             expect(page.get_by_text("Terrain, forêt, mine, site ou PNJ : non cartographié")).to_be_visible()
             page.get_by_role("link", name="Entrer en ville").first.click()
             expect(page.get_by_role("heading", level=1, name="Premier Havre", exact=True)).to_be_visible()
+            expect(page.get_by_test_id("city-game-screen")).to_be_visible()
+            city_tabs=page.get_by_role("tablist",name="Écrans de la cité")
+            city_tabs.get_by_role("tab",name="Réserves").click()
             expect(page.get_by_role("heading", name="Réserves de la ville")).to_be_visible()
+            assert page.evaluate("""() => {
+              const shell=document.querySelector('.kingdom-screen-content');
+              return getComputedStyle(shell).overflowY==='hidden' &&
+                shell.scrollHeight<=shell.clientHeight+2;
+            }"""), "City is still a long web article in a fixed viewport"
+            city_tabs.get_by_role("tab",name="Panorama").click()
             expect(page.get_by_role("link", name="Héros et artefacts").first).to_be_visible()
             expect(page.get_by_role("link", name="Garnison et recrutement").first).to_be_visible()
             expect(page.get_by_test_id("city-interactive-district")).to_be_visible()
             assert page.locator(".city-plan-ribbon-list button").count() >= 8
             expect(page.locator(".city-plan-ribbon-list button").filter(
                 has_text="Demeure des miliciens")).to_be_visible()
-            # The long technical directory is opt-in; it never dominates the game screen.
+            # Dedicated chantier activity opens the project collection by
+            # default: never show a mostly empty page hiding its content.
+            city_tabs.get_by_role("tab",name="Chantiers").click()
+            expect(page.get_by_test_id("city-construction-screen")).to_be_visible()
             directory=page.get_by_test_id("construction-directory")
+            expect(directory).to_have_attribute("open", "")
+            assert page.locator(".building-plan").count() >= 8, "Haven catalogue not provisioned"
+            directory.locator("summary").click()
             expect(directory).not_to_have_attribute("open", "")
             directory.locator("summary").click()
-            assert page.locator(".building-plan").count() >= 8, "Expanded Haven catalogue not provisioned"
-            directory.locator("summary").click()
+            expect(directory).to_have_attribute("open", "")
+            city_tabs.get_by_role("tab",name="Panorama").click()
             # A building with no certified scene anchor remains accessible
             # through the same in-game blueprint ribbon.
             page.locator(".city-plan-ribbon-list button").filter(
@@ -166,7 +181,8 @@ def main() -> int:
             page.get_by_role("link", name="Entrer en ville").first.click()
             expect(page.get_by_role("heading", level=1, name="Premier Havre")).to_be_visible()
 
-            expect(page.get_by_text("Actualisation automatique", exact=False)).to_be_visible()
+            # Auto-refresh remains mounted but no longer eats space in the fixed panorama.
+            expect(page.locator(".live-refresh-status")).to_have_count(1)
 
             # Select a verified Haven building: inspect actual server quotes,
             # then submit the construction order from its contextual inspector.
@@ -183,7 +199,23 @@ def main() -> int:
                 "aria-pressed","true")
             os.makedirs("test-output/visuals",exist_ok=True)
             page.screenshot(path="test-output/visuals/haven-city-building-inspector.png",
-                            full_page=True)
+                            full_page=False)
+            city_geometry=page.evaluate("""() => {
+              const shell=document.querySelector('.kingdom-screen-content');
+              const frame=document.querySelector('.mmhk-city-game-screen');
+              const scene=document.querySelector('.city-scene-frame');
+              const inspector=document.querySelector('.mmhk-city-inspector-column');
+              return {shellOverflow:getComputedStyle(shell).overflowY,
+                shellExtra:shell.scrollHeight-shell.clientHeight,
+                frameExtra:frame.scrollHeight-frame.clientHeight,
+                sceneHeight:Math.round(scene.getBoundingClientRect().height),
+                inspectorHeight:Math.round(inspector.getBoundingClientRect().height)};
+            }""")
+            print("CITY PANORAMA GAME GEOMETRY:",city_geometry,flush=True)
+            assert city_geometry["shellOverflow"]=="hidden",city_geometry
+            assert city_geometry["shellExtra"]<=2,city_geometry
+            assert city_geometry["frameExtra"]<=2,city_geometry
+            assert city_geometry["sceneHeight"]>=130,city_geometry
             rapid = inspector.locator(
                 "form.city-inspector-quote:has(input[name='buildingCode'][value='village_hall'])"
                 ":has(input[name='mode'][value='rapid'])"
@@ -209,7 +241,9 @@ def main() -> int:
                 },flush=True)
                 raise
             page.screenshot(path="test-output/visuals/haven-city-active-project.png",
-                            full_page=True)
+                            full_page=False)
+            page.get_by_role("tab",name="Historique").click()
+            expect(page.get_by_test_id("city-history-screen")).to_be_visible()
             expect(page.locator("#city-history .construction-history-entry")).to_have_count(1)
             expect(page.locator("#city-history .construction-history-entry").first).to_contain_text("Hôtel du village")
             snap = page.request.get(root + "/api/game-timeline?hours=12")
@@ -221,13 +255,14 @@ def main() -> int:
                   "clusters", page.locator(".timeline-cluster").count(),
                   "message", page.locator(".kingdom-timeline").inner_text()[:180], flush=True)
             expect(page.locator(".timeline-event")).to_have_count(1, timeout=20000)
+            page.get_by_role("tab",name="Chantiers").click()
             expect(page.locator(".active-project")).to_contain_text("En construction")
             # One active site, no queue and no second payment option.
             assert page.locator("form.build-option").count() == 0
 
             # The real worker should complete this 36s experimental job.
             # Check that Next.js refreshes it without a manual browser reload.
-            finished = page.get_by_text("village_hall niveau 1", exact=False)
+            finished = page.get_by_text("Hôtel du village niveau 1", exact=False)
             deadline = time.monotonic() + 105
             while time.monotonic() < deadline:
                 if finished.count() and finished.first.is_visible():
@@ -243,6 +278,7 @@ def main() -> int:
             expect(page.get_by_role("heading", name="Marché de Premier Havre")).to_be_visible()
             expect(page.get_by_role("heading", name="Le marché attend son ouverture")).to_be_visible()
             page.get_by_role("link", name="Voir le bâtiment Marché").click()
+            expect(page.get_by_test_id("city-panorama-screen")).to_be_visible()
             expect(page.locator("#city-inspector")).to_have_attribute(
                 "data-selected-building", "marketplace")
             page.locator("#city-inspector").get_by_role(
@@ -254,7 +290,8 @@ def main() -> int:
             expect(market_job.get_by_role("button",name="Lancer le chantier")).to_be_enabled()
             market_job.get_by_role("button",name="Lancer le chantier").click()
             expect(page.get_by_text("Chantier enregistré et ressources payées.")).to_be_visible(timeout=20000)
-            market_ready=page.get_by_text("marketplace niveau 1",exact=False)
+            page.get_by_role("tab",name="Chantiers").click()
+            market_ready=page.get_by_text("Marché niveau 1",exact=False)
             deadline=time.monotonic()+115
             while time.monotonic()<deadline:
                 if market_ready.count() and market_ready.first.is_visible():
@@ -306,7 +343,8 @@ def main() -> int:
             # Build the first actual dwelling via the in-scene inspector.
             tier_one.get_by_role("button",name="Lancer le chantier").click()
             expect(page.get_by_text("Chantier enregistré et ressources payées.")).to_be_visible(timeout=20000)
-            next_ready = page.get_by_text("recruit_t1 niveau 1", exact=False)
+            page.get_by_role("tab",name="Chantiers").click()
+            next_ready = page.get_by_text("Demeure des miliciens niveau 1", exact=False)
             deadline = time.monotonic() + 125
             while time.monotonic() < deadline:
                 if next_ready.count() and next_ready.first.is_visible():
