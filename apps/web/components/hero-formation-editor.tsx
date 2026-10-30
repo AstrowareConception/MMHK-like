@@ -3,6 +3,8 @@ import {useEffect,useMemo,useRef,useState} from "react";
 import type {DragEvent,PointerEvent} from "react";
 import {saveHeroFormation} from "../app/actions";
 import {HeritageUnitArt} from "./heritage-art";
+import {GameDialog} from "./game-ui/game-dialog";
+import {GameQuantity} from "./game-ui/game-quantity";
 import type {HeroFormation} from "../lib/server-api";
 
 type Cell={unit_code:string;quantity:number};
@@ -29,6 +31,8 @@ export function HeroFormationEditor({cityId,formation,sheet}:{
   const pointerStart=useRef<{index:number;x:number;y:number}|null>(null);
   const suppressClick=useRef(false);
   const [touched,setTouched]=useState(false);
+  const [splitSource,setSplitSource]=useState<number|null>(null);
+  const [splitQuantity,setSplitQuantity]=useState(1);
   useEffect(()=>{setReady(true);},[]);
   useEffect(()=>{setRows(hydrate(formation));setSelected(null);setTouched(false);},[formation]);
   const totals=useMemo(()=>{
@@ -61,10 +65,18 @@ export function HeroFormationEditor({cityId,formation,sheet}:{
   function split(i:number){
     const original=rows[i],target=rows.findIndex(r=>!r.unit_code);
     if(!editable||!original.unit_code||original.quantity<2||target<0)return;
-    const n=Math.floor(original.quantity/2);
-    setRows(prev=>prev.map((v,k)=>k===i?{...v,quantity:v.quantity-n}:
-      k===target?{unit_code:original.unit_code,quantity:n}:v));
-    setTouched(true);
+    setSplitSource(i);
+    setSplitQuantity(Math.floor(original.quantity/2));
+  }
+  function confirmSplit(){
+    if(splitSource===null||!editable)return;
+    const source=rows[splitSource],target=rows.findIndex(r=>!r.unit_code);
+    if(!source?.unit_code||target<0||!Number.isSafeInteger(splitQuantity)||
+       splitQuantity<1||splitQuantity>=source.quantity)return;
+    setRows(prev=>prev.map((v,k)=>k===splitSource?
+      {...v,quantity:v.quantity-splitQuantity}:
+      k===target?{unit_code:source.unit_code,quantity:splitQuantity}:v));
+    setTouched(true);setSplitSource(null);setSelected(null);
   }
   function merge(i:number){
     const src=rows[i],target=rows.findIndex((v,k)=>k!==i&&
@@ -173,6 +185,35 @@ export function HeroFormationEditor({cityId,formation,sheet}:{
         })}
       </div>
     </div>
+    <GameDialog open={splitSource!==null} eyebrow="ORGANISER LES PELOTONS"
+      title="Diviser un peloton" testId="formation-split-dialog" size="compact"
+      onClose={()=>setSplitSource(null)}
+      footer={<>
+        <button type="button" className="gui-button gui-button--secondary"
+          onClick={()=>setSplitSource(null)}>Annuler</button>
+        <button type="button" className="gui-button gui-button--primary"
+          onClick={confirmSplit} disabled={splitSource===null||!editable}>
+          Diviser les unités
+        </button>
+      </>}>
+      {splitSource!==null&&rows[splitSource]&&<>
+        <p className="gui-help">Choisissez le nombre de soldats à placer
+          sur une nouvelle position libre. Le total reste inchangé.</p>
+        <div className="gui-stack-balance">
+          <div><small>PELOTON D'ORIGINE</small>
+            <strong>{(rows[splitSource].quantity-splitQuantity).toLocaleString("fr-FR")}</strong></div>
+          <span aria-hidden="true">+</span>
+          <div><small>NOUVEAU PELOTON</small>
+            <strong>{splitQuantity.toLocaleString("fr-FR")}</strong></div>
+          <span aria-hidden="true">=</span>
+          <div><small>TOTAL</small>
+            <strong>{rows[splitSource].quantity.toLocaleString("fr-FR")}</strong></div>
+        </div>
+        <GameQuantity label="Soldats à détacher" min={1}
+          max={Math.max(1,rows[splitSource].quantity-1)}
+          value={splitQuantity} onChange={setSplitQuantity} testId="formation-split-quantity"/>
+      </>}
+    </GameDialog>
     <form action={saveHeroFormation} className="mmhk-formation-save">
       <input type="hidden" name="cityId" value={cityId}/>
       <input type="hidden" name="heroId" value={formation.hero_id}/>
@@ -207,6 +248,9 @@ export function HeroFormationEditor({cityId,formation,sheet}:{
         </span>)}
       </div>
       <footer className="formation-footer">
+        {touched&&<button type="button" className="gui-formation-reset"
+          onClick={()=>{setRows(hydrate(formation));setSelected(null);setTouched(false);}}
+          disabled={!editable}>Annuler les modifications</button>}
         <p>Les effectifs ne changent pas lorsque vous réorganisez les positions.
           Seule la formation préparée est enregistrée auprès du serveur.</p>
         <button type="submit" disabled={!balanced||!editable}>
