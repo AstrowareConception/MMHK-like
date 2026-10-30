@@ -2458,3 +2458,28 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   .mmhk-screen-empty strong{font-size:15px;}
   .mmhk-screen-empty p{font-size:11px;}
 }
+
+
+/* Contrast fixes from the actual 1220x900 and 1440x950 Chromium captures. */
+.gui-game-stage[data-game-screen="forces"] .mmhk-empty-room,
+.gui-game-stage[data-game-screen="forces"] .mmhk-garrison-keep .mmhk-empty-room,
+.gui-game-stage[data-game-screen="forces"] .mmhk-deployment-hero .mmhk-empty-room{
+  color:#69513b!important;font:12px/1.45 Arial,sans-serif!important;
+}
+.gui-game-stage[data-game-screen="forces"] .mmhk-board-heading .eyebrow,
+.gui-game-stage[data-game-screen="heroes"] .mmhk-heritage-formation .eyebrow{
+  color:#79522d!important;letter-spacing:.07em!important;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-heritage-formation .formation-state{
+  background:#ead4a7!important;color:#55371f!important;
+  border:1px solid #ae8d5f!important;font:bold 11px Arial,sans-serif!important;
+  padding:7px 11px!important;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-heritage-formation .formation-totals .balanced{
+  color:#355d40!important;background:#e1ead9!important;
+  border-color:#9fbb98!important;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-heritage-formation .formation-totals .unbalanced{
+  color:#853322!important;background:#f9e0d5!important;
+  border-color:#cf9e8b!important;
+}
