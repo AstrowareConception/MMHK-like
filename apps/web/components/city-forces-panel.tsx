@@ -1,10 +1,10 @@
 import {hireCityHero,recruitCityUnits} from "../app/actions";
 import {TroopDeploymentBoard} from "./troop-deployment-board";
+import {MilitaryGameScreen} from "./military-game-screen";
 import {HeritagePortrait,HeritageUnitArt} from "./heritage-art";
 import {GameQuantity} from "./game-ui/game-quantity";
 import {GameNotice} from "./game-ui/game-notice";
 import type {CityForces} from "../lib/server-api";
-import Link from "next/link";
 
 const money=(value:number)=>value.toLocaleString("fr-FR");
 const ART:Record<string,string>={
@@ -32,28 +32,18 @@ export function CityForcesPanel({cityId,forces,message,visuals}:{
   }
   return <section className="military-panel mmhk-military-panel mmhk-heritage-armies" id="military-panel"
     data-testid="heritage-garrison">
-    <header className="military-panel-heading mmhk-war-banner">
-      <div><span className="eyebrow">LE HALL DES ARMÉES · HAVRE</span>
-        <h2>Gestion des armées</h2>
-        <p>Organisez les pelotons et le commandement de votre royaume.
-          Les cartes correspondent à vos véritables effectifs.</p>
-        <Link href={"/cities/"+cityId+"/heroes"} className="scene-action">
-          Ouvrir les fiches de héros et leurs artefacts
-        </Link>
-      </div>
-      <div className="mmhk-war-emblem" aria-hidden="true">⚔</div>
-    </header>
-    {!forces?<p className="error">Le registre de la garnison n'est pas disponible.</p>:<>
+    {!forces?<p className="error">Le registre de la garnison n'est pas disponible.</p>:
+      <MilitaryGameScreen heroesCount={forces.heroes.length} garrison={<>
       {message.transfer&&<GameNotice tone={message.transfer==="ok"?"success":"error"}
         title={message.transfer==="ok"?
           "Transfert confirmé : les effectifs sont conservés et la formation a été réinitialisée.":
           "Transfert non confirmé : effectifs insuffisants ou héros indisponible."}/>}
-      {status("hero",message.hero)}
-      {status("recruit",message.recruit)}
       <TroopDeploymentBoard cityId={cityId} forces={forces}
         portrait={visuals.portrait} portraitSheet={visuals.portraitSheet}
         unitSheet={visuals.unitSheet} backdrop={visuals.garrison}/>
-      <div className="mmhk-military-market">
+      </>}
+      recruitment={<>
+        {status("recruit",message.recruit)}
         <section className="military-wing mmhk-recruit-hall">
           <header>
             <span className="eyebrow">LES DEMEURES</span>
@@ -90,6 +80,9 @@ export function CityForcesPanel({cityId,forces,message,visuals}:{
           {!forces.recruitment.length&&
             <p className="mmhk-empty-room">Aucune réserve de recrutement dans cette cité.</p>}
         </section>
+      </>}
+      tavern={<>
+        {status("hero",message.hero)}
         <section className="military-wing mmhk-tavern-hall"
           style={visuals.tavern?{backgroundImage:
             "linear-gradient(#101b23dd,#101b23ee),url("+JSON.stringify(visuals.tavern)+")"}:undefined}>
@@ -121,10 +114,6 @@ export function CityForcesPanel({cityId,forces,message,visuals}:{
             {forces.heroes.length}/{forces.hero_capacity} places de héros occupées
           </div>
         </section>
-      </div>
-      <p className="notice">Le prix des unités et les offres de héros sont
-        des paramètres du monde expérimental, pas des règles MMHK S2 certifiées.
-        Aucun effectif n'est créé lors d'un simple glisser-déposer.</p>
-    </>}
+      </>}/>
   </section>;
 }
