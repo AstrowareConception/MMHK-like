@@ -23,6 +23,8 @@ on:
       - feat/hero-direct-unequip-54
       # Readable and contrast-checked mission duel scorecards.
       - fix/mission-duel-readable-numbers-55
+      # Compact desktop / tablet / mobile regression matrix.
+      - test/compact-tablet-interface-56
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
@@ -225,6 +227,7 @@ jobs:
           export MMHK_E2E_USERNAME="demo_ci"
           export MMHK_E2E_PASSWORD="$(cat .ci-e2e-password)"
           python3 tools/e2e/player_visual_audit.py
+          python3 tools/e2e/responsive_visual_audit.py
       - name: Publish player visual QA captures immediately
         if: always()
         uses: actions/upload-artifact@v4
