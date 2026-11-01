@@ -113,6 +113,40 @@ def main():
         page.get_by_role("button",name="Entrer dans le royaume").click()
         expect(page.get_by_role("heading",name="Mes mondes")).to_be_visible()
         page.get_by_role("link",name="Royaume de démonstration",exact=False).click()
+        expect(page.get_by_test_id("world-game-screen")).to_be_visible()
+        wt=page.get_by_role("tablist",name="Écrans du monde")
+        wt.get_by_role("tab",name="Carte").focus()
+        page.keyboard.press("ArrowRight")
+        expect(wt.get_by_role("tab",name="Mes cités")).to_have_attribute("aria-selected","true")
+        page.keyboard.press("Home")
+        expect(wt.get_by_role("tab",name="Carte")).to_have_attribute("aria-selected","true")
+        for width,height in ((1220,900),(1440,950)):
+            page.set_viewport_size({"width":width,"height":height})
+            for name,key in (("Carte","map"),("Mes cités","cities"),
+                             ("Influence","influence"),("Expansion","expansion")):
+                wt.get_by_role("tab",name=name).click()
+                expect(page.get_by_test_id("world-"+key+"-screen")).to_be_visible()
+                geom=page.evaluate("""() => {
+                  const outer=document.querySelector('.kingdom-screen-content');
+                  const frame=document.querySelector('.mmhk-world-game-screen');
+                  const panel=document.querySelector('.mmhk-world-active-screen>[role="tabpanel"]:not([hidden])');
+                  const atlas=panel.querySelector('.world-atlas-interactive');
+                  return {overflow:getComputedStyle(outer).overflowY,
+                    outerExtra:outer.scrollHeight-outer.clientHeight,
+                    frameExtra:frame.scrollHeight-frame.clientHeight,
+                    panelExtra:panel.scrollHeight-panel.clientHeight,
+                    width:Math.round(panel.getBoundingClientRect().width),
+                    atlasHeight:atlas?Math.round(atlas.getBoundingClientRect().height):0};
+                }""")
+                print("WORLD VISUAL QA",key,width,height,geom,flush=True)
+                assert geom["overflow"]=="hidden" and geom["outerExtra"]<=2,(key,geom)
+                assert geom["frameExtra"]<=3 and geom["panelExtra"]<=3,(key,geom)
+                assert geom["width"]>=750,(key,geom)
+                if key=="map":assert geom["atlasHeight"]>=130,(key,geom)
+                page.screenshot(path=str(ARTIFACTS/f"WORLD-{key}-{width}x{height}.png"),
+                                full_page=False,animations="disabled")
+        page.set_viewport_size({"width":1220,"height":900})
+        wt.get_by_role("tab",name="Mes cités").click()
         page.get_by_role("link",name="Entrer en ville").first.click()
         expect(page.get_by_test_id("city-game-screen")).to_be_visible()
         citytabs=page.get_by_role("tablist",name="Écrans de la cité")
@@ -265,7 +299,7 @@ def main():
             expect(page.get_by_test_id("military-"+key+"-screen")).to_be_visible()
             metrics=capture(page,f"PLAYER-{key}-1220x900.png")
             assert_dimensions(metrics,key)
-        print("PASS: 30 Chromium screens (city, market, heroes, military) at both resolutions",flush=True)
+        print("PASS: 38 Chromium screens (world, city, market, heroes, military) at both resolutions",flush=True)
         context.close()
         browser.close()
 

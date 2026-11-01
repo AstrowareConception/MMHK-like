@@ -25,6 +25,7 @@ def main():
             page.get_by_role("button",name="Entrer dans le royaume").click()
             expect(page.get_by_role("heading",name="Mes mondes")).to_be_visible(timeout=20000)
             page.get_by_role("link",name=re.compile("Royaume de démonstration")).click()
+            page.get_by_role("tablist",name="Écrans du monde").get_by_role("tab",name="Influence").click()
             section=page.get_by_role("region",name="Rayons d'influence territoriale")
             expect(section).to_be_visible(timeout=16000)
             # A worker cycle, never a client-calculated counter, will publish
@@ -34,6 +35,7 @@ def main():
                     break
                 time.sleep(2)
                 page.reload(wait_until="domcontentloaded")
+                page.get_by_role("tablist",name="Écrans du monde").get_by_role("tab",name="Influence").click()
                 section=page.get_by_role("region",name="Rayons d'influence territoriale")
             expect(section).to_contain_text("révision n° 1",timeout=15000)
             expect(section).to_contain_text("moyenne militaire sur 4 jours")

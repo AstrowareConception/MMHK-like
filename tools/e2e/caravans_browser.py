@@ -29,6 +29,7 @@ def main():
             page.get_by_role("button",name="Entrer dans le royaume").click()
             expect(page.get_by_role("heading",name="Mes mondes")).to_be_visible(timeout=20000)
             page.get_by_role("link",name=re.compile("Royaume de démonstration")).click()
+            page.get_by_role("tablist",name="Écrans du monde").get_by_role("tab",name="Mes cités").click()
             start=page.locator(".world-city-link").filter(has_text="Premier Havre")
             expect(start).to_have_count(1)
             dest=page.locator(".world-city-link").filter(has_text="Comptoir des caravanes")
@@ -54,6 +55,7 @@ def main():
             # Browser refresh only reads; PostgreSQL worker confirms the delivery.
             expect(record).to_contain_text("Livrée",timeout=145000)
             page.locator('a[href="/worlds/local-sandbox"]').first.click()
+            page.get_by_role("tablist",name="Écrans du monde").get_by_role("tab",name="Mes cités").click()
             dest=page.locator(".world-city-link").filter(has_text="Comptoir des caravanes")
             dest.get_by_role("link",name="Entrer en ville").click()
             expect(page.get_by_role("heading",level=1,
@@ -64,6 +66,7 @@ def main():
             # Return to the SENDER: the destination test city has no
             # marketplace built, and must not be allowed to dispatch cargo.
             page.locator('a[href="/worlds/local-sandbox"]').first.click()
+            page.get_by_role("tablist",name="Écrans du monde").get_by_role("tab",name="Mes cités").click()
             source=page.locator(".world-city-link").filter(has_text="Premier Havre")
             source.get_by_role("link",name="Entrer en ville").click()
             page.get_by_role("link",name="Marché",exact=True).click()
@@ -91,6 +94,7 @@ def main():
             expect(page.get_by_test_id("caravan-record").filter(
                 has_text="Livrée")).to_have_count(3,timeout=160000)
             page.locator('a[href="/worlds/local-sandbox"]').first.click()
+            page.get_by_role("tablist",name="Écrans du monde").get_by_role("tab",name="Mes cités").click()
             dest=page.locator(".world-city-link").filter(has_text="Comptoir des caravanes")
             dest.get_by_role("link",name="Entrer en ville").click()
             page.get_by_role("tablist",name="Écrans de la cité").get_by_role("tab",name="Réserves").click()
