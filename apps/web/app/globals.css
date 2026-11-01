@@ -3603,3 +3603,200 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
     max-height:240px;min-height:150px;
   }
 }
+
+
+/* REGIONAL COMMAND: a navigable 5x5 scene, real encounters and separate
+   mission/intelligence activities. The active map and the encounter inspector
+   share the stage; each independent area handles its own scroll. */
+.gui-game-stage[data-game-screen="region"] .kingdom-screen-heading{
+  display:flex;align-items:center;justify-content:center;gap:11px;
+  padding:5px 10px!important;margin-bottom:4px!important;min-height:0;
+}
+.gui-game-stage[data-game-screen="region"] .kingdom-screen-heading .eyebrow{
+  display:none;
+}
+.gui-game-stage[data-game-screen="region"] .kingdom-screen-heading h1{
+  font:small-caps 21px/1.1 Georgia,serif!important;margin:0;
+}
+.gui-game-stage[data-game-screen="region"] .kingdom-screen-heading p{
+  font:11px Georgia,serif!important;margin:0;opacity:.75;
+}
+.mmhk-region-game-screen{
+  display:flex;flex-direction:column;
+  height:100%;width:100%;min-width:0;min-height:0;
+  margin:0!important;border:2px ridge #b19672;
+  background:#e9dec8;color:#533b2b;
+}
+.mmhk-region-command-header{
+  flex:0 0 auto;display:flex;align-items:center;
+  flex-wrap:wrap;justify-content:space-between;
+  gap:8px;padding:6px 10px;
+  min-height:47px;background:linear-gradient(#b4a087,#806e5a);
+  border-bottom:2px solid #856649;
+}
+.mmhk-region-active-screen{
+  flex:1 1 0;min-width:0;min-height:0;
+  display:flex;flex-direction:column;overflow:hidden;
+}
+.mmhk-region-active-screen>[role="tabpanel"]{
+  width:100%;height:100%;flex:1 1 0;min-width:0;min-height:0;
+  overflow:hidden;
+}
+.mmhk-region-active-screen>[hidden]{display:none!important;}
+.mmhk-region-active-screen .mmhk-region-map-panel{
+  display:grid;grid-template-columns:minmax(0,1.15fr) minmax(320px,.85fr);
+  gap:9px;padding:7px;
+  background:#172e36;
+}
+.mmhk-region-map-column{
+  display:flex;flex-direction:column;min-width:0;min-height:0;
+  padding:4px;background:#18333c;border:2px ridge #b49b74;
+  overflow:hidden;
+}
+.mmhk-region-map-column .map-section-heading{
+  flex:0 0 auto;display:flex;align-items:center;
+  justify-content:space-between;gap:8px;min-height:23px;
+  margin:0!important;padding:0 5px;
+}
+.mmhk-region-map-column .map-section-heading h2{
+  font:small-caps 17px/1.1 Georgia,serif!important;
+  margin:0!important;color:#f0daaa;
+}
+.mmhk-region-map-column .map-section-heading .eyebrow{display:none;}
+.mmhk-region-map-column .map-section-legend{
+  white-space:nowrap;font:10px Georgia,serif;color:#ddc89d;
+}
+.mmhk-region-map-column .map-coordinate-status{
+  flex:0 0 auto;min-height:24px;align-items:center;
+  gap:8px;padding:4px 7px;font:10px Georgia,serif;
+}
+.mmhk-region-map-column .map-coordinate-status strong{
+  font:700 11px Georgia,serif;
+}
+.mmhk-region-map-column .map-grid-switch{font-size:10px;}
+.mmhk-region-map-column svg.region-scene{
+  display:block!important;flex:1 1 0!important;min-height:0!important;
+  width:100%!important;height:0!important;aspect-ratio:auto!important;
+  max-height:100%;object-fit:contain;border:1px solid #b69a70;
+  background:#193840;
+}
+.mmhk-region-map-column .region-selected-details{
+  flex:0 0 auto;min-height:42px;max-height:65px;
+  overflow-y:auto;display:flex;align-items:center;
+  flex-wrap:wrap;gap:7px;padding:5px 8px;
+  font:11px/1.2 Georgia,serif;
+}
+.mmhk-region-map-column .region-selected-details strong{
+  font:700 12px Georgia,serif;
+}
+.mmhk-region-encounter-column{
+  display:flex;flex-direction:column;min-width:0;min-height:0;
+  border:2px ridge #b79b70;overflow-y:auto;overflow-x:hidden;
+  background:linear-gradient(#f8eedb,#e3d1b2);
+  scrollbar-width:thin;scrollbar-color:#a58b65 #e8d9c0;
+}
+.mmhk-region-encounter-column .region-encounter-panel{
+  min-width:0;min-height:0;max-width:none;
+  margin:0!important;padding:12px!important;
+  border:0!important;color:#614530;
+  background:transparent!important;
+}
+.mmhk-region-encounter-column .region-encounter-panel h3,
+.mmhk-region-encounter-column .region-encounter-panel h4{
+  color:#523626!important;
+}
+.mmhk-region-encounter-column .region-encounter-panel p{
+  color:#735740;font:11px/1.45 Georgia,serif;
+}
+.mmhk-region-encounter-column .region-encounter-panel .eyebrow{
+  color:#815a37;
+}
+.mmhk-region-collection{
+  box-sizing:border-box;min-height:0;min-width:0;
+  padding:18px;overflow-y:auto!important;
+  background:linear-gradient(#f4e9d5,#e8d9bc);
+  scrollbar-width:thin;scrollbar-color:#ac9068 #ebdec7;
+}
+.mmhk-region-collection .regional-mission-status{
+  margin:0!important;padding:12px;min-width:0;
+  border:2px ridge #b99c75;background:#fff7e6;
+}
+.mmhk-region-collection .regional-mission-status h3{
+  color:#573c2b;font:small-caps 24px Georgia,serif;
+}
+.mmhk-region-collection .regional-mission-status p,
+.mmhk-region-collection .regional-mission-status small{
+  color:#715941;
+}
+.mmhk-region-intel-heading{
+  display:flex;align-items:center;gap:16px;
+  border-bottom:1px solid #b8a180;padding:8px 12px 14px;margin-bottom:14px;
+}
+.mmhk-region-intel-heading>span{
+  display:grid;place-items:center;width:57px;height:57px;
+  font:30px Georgia,serif;color:#5a3d26;
+  border:3px double #987848;background:#e5ce9d;border-radius:50%;
+}
+.mmhk-region-intel-heading h3{
+  margin:0 0 5px;color:#563925;font:small-caps 23px Georgia,serif;
+}
+.mmhk-region-intel-heading p{
+  margin:0;color:#79614b;font:12px/1.5 Georgia,serif;
+}
+.mmhk-region-collection .region-legend{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  align-items:start;gap:14px;margin:0;
+}
+.mmhk-region-collection .region-legend>div{
+  min-width:0;min-height:145px;padding:15px;
+  background:linear-gradient(#fff8e8,#ead8bc);
+  border:2px ridge #b49b74;color:#5c422c;
+}
+.mmhk-region-collection .region-legend strong{
+  color:#543824;
+}
+.mmhk-region-collection .region-legend p,
+.mmhk-region-collection .region-legend small{
+  color:#74563d;
+}
+.gui-game-stage[data-game-screen="region"] .live-refresh-status{display:none;}
+@media(min-width:901px){
+  .gui-game-stage[data-game-screen="region"] .kingdom-screen-content{
+    display:flex;flex-direction:column;min-width:0;min-height:0;
+    overflow:hidden!important;padding:6px 8px!important;gap:5px;
+  }
+  .gui-game-stage[data-game-screen="region"] .mmhk-region-game-screen{
+    flex:1 1 0;min-height:0;max-height:100%;
+  }
+  .gui-game-stage[data-game-screen="region"] .region-actions{
+    flex:0 0 auto;display:flex;justify-content:center;
+    gap:7px;margin:0!important;padding:0;
+  }
+  .gui-game-stage[data-game-screen="region"] .region-actions a{
+    min-height:29px;padding:6px 10px;font-size:11px;
+  }
+  .gui-game-stage[data-game-screen="region"] .kingdom-screen-content>p.notice{
+    flex:0 0 auto;max-height:24px;overflow-y:auto;
+    margin:0!important;padding:3px 7px;
+    font:9px/1.2 Georgia,serif;
+  }
+}
+@media(max-width:900px){
+  .mmhk-region-game-screen{height:auto;min-height:650px;}
+  .mmhk-region-active-screen{min-height:540px;}
+  .mmhk-region-active-screen .mmhk-region-map-panel{
+    grid-template-columns:minmax(0,1fr);overflow-y:auto;
+  }
+  .mmhk-region-map-column{min-height:420px;}
+  .mmhk-region-encounter-column{min-height:230px;max-height:420px;}
+}
+@media(max-width:600px){
+  .mmhk-region-command-header .mmhk-command-tabs{
+    width:100%;justify-content:space-between;
+  }
+  .kingdom-shell .mmhk-region-command-header [role="tab"]{
+    padding:5px 6px!important;font-size:11px!important;
+  }
+  .mmhk-region-collection .region-legend{grid-template-columns:1fr;}
+  .mmhk-region-collection{padding:9px;}
+}
