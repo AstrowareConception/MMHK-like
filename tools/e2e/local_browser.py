@@ -310,12 +310,23 @@ def main() -> int:
             wood_for_ore.locator("input[name='pay_amount']").fill("6")
             wood_for_ore.get_by_role("button",name="Obtenir un devis").click()
             expect(page.locator("#market-quote")).to_contain_text("3 minerai")
+            # An OPEN, populated exchange must look as convincing as the
+            # closed-market screenshots. The quote is real server data.
+            page.set_viewport_size({"width":1220,"height":900})
+            page.locator("#market-quote").scroll_into_view_if_needed()
+            page.screenshot(path="test-output/visuals/MARKET-live-merchant-quote-1220x900.png",
+                            full_page=False,animations="disabled")
+            page.set_viewport_size({"width":1366,"height":900})
             page.get_by_role("button",name="Confirmer cet échange").click()
             expect(page.get_by_text("Échange confirmé :",exact=False)).to_be_visible(timeout=20000)
             market_tabs.get_by_role("tab",name="Historique").click()
             expect(page.get_by_test_id("market-ledger-screen")).to_be_visible()
             expect(page.get_by_test_id("market-history-row")).to_have_count(1)
             expect(page.get_by_test_id("market-history-row").first).to_contain_text("6 bois vers 3 minerai")
+            page.set_viewport_size({"width":1220,"height":900})
+            page.screenshot(path="test-output/visuals/MARKET-live-ledger-1220x900.png",
+                            full_page=False,animations="disabled")
+            page.set_viewport_size({"width":1366,"height":900})
             market_tabs.get_by_role("tab",name="Hôtel des ventes").click()
             expect(page.get_by_test_id("market-auctions-screen")).to_be_visible()
             # US-ECH-004/005/008: actually reserve a lot outside spendable stock,
@@ -330,6 +341,11 @@ def main() -> int:
             own_lot=page.get_by_test_id("marketplace-my-offer").first
             expect(own_lot).to_contain_text("4 Bois")
             expect(own_lot).to_contain_text("En vente")
+            page.set_viewport_size({"width":1220,"height":900})
+            own_lot.scroll_into_view_if_needed()
+            page.screenshot(path="test-output/visuals/MARKET-live-auction-1220x900.png",
+                            full_page=False,animations="disabled")
+            page.set_viewport_size({"width":1366,"height":900})
             own_lot.get_by_role("button",name="Retirer l'offre").click()
             expect(page.get_by_text("Lot retiré et remis",exact=False)).to_be_visible(timeout=20000)
             expect(page.get_by_test_id("marketplace-my-offer").first).to_contain_text("Retiré")
