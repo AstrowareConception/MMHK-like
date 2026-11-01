@@ -187,6 +187,7 @@ export default async function MarketPage({params,searchParams}:{
           </>}
         </section>}
         </>}
+        </>}
         <p className="notice">
       Marchand local opérationnel uniquement lorsque le bâtiment est actif.
       Offres à prix fixe expérimentales disponibles selon les droits du monde ;
