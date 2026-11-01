@@ -581,9 +581,47 @@ def main() -> int:
             page.get_by_text("Dernières missions achevées").click()
             page.get_by_role("link", name="Rapport", exact=True).first.click()
             expect(page.get_by_role("heading", level=1, name="Chronique de mission")).to_be_visible()
-            expect(page.locator(".mission-report-events li")).to_have_count(3)
-            expect(page.locator(".mission-report-formation > div")).to_have_count(7)
-            expect(page.get_by_text("Peloton du duel expérimental")).to_be_visible()
+            expect(page.get_by_test_id("mission-report-game-screen")).to_be_visible()
+            tabs=page.get_by_role("tablist",name="Écrans du rapport de mission")
+            tabs.get_by_role("tab",name="Trajet").focus()
+            page.keyboard.press("ArrowRight")
+            expect(tabs.get_by_role("tab",name="Journal")).to_have_attribute("aria-selected","true")
+            page.keyboard.press("Home")
+            expect(tabs.get_by_role("tab",name="Trajet")).to_have_attribute("aria-selected","true")
+            for width,height in ((1220,900),(1440,950)):
+                page.set_viewport_size({"width":width,"height":height})
+                for label,key in (("Trajet","journey"),("Journal","events"),
+                                  ("Formation","formation"),("Duel","duel")):
+                    tabs.get_by_role("tab",name=label).click()
+                    panel=page.get_by_test_id("report-"+key+"-screen")
+                    expect(panel).to_be_visible()
+                    geom=page.evaluate("""() => {
+                        const outer=document.querySelector('.kingdom-screen-content');
+                        const game=document.querySelector('.mmhk-mission-report-game-screen');
+                        const panel=document.querySelector('.mmhk-mission-report-active-screen>[role="tabpanel"]:not([hidden])');
+                        const scroll=panel.querySelector('.mmhk-mission-report-scroll');
+                        return {overflow:getComputedStyle(outer).overflowY,
+                          outerExtra:outer.scrollHeight-outer.clientHeight,
+                          gameExtra:game.scrollHeight-game.clientHeight,
+                          panelExtra:panel.scrollHeight-panel.clientHeight,
+                          width:Math.round(panel.getBoundingClientRect().width),
+                          scrollHeight:scroll.clientHeight};
+                    }""")
+                    print("FILLED MISSION REPORT QA",key,width,height,geom,flush=True)
+                    assert geom["overflow"]=="hidden" and geom["outerExtra"]<=2,(key,geom)
+                    assert geom["gameExtra"]<=3 and geom["panelExtra"]<=3,(key,geom)
+                    assert geom["width"]>=750 and geom["scrollHeight"]>=175,(key,geom)
+                    if key=="events":
+                        expect(page.locator(".mission-report-events li")).to_have_count(3)
+                    if key=="formation":
+                        expect(page.locator(".mission-report-formation > div")).to_have_count(7)
+                        expect(page.get_by_text("Peloton du duel expérimental")).to_be_visible()
+                    if key=="duel":
+                        expect(page.get_by_text("Rapport enregistré au contact")).to_be_visible()
+                    page.screenshot(path="test-output/visuals/REPORT-"+key+"-"+str(width)+"x"+str(height)+".png",
+                                    full_page=False,animations="disabled")
+            page.set_viewport_size({"width":1366,"height":900})
+            tabs.get_by_role("tab",name="Trajet").click()
             page.get_by_role("link", name="Suivre sur la carte").click()
             expect(page.get_by_role("heading", name="Autour de Premier Havre")).to_be_visible()
 
