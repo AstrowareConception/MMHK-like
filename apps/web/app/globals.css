@@ -4070,3 +4070,183 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
     grid-template-columns:1fr;
   }
 }
+
+
+/* COLONIZATION COMMAND — one activity at a time. Eligibility, authentic
+   server quote and worker-registered orders remain separate surfaces.
+   Never let a long resource ledger scroll the entire kingdom frame. */
+.gui-game-stage[data-game-screen="colony"] .kingdom-screen-heading{
+  display:flex;align-items:center;justify-content:center;
+  gap:12px;padding:5px 10px!important;margin-bottom:4px!important;min-height:0;
+}
+.gui-game-stage[data-game-screen="colony"] .kingdom-screen-heading .eyebrow{
+  display:none;
+}
+.gui-game-stage[data-game-screen="colony"] .kingdom-screen-heading h1{
+  margin:0;font:small-caps 21px/1.1 Georgia,serif!important;
+}
+.gui-game-stage[data-game-screen="colony"] .kingdom-screen-heading p{
+  margin:0;font:11px Georgia,serif!important;opacity:.76;
+}
+.mmhk-colony-game-screen{
+  display:flex;flex-direction:column;width:100%;height:100%;
+  min-width:0;min-height:0;border:2px ridge #aa906a;
+  background:#eee0c9;color:#523c2b;
+}
+.mmhk-colony-command-header{
+  flex:0 0 auto;display:flex;align-items:center;
+  justify-content:space-between;gap:7px 10px;flex-wrap:wrap;
+  padding:7px 9px;min-height:48px;
+  background:linear-gradient(#b49c81,#7e6c59);
+  border-bottom:2px solid #8b6a4c;
+}
+.mmhk-colony-shortcuts{
+  display:flex;gap:4px;align-items:center;flex-wrap:wrap;
+}
+.mmhk-colony-shortcuts a{
+  background:linear-gradient(#f0ddba,#d3b386);padding:7px 9px;
+  color:#513823!important;border:1px solid #9f7e58;
+  font:700 11px Arial,sans-serif;text-decoration:none;
+}
+.mmhk-colony-shortcuts a:hover,.mmhk-colony-shortcuts a:focus-visible{
+  background:#fff1d2;outline:2px solid #d5a768;
+}
+.mmhk-colony-notices{flex:0 0 auto;min-height:0;}
+.mmhk-colony-notices:empty{display:none;}
+.mmhk-colony-notices .construction-notice,
+.mmhk-colony-notices .error{
+  margin:3px 6px;padding:6px 10px;font-size:11px;
+}
+.mmhk-colony-active-screen{
+  flex:1 1 0;min-width:0;min-height:0;display:flex;
+  flex-direction:column;overflow:hidden;background:#f4ebda;
+}
+.mmhk-colony-active-screen>[role="tabpanel"]{
+  display:flex;flex-direction:column;flex:1 1 0;
+  min-height:0;min-width:0;width:100%;height:100%;overflow:hidden;
+}
+.mmhk-colony-active-screen>[hidden]{display:none!important;}
+.mmhk-colony-scroll{
+  box-sizing:border-box;min-width:0;min-height:0;flex:1 1 0;
+  display:flex;flex-direction:column;gap:12px;
+  overflow-y:auto;overflow-x:hidden;overscroll-behavior:contain;
+  padding:13px 15px 19px;
+  scrollbar-width:thin;scrollbar-color:#b29166 #eadbc5;
+  background:radial-gradient(ellipse at 50% 12%,#fff9e9,#eadac0 88%);
+}
+.mmhk-colony-scroll .colony-intro{
+  margin:0!important;min-width:0;
+  padding:17px 19px;background:linear-gradient(140deg,#fff7e5,#e5d2b0);
+  border:2px ridge #b69a70;
+}
+.mmhk-colony-scroll .colony-intro h2,
+.mmhk-colony-scroll .colony-preparation h3,
+.mmhk-colony-scroll .colony-orders h3{
+  color:#583b26!important;font:small-caps 22px Georgia,serif!important;
+  margin:0 0 8px!important;
+}
+.mmhk-colony-scroll .colony-intro p{
+  color:#775940;font:12px/1.55 Georgia,serif;
+}
+.mmhk-colony-scroll .colony-rules{
+  grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;
+}
+.mmhk-colony-scroll .colony-rules article{
+  min-width:0;padding:13px;border:2px ridge #af9166;
+  background:linear-gradient(#fff9ea,#e8d5b4);
+  color:#543d2b;
+}
+.mmhk-colony-scroll .colony-rules .eyebrow{color:#855f3b;}
+.mmhk-colony-scroll .colony-rules article strong{
+  color:#583a26;font:small-caps 17px Georgia,serif;
+}
+.mmhk-colony-scroll .colony-rules article small{
+  color:#79604a;
+}
+.mmhk-colony-scroll .colony-preparation,
+.mmhk-colony-scroll .colony-orders{
+  margin:0!important;min-width:0;padding:13px;
+  border:2px ridge #b29870;
+  background:linear-gradient(#fff8e8,#ecdbbe);
+  color:#523a29;
+}
+.mmhk-colony-scroll .colony-preparation p,
+.mmhk-colony-scroll .colony-orders p{
+  color:#71553e;
+}
+.mmhk-colony-scroll .colony-preparation input,
+.mmhk-colony-scroll .colony-preparation select{
+  background:#fff9ec;color:#533b2a;border-color:#bb9d70;
+  min-height:34px;
+}
+.mmhk-colony-scroll .colony-quote{
+  margin:8px 0 0;padding:13px;
+  border:2px ridge #ae9066;
+  background:linear-gradient(#f9edda,#e7d3b3);color:#553d2a;
+}
+.mmhk-colony-scroll .colony-quote h3{color:#533a28!important;}
+.mmhk-colony-scroll .colony-quote>p strong{color:#594027;}
+.mmhk-colony-scroll .colony-cost-grid{
+  grid-template-columns:repeat(4,minmax(0,1fr));gap:7px;
+}
+.mmhk-colony-scroll .colony-cost-grid>div{
+  background:linear-gradient(#fff6e4,#dbc39d);
+  border:1px solid #b1956f;color:#5b402d;min-width:0;
+}
+.mmhk-colony-scroll .colony-cost-grid>div strong{color:#563824;}
+.mmhk-colony-scroll .colony-cost-grid>div small{color:#73573e;}
+.mmhk-colony-scroll .colony-site-list{margin:5px 0;gap:5px;}
+.mmhk-colony-scroll .colony-site-list a{
+  border-color:#ac8c61;background:#e7d1a8;color:#523723!important;
+}
+.mmhk-colony-scroll .colony-site-list a.selected{
+  background:#a9824c;color:#fff6de!important;
+}
+.mmhk-colony-scroll .colony-order{
+  border:2px ridge #b39a76;padding:12px;
+  background:linear-gradient(#fff8e7,#e8d4b1);color:#5c412f;
+}
+.mmhk-colony-scroll .colony-order strong,
+.mmhk-colony-scroll .colony-order small{
+  color:#60442f;
+}
+.mmhk-colony-scroll .colony-order-actions a,
+.mmhk-colony-scroll .colony-order-actions button,
+.mmhk-colony-primary-action{
+  align-self:center;min-height:36px;padding:9px 14px;
+  color:#4e3320!important;background:linear-gradient(#f3e0b3,#c6a16e);
+  border:1px solid #a08458;font:700 12px Arial,sans-serif;
+  text-decoration:none;cursor:pointer;
+}
+.mmhk-colony-scroll .colony-confirm button[type="submit"]{
+  min-height:40px;font-weight:700;
+}
+.mmhk-colony-scroll .colony-locked,
+.mmhk-colony-scroll .colony-blockers{
+  background:#f4e1c9;color:#80533c;border-left:4px solid #bc8353;
+}
+.gui-game-stage[data-game-screen="colony"] .live-refresh-status{display:none;}
+@media(min-width:901px){
+  .gui-game-stage[data-game-screen="colony"] .kingdom-screen-content{
+    display:flex;flex-direction:column;padding:6px 8px!important;
+    min-width:0;min-height:0;overflow:hidden!important;
+  }
+  .gui-game-stage[data-game-screen="colony"] .mmhk-colony-game-screen{
+    flex:1 1 0;min-height:0;
+  }
+}
+@media(max-width:900px){
+  .mmhk-colony-game-screen{min-height:610px;}
+  .mmhk-colony-active-screen{min-height:475px;}
+  .mmhk-colony-scroll .colony-rules{grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media(max-width:650px){
+  .mmhk-colony-command-header .mmhk-command-tabs{
+    order:2;width:100%;justify-content:space-between;
+  }
+  .mmhk-colony-shortcuts{order:3;width:100%;}
+  .mmhk-colony-scroll{padding:9px;}
+  .mmhk-colony-scroll .colony-rules,
+  .mmhk-colony-scroll .colony-cost-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .mmhk-colony-scroll .colony-selector{grid-template-columns:minmax(0,1fr);}
+}
