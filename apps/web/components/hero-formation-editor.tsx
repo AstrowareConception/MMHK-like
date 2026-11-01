@@ -32,6 +32,7 @@ export function HeroFormationEditor({cityId,formation,sheet}:{
   const pointerStart=useRef<{index:number;x:number;y:number}|null>(null);
   const suppressClick=useRef(false);
   const [touched,setTouched]=useState(false);
+  const [advancedOpen,setAdvancedOpen]=useState(false);
   const [splitSource,setSplitSource]=useState<number|null>(null);
   const [splitQuantity,setSplitQuantity]=useState(1);
   useEffect(()=>{setReady(true);},[]);
@@ -172,10 +173,9 @@ export function HeroFormationEditor({cityId,formation,sheet}:{
                   fallback={ART[r.unit_code]} scale={1}/>:
                   <span aria-hidden="true">+</span>}
               </span>
-              <strong>{u?.name??(r.unit_code||"Emplacement libre")}</strong>
+              <strong>{u?.name??(r.unit_code||"Libre")}</strong>
               <span className="mmhk-formation-qty">{r.unit_code?
-                "×"+r.quantity.toLocaleString("fr-FR"):"Disponible"}</span>
-              <small>Jactari {i+2}</small>
+                "×"+r.quantity.toLocaleString("fr-FR"):""}</span>
             </button>
             {r.unit_code&&editable&&<div className="mmhk-formation-tools">
               <button type="button" onClick={()=>split(i)}
@@ -225,11 +225,13 @@ export function HeroFormationEditor({cityId,formation,sheet}:{
         <input type="hidden" name={"unit-"+(i+1)} value={r.unit_code}/>
         <input type="hidden" name={"quantity-"+(i+1)} value={r.quantity}/>
       </div>)}
-      <details className="mmhk-formation-advanced">
-        <summary>Ajuster finement les effectifs</summary>
-        <p>Pour fractionner un même type sur plusieurs positions,
-          modifiez les quantités. La somme doit rester égale aux soldats
-          réellement affectés au héros.</p>
+      <GameDialog open={advancedOpen} title="Répartir les effectifs"
+        eyebrow="POSITIONNEMENT TACTIQUE" testId="formation-advanced-dialog"
+        size="wide" onClose={()=>setAdvancedOpen(false)}
+        footer={<button type="button" className="gui-button gui-button--primary"
+          onClick={()=>setAdvancedOpen(false)}>Revenir à la formation</button>}>
+        <p className="gui-help">Ajustez les effectifs de chaque position. Le total
+          de chaque type doit rester identique aux soldats du héros.</p>
         <div className="mmhk-formation-edit-grid">
           {rows.map((r,i)=><label key={i}>Position {i+1}
             <select disabled={!editable} value={r.unit_code} onChange={e=>edit(i,{
@@ -239,11 +241,13 @@ export function HeroFormationEditor({cityId,formation,sheet}:{
               {formation.available_units.map(u=><option key={u.unit_code}
                 value={u.unit_code}>{u.name}</option>)}
             </select>
-            <input type="number" min="1" max="1000000" disabled={!editable||!r.unit_code}
-              value={r.unit_code?r.quantity:""} onChange={e=>edit(i,{quantity:Number(e.target.value)})}/>
+            <input type="number" min="1" max="1000000"
+              disabled={!editable||!r.unit_code}
+              value={r.unit_code?r.quantity:""}
+              onChange={e=>edit(i,{quantity:Number(e.target.value)})}/>
           </label>)}
         </div>
-      </details>
+      </GameDialog>
       <div className="formation-totals">
         {remaining.map(u=><span key={u.unit_code} className={
           u.remaining===0?"balanced":"unbalanced"}>
@@ -252,6 +256,8 @@ export function HeroFormationEditor({cityId,formation,sheet}:{
         </span>)}
       </div>
       <footer className="formation-footer">
+        <button type="button" className="gui-formation-detail"
+          onClick={()=>setAdvancedOpen(true)}>Ajuster les effectifs…</button>
         {touched&&<button type="button" className="gui-formation-reset"
           onClick={()=>{setRows(hydrate(formation));setSelected(null);setTouched(false);}}
           disabled={!editable}>Annuler les modifications</button>}

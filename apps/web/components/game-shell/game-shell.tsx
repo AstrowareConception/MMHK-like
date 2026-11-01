@@ -11,9 +11,10 @@ const RESOURCE_LIST=[
   ["gold","Or"],["wood","Bois"],["ore","Minerai"],["crystal","Cristal"],
   ["gems","Gemmes"],["sulfur","Soufre"],["mercury","Mercure"]
 ] as const;
-export async function GameShell({token,title,eyebrow,description,worldId,cityId,stocks,children}:{
+export async function GameShell({token,title,eyebrow,description,worldId,cityId,stocks,children,screen}:{
   token:string;title:string;eyebrow:string;description:string;
   worldId?:string;cityId?:string;stocks?:Record<string,number>;children:ReactNode;
+  screen?:string;
 }) {
   const [response,citiesResponse]=await Promise.all([
     privateApi<TimelineResponse>("/api/v1/me/timeline?hours=12",token),
@@ -24,7 +25,8 @@ export async function GameShell({token,title,eyebrow,description,worldId,cityId,
   const ownCities=citiesResponse?.ok?citiesResponse.data??[]:[];
   const backdrop=resolveAssetUrl("ui.page.background");
   const paper=resolveAssetUrl("ui.panel.main");
-  return <main id="mmhk-game-viewport" className="shell kingdom-shell gui-game-stage"
+  return <main id="mmhk-game-viewport" data-game-screen={screen}
+    className="shell kingdom-shell gui-game-stage"
     style={backdrop?{backgroundImage:"linear-gradient(180deg,#101a21a8,#101820e8),url("+JSON.stringify(backdrop)+")"}:undefined}>
     <div className="kingdom-frame">
       <TopTimelineBar initial={response.ok?response.data??null:null}

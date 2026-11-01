@@ -23,14 +23,9 @@ export default async function ForcesPage({params,searchParams}:{
     return <main className="shell"><p>Les forces de cette cité sont indisponibles.</p>
       <Link href={"/cities/"+cityId}>Retour à la cité</Link></main>;
   }
-  return <GameShell token={token} title="Forces et garnisons" eyebrow="ROYAUME · COMMANDEMENT"
+  return <GameShell token={token} title="Forces et garnisons" screen="forces" eyebrow="ROYAUME · COMMANDEMENT"
     description={"Réserve de troupes, taverne et affectations · "+city.data.name}
     worldId={city.data.world_id} cityId={cityId} stocks={city.data.stocks}>
-    <nav className="city-shortcuts">
-      <Link href={"/cities/"+cityId}>Ville</Link>
-      <Link href={"/cities/"+cityId+"/heroes"}>Fiches de héros et artefacts</Link>
-      <Link href={"/cities/"+cityId+"/region"}>Région et rencontres</Link>
-    </nav>
     <CityForcesPanel cityId={cityId} forces={forces.data} message={query}
       visuals={{
         portrait:{
