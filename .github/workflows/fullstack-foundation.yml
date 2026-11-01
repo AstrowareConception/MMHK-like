@@ -19,6 +19,8 @@ on:
       - feat/mission-report-fixed-screens-52
       # Stacked founding eligibility, quote and expedition screens.
       - feat/colonization-fixed-screens-53
+      # Direct inventory command usability and mouse/keyboard fixture.
+      - feat/hero-direct-unequip-54
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
