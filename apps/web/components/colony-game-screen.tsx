@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import {useEffect,useState,type ReactNode} from "react";
+import {useEffect,useState,type MouseEvent,type ReactNode} from "react";
 
 type ColonyActivity="rights"|"prepare"|"orders";
 const tabs=[
@@ -34,7 +34,18 @@ export function ColonyGameScreen({worldId,sourceCityId,initialTab="rights",
     const url=new URL(window.location.href);url.hash=entry.hash;
     window.history.replaceState(window.history.state,"",url.pathname+url.search+url.hash);
   }
-  return <div className="mmhk-colony-game-screen" data-testid="colony-game-screen"
+  function switchInternalAnchor(event:MouseEvent<HTMLDivElement>){
+    const node=event.target;
+    if(!(node instanceof Element))return;
+    const anchor=node.closest("a[href]");
+    const hash=anchor?.getAttribute("href")??"";
+    const found=tabs.find(t=>t.hash===hash);
+    if(!found)return;
+    event.preventDefault();
+    select(found.id);
+  }
+  return <div onClick={switchInternalAnchor}
+    className="mmhk-colony-game-screen" data-testid="colony-game-screen"
     data-active-screen={active}>
     <header className="mmhk-colony-command-header">
       <div className="mmhk-command-hero-heading">
