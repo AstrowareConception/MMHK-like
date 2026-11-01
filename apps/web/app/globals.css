@@ -3119,3 +3119,177 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   min-height:34px!important;padding:6px!important;
   font-size:12px!important;
 }
+
+
+/* MARKET activity suite — one actual game panel at a time.
+   Preserve authoritative FastAPI prices, offers and transport orders; the
+   client tab bar only selects visual surfaces. */
+.gui-game-stage[data-game-screen="market"] .kingdom-screen-heading{
+  display:flex;align-items:center;justify-content:center;gap:13px;
+  padding:5px 10px!important;margin-bottom:4px!important;min-height:0;
+}
+.gui-game-stage[data-game-screen="market"] .kingdom-screen-heading .eyebrow{
+  display:none;
+}
+.gui-game-stage[data-game-screen="market"] .kingdom-screen-heading h1{
+  font:small-caps 21px/1.1 Georgia,serif!important;margin:0;
+}
+.gui-game-stage[data-game-screen="market"] .kingdom-screen-heading p{
+  font:11px Georgia,serif!important;margin:0;opacity:.76;
+}
+.mmhk-market-game-screen{
+  display:flex;flex-direction:column;width:100%;min-width:0;min-height:0;
+  background:#ede0c7;border:2px ridge #ae926c;color:#59412e;
+}
+.mmhk-market-command-header{
+  display:flex;flex-wrap:wrap;align-items:center;gap:7px 11px;
+  flex:0 0 auto;padding:7px 9px;min-height:49px;
+  background:linear-gradient(#b19c81,#7e6b58);border-bottom:2px solid #795d43;
+}
+.mmhk-market-command-header .mmhk-command-tabs{align-items:stretch;gap:4px;}
+.kingdom-shell .mmhk-market-command-header [role="tab"]{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:2px;min-height:34px;padding:5px 9px!important;
+}
+.mmhk-market-tab-state{
+  display:block;font:700 9px/1 Arial,sans-serif;
+  color:#4a6238;letter-spacing:.01em;
+}
+.mmhk-market-tab-state.locked{color:#95664b;}
+.mmhk-market-city-link{
+  margin-left:auto;min-height:30px;padding:7px 8px;
+  text-decoration:none;color:#513621!important;
+  font:700 11px Arial,sans-serif;
+  border:1px solid #a48968;background:#e8d1a5;
+}
+.mmhk-market-city-link:hover,.mmhk-market-city-link:focus-visible{
+  outline:2px solid #f4d082;background:#fff1d0;
+}
+.mmhk-market-notices{flex:0 0 auto;}
+.mmhk-market-notices:empty{display:none;}
+.mmhk-market-notices .construction-notice,.mmhk-market-notices .error{
+  margin:3px 6px;padding:5px 9px;font-size:11px;
+}
+.mmhk-market-active-screen{
+  flex:1 1 auto;min-width:0;min-height:0;display:flex;flex-direction:column;
+  overflow:hidden;background:#f3e9d8;
+}
+.mmhk-market-active-screen>[role="tabpanel"]{
+  display:flex;flex-direction:column;width:100%;height:100%;
+  min-width:0;min-height:0;overflow:hidden;
+}
+.mmhk-market-active-screen>[hidden]{display:none!important;}
+.mmhk-market-scroll{
+  display:flex;flex-direction:column;gap:8px;box-sizing:border-box;
+  min-width:0;min-height:0;flex:1 1 auto;overflow-y:auto;overflow-x:hidden;
+  overscroll-behavior:contain;scrollbar-width:thin;
+  scrollbar-color:#ae8f62 #eee1c9;
+  padding:12px 14px 18px;background:
+  radial-gradient(ellipse at 48% 0%,#fff9e9,#eee0c7 90%);
+}
+.mmhk-market-room-heading{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;
+  gap:10px;padding:5px 8px 9px;border-bottom:1px solid #bca17b;
+}
+.mmhk-market-room-heading .eyebrow{color:#88623c;}
+.mmhk-market-room-heading h2{
+  color:#50331f!important;font:small-caps 23px/1.2 Georgia,serif!important;
+  margin:2px 0!important;
+}
+.mmhk-market-room-heading p{margin:0;font:12px/1.4 Georgia,serif;color:#74563e;}
+.mmhk-market-room-heading a{
+  color:#4b321f!important;background:#e7cf9f;padding:8px 12px;
+  border:1px solid #a38763;text-decoration:none;font:700 11px Arial,sans-serif;
+}
+.mmhk-market-merchant-room .market-locked{
+  min-height:170px;display:flex;flex-direction:column;
+  justify-content:center;align-items:center;text-align:center;
+  padding:18px;gap:8px;border:2px double #b39873;
+  background:radial-gradient(ellipse,#ead5b1,#f4e9d8 80%);
+}
+.mmhk-market-merchant-room .market-locked h3{
+  color:#533623!important;font:small-caps 25px Georgia,serif;margin:0;
+}
+.mmhk-market-merchant-room .market-locked p{
+  color:#73533e;font-size:12px;max-width:500px;
+}
+.mmhk-market-scroll .merchant-offers,
+.mmhk-market-scroll .merchant-ledger,
+.mmhk-market-scroll .marketplace-panel,
+.mmhk-market-scroll .caravan-panel{
+  box-sizing:border-box;margin:0;min-height:0;min-width:0;
+}
+.mmhk-market-scroll .merchant-offers>h3,
+.mmhk-market-scroll .merchant-ledger>h3,
+.mmhk-market-scroll .marketplace-heading h3,
+.mmhk-market-scroll .caravan-heading h3{
+  color:#513824!important;margin:0 0 5px;
+  font:small-caps 23px/1.2 Georgia,serif;
+}
+.mmhk-market-scroll .merchant-rate-grid{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+  align-content:start;gap:9px;
+}
+.mmhk-market-scroll .merchant-rate,
+.mmhk-market-scroll .marketplace-wing,
+.mmhk-market-scroll .marketplace-own-offer,
+.mmhk-market-scroll .merchant-ledger-row{
+  min-width:0;overflow-wrap:anywhere;
+}
+.mmhk-market-scroll .market-disclaimer,
+.mmhk-market-scroll .notice,
+.mmhk-market-scroll .caravan-heading p,
+.mmhk-market-scroll .marketplace-panel p{
+  font-size:11px;line-height:1.4;
+}
+.mmhk-market-scroll .merchant-quote{
+  box-sizing:border-box;flex:0 0 auto;min-width:0;
+  background:linear-gradient(#f7e9c8,#e2cdac);border:2px ridge #ad8956;
+  padding:10px 13px;color:#503823;
+}
+.mmhk-market-scroll .merchant-quote h3,
+.mmhk-market-scroll .merchant-quote strong{color:#503823;}
+.mmhk-market-scroll .merchant-confirm-form button{
+  min-height:35px;font-weight:700;
+}
+.mmhk-market-ledger-room .merchant-ledger{
+  display:flex;flex-direction:column;min-height:0;gap:8px;
+}
+.mmhk-market-ledger-room .merchant-ledger>p{
+  display:flex;align-items:center;justify-content:center;
+  text-align:center;min-height:160px;
+  color:#705440;background:#eee0c9;
+  border:2px double #b89a72;padding:16px;
+}
+.mmhk-market-ledger-room .merchant-ledger>ol{
+  display:grid;gap:9px;align-content:start;min-width:0;
+}
+.mmhk-market-auctions-room .marketplace-columns{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;
+}
+.mmhk-market-caravans-room .caravan-layout{min-width:0;}
+@media(min-width:901px){
+  .gui-game-stage[data-game-screen="market"] .kingdom-screen-content{
+    display:flex;flex-direction:column;min-width:0;min-height:0;
+    padding:6px 8px!important;overflow:hidden!important;
+  }
+  .gui-game-stage[data-game-screen="market"] .mmhk-market-game-screen{
+    flex:1 1 auto;height:100%;overflow:hidden;
+  }
+}
+@media(max-width:900px){
+  .mmhk-market-game-screen{min-height:620px;}
+  .mmhk-market-active-screen{min-height:470px;}
+  .mmhk-market-command-header{align-items:flex-start;}
+}
+@media(max-width:650px){
+  .mmhk-market-command-header .mmhk-command-tabs{
+    order:2;width:100%;justify-content:space-between;gap:2px;
+  }
+  .kingdom-shell .mmhk-market-command-header [role="tab"]{
+    font-size:10px!important;padding:5px 4px!important;
+  }
+  .mmhk-market-city-link{order:3;width:100%;text-align:center;}
+  .mmhk-market-scroll{padding:9px;}
+  .mmhk-market-auctions-room .marketplace-columns{grid-template-columns:1fr;}
+}
