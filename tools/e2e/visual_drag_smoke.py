@@ -206,6 +206,28 @@ def main():
             expect(page.locator(".equipment-slot.filled")).to_have_count(1)
             equipped=page.locator('.mmhk-equip-target[data-slot="head"] .artifact-card')
             expect(equipped).to_be_visible()
+            # Direct mouse path: equip remains fully backed by the server.
+            # The player no longer has to drag the artefact back to the bag
+            # to find the unequip operation. This is separate from the
+            # still-unverified native reverse DnD scenario (#46).
+            equipped.click()
+            direct=page.get_by_role("button",name="Déséquiper Heaume de bronze")
+            expect(direct).to_be_visible()
+            expect(direct).to_be_enabled()
+            direct.click()
+            expect(page.locator(".equipment-slot.filled")).to_have_count(0,timeout=15000)
+            bag=page.locator("#hero-bag .artifact-card").filter(has_text="Heaume de bronze")
+            expect(bag).to_be_visible()
+            print("PASS: direct mouse unequip -> server bag",flush=True)
+            # Re-equip through the accessible click destination to test the
+            # keyboard inverse route independently without a second native
+            # Chromium drag (which the runner can freeze).
+            bag.click()
+            expect(page.locator(".mmhk-selection-hint")).to_contain_text("Heaume de bronze")
+            slot.click()
+            expect(page.locator(".equipment-slot.filled")).to_have_count(1,timeout=15000)
+            equipped=page.locator('.mmhk-equip-target[data-slot="head"] .artifact-card')
+            expect(equipped).to_be_visible()
             # Keep a REAL native mouse drag for equipment. The Chromium 1.56
             # runner intermittently freezes on a second native drag, even when
             # driven with raw mouse.move calls. Test the supported accessible
@@ -226,7 +248,7 @@ def main():
             expect(page.locator("#hero-bag .artifact-card").filter(
                 has_text="Heaume de bronze")).to_be_visible(timeout=12000)
             assert not failures,failures[:3]
-            print("PASS: native helmet equip + keyboard unequip + persistence; inverse native drag is a separately tracked gap",flush=True)
+            print("PASS: native helmet equip + explicit mouse unequip + click re-equip + keyboard unequip + persistence; inverse native drag remains separately tracked",flush=True)
         finally:
             print("E2E DND: browser shutdown",flush=True)
             browser.close()

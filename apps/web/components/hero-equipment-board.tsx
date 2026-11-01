@@ -246,6 +246,12 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
     </GameDialog>}
     <div className="mmhk-inventory-toolbar">
       <small>Glissez un objet ou sélectionnez sa destination.</small>
+      {chosen?.location==="equipped"&&<button type="button"
+        className="mmhk-direct-unequip" disabled={!idle||pending}
+        aria-label={"Déséquiper "+chosen.name}
+        onClick={()=>move({place:"bag"},chosen.artifact_id)}>
+        Déséquiper {chosen.name}
+      </button>}
       {heroes.length>1&&<button type="button" onClick={()=>setRecipientsOpen(true)}>
         Confier un objet à un autre héros
       </button>}
