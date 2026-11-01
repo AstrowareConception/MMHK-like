@@ -257,6 +257,7 @@ export function WorldAtlasInteractive({world,cities,detailBackground,politicalBa
       <span>Sélection : <strong data-testid="world-selection">{readable(selected)}</strong></span>
       <span>{!background?"Grille schématique de substitution":showGrid?"Grille de diagnostic (non historique)":"Grille d’origine préservée"}</span>
     </div>
+    <div className="world-map-workbench">
     <svg ref={svgRef} className="world-atlas world-atlas-interactive" viewBox="0 0 680 500"
       role="group" tabIndex={0} onKeyDown={onKeyboard}
       style={{touchAction:"none",cursor:pan.x||pan.y?"grabbing":"grab"}}
@@ -343,6 +344,7 @@ export function WorldAtlasInteractive({world,cities,detailBackground,politicalBa
         Flèches • glisser • molette • clavier · exploration sans mission
       </text>
     </svg>
+    <aside className="world-map-sidebar" aria-label="Informations et repères de la carte">
     <div className="map-city-shortcuts">
       {cities.map(city=><button key={city.city_id} type="button"
         onClick={()=>{centerOn(city.x,city.y);setSelected({x:city.x,y:city.y});}}
@@ -380,5 +382,7 @@ export function WorldAtlasInteractive({world,cities,detailBackground,politicalBa
       des cases qualifiées, soit d'une projection de laboratoire activée par le monde ;
       les frontières adverses non découvertes restent cachées.
     </p>
+    </aside>
+    </div>
   </section>;
 }

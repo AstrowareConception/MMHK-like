@@ -136,13 +136,18 @@ def main():
                     frameExtra:frame.scrollHeight-frame.clientHeight,
                     panelExtra:panel.scrollHeight-panel.clientHeight,
                     width:Math.round(panel.getBoundingClientRect().width),
-                    atlasHeight:atlas?Math.round(atlas.getBoundingClientRect().height):0};
+                    atlasHeight:atlas?Math.round(atlas.getBoundingClientRect().height):0,
+                    atlasWidth:atlas?Math.round(atlas.getBoundingClientRect().width):0,
+                    sidebarWidth:Math.round((panel.querySelector('.world-map-sidebar')?.getBoundingClientRect().width)||0)};
                 }""")
                 print("WORLD VISUAL QA",key,width,height,geom,flush=True)
                 assert geom["overflow"]=="hidden" and geom["outerExtra"]<=2,(key,geom)
                 assert geom["frameExtra"]<=3 and geom["panelExtra"]<=3,(key,geom)
                 assert geom["width"]>=750,(key,geom)
-                if key=="map":assert geom["atlasHeight"]>=130,(key,geom)
+                if key=="map":
+                    assert geom["atlasHeight"]>=220,(key,geom)
+                    assert geom["atlasWidth"]>=420,(key,geom)
+                    assert geom["sidebarWidth"]>=240,(key,geom)
                 page.screenshot(path=str(ARTIFACTS/f"WORLD-{key}-{width}x{height}.png"),
                                 full_page=False,animations="disabled")
         page.set_viewport_size({"width":1220,"height":900})
