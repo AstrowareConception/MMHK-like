@@ -21,6 +21,8 @@ on:
       - feat/colonization-fixed-screens-53
       # Direct inventory command usability and mouse/keyboard fixture.
       - feat/hero-direct-unequip-54
+      # Readable and contrast-checked mission duel scorecards.
+      - fix/mission-duel-readable-numbers-55
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
