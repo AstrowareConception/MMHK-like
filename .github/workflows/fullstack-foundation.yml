@@ -15,6 +15,8 @@ on:
       - feat/world-fixed-activity-screens-50
       # Stacked region UI release candidate, remove before merging.
       - feat/region-fixed-command-screens-51
+      # Stacked immutable mission report candidate; remove before merging.
+      - feat/mission-report-fixed-screens-52
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
