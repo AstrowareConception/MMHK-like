@@ -88,7 +88,7 @@ def main():
             record(page,"hero-inventory-screen",width,height,errors)
             page.get_by_role("link",name="Armées").first.click()
             record(page,"military-garrison-screen",width,height,errors)
-            page.get_by_role("link",name="Marché",exact=True).first.click()
+            page.locator('.kingdom-navbar a[href$="/market"]').first.click()
             record(page,"market-merchant-screen",width,height,errors)
             page.get_by_role("link",name="Ma région").first.click()
             record(page,"region-map-screen",width,height,errors)
