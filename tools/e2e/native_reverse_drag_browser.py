@@ -70,9 +70,26 @@ def main():
                 }
             }""")
             print("NATIVE REVERSE: first native gesture equipped helm -> bag",flush=True)
-            # A genuine Chromium DnD, not synthetic events and not a
-            # click fallback. Failure/timeouts are not silently bypassed.
-            equipped.drag_to(bag,timeout=25000)
+            # Drive actual browser pointer input rather than Playwright's
+            # high-level drag_to; no synthetic HTML DragEvent is created.
+            source=equipped.bounding_box()
+            destination=bag.bounding_box()
+            assert source and destination
+            sx=source["x"]+source["width"]/2
+            sy=source["y"]+source["height"]/2
+            tx=destination["x"]+destination["width"]/2
+            ty=destination["y"]+min(42,destination["height"]/2)
+            print("NATIVE REVERSE: mouse move to source",flush=True)
+            page.mouse.move(sx,sy)
+            print("NATIVE REVERSE: mouse down",flush=True)
+            page.mouse.down()
+            print("NATIVE REVERSE: mouse movement across the game board",flush=True)
+            page.mouse.move((sx+tx)/2,(sy+ty)/2,steps=8)
+            print("NATIVE REVERSE: mouse movement to bag",flush=True)
+            page.mouse.move(tx,ty,steps=10)
+            print("NATIVE REVERSE: mouse up",flush=True)
+            page.mouse.up()
+            print("NATIVE REVERSE: wait for actual server persistence",flush=True)
             expect(head.locator(".artifact-card")).to_have_count(0,timeout=15000)
             expect(bag.locator(".artifact-card").filter(
                 has_text="Heaume de bronze")).to_be_visible()
