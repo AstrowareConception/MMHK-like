@@ -618,6 +618,10 @@ def main() -> int:
                         expect(page.get_by_text("Peloton du duel expérimental")).to_be_visible()
                     if key=="duel":
                         expect(page.get_by_text("Rapport enregistré au contact")).to_be_visible()
+                        scores=page.locator(".mission-duel-results").inner_text()
+                        assert not re.search(r"\d+\.\d{8,}",scores),(
+                            "Jactari output leaked unformatted floating precision",scores)
+                        assert len(page.locator(".mission-duel-results>div").all())>=3
                     page.screenshot(path="test-output/visuals/REPORT-"+key+"-"+str(width)+"x"+str(height)+".png",
                                     full_page=False,animations="disabled")
             page.set_viewport_size({"width":1366,"height":900})
