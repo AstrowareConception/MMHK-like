@@ -299,7 +299,10 @@ def main() -> int:
                 page.wait_for_timeout(2500)
             expect(market_ready.first).to_be_visible(timeout=5000)
             page.get_by_role("link",name="Marché",exact=True).click()
-            expect(page.get_by_role("heading",name="La halle des échanges")).to_be_visible()
+            expect(page.get_by_test_id("market-game-screen")).to_be_visible()
+            expect(page.get_by_role("heading",name="Le comptoir du marchand")).to_be_visible()
+            market_tabs=page.get_by_role("tablist",name="Écrans du marché")
+            expect(market_tabs.get_by_role("tab",name="Marchand")).to_have_attribute("aria-selected","true")
             wood_for_ore=page.locator(
                 "form.merchant-rate:has(input[name='pay_resource'][value='wood'])"
                 ":has(input[name='receive_resource'][value='ore'])"
@@ -309,8 +312,12 @@ def main() -> int:
             expect(page.locator("#market-quote")).to_contain_text("3 minerai")
             page.get_by_role("button",name="Confirmer cet échange").click()
             expect(page.get_by_text("Échange confirmé :",exact=False)).to_be_visible(timeout=20000)
+            market_tabs.get_by_role("tab",name="Historique").click()
+            expect(page.get_by_test_id("market-ledger-screen")).to_be_visible()
             expect(page.get_by_test_id("market-history-row")).to_have_count(1)
             expect(page.get_by_test_id("market-history-row").first).to_contain_text("6 bois vers 3 minerai")
+            market_tabs.get_by_role("tab",name="Hôtel des ventes").click()
+            expect(page.get_by_test_id("market-auctions-screen")).to_be_visible()
             # US-ECH-004/005/008: actually reserve a lot outside spendable stock,
             # display its state and withdraw it to the same city.
             publish=page.get_by_test_id("marketplace-publish")
@@ -326,7 +333,7 @@ def main() -> int:
             own_lot.get_by_role("button",name="Retirer l'offre").click()
             expect(page.get_by_text("Lot retiré et remis",exact=False)).to_be_visible(timeout=20000)
             expect(page.get_by_test_id("marketplace-my-offer").first).to_contain_text("Retiré")
-            page.get_by_role("link",name="Retourner dans la cité.").click()
+            page.get_by_role("link",name="Entrer en ville").first.click()
             expect(page.get_by_role("heading",level=1,name="Premier Havre")).to_be_visible()
             # Progression: after exchanging resources, build the first dwelling
             # and recruit the army used by the next journey.
