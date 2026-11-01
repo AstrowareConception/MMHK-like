@@ -523,12 +523,37 @@ def main() -> int:
             # Two seeded laboratory encounters, genuinely scoped to this city.
             # Region is already open through the main kingdom navbar.
             expect(page.get_by_role("heading", name="Autour de Premier Havre")).to_be_visible()
+            expect(page.get_by_test_id("region-game-screen")).to_be_visible()
+            region_tabs=page.get_by_role("tablist",name="Écrans de la région")
+            expect(region_tabs.get_by_role("tab",name="Carte")).to_have_attribute("aria-selected","true")
             wolf = page.locator('[data-region-i="1"][data-region-j="3"] polygon')
             wolf.click()
             expect(page.get_by_role("heading", name="Loups des bois")).to_be_visible()
             page.get_by_role("button", name="Tester un duel Jactari").click()
             expect(page.get_by_text("Rapport de simulation", exact=False)).to_be_visible(timeout=15000)
             expect(page.get_by_text("Rien n'est débité, libéré ou attribué dans PostgreSQL.", exact=False)).to_be_visible()
+            # Verify the populated regional encounter is actionable and no
+            # map or order extends below its fixed panel at 1220×900.
+            page.set_viewport_size({"width":1220,"height":900})
+            metrics=page.evaluate("""() => {
+              const outer=document.querySelector('.kingdom-screen-content');
+              const region=document.querySelector('.mmhk-region-game-screen');
+              const active=document.querySelector('.mmhk-region-map-panel');
+              const encounter=document.querySelector('.mmhk-region-encounter-column');
+              const svg=document.querySelector('svg.region-scene');
+              return {scroll:outer.scrollHeight-outer.clientHeight,
+                regionExtra:region.scrollHeight-region.clientHeight,
+                activeExtra:active.scrollHeight-active.clientHeight,
+                svgHeight:Math.round(svg.getBoundingClientRect().height),
+                encounterHeight:Math.round(encounter.getBoundingClientRect().height)};
+            }""")
+            print("POPULATED REGION GEOMETRY:",metrics,flush=True)
+            assert metrics["scroll"]<=2 and metrics["regionExtra"]<=2,metrics
+            assert metrics["activeExtra"]<=3 and metrics["svgHeight"]>=180,metrics
+            assert metrics["encounterHeight"]>=180,metrics
+            page.screenshot(path="test-output/visuals/REGION-populated-encounter-1220x900.png",
+                            full_page=False)
+            page.set_viewport_size({"width":1366,"height":900})
 
 
 
@@ -538,14 +563,20 @@ def main() -> int:
             expect(page.get_by_text("Le héros est parti. Son trajet est désormais suivi par le worker.")).to_be_visible(timeout=20000)
             expect(page.get_by_test_id("region-selection")).to_have_text("(1, 3)")
             expect(page.locator(".region-mission-map [data-mission-stage='outbound']")).to_have_count(1)
+            region_tabs=page.get_by_role("tablist",name="Écrans de la région")
+            region_tabs.get_by_role("tab",name="Missions").click()
             expect(page.get_by_text("En marche vers", exact=False)).to_be_visible()
+            region_tabs.get_by_role("tab",name="Carte").click()
             expect(page.locator(".region-mission-map text").filter(has_text="Aller").first).to_be_visible()
+            region_tabs.get_by_role("tab",name="Missions").click()
             expect(page.locator(".region-mission-map [data-mission-stage='returning']")).to_have_count(1,timeout=100000)
             expect(page.get_by_text("Sur le chemin du retour", exact=False)).to_be_visible()
             expect(page.locator(".region-mission-map [data-mission-stage='outbound']")).to_have_count(0)
             expect(page.locator(".region-mission-map [data-mission-stage='returning']")).to_have_count(0,timeout=100000)
             expect(page.get_by_text("Aucun héros actuellement en déplacement.")).to_be_visible()
+            region_tabs.get_by_role("tab",name="Carte").click()
             expect(page.get_by_role("heading", name="Loups des bois")).to_be_visible()
+            region_tabs.get_by_role("tab",name="Missions").click()
             # Mission history is collapsed by default. Reveal its report link.
             page.get_by_text("Dernières missions achevées").click()
             page.get_by_role("link", name="Rapport", exact=True).first.click()
