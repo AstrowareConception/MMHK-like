@@ -31,7 +31,7 @@ export function MarketplacePanel({cityId,catalog,stocks,notice}:{
   return <section className="marketplace-panel" id="marketplace"
     aria-labelledby="marketplace-heading">
     <div className="marketplace-heading">
-      <div><span className="eyebrow">COMMERCE ENTRE JOUEURS · LABORATOIRE</span>
+      <div><span className="eyebrow">COMMERCE ENTRE ROYAUMES · OFFRES</span>
         <h3 id="marketplace-heading">Hôtel des ventes — offres à prix fixe</h3></div>
       <a href="#market-ledger">Registre du marchand</a>
     </div>
@@ -63,9 +63,8 @@ export function MarketplacePanel({cityId,catalog,stocks,notice}:{
         une politique commerciale autorisée pour ce monde. Les lots déjà
         réservés restent récupérables par leur propriétaire.</p>}
       {policy&&<p className="market-disclaimer">
-        Politique : {policy.policy_id}. Prix fixes sans commissions, livraison
-        immédiate expérimentale, unités entières. Aucune règle historique
-        d'enchère, de transport ou de balance commerciale n'est certifiée.</p>}
+        Les offres sont proposées à prix fixe, sans commission.
+        Le règlement est immédiat : les enchères historiques ne sont pas encore disponibles.</p>}
       <div className="marketplace-columns">
         <div className="marketplace-wing">
           <h4>Offres disponibles dans votre monde</h4>

@@ -36,6 +36,8 @@ def main():
             start.get_by_role("link",name="Entrer en ville").click()
             expect(page.get_by_role("heading",level=1,name="Premier Havre")).to_be_visible()
             page.get_by_role("link",name="Marché",exact=True).click()
+            expect(page.get_by_test_id("market-game-screen")).to_be_visible()
+            page.get_by_role("tablist",name="Écrans du marché").get_by_role("tab",name="Caravanes").click()
             expect(page.get_by_role("heading",name="Caravanes entre mes cités")).to_be_visible()
             plan=page.get_by_test_id("caravan-quote-form")
             expect(plan).to_be_visible()
@@ -56,6 +58,7 @@ def main():
             dest.get_by_role("link",name="Entrer en ville").click()
             expect(page.get_by_role("heading",level=1,
                 name="Comptoir des caravanes (laboratoire)")).to_be_visible()
+            page.get_by_role("tablist",name="Écrans de la cité").get_by_role("tab",name="Réserves").click()
             warehouse=page.locator(".resource-grid article").filter(has_text="Bois")
             expect(warehouse.locator("strong")).to_have_text("2")
             # Return to the SENDER: the destination test city has no
@@ -66,6 +69,7 @@ def main():
             page.get_by_role("link",name="Marché",exact=True).click()
             # US-ECH-014..017: two independent, worker-confirmed departures.
 
+            page.get_by_role("tablist",name="Écrans du marché").get_by_role("tab",name="Caravanes").click()
             plan=page.get_by_test_id("caravan-quote-form")
             plan.locator("input[name='load_wood']").fill("2")
             plan.get_by_role("button",name="Calculer la charge et le trajet").click()
@@ -89,6 +93,7 @@ def main():
             page.locator('a[href="/worlds/local-sandbox"]').first.click()
             dest=page.locator(".world-city-link").filter(has_text="Comptoir des caravanes")
             dest.get_by_role("link",name="Entrer en ville").click()
+            page.get_by_role("tablist",name="Écrans de la cité").get_by_role("tab",name="Réserves").click()
             warehouse=page.locator(".resource-grid article").filter(has_text="Bois")
             expect(warehouse.locator("strong")).to_have_text("6")
             if errors:

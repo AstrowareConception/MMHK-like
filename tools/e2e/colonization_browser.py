@@ -59,6 +59,7 @@ def main():
             picker.get_by_role("link",name=re.compile("Premier Havre")).click()
             expect(page.get_by_role("heading",level=1,name="Premier Havre")).to_be_visible()
             page.get_by_role("link",name="Marché",exact=True).click()
+            page.get_by_role("tablist",name="Écrans du marché").get_by_role("tab",name="Caravanes").click()
             dest=page.locator("select[name='destination_city_id']")
             expect(dest).to_contain_text("Nouvel Havre des Brumes")
             page.locator('a[href="/worlds/local-sandbox"]').first.click()

@@ -174,6 +174,47 @@ def main():
                             full_page=False,animations="disabled")
         page.set_viewport_size({"width":1220,"height":900})
         print("PASS: city panorama, reserves, construction, history and real inspector",flush=True)
+        page.get_by_role("link",name="Marché",exact=True).first.click()
+        expect(page.get_by_test_id("market-game-screen")).to_be_visible()
+        mtabs=page.get_by_role("tablist",name="Écrans du marché")
+        mtabs.get_by_role("tab",name="Marchand").focus()
+        page.keyboard.press("ArrowRight")
+        expect(mtabs.get_by_role("tab",name="Hôtel des ventes")).to_have_attribute("aria-selected","true")
+        page.keyboard.press("Home")
+        expect(mtabs.get_by_role("tab",name="Marchand")).to_have_attribute("aria-selected","true")
+        for width,height in ((1220,900),(1440,950)):
+            page.set_viewport_size({"width":width,"height":height})
+            for name,key in (("Marchand","merchant"),("Hôtel des ventes","auctions"),
+                             ("Caravanes","caravans"),("Historique","ledger")):
+                mtabs.get_by_role("tab",name=name).click()
+                expect(page.get_by_test_id("market-"+key+"-screen")).to_be_visible()
+                measure=page.evaluate("""() => {
+                  const shell=document.querySelector('.kingdom-screen-content');
+                  const game=document.querySelector('.mmhk-market-game-screen');
+                  const active=document.querySelector('.mmhk-market-active-screen>[role="tabpanel"]:not([hidden])');
+                  const scroll=active.querySelector('.mmhk-market-scroll');
+                  return {shellOverflow:getComputedStyle(shell).overflowY,
+                    shellExtra:shell.scrollHeight-shell.clientHeight,
+                    gameExtra:game.scrollHeight-game.clientHeight,
+                    panelExtra:active.scrollHeight-active.clientHeight,
+                    width:Math.round(active.getBoundingClientRect().width),
+                    scrollArea:scroll.clientHeight,
+                    scrollHeight:scroll.scrollHeight};
+                }""")
+                print("MARKET VISUAL QA",key,width,height,measure,flush=True)
+                assert measure["shellOverflow"]=="hidden" and measure["shellExtra"]<=2,(key,measure)
+                assert measure["gameExtra"]<=3 and measure["panelExtra"]<=3,(key,measure)
+                assert measure["width"]>=750 and measure["scrollArea"]>=180,(key,measure)
+                page.screenshot(path=str(ARTIFACTS/f"MARKET-{key}-{width}x{height}.png"),
+                                full_page=False,animations="disabled")
+        mtabs.get_by_role("tab",name="Hôtel des ventes").click()
+        page.locator('.marketplace-heading a[href="#market-ledger"]').click()
+        expect(mtabs.get_by_role("tab",name="Historique")).to_have_attribute("aria-selected","true")
+        expect(page.locator(".mmhk-market-history-empty")).to_be_visible()
+        page.get_by_role("link",name="Consulter le comptoir du marchand").click()
+        expect(mtabs.get_by_role("tab",name="Marchand")).to_have_attribute("aria-selected","true")
+        page.get_by_role("link",name="Entrer en ville").first.click()
+        page.set_viewport_size({"width":1220,"height":900})
         page.get_by_role("link",name="Héros et artefacts").first.click()
         expect(page.get_by_test_id("hero-game-screen")).to_be_visible()
         tabs=page.get_by_role("tablist",name="Écrans du héros")
@@ -224,7 +265,7 @@ def main():
             expect(page.get_by_test_id("military-"+key+"-screen")).to_be_visible()
             metrics=capture(page,f"PLAYER-{key}-1220x900.png")
             assert_dimensions(metrics,key)
-        print("PASS: 22 real Chromium captures (city + heroes + military), both resolutions",flush=True)
+        print("PASS: 30 Chromium screens (city, market, heroes, military) at both resolutions",flush=True)
         context.close()
         browser.close()
 
