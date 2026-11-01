@@ -27,6 +27,11 @@ def main():
                       wait_until="domcontentloaded",timeout=30000)
             expect(page.get_by_role("heading",level=1,name="Fonder une nouvelle cité")).to_be_visible()
             expect(page.get_by_text("Période initiale terminée")).to_be_visible()
+            # Qualified-site registration is independent of the selected UI
+            # panel. A real user must open Préparer before using its form.
+            tabs=page.get_by_role("tablist",name="Écrans de colonisation")
+            tabs.get_by_role("tab",name="Préparer").click()
+            expect(page.get_by_test_id("colony-prepare-screen")).to_be_visible()
             options=page.locator("select[name='plot'] option")
             verified=options.filter(has_text="terrain qualifié")
             expect(verified).not_to_have_count(0)
@@ -56,6 +61,7 @@ def main():
             order.get_by_role("link",name="Entrer dans la cité fondée").click()
             expect(page.get_by_role("heading",level=1,
                 name="Territoire qualifié de la Brume")).to_be_visible(timeout=20000)
+            page.get_by_role("tablist",name="Écrans de la cité").get_by_role("tab",name="Réserves").click()
             expect(page.locator(".resource-grid article")).to_have_count(7)
             assert not errors,errors[:5]
             print("PASS: independent operator terrain + 4-day dynamic control -> "
