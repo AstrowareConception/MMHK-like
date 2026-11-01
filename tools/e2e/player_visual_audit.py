@@ -184,7 +184,11 @@ def main():
                 assert gm["overflow"]=="hidden" and gm["outerExtra"]<=2,(key,gm)
                 assert gm["frameExtra"]<=3 and gm["panelExtra"]<=3,(key,gm)
                 assert gm["width"]>=750,(key,gm)
-                if key=="map":assert gm["atlasHeight"]>=175,(key,gm)
+                if key=="map":
+                    assert gm["atlasHeight"]>=175,(key,gm)
+                    expect(page.locator(".mmhk-region-encounter-empty")).to_be_visible()
+                if key=="missions":
+                    expect(page.locator(".mmhk-region-missions-empty")).to_be_visible()
                 page.screenshot(path=str(ARTIFACTS/f"REGION-{key}-{width}x{height}.png"),
                                 full_page=False,animations="disabled")
         page.set_viewport_size({"width":1220,"height":900})

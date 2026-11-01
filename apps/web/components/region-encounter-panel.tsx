@@ -39,9 +39,13 @@ export function RegionEncounterPanel({encounter,forces,cityId,missions}:{
     }catch(err){setError(err instanceof Error?err.message:"Simulation indisponible");}
     finally{setBusy(false);}
   };
-  if(!encounter)return <aside className="region-encounter-panel">
+  if(!encounter)return <aside className="region-encounter-panel mmhk-region-encounter-empty"
+    role="status">
+    <span aria-hidden="true">◇</span>
     <strong>Aucune rencontre connue sur cette case</strong>
-    <p>Les autres emplacements conservent un état inconnu, sans population inventée.</p>
+    <p>Choisissez une autre case dans la carte pour examiner les rencontres
+      réellement découvertes. Les autres emplacements conservent un état inconnu,
+      sans population inventée.</p>
   </aside>;
   return <aside className="region-encounter-panel" data-encounter-id={encounter.encounter_id}>
     <div className="encounter-title"><span aria-hidden="true">⚔</span>

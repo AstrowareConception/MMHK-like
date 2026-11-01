@@ -3800,3 +3800,61 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   .mmhk-region-collection .region-legend{grid-template-columns:1fr;}
   .mmhk-region-collection{padding:9px;}
 }
+
+
+/* Regional empty views are real navigable game screens, not unoccupied
+   parchment. All actions point to already available activities. */
+.gui-game-stage[data-game-screen="region"] .mmhk-region-missions-empty{
+  display:flex;flex-direction:column;justify-content:center;
+  align-items:center;text-align:center;gap:12px;
+  min-height:245px;max-width:620px;margin:0 auto;padding:20px;
+  background:radial-gradient(ellipse at center,#e8d6b3 0%,#f8efdf00 75%);
+  color:#5d412c;
+}
+.gui-game-stage[data-game-screen="region"] .mmhk-region-missions-empty>span{
+  display:grid;place-items:center;width:68px;height:68px;
+  border-radius:50%;border:3px double #aa8758;
+  font:35px Georgia,serif;color:#744e31;
+  background:linear-gradient(#f2e3bc,#d4b585);
+}
+.gui-game-stage[data-game-screen="region"] .mmhk-region-missions-empty strong{
+  color:#513524;font:small-caps 23px/1.15 Georgia,serif;
+}
+.gui-game-stage[data-game-screen="region"] .mmhk-region-missions-empty p{
+  margin:0;max-width:460px;
+  color:#745941!important;font:12px/1.5 Georgia,serif;
+}
+.gui-game-stage[data-game-screen="region"] .mmhk-region-missions-empty button{
+  min-height:36px;padding:8px 14px;
+  color:#4f3422;background:linear-gradient(#f1deaf,#c8a472);
+  border:1px solid #a17e52;
+  font:700 12px Arial,sans-serif;
+}
+.gui-game-stage[data-game-screen="region"] .mmhk-region-missions-empty button:hover,
+.gui-game-stage[data-game-screen="region"] .mmhk-region-missions-empty button:focus-visible{
+  outline:2px solid #b88948;outline-offset:2px;
+}
+.gui-game-stage[data-game-screen="region"] .mmhk-region-encounter-empty{
+  flex:1 1 auto;min-height:100%;
+  display:flex;align-items:center;justify-content:center;
+  flex-direction:column;gap:12px;text-align:center;
+  padding:22px 14px!important;
+  background:radial-gradient(ellipse at center,#efe0c2,#f8eedb00 70%)!important;
+}
+.gui-game-stage[data-game-screen="region"] .mmhk-region-encounter-empty>span{
+  display:grid;place-items:center;width:61px;height:61px;
+  background:linear-gradient(#ebd5a5,#c7aa7e);
+  color:#765437;font:32px Georgia,serif;
+  border:3px double #a68a65;border-radius:50%;
+}
+.gui-game-stage[data-game-screen="region"] .mmhk-region-encounter-empty strong{
+  color:#593c2a;font:small-caps 20px/1.2 Georgia,serif;
+}
+.gui-game-stage[data-game-screen="region"] .mmhk-region-encounter-empty p{
+  margin:0;max-width:300px;color:#785b45!important;
+  font:12px/1.5 Georgia,serif!important;
+}
+@media(max-width:600px){
+  .gui-game-stage[data-game-screen="region"] .mmhk-region-missions-empty{min-height:190px;padding:12px;}
+  .gui-game-stage[data-game-screen="region"] .mmhk-region-missions-empty strong{font-size:19px;}
+}

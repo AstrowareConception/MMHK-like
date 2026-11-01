@@ -134,7 +134,7 @@ export function RegionSceneInteractive({region,background,forces,missions,initia
         aria-labelledby="region-screen-tab-missions"
         data-testid="region-missions-screen" hidden={view!=="missions"}
         className="mmhk-region-collection">
-        <RegionMissionsPanel missions={missions}/>
+        <RegionMissionsPanel missions={missions} onExplore={()=>select("map")}/>
       </section>
       <section role="tabpanel" id="region-screen-panel-intel"
         aria-labelledby="region-screen-tab-intel"
