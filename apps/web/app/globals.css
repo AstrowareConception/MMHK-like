@@ -4348,3 +4348,154 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   max-width:100%;overflow-wrap:anywhere;
   font-variant-numeric:tabular-nums;
 }
+
+
+/* MOBILE GAME HUD — first-viewport gameplay is a usability requirement.
+   At 390px the old vertically wrapped masthead+navbar+treasury consumed
+   nearly the entire screen, leaving little of the actual game visible.
+   Preserve every navigation command in a horizontally scrollable ribbon,
+   never hide inaccessible actions or artificially clip the document. */
+@media(max-width:600px){
+  .gui-game-stage.kingdom-shell{
+    width:calc(100% - 6px)!important;
+    padding:3px 4px!important;
+    margin:3px auto!important;
+  }
+  .gui-game-stage .kingdom-frame{
+    padding:3px 4px 2px!important;
+  }
+  .gui-game-stage .kingdom-timeline{
+    margin-bottom:3px!important;
+    padding:3px 7px!important;
+  }
+  .gui-game-stage .timeline-title{
+    gap:5px!important;padding-bottom:0!important;
+  }
+  .gui-game-stage .timeline-title>div{gap:0;}
+  .gui-game-stage .timeline-title strong{
+    font-size:12px!important;line-height:1!important;
+  }
+  .gui-game-stage .timeline-title small{
+    font-size:9px!important;line-height:1.1!important;
+  }
+  .gui-game-stage .timeline-crest{
+    font-size:17px!important;
+  }
+  .gui-game-stage .timeline-clock{
+    font-size:10px!important;white-space:nowrap;
+  }
+  .gui-game-stage .kingdom-masthead{
+    display:flex;align-items:center;flex-wrap:nowrap!important;
+    gap:6px!important;min-height:43px!important;
+    padding:4px 5px!important;
+  }
+  .gui-game-stage .kingdom-emblem{
+    width:27px!important;height:27px!important;
+    font-size:17px!important;border-width:2px!important;
+  }
+  .gui-game-stage .kingdom-brand{
+    flex:1 1 auto;min-width:0;gap:0!important;
+  }
+  .gui-game-stage .kingdom-brand span{
+    display:none!important;
+  }
+  .gui-game-stage .kingdom-brand strong{
+    font:small-caps 16px/1.1 Georgia,serif!important;
+    letter-spacing:0!important;white-space:nowrap;
+    text-overflow:ellipsis;overflow:hidden;
+  }
+  .gui-game-stage .gui-stage-actions{
+    flex:0 0 auto;width:auto!important;
+    margin-left:auto!important;gap:2px!important;
+    flex-wrap:nowrap!important;justify-content:flex-end!important;
+  }
+  .gui-game-stage .kingdom-realm-badge{
+    display:none!important;
+  }
+  .gui-game-stage .gui-viewport-controls{
+    display:flex;gap:1px!important;flex-wrap:nowrap!important;
+    padding:1px!important;
+  }
+  .gui-game-stage .gui-viewport-controls>span{
+    display:none!important;
+  }
+  .gui-game-stage .gui-viewport-controls button{
+    font:9px/1 Arial,sans-serif!important;
+    min-height:25px!important;padding:4px 5px!important;
+    white-space:nowrap;
+  }
+  .gui-game-stage .kingdom-navbar{
+    display:flex;align-items:center;
+    flex-wrap:nowrap!important;justify-content:flex-start;
+    gap:3px;min-height:35px!important;
+    overflow-x:auto;overflow-y:hidden;
+    padding:3px 4px!important;
+    scrollbar-width:thin;
+    scrollbar-color:#c6a66f #1c3038;
+    scroll-snap-type:x proximity;
+  }
+  .gui-game-stage .kingdom-navbar a,
+  .gui-game-stage .kingdom-navbar button{
+    flex:0 0 auto;min-height:28px!important;
+    padding:5px 7px!important;
+    font:700 10px/1 Georgia,serif!important;
+    white-space:nowrap;scroll-snap-align:start;
+  }
+  .gui-game-stage .kingdom-navbar form{
+    margin-left:0!important;flex:0 0 auto;
+  }
+  .gui-game-stage .kingdom-city-switcher{
+    display:flex;align-items:center;flex-wrap:nowrap;
+    overflow-x:auto;gap:4px;padding:3px 5px;
+  }
+  .gui-game-stage .kingdom-treasury{
+    display:flex!important;align-items:center;
+    flex-wrap:nowrap!important;overflow-x:auto;
+    overflow-y:hidden;gap:3px!important;
+    padding:3px!important;max-height:40px;
+    scrollbar-width:thin;
+  }
+  .gui-game-stage .kingdom-resource{
+    flex:0 0 81px!important;min-height:31px!important;
+    padding:3px 4px!important;
+    grid-template-columns:18px minmax(0,1fr);
+    gap:0 3px!important;
+  }
+  .gui-game-stage .kingdom-resource img{
+    width:17px!important;height:17px!important;
+  }
+  .gui-game-stage .kingdom-resource span{
+    font-size:8px!important;
+  }
+  .gui-game-stage .kingdom-resource strong{
+    font-size:10px!important;
+  }
+  .gui-game-stage .kingdom-main-panel{
+    margin-top:3px!important;
+    padding:4px 5px!important;
+    border-width:2px!important;
+  }
+  .gui-game-stage .kingdom-screen-heading{
+    min-height:0!important;
+    padding:3px 5px 5px!important;
+    margin-bottom:4px!important;
+  }
+  .gui-game-stage .kingdom-screen-heading .eyebrow{
+    display:none!important;
+  }
+  .gui-game-stage .kingdom-screen-heading h1{
+    font-size:17px!important;line-height:1.1!important;
+    margin:1px 0!important;
+  }
+  .gui-game-stage .kingdom-screen-heading p{
+    font-size:9px!important;line-height:1.2!important;
+    margin:1px 0 0!important;
+  }
+  .gui-game-stage .kingdom-screen-content{
+    padding:5px 4px!important;
+  }
+  .gui-game-stage .kingdom-footer{
+    padding:5px 3px!important;
+    font-size:9px!important;
+  }
+}
