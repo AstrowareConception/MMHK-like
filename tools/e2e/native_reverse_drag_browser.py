@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
-"""Isolated first native reverse artefact drag (equipped slot -> hero bag).
+"""Real pointer reverse gesture (equipped slot -> bag), no synthetic drag.
 
-Playwright/Chromium used to freeze on a SECOND native drag in a shared
-context. This independent test equips by an accessible click, and then
-performs the FIRST native HTML drag in a brand-new browser session.
-An external CI timeout makes a real browser hang fail visibly.
+Reproduction: Chromium freezes even on the FIRST native reverse drag in a
+fresh context. Equipped items use pointerdown/move/up to reach the actual
+bag target; ordinary bag -> equipped still uses certified native HTML DnD.
+The server must persist the reverse operation before the test can pass.
 """
 from __future__ import annotations
 
@@ -44,8 +44,8 @@ def main():
             head=page.locator('[data-testid="equipment-drop-zone"][data-slot="head"]')
             expect(helm).to_be_visible()
             expect(head.locator(".artifact-card")).to_have_count(0)
-            # Equip by click: reserve the FIRST Chromium native drag for
-            # the historically unreliable reverse direction.
+            # Equip by click; the reverse movement must be a genuine mouse
+            # gesture rather than a native HTML drag from this nested slot.
             helm.click()
             expect(page.locator(".mmhk-selection-hint")).to_contain_text("Heaume de bronze")
             head.click()
@@ -57,7 +57,7 @@ def main():
             # or API payloads in artifacts/logs.
             page.evaluate("""() => {
                 window.__reverseDragTrace=[];
-                for(const type of ['dragstart','dragenter','dragover','drop','dragend']){
+                for(const type of ['dragstart','dragenter','dragover','drop','dragend','pointerdown','pointerup']){
                   document.addEventListener(type,event=>{
                     const trace=window.__reverseDragTrace;
                     if(trace.length<80)trace.push({
@@ -69,9 +69,11 @@ def main():
                   },true);
                 }
             }""")
-            print("NATIVE REVERSE: first native gesture equipped helm -> bag",flush=True)
-            # Drive actual browser pointer input rather than Playwright's
-            # high-level drag_to; no synthetic HTML DragEvent is created.
+            assert equipped.get_attribute("draggable")=="false",(
+                "equipped drag must use the pointer path, not frozen native HTML DnD")
+            print("POINTER REVERSE: equipped helm -> bag, genuine mouse gesture",flush=True)
+            # Drive actual Chromium pointer input; do not dispatch a
+            # synthetic DragEvent or fake a click to cover the reverse.
             source=equipped.bounding_box()
             destination=bag.bounding_box()
             assert source and destination
@@ -79,7 +81,7 @@ def main():
             sy=source["y"]+source["height"]/2
             tx=destination["x"]+destination["width"]/2
             ty=destination["y"]+min(42,destination["height"]/2)
-            print("NATIVE REVERSE: mouse move to source",flush=True)
+            print("POINTER REVERSE: mouse move to source",flush=True)
             page.mouse.move(sx,sy)
             print("NATIVE REVERSE: mouse down",flush=True)
             page.mouse.down()
@@ -89,20 +91,23 @@ def main():
             page.mouse.move(tx,ty,steps=10)
             print("NATIVE REVERSE: mouse up",flush=True)
             page.mouse.up()
-            print("NATIVE REVERSE: wait for actual server persistence",flush=True)
+            print("POINTER REVERSE: wait for actual server persistence",flush=True)
             expect(head.locator(".artifact-card")).to_have_count(0,timeout=15000)
             expect(bag.locator(".artifact-card").filter(
                 has_text="Heaume de bronze")).to_be_visible()
             page.screenshot(path=str(ART/"NATIVE-REVERSE-after-1220x900.png"),
                 full_page=False,animations="disabled")
-            print("NATIVE REVERSE EVENTS:",page.evaluate(
-                "() => window.__reverseDragTrace"),flush=True)
+            trace=page.evaluate("() => window.__reverseDragTrace")
+            print("POINTER REVERSE EVENTS:",trace,flush=True)
+            assert any(e["type"]=="pointerup" and e["role"]=="bag" for e in trace),trace
+            assert not any(e["type"]=="dragstart" for e in trace),(
+                "equipped gesture unexpectedly fell back into native HTML DnD",trace)
             page.reload(wait_until="domcontentloaded")
             expect(page.locator("#hero-bag .artifact-card").filter(
                 has_text="Heaume de bronze")).to_be_visible(timeout=15000)
             expect(page.locator('[data-slot="head"] .artifact-card')).to_have_count(0)
             assert not errors,errors[:3]
-            print("PASS: FIRST native mouse reverse drag equipped -> bag, DB persistence verified",
+            print("PASS: real mouse pointer reverse gesture equipped -> bag, DB persistence verified",
                   flush=True)
         finally:
             browser.close()
@@ -111,6 +116,6 @@ if __name__=="__main__":
     try:
         main()
     except Exception as exc:
-        print("FAIL: independent native reverse drag",type(exc).__name__,
+        print("FAIL: independent pointer reverse drag",type(exc).__name__,
               str(exc)[:850],file=sys.stderr,flush=True)
         raise SystemExit(1)
