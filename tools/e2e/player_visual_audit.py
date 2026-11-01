@@ -182,6 +182,10 @@ def main():
                       scrollerHeight:scroller.clientHeight};
                 }""")
                 print("COLONY VISUAL QA",key,width,height,metrics,flush=True)
+                if key=="prepare":
+                    expect(page.get_by_test_id("colony-no-site")).to_be_visible()
+                if key=="orders":
+                    expect(page.get_by_test_id("colony-no-order")).to_be_visible()
                 assert metrics["overflow"]=="hidden" and metrics["outerExtra"]<=2,(key,metrics)
                 assert metrics["frameExtra"]<=3 and metrics["panelExtra"]<=3,(key,metrics)
                 assert metrics["width"]>=750 and metrics["scrollerHeight"]>=170,(key,metrics)

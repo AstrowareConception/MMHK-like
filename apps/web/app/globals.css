@@ -4250,3 +4250,53 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   .mmhk-colony-scroll .colony-cost-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
   .mmhk-colony-scroll .colony-selector{grid-template-columns:minmax(0,1fr);}
 }
+
+
+
+/* Colony review: the first six Chromium captures proved that eligibility
+   without configured founding sites and an empty worker journal were still
+   enormous blank parchment. Make blockers and progression legible without
+   fabricating a qualified site or relaxing beginner protection. */
+.gui-game-stage[data-game-screen="colony"] .mmhk-colony-empty-state{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:11px;text-align:center;
+  min-height:235px;max-width:620px;
+  margin:clamp(15px,5dvh,55px) auto;
+  padding:20px 22px;
+  border:2px double #b49b74;
+  background:radial-gradient(ellipse at 50% 50%,#f8efd9,#e8d4b1);
+  color:#5f412d;
+}
+.gui-game-stage[data-game-screen="colony"] .mmhk-colony-empty-state>span{
+  display:grid;place-items:center;width:73px;height:73px;
+  border:3px double #aa8a59;border-radius:50%;
+  color:#715139;background:linear-gradient(#f0dcab,#ccab78);
+  font:36px Georgia,serif;
+}
+.gui-game-stage[data-game-screen="colony"] .mmhk-colony-empty-state strong{
+  color:#553a29;font:small-caps 23px/1.15 Georgia,serif;
+}
+.gui-game-stage[data-game-screen="colony"] .mmhk-colony-empty-state p{
+  max-width:460px;margin:0;color:#765c43!important;
+  font:12px/1.55 Georgia,serif;
+}
+.gui-game-stage[data-game-screen="colony"] .mmhk-colony-empty-state a{
+  text-decoration:none;display:inline-flex;
+  align-items:center;justify-content:center;
+  padding:10px 16px;min-height:36px;
+  background:linear-gradient(#f1ddb0,#cba572);
+  border:1px solid #9a784e;color:#4f3624!important;
+  font:700 12px Arial,sans-serif;
+}
+.gui-game-stage[data-game-screen="colony"] .mmhk-colony-empty-state a:hover,
+.gui-game-stage[data-game-screen="colony"] .mmhk-colony-empty-state a:focus-visible{
+  outline:2px solid #b98b4a;outline-offset:2px;
+}
+@media(max-width:650px){
+  .gui-game-stage[data-game-screen="colony"] .mmhk-colony-empty-state{
+    min-height:190px;padding:12px;
+  }
+  .gui-game-stage[data-game-screen="colony"] .mmhk-colony-empty-state strong{
+    font-size:19px;
+  }
+}

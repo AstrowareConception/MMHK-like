@@ -130,14 +130,18 @@ export default async function ColonizePage({params,searchParams}:{
         <section className="colony-preparation" id="colony-form"
       aria-label="Préparation d'une expédition">
       <h3>Choix de l'emplacement et du fondateur</h3>
-      {!colony.colonization_policy?<p className="error">
-        Aucun profil de colonisation n'est activé dans ce monde. Les règles
-        historiques non qualifiées ne sont pas remplacées par un tarif supposé.</p>:null}
-      {colony.qualified_sites.length===0?<p className="colony-locked">
-        Aucune région possédée et validée pour la colonisation n'est disponible.
-        Explorez votre monde : seules les cases d'influence et les sites
-        explicitement enregistrés permettent une fondation.
-      </p>:null}
+      {(!colony.colonization_policy||colony.qualified_sites.length===0)&&
+      <div className="mmhk-colony-empty-state" data-testid="colony-no-site">
+        <span aria-hidden="true">◇</span>
+        <strong>Aucune fondation disponible pour le moment</strong>
+        {!colony.colonization_policy&&<p>Aucune politique de colonisation
+          n'est actuellement activée dans ce monde. Aucun tarif supposé
+          ne remplacera les règles manquantes.</p>}
+        {colony.qualified_sites.length===0&&<p>Aucun emplacement n'est
+          actuellement qualifié pour une nouvelle cité. Seules les cases
+          réellement autorisées par les règles du monde pourront être proposées.</p>}
+        <Link href={"/worlds/"+worldId}>Explorer la carte du monde</Link>
+      </div>}
       {colony.cities.length>0&&colony.qualified_sites.length>0&&
       <form method="get" className="colony-selector"
         action={"/worlds/"+worldId+"/colonize"}>
@@ -258,7 +262,14 @@ export default async function ColonizePage({params,searchParams}:{
             </form>}
           </div>
         </li>)}</ol>
-      ):<p>Aucune expédition n'a encore été engagée.</p>}
+      ):<div className="mmhk-colony-empty-state" data-testid="colony-no-order">
+        <span aria-hidden="true">♞</span>
+        <strong>Le registre des fondations est encore vierge</strong>
+        <p>Aucun héros n'a encore été engagé pour fonder une nouvelle cité.
+          Les ordres confirmés, leur trajet, leur destination et leur
+          éventuel remboursement seront consignés dans ce journal.</p>
+        <a href="#colony-form">Préparer une expédition</a>
+      </div>}
     </section>
         {pending&&<LiveRefresh intervalSeconds={10}/>}
     <p className="market-disclaimer">
