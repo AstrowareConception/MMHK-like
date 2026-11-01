@@ -71,7 +71,7 @@ export async function CaravanPanel({cityId,token,catalog,stocks,query}:{
     (catalog?.programs.some(p=>p.status==="active"||p.status==="waiting_stock")??false);
   return <section id="caravans" className="caravan-panel" aria-labelledby="caravan-heading">
     <div className="caravan-heading">
-      <span className="eyebrow">LOGISTIQUE · US-ECH-010 À 013</span>
+      <span className="eyebrow">LOGISTIQUE · CONVOIS DU ROYAUME</span>
       <h3 id="caravan-heading">Caravanes entre mes cités</h3>
       <p>Préparez un chargement mixte parmi les sept ressources, puis confiez-le
         au worker du royaume. Un ordre envoyé est réellement débité ; aucune
@@ -104,7 +104,7 @@ export async function CaravanPanel({cityId,token,catalog,stocks,query}:{
     {!catalog?<p className="error" role="alert">Le registre des caravanes est momentanément inaccessible.</p>:<>
       <p className="caravan-limits">
         {catalog.transport_policy?
-          <>Politique {catalog.transport_policy.policy_id} · capacité mixte
+          <>Capacité de transport · chargement mixte
             {" "}{format(catalog.transport_policy.capacity_units)} unités de charge ·
             {" "}{catalog.transport_policy.seconds_per_tile} s par case torique</>
           :"Aucune politique de transport n'est encore activée dans ce monde."}
@@ -113,8 +113,8 @@ export async function CaravanPanel({cityId,token,catalog,stocks,query}:{
         Le Marché de cette cité doit être construit et opérationnel pour envoyer des convois.</p>}
       {catalog.destinations.length===0&&<p className="caravan-blocked">
         Aucune autre cité que vous possédez dans ce monde n'est disponible.
-        Le prototype ne permet pas de créer artificiellement une deuxième cité.
-        Les transferts alliés restent désactivés tant que leurs droits ne sont pas établis.</p>}
+        Les convois ne peuvent rejoindre que vos propres cités dans ce monde.
+        Les transferts vers les cités alliées ne sont pas encore disponibles.</p>}
       {catalog.transport_policy&&catalog.marketplace_active&&
        catalog.destinations.length>0&&
       <div className="caravan-layout">

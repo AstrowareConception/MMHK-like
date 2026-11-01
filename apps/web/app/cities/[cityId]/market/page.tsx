@@ -120,8 +120,8 @@ export default async function MarketPage({params,searchParams}:{
         <section className="merchant-offers" aria-label="Tarifs marchands du monde">
           <h3>Devis du marchand</h3>
           <p className="market-disclaimer">
-            Taux du laboratoire définis par l'opérateur. Chaque conversion arrondit
-            la quantité reçue à l'entier inférieur. Aucun taux MMHK saison 2 n'est certifié.
+            Les taux affichés proviennent des règles de ce monde. La quantité
+            reçue est arrondie à l'entier inférieur ; les valeurs historiques restent à vérifier.
           </p>
           <div className="merchant-rate-grid">
             {market.rates.map(rate=>(
@@ -130,7 +130,7 @@ export default async function MarketPage({params,searchParams}:{
                 <input type="hidden" name="pay_resource" value={rate.pay_resource}/>
                 <input type="hidden" name="receive_resource" value={rate.receive_resource}/>
                 <strong>{name(rate.pay_resource)} contre {name(rate.receive_resource)}</strong>
-                <small>Taux : {rate.numerator} / {rate.denominator} · {rate.policy_id}</small>
+                <small>Taux de conversion : {rate.numerator} / {rate.denominator}</small>
                 <label>Quantité de {name(rate.pay_resource)} à céder
                   <input type="number" name="pay_amount" min="1" max="1000000"
                     defaultValue="6" required/>
@@ -162,8 +162,8 @@ export default async function MarketPage({params,searchParams}:{
               {" "}· {quote.expected_receive_balance===null?"capacité de stockage insuffisante":
                 amount(quote.expected_receive_balance)+" "+name(quote.receive_resource)}.</p>
             <p className="market-disclaimer">
-              Politique {quote.policy_id}. La confirmation revérifie le taux,
-              vos réserves et votre capacité de stockage dans PostgreSQL.
+              À la confirmation, le royaume revérifie le taux, vos réserves
+              et votre capacité de stockage avant d'enregistrer l'échange.
             </p>
             <form action={tradeCityResources} className="merchant-confirm-form">
               <input type="hidden" name="cityId" value={cityId}/>
@@ -215,11 +215,17 @@ export default async function MarketPage({params,searchParams}:{
                 {" "}{amount(row.receive_amount)} {name(row.receive_resource)}</strong>
               <span>{new Date(row.completed_at).toLocaleString("fr-FR",
                 {timeZone:"Europe/Paris"})}</span>
-              <small>Contrat : {row.policy_id} · taux conservé :
+              <small>Taux appliqué :
                 {" "}{row.numerator} / {row.denominator}</small>
             </li>
           ))}</ol>
-        ):<p>Aucune transaction n'a été enregistrée pour cette cité.</p>}
+        ):<div className="mmhk-market-history-empty">
+          <span className="mmhk-market-empty-symbol" aria-hidden="true">⚖</span>
+          <strong>Le registre des échanges est encore vierge</strong>
+          <p>Vos transactions apparaîtront ici après confirmation,
+            avec les quantités effectivement échangées et la date du règlement.</p>
+          <a href="#merchant">Consulter le comptoir du marchand</a>
+        </div>}
       </section>
         </>:<section className="merchant-ledger" id="market-ledger">
           <h3>Transactions enregistrées</h3>

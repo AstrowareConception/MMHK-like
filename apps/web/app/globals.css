@@ -3293,3 +3293,50 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   .mmhk-market-scroll{padding:9px;}
   .mmhk-market-auctions-room .marketplace-columns{grid-template-columns:1fr;}
 }
+
+
+/* Market review: a blank transaction register is still an activity with
+   an invitation to trade, not a deserted administrative ledger. */
+.gui-game-stage[data-game-screen="market"] .mmhk-market-ledger-room{
+  background:radial-gradient(ellipse at 50% 45%,#e4d0aa,#f5ebda 80%);
+}
+.gui-game-stage[data-game-screen="market"] .mmhk-market-ledger-room .merchant-ledger{
+  flex:1 1 auto;min-height:0;margin:0!important;
+  padding:0!important;border:0!important;background:transparent!important;
+}
+.gui-game-stage[data-game-screen="market"] .mmhk-market-history-empty{
+  flex:1 1 auto;display:flex;align-items:center;justify-content:center;
+  flex-direction:column;text-align:center;gap:10px;
+  min-height:240px;max-width:570px;margin:0 auto;padding:16px;
+  color:#5b3c29;
+}
+.gui-game-stage[data-game-screen="market"] .mmhk-market-empty-symbol{
+  display:grid;place-items:center;width:70px;height:70px;
+  border:3px double #aa895a;border-radius:50%;
+  background:linear-gradient(#ebd59d,#c59f68);
+  font:35px Georgia,serif;color:#6d4529;
+}
+.gui-game-stage[data-game-screen="market"] .mmhk-market-history-empty strong{
+  color:#563823;font:small-caps 23px/1.2 Georgia,serif;
+}
+.gui-game-stage[data-game-screen="market"] .mmhk-market-history-empty p{
+  max-width:430px;margin:0;color:#795940;
+  font:13px/1.5 Georgia,serif;
+}
+.gui-game-stage[data-game-screen="market"] .mmhk-market-history-empty a{
+  padding:10px 16px;text-decoration:none;color:#4f3525!important;
+  background:linear-gradient(#f1ddb0,#cdaa73);
+  border:1px solid #a78a60;font:700 12px Arial,sans-serif;
+}
+.gui-game-stage[data-game-screen="market"] .mmhk-market-history-empty a:hover,
+.gui-game-stage[data-game-screen="market"] .mmhk-market-history-empty a:focus-visible{
+  outline:2px solid #b78642;outline-offset:2px;
+}
+@media(max-width:650px){
+  .gui-game-stage[data-game-screen="market"] .mmhk-market-history-empty{
+    min-height:220px;padding:12px;
+  }
+  .gui-game-stage[data-game-screen="market"] .mmhk-market-history-empty strong{
+    font-size:18px;
+  }
+}
