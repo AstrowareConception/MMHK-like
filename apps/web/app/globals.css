@@ -3858,3 +3858,215 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   .gui-game-stage[data-game-screen="region"] .mmhk-region-missions-empty{min-height:190px;padding:12px;}
   .gui-game-stage[data-game-screen="region"] .mmhk-region-missions-empty strong{font-size:19px;}
 }
+
+
+/* READ-ONLY MISSION CHRONICLE — the report is a game window, not an article.
+   The server's immutable events, troop counts, and Jactari outcome retain
+   their exact values. Only the selected content panel may scroll. */
+.gui-game-stage[data-game-screen="report"] .kingdom-screen-heading{
+  display:flex;align-items:center;justify-content:center;
+  gap:12px;padding:5px 10px!important;
+  margin-bottom:4px!important;min-height:0;
+}
+.gui-game-stage[data-game-screen="report"] .kingdom-screen-heading .eyebrow{
+  display:none;
+}
+.gui-game-stage[data-game-screen="report"] .kingdom-screen-heading h1{
+  margin:0;font:small-caps 21px/1.1 Georgia,serif!important;
+}
+.gui-game-stage[data-game-screen="report"] .kingdom-screen-heading p{
+  margin:0;font:11px Georgia,serif!important;opacity:.76;
+}
+.mmhk-mission-report-game-screen{
+  width:100%;height:100%;min-width:0;min-height:0;display:flex;
+  flex-direction:column;background:#ede1cc;
+  border:2px ridge #ac9069;color:#533a28;
+}
+.mmhk-mission-report-command-header{
+  flex:0 0 auto;display:flex;flex-wrap:wrap;
+  align-items:center;justify-content:space-between;
+  gap:6px 9px;padding:7px 10px;min-height:48px;
+  background:linear-gradient(#b09a7d,#806b57);border-bottom:2px solid #856b53;
+}
+.mmhk-mission-report-command-header .mmhk-command-tabs{
+  gap:4px;align-items:center;
+}
+.mmhk-mission-report-shortcuts{
+  display:flex;align-items:center;flex-wrap:wrap;gap:5px;
+}
+.mmhk-mission-report-shortcuts a{
+  border:1px solid #9e815e;background:linear-gradient(#f1dcae,#c9a873);
+  color:#4f351f!important;text-decoration:none;
+  padding:6px 8px;font:700 10px Arial,sans-serif;
+}
+.mmhk-mission-report-shortcuts a:focus-visible{
+  outline:3px solid #f1d187;outline-offset:1px;
+}
+.mmhk-mission-report-active-screen{
+  display:flex;flex-direction:column;
+  min-height:0;min-width:0;flex:1 1 0;
+  overflow:hidden;background:#eee1c9;
+}
+.mmhk-mission-report-active-screen>[role="tabpanel"]{
+  display:flex;flex-direction:column;flex:1 1 0;
+  width:100%;height:100%;min-height:0;min-width:0;overflow:hidden;
+}
+.mmhk-mission-report-active-screen>[hidden]{display:none!important;}
+.mmhk-mission-report-scroll{
+  box-sizing:border-box;display:flex;flex-direction:column;
+  min-height:0;min-width:0;flex:1 1 0;
+  padding:17px 19px 24px;gap:10px;overflow-y:auto;overflow-x:hidden;
+  overscroll-behavior:contain;
+  scrollbar-width:thin;scrollbar-color:#ac8e61 #f2e7d4;
+  background:radial-gradient(ellipse at 50% 28%,#faf2e3,#eaddc4 85%);
+}
+.mmhk-mission-pane-heading{
+  display:flex;align-items:center;gap:12px;
+  padding:6px 7px 11px;border-bottom:1px solid #b79c75;
+}
+.mmhk-mission-pane-heading>span{
+  display:grid;place-items:center;flex:0 0 auto;
+  width:53px;height:53px;border:3px double #a8895e;border-radius:50%;
+  background:linear-gradient(#f0dfb7,#cdb087);
+  color:#69472d;font:28px Georgia,serif;
+}
+.mmhk-mission-pane-heading h2{
+  color:#4b321f!important;font:small-caps 23px/1.2 Georgia,serif!important;
+  margin:0 0 4px!important;
+}
+.mmhk-mission-pane-heading p{
+  color:#72543c;font:12px/1.5 Georgia,serif;margin:0;
+}
+.mmhk-mission-status{
+  margin-left:auto;background:#ecd7ac;
+  border:1px solid #ac8a55;padding:9px 11px;
+  white-space:nowrap;color:#624224;
+  font:700 12px Arial,sans-serif;
+}
+.mmhk-mission-report-scroll .mission-report-legs{
+  margin:8px 0;gap:14px;min-width:0;
+}
+.mmhk-mission-report-scroll .mission-report-legs article{
+  min-width:0;padding:15px;
+  background:linear-gradient(#fff7e9,#e4d1b1);
+  border:2px ridge #b69a6d;color:#5a432f;
+}
+.mmhk-mission-report-scroll .mission-report-legs .eyebrow{
+  color:#8b623d;
+}
+.mmhk-mission-report-scroll .mission-report-legs article strong{
+  color:#60412d;
+}
+.mmhk-mission-report-scroll .mission-report-legs article span:not(.eyebrow){
+  color:#77563e;
+}
+.mmhk-mission-map-return{
+  align-self:center;text-decoration:none;
+  border:1px solid #997a4a;padding:10px 18px;
+  background:linear-gradient(#ead6a5,#c3a16d);
+  color:#4b3220!important;font:700 12px Arial,sans-serif;
+}
+.mmhk-mission-ledger-note{
+  margin:9px 0 0;padding:10px 12px;
+  background:#f0e5d3;border:1px solid #c2ab87;
+  color:#765941;font:11px/1.5 Georgia,serif;
+}
+.mmhk-mission-events .mission-report-events{
+  margin:12px 0;list-style:none;
+  border-left:3px solid #a5844e;
+}
+.mmhk-mission-events .mission-report-events li{
+  color:#513823;padding:15px 20px;
+  border-bottom:1px solid #c5aa86;
+  background:linear-gradient(90deg,#e9d7b7,#fff8ea);
+}
+.mmhk-mission-events .mission-report-events time{
+  color:#74553f;
+}
+.mmhk-mission-formation .mission-report-formation{
+  display:grid;grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:8px;margin:13px 0;
+}
+.mmhk-mission-formation .mission-report-formation>div{
+  box-sizing:border-box;display:flex;flex-direction:column;
+  align-items:center;text-align:center;justify-content:start;gap:7px;
+  min-width:0;min-height:176px;padding:13px 6px;
+  border:2px ridge #ab8a58;
+  background:linear-gradient(#faf1dd,#dcc39d);color:#563927;
+}
+.mmhk-mission-formation .mission-report-formation>div.empty{
+  opacity:.72;border-style:dashed;
+}
+.mmhk-mission-formation .mission-report-formation strong,
+.mmhk-mission-formation .mission-report-formation span,
+.mmhk-mission-formation .mission-report-formation small{
+  color:#64452f;
+}
+.mmhk-mission-formation .mission-report-formation strong{font:bold 11px Arial,sans-serif;}
+.mmhk-mission-troop-symbol{
+  display:grid;place-items:center;width:57px;height:58px;
+  border:2px ridge #b59a6a;background:radial-gradient(#faedca,#d6bf9b);
+  font:31px Georgia,serif!important;color:#704e31!important;
+}
+.mmhk-mission-formation .mission-report-formation>div span:not(.mmhk-mission-troop-symbol){
+  font:700 12px/1.25 Arial,sans-serif;overflow-wrap:anywhere;
+}
+.mmhk-mission-formation .mission-report-formation small{
+  font:10px/1.3 Arial,sans-serif;
+}
+.mmhk-mission-duel .mission-duel-results{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;background:transparent;border:0;
+}
+.mmhk-mission-duel .mission-duel-results>p{
+  grid-column:1/-1;font:12px/1.5 Georgia,serif;color:#694c33;
+}
+.mmhk-mission-duel .mission-duel-results>div{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:11px;min-height:155px;padding:15px 8px;
+  border:2px ridge #ac8c60;background:linear-gradient(#fff8e8,#e7d1af);
+  color:#5e4430;text-align:center;
+}
+.mmhk-mission-duel .mission-duel-results>div strong{
+  font:small-caps 29px Georgia,serif;color:#573924;
+}
+.mmhk-mission-duel-pending{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;gap:12px;
+  min-height:240px;margin:0 auto;max-width:600px;
+  background:radial-gradient(ellipse,#e4d0ad,#fff8e800 75%);
+}
+.mmhk-mission-duel-pending>span{
+  display:grid;place-items:center;width:70px;height:70px;border-radius:50%;
+  border:3px double #aa8554;background:#ead3a5;
+  color:#66472c;font:34px Georgia,serif;
+}
+.mmhk-mission-duel-pending strong{font:small-caps 22px Georgia,serif;color:#593b24;}
+.mmhk-mission-duel-pending p{font:12px/1.5 Georgia,serif;color:#71523b;}
+@media(min-width:901px){
+  .gui-game-stage[data-game-screen="report"] .kingdom-screen-content{
+    display:flex;flex-direction:column;min-width:0;min-height:0;
+    overflow:hidden!important;padding:6px 8px!important;
+  }
+  .gui-game-stage[data-game-screen="report"] .mmhk-mission-report-game-screen{
+    flex:1 1 0;min-height:0;
+  }
+}
+@media(max-width:900px){
+  .mmhk-mission-report-game-screen{min-height:610px;}
+  .mmhk-mission-report-active-screen{min-height:470px;}
+  .mmhk-mission-formation .mission-report-formation{
+    grid-template-columns:repeat(4,minmax(0,1fr));
+  }
+}
+@media(max-width:650px){
+  .mmhk-mission-report-command-header .mmhk-command-tabs{order:2;width:100%;}
+  .mmhk-mission-report-shortcuts{order:3;width:100%;}
+  .mmhk-mission-report-scroll{padding:10px;}
+  .mmhk-mission-formation .mission-report-formation{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .mmhk-mission-duel .mission-duel-results{
+    grid-template-columns:1fr;
+  }
+}
