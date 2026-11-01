@@ -15,6 +15,8 @@ const units:Record<string,string>={
   militia:"Miliciens du Havre",archers:"Archers du Havre",
   wolves:"Loups",bandits:"Brigands"
 };
+const metric=(value:number|null|undefined)=>typeof value==="number"&&Number.isFinite(value)
+  ?value.toLocaleString("fr-FR",{maximumFractionDigits:2}):"—";
 const time=(at:string|null)=>at?new Date(at).toLocaleString("fr-FR",{
   timeZone:"Europe/Paris",
   day:"2-digit",month:"2-digit",hour:"2-digit",minute:"2-digit",second:"2-digit"
@@ -120,11 +122,11 @@ export default async function MissionReportPage({params}:{
           <p><strong>Rapport enregistré au contact</strong> — simulation mono-peloton,
             sans pertes permanentes, récompense, XP ou libération de la case.</p>
           <div><span>Puissance de l'attaquant</span>
-            <strong>{duel.outcome?.totalPower?.attacker??"—"}</strong></div>
+            <strong>{metric(duel.outcome?.totalPower?.attacker)}</strong></div>
           <div><span>Puissance des défenseurs</span>
-            <strong>{duel.outcome?.totalPower?.defender??"—"}</strong></div>
+            <strong>{metric(duel.outcome?.totalPower?.defender)}</strong></div>
           <div><span>Unités actives restantes (simulation)</span>
-            <strong>{duel.outcome?.remaining?.attacker??"—"} / {duel.outcome?.remaining?.defender??"—"}</strong></div>
+            <strong>{metric(duel.outcome?.remaining?.attacker)} / {metric(duel.outcome?.remaining?.defender)}</strong></div>
         </div>:<div className="mmhk-mission-duel-pending">
           <span aria-hidden="true">⌛</span>
           <strong>Le héros n'a pas encore atteint sa destination</strong>
