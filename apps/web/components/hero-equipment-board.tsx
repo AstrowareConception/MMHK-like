@@ -119,7 +119,11 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
     return <div key={item.artifact_id}
       data-testid="artifact-tile" data-artifact-id={item.artifact_id}
       className={"artifact-card mmhk-item "+(isSelected?"selected":"")}
-      draggable={ready&&idle&&!pending}
+      // Chromium's native HTML drag freezes when it starts from a nested
+      // equipped slot. Bag/reserve -> equipment retains the proven native
+      // path. Equipped -> bag/reserve uses the genuine pointer gesture
+      // recognized by makeTarget.onPointerUp, with the same server action.
+      draggable={ready&&idle&&!pending&&item.location!=="equipped"}
       onPointerDown={e=>{
         if(!idle||pending||!ready||e.button!==0)return;
         pointerStart.current={id:item.artifact_id,x:e.clientX,y:e.clientY};
