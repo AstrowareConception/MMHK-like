@@ -47,6 +47,8 @@ def main():
             expect(expedition).to_contain_text("Cité fondée et opérationnelle",timeout=120000)
             expedition.get_by_role("link",name="Entrer dans la cité fondée").click()
             expect(page.get_by_role("heading",level=1,name="Nouvel Havre des Brumes")).to_be_visible()
+            expect(page.get_by_test_id("city-game-screen")).to_be_visible()
+            page.get_by_role("tablist",name="Écrans de la cité").get_by_role("tab",name="Réserves").click()
             expect(page.get_by_role("heading",name="Réserves de la ville")).to_be_visible()
             expect(page.get_by_text("Mine présente").first).to_be_visible()
             # New settlements have seven distinct zero-starting stock balances
