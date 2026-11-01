@@ -37,6 +37,9 @@ METRICS="""() => {
     panelWidth:Math.round(r?.width??0),
     panelLeft:Math.round(r?.left??0),
     panelRight:Math.round(r?.right??0),
+    panelTop:Math.round(r?.top??0),
+    panelVisibleHeight:r?Math.round(Math.max(0,
+      Math.min(r.bottom,innerHeight)-Math.max(r.top,0))):0,
     contentOverflow:content?getComputedStyle(content).overflowY:"missing",
     contentExtra:content?(content.scrollHeight-content.clientHeight):null,
     selectedTabs:tabs.length
@@ -59,6 +62,8 @@ def record(page,screen,width,height,failures):
         failures.append((screen,width,height,"desktop game has global scroll",m))
     if m["selectedTabs"]!=1:
         failures.append((screen,width,height,"ambiguous selected game activity",m))
+    if width==390 and (m["panelTop"]>465 or m["panelVisibleHeight"]<285):
+        failures.append((screen,width,height,"game activity buried below mobile HUD",m))
 
 def main():
     errors=[]
