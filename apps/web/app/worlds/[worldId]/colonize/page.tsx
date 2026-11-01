@@ -3,6 +3,7 @@ import {randomUUID} from "node:crypto";
 import {notFound,redirect} from "next/navigation";
 import {GameShell} from "../../../../components/game-shell/game-shell";
 import {LiveRefresh} from "../../../../components/live-refresh";
+import {ColonyGameScreen} from "../../../../components/colony-game-screen";
 import {dispatchFoundingExpedition,reclaimFailedFounding} from "../../../actions";
 import {privateApi,sessionToken,type ColonizationCatalog,
   type ColonizationQuote,type CityDetail} from "../../../../lib/server-api";
@@ -77,18 +78,22 @@ export default async function ColonizePage({params,searchParams}:{
   const costs=quote?.applied_costs??colony.colonization_policy?.costs;
   const locked=colony.newbie_protected;
   const pending=colony.expeditions.some(e=>e.status==="traveling");
-  return <GameShell token={token} title="Fonder une nouvelle cité"
+  return <GameShell screen="colony" token={token} title="Fonder une nouvelle cité"
     eyebrow="EXPLORATION · INFLUENCE · EXPANSION"
     description="Colonisation sécurisée, protections et expéditions suivies par le serveur"
     worldId={worldId} cityId={sourceCity?.city_id}
     stocks={sourceResponse?.ok?sourceResponse.data?.stocks:undefined}>
-    <nav className="city-shortcuts" aria-label="Navigation de l'expansion">
-      <Link href={"/worlds/"+worldId}>Carte du monde</Link>
-      {sourceCity&&<Link href={"/cities/"+sourceCity.city_id}>Cité d'origine</Link>}
-      <a href="#colony-form">Préparer l'expédition</a>
-      <a href="#colony-orders">Journal des fondations</a>
-    </nav>
-    <section className="colony-intro">
+    <ColonyGameScreen worldId={worldId} sourceCityId={sourceCity?.city_id}
+      initialTab={query.colony?"orders":
+        query.x||query.y||query.plot||query.hero||query.source?"prepare":"rights"}
+      notices={<>
+        {query.colony&&Object.prototype.hasOwnProperty.call(feedback,query.colony)&&
+      <p role={["started","refunded"].includes(query.colony)?"status":"alert"}
+        className={["started","refunded"].includes(query.colony)?
+          "construction-notice":"error"}>{feedback[query.colony]}</p>}
+      </>}
+      rights={<>
+        <section className="colony-intro">
       <h2>Établir une nouvelle colonie</h2>
       <p>Choisissez une région placée sous votre <strong>influence propre attestée</strong>.
         L'emplacement doit avoir été qualifié par le monde : aucun terrain, aucune
@@ -120,11 +125,9 @@ export default async function ColonizePage({params,searchParams}:{
           d'influence ; les contrôles sont réexécutés à chaque départ et arrivée.</small>
       </article>
     </div>
-    {query.colony&&Object.prototype.hasOwnProperty.call(feedback,query.colony)&&
-      <p role={["started","refunded"].includes(query.colony)?"status":"alert"}
-        className={["started","refunded"].includes(query.colony)?
-          "construction-notice":"error"}>{feedback[query.colony]}</p>}
-    <section className="colony-preparation" id="colony-form"
+      </>}
+      prepare={<>
+        <section className="colony-preparation" id="colony-form"
       aria-label="Préparation d'une expédition">
       <h3>Choix de l'emplacement et du fondateur</h3>
       {!colony.colonization_policy?<p className="error">
@@ -216,7 +219,9 @@ export default async function ColonizePage({params,searchParams}:{
       <p className="colony-locked">Aucun devis admissible pour la sélection :
         sélectionnez un héros de votre cité et une case autorisée et libre.</p>}
     </section>
-    <section className="colony-orders" id="colony-orders"
+      </>}
+      orders={<>
+        <section className="colony-orders" id="colony-orders"
       aria-label="Journal des expéditions">
       <h3>Expéditions et nouvelles cités</h3>
       {colony.expeditions.length?(
@@ -255,12 +260,14 @@ export default async function ColonizePage({params,searchParams}:{
         </li>)}</ol>
       ):<p>Aucune expédition n'a encore été engagée.</p>}
     </section>
-    {pending&&<LiveRefresh intervalSeconds={10}/>}
+        {pending&&<LiveRefresh intervalSeconds={10}/>}
     <p className="market-disclaimer">
       Les coûts, trajets, profils de mine et plafonds proviennent de politiques
       expérimentales versionnées. Le classement Richesse, les extensions hors
       influence et les règles MMHK saison 2 restent à reconstituer.
       La protection débutant de sept jours ne peut être désactivée par un joueur.
     </p>
+      </>}
+    />
   </GameShell>;
 }
