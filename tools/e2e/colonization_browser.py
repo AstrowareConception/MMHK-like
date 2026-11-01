@@ -33,7 +33,10 @@ def main():
             page.get_by_role("tablist",name="Écrans du monde").get_by_role("tab",name="Expansion").click()
             page.get_by_role("link",name="Examiner les droits de colonisation").click()
             expect(page.get_by_role("heading",level=1,name="Fonder une nouvelle cité")).to_be_visible()
+            expect(page.get_by_test_id("colony-game-screen")).to_be_visible()
+            tabs=page.get_by_role("tablist",name="Écrans de colonisation")
             expect(page.get_by_text("Période initiale terminée")).to_be_visible()
+            tabs.get_by_role("tab",name="Préparer").click()
             expect(page.get_by_text("Devis serveur",exact=False)).to_be_visible()
             button=page.get_by_role("button",name="Engager le héros et réserver les ressources")
             expect(button).to_be_enabled()
@@ -41,6 +44,7 @@ def main():
             label.fill("Nouvel Havre des Brumes")
             button.click()
             expect(page.get_by_text("Expédition enregistrée :",exact=False)).to_be_visible(timeout=25000)
+            expect(page.get_by_test_id("colony-orders-screen")).to_be_visible()
             expedition=page.get_by_test_id("colonization-order").first
             expect(expedition).to_contain_text("Nouvel Havre des Brumes")
             expect(expedition).to_contain_text("En marche vers",timeout=20000)

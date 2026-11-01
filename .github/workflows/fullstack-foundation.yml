@@ -17,6 +17,8 @@ on:
       - feat/region-fixed-command-screens-51
       # Stacked immutable mission report candidate; remove before merging.
       - feat/mission-report-fixed-screens-52
+      # Stacked founding eligibility, quote and expedition screens.
+      - feat/colonization-fixed-screens-53
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'

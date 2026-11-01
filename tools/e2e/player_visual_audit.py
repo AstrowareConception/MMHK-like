@@ -151,6 +151,49 @@ def main():
                 page.screenshot(path=str(ARTIFACTS/f"WORLD-{key}-{width}x{height}.png"),
                                 full_page=False,animations="disabled")
         page.set_viewport_size({"width":1220,"height":900})
+        wt.get_by_role("tab",name="Expansion").click()
+        page.get_by_role("link",name="Examiner les droits de colonisation").click()
+        expect(page.get_by_test_id("colony-game-screen")).to_be_visible()
+        ctab=page.get_by_role("tablist",name="Écrans de colonisation")
+        ctab.get_by_role("tab",name="Droits du royaume").focus()
+        page.keyboard.press("ArrowRight")
+        expect(ctab.get_by_role("tab",name="Préparer")).to_have_attribute("aria-selected","true")
+        page.keyboard.press("End")
+        expect(ctab.get_by_role("tab",name="Expéditions")).to_have_attribute("aria-selected","true")
+        page.keyboard.press("Home")
+        expect(ctab.get_by_role("tab",name="Droits du royaume")).to_have_attribute("aria-selected","true")
+        for width,height in ((1220,900),(1440,950)):
+            page.set_viewport_size({"width":width,"height":height})
+            for name,key in (("Droits du royaume","rights"),("Préparer","prepare"),
+                             ("Expéditions","orders")):
+                ctab.get_by_role("tab",name=name).click()
+                panel=page.get_by_test_id("colony-"+key+"-screen")
+                expect(panel).to_be_visible()
+                metrics=page.evaluate("""() => {
+                    const outer=document.querySelector('.kingdom-screen-content');
+                    const frame=document.querySelector('.mmhk-colony-game-screen');
+                    const panel=document.querySelector('.mmhk-colony-active-screen>[role="tabpanel"]:not([hidden])');
+                    const scroller=panel.querySelector('.mmhk-colony-scroll');
+                    return {overflow:getComputedStyle(outer).overflowY,
+                      outerExtra:outer.scrollHeight-outer.clientHeight,
+                      frameExtra:frame.scrollHeight-frame.clientHeight,
+                      panelExtra:panel.scrollHeight-panel.clientHeight,
+                      width:Math.round(panel.getBoundingClientRect().width),
+                      scrollerHeight:scroller.clientHeight};
+                }""")
+                print("COLONY VISUAL QA",key,width,height,metrics,flush=True)
+                if key=="prepare":
+                    expect(page.get_by_test_id("colony-no-site")).to_be_visible()
+                if key=="orders":
+                    expect(page.get_by_test_id("colony-no-order")).to_be_visible()
+                assert metrics["overflow"]=="hidden" and metrics["outerExtra"]<=2,(key,metrics)
+                assert metrics["frameExtra"]<=3 and metrics["panelExtra"]<=3,(key,metrics)
+                assert metrics["width"]>=750 and metrics["scrollerHeight"]>=170,(key,metrics)
+                page.screenshot(path=str(ARTIFACTS/f"COLONY-{key}-{width}x{height}.png"),
+                                full_page=False,animations="disabled")
+        page.set_viewport_size({"width":1220,"height":900})
+        page.get_by_role("link",name="Carte du monde").first.click()
+        wt=page.get_by_role("tablist",name="Écrans du monde")
         wt.get_by_role("tab",name="Mes cités").click()
         page.get_by_role("link",name="Voir la région").first.click()
         expect(page.get_by_test_id("region-game-screen")).to_be_visible()
@@ -344,7 +387,7 @@ def main():
             expect(page.get_by_test_id("military-"+key+"-screen")).to_be_visible()
             metrics=capture(page,f"PLAYER-{key}-1220x900.png")
             assert_dimensions(metrics,key)
-        print("PASS: 44 Chromium screens (world, region, city, market, heroes, military) at both resolutions",flush=True)
+        print("PASS: 50 Chromium screens (colonization, world, region, city, market, heroes, military) at both resolutions",flush=True)
         context.close()
         browser.close()
 
