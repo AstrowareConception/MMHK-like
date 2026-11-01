@@ -4300,3 +4300,28 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
     font-size:19px;
   }
 }
+
+
+/* A selected equipped artefact now has an explicit mouse-accessible
+   unequip command. This is a complementary accessible path, NOT proof
+   of the unresolved reverse native drag (#46). Keep the toolbar height
+   bounded so no command overlaps the hero inventory or the bag. */
+.gui-game-stage[data-game-screen="heroes"] .mmhk-inventory-toolbar{
+  flex-wrap:nowrap;min-width:0;max-width:100%;min-height:31px;
+  overflow:hidden;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-inventory-toolbar small{
+  min-width:0;flex:1 1 auto;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-inventory-toolbar .mmhk-direct-unequip{
+  flex:0 1 auto;max-width:40%;min-width:116px;overflow:hidden;
+  text-overflow:ellipsis;white-space:nowrap;
+  background:linear-gradient(#edd8a8,#bd925e);
+  color:#4e301e;font-weight:700;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-inventory-toolbar .mmhk-direct-unequip:focus-visible{
+  outline:3px solid #a77839;outline-offset:-1px;
+}
+.gui-game-stage[data-game-screen="heroes"] .mmhk-inventory-toolbar button:disabled{
+  opacity:.6;cursor:not-allowed;
+}
