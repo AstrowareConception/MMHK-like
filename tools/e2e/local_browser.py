@@ -87,6 +87,7 @@ def main() -> int:
             page.get_by_role("button", name="Déplacer vers l'est").click()
             expect(page.get_by_test_id("world-center")).to_have_text("(1, 23)")
             page.get_by_role("button", name="Recentrer sur Premier Havre").click()
+            page.get_by_role("tablist",name="Écrans du monde").get_by_role("tab",name="Mes cités").click()
             page.get_by_role("link", name="Voir la région").click()
             expect(page.get_by_role("heading", name="Autour de Premier Havre")).to_be_visible()
             # Native resolution matches original historical region imagery.

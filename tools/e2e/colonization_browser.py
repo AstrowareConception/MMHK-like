@@ -30,6 +30,7 @@ def main():
             expect(page.get_by_role("heading",name="Mes mondes")).to_be_visible(timeout=25000)
             page.get_by_role("link",name=re.compile("Royaume de démonstration")).click()
             expect(page.get_by_role("heading",name="Mes positions dans le monde")).to_be_visible()
+            page.get_by_role("tablist",name="Écrans du monde").get_by_role("tab",name="Expansion").click()
             page.get_by_role("link",name="Examiner les droits de colonisation").click()
             expect(page.get_by_role("heading",level=1,name="Fonder une nouvelle cité")).to_be_visible()
             expect(page.get_by_text("Période initiale terminée")).to_be_visible()
@@ -63,6 +64,7 @@ def main():
             dest=page.locator("select[name='destination_city_id']")
             expect(dest).to_contain_text("Nouvel Havre des Brumes")
             page.locator('a[href="/worlds/local-sandbox"]').first.click()
+            page.get_by_role("tablist",name="Écrans du monde").get_by_role("tab",name="Mes cités").click()
             world_cities=page.locator(".world-city-link")
             # Next.js RSC navigation can commit after click's browser event.
             # Wait for the authoritative world city list to finish rendering.
