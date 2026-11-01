@@ -13,13 +13,45 @@ export function RegionSceneInteractive({region,background,forces,missions,initia
   const [hover,setHover]=useState<RegionCell|null>(null);
   const [selected,setSelected]=useState<RegionCell>(initialSelection??{i:2,j:2});
   const [showGuide,setShowGuide]=useState(!background);
+  const [view,setView]=useState<"map"|"missions"|"intel">("map");
+  const tabs=[{id:"map",label:"Carte"},{id:"missions",label:"Missions"},
+    {id:"intel",label:"Renseignements"}] as const;
+  const select=(id:"map"|"missions"|"intel")=>setView(id);
   const known=region.cells.find(c=>c.i===selected.i&&c.j===selected.j);
   const currentEncounter=region.encounters?.find(e=>e.i===selected.i&&e.j===selected.j)??null;
   const activate=(cell:RegionCell)=>setSelected({i:cell.i,j:cell.j});
   const key=(e:KeyboardEvent<SVGGElement>,cell:RegionCell)=>{
     if(e.key==="Enter"||e.key===" "){e.preventDefault();activate(cell);}
   };
-  return <section className="region-scene-container" aria-labelledby="region-view-title">
+  return <section className="region-scene-container mmhk-region-game-screen"
+    data-testid="region-game-screen" aria-label={"Région de "+region.city_name}>
+    <header className="mmhk-region-command-header">
+      <div className="mmhk-command-hero-heading">
+        <strong>Région de {region.city_name}</strong>
+        <small>Exploration, rencontres et déplacements</small>
+      </div>
+      <div className="mmhk-command-tabs" role="tablist" aria-label="Écrans de la région">
+        {tabs.map((tab,i)=><button key={tab.id} type="button" role="tab"
+          id={"region-screen-tab-"+tab.id}
+          aria-controls={"region-screen-panel-"+tab.id}
+          aria-selected={view===tab.id} tabIndex={view===tab.id?0:-1}
+          onClick={()=>select(tab.id)}
+          onKeyDown={e=>{
+            if(!["ArrowRight","ArrowLeft","Home","End"].includes(e.key))return;
+            e.preventDefault();
+            const next=e.key==="Home"?0:e.key==="End"?tabs.length-1:
+              (i+(e.key==="ArrowRight"?1:-1)+tabs.length)%tabs.length;
+            select(tabs[next].id);
+            e.currentTarget.parentElement?.querySelectorAll<HTMLButtonElement>('[role="tab"]')[next]?.focus();
+          }}>{tab.label}</button>)}
+      </div>
+    </header>
+    <div className="mmhk-region-active-screen">
+      <section role="tabpanel" id="region-screen-panel-map"
+        aria-labelledby="region-screen-tab-map"
+        data-testid="region-map-screen" hidden={view!=="map"}
+        className="mmhk-region-map-panel">
+        <div className="mmhk-region-map-column">
     <div className="map-section-heading">
       <div><span className="eyebrow">RÉGION · VUE 5 × 5</span>
         <h2 id="region-view-title">Autour de {region.city_name}</h2></div>
@@ -92,9 +124,29 @@ export function RegionSceneInteractive({region,background,forces,missions,initia
         "Terrain, forêt, mine, site ou PNJ : non cartographié"}</span>
       {known?.kind==="owned_city"&&<a href={"/cities/"+region.city_id}>Entrer dans la cité</a>}
     </div>
-    <RegionMissionsPanel missions={missions}/>
-    <RegionEncounterPanel encounter={currentEncounter} forces={forces} cityId={region.city_id} missions={missions}/>
-    <div className="region-legend">
+        </div>
+        <div className="mmhk-region-encounter-column">
+          <RegionEncounterPanel encounter={currentEncounter} forces={forces}
+            cityId={region.city_id} missions={missions}/>
+        </div>
+      </section>
+      <section role="tabpanel" id="region-screen-panel-missions"
+        aria-labelledby="region-screen-tab-missions"
+        data-testid="region-missions-screen" hidden={view!=="missions"}
+        className="mmhk-region-collection">
+        <RegionMissionsPanel missions={missions} onExplore={()=>select("map")}/>
+      </section>
+      <section role="tabpanel" id="region-screen-panel-intel"
+        aria-labelledby="region-screen-tab-intel"
+        data-testid="region-intel-screen" hidden={view!=="intel"}
+        className="mmhk-region-collection">
+        <div className="mmhk-region-intel-heading">
+          <span aria-hidden="true">◇</span>
+          <div><h3>Renseignements de la région</h3>
+            <p>Les seules mines et coordonnées attestées pour votre cité.
+              Aucune position inconnue n'est révélée par cet écran.</p></div>
+        </div>
+        <div className="region-legend">
       <div><strong>Mines rattachées à cette cité</strong>
         <p>{region.mine_types_unlocated.map(k=>MINE_LABELS[k]??k).join(" · ")||"Aucune mine enregistrée"}</p>
         <small>Types connus en base, emplacements non déterminés.</small></div>
@@ -106,6 +158,8 @@ export function RegionSceneInteractive({region,background,forces,missions,initia
             {c.x},{c.y}</span>)}
         </div>
         <small>Coordonnées mondiales distinctes des cases locales (i,j).</small></div>
+        </div>
+      </section>
     </div>
   </section>;
 }

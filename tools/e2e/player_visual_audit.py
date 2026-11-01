@@ -152,7 +152,47 @@ def main():
                                 full_page=False,animations="disabled")
         page.set_viewport_size({"width":1220,"height":900})
         wt.get_by_role("tab",name="Mes cités").click()
-        page.get_by_role("link",name="Entrer en ville").first.click()
+        page.get_by_role("link",name="Voir la région").first.click()
+        expect(page.get_by_test_id("region-game-screen")).to_be_visible()
+        region_tabs=page.get_by_role("tablist",name="Écrans de la région")
+        region_tabs.get_by_role("tab",name="Carte").focus()
+        page.keyboard.press("ArrowRight")
+        expect(region_tabs.get_by_role("tab",name="Missions")).to_have_attribute("aria-selected","true")
+        page.keyboard.press("End")
+        expect(region_tabs.get_by_role("tab",name="Renseignements")).to_have_attribute("aria-selected","true")
+        page.keyboard.press("Home")
+        expect(region_tabs.get_by_role("tab",name="Carte")).to_have_attribute("aria-selected","true")
+        for width,height in ((1220,900),(1440,950)):
+            page.set_viewport_size({"width":width,"height":height})
+            for name,key in (("Carte","map"),("Missions","missions"),
+                             ("Renseignements","intel")):
+                region_tabs.get_by_role("tab",name=name).click()
+                expect(page.get_by_test_id("region-"+key+"-screen")).to_be_visible()
+                gm=page.evaluate("""() => {
+                  const outer=document.querySelector('.kingdom-screen-content');
+                  const frame=document.querySelector('.mmhk-region-game-screen');
+                  const panel=document.querySelector('.mmhk-region-active-screen>[role="tabpanel"]:not([hidden])');
+                  const map=panel.querySelector('svg.region-scene');
+                  return {overflow:getComputedStyle(outer).overflowY,
+                    outerExtra:outer.scrollHeight-outer.clientHeight,
+                    frameExtra:frame.scrollHeight-frame.clientHeight,
+                    panelExtra:panel.scrollHeight-panel.clientHeight,
+                    width:Math.round(panel.getBoundingClientRect().width),
+                    atlasHeight:map?Math.round(map.getBoundingClientRect().height):0};
+                }""")
+                print("REGION VISUAL QA",key,width,height,gm,flush=True)
+                assert gm["overflow"]=="hidden" and gm["outerExtra"]<=2,(key,gm)
+                assert gm["frameExtra"]<=3 and gm["panelExtra"]<=3,(key,gm)
+                assert gm["width"]>=750,(key,gm)
+                if key=="map":
+                    assert gm["atlasHeight"]>=175,(key,gm)
+                    expect(page.locator(".mmhk-region-encounter-empty")).to_be_visible()
+                if key=="missions":
+                    expect(page.locator(".mmhk-region-missions-empty")).to_be_visible()
+                page.screenshot(path=str(ARTIFACTS/f"REGION-{key}-{width}x{height}.png"),
+                                full_page=False,animations="disabled")
+        page.set_viewport_size({"width":1220,"height":900})
+        page.get_by_role("link",name="Ouvrir la cité",exact=False).click()
         expect(page.get_by_test_id("city-game-screen")).to_be_visible()
         citytabs=page.get_by_role("tablist",name="Écrans de la cité")
         citytabs.get_by_role("tab",name="Panorama").focus()
@@ -304,7 +344,7 @@ def main():
             expect(page.get_by_test_id("military-"+key+"-screen")).to_be_visible()
             metrics=capture(page,f"PLAYER-{key}-1220x900.png")
             assert_dimensions(metrics,key)
-        print("PASS: 38 Chromium screens (world, city, market, heroes, military) at both resolutions",flush=True)
+        print("PASS: 44 Chromium screens (world, region, city, market, heroes, military) at both resolutions",flush=True)
         context.close()
         browser.close()
 

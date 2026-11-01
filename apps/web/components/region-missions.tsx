@@ -50,7 +50,7 @@ export function RegionJourneyLayer({missions}:{missions:PveMissionsResponse|null
     })}
   </g>;
 }
-export function RegionMissionsPanel({missions}:{missions:PveMissionsResponse|null}) {
+export function RegionMissionsPanel({missions,onExplore}:{missions:PveMissionsResponse|null;onExplore?:()=>void}) {
   const [tick,setTick]=useState<number|null>(null);
   const [offset,setOffset]=useState(0);
   useEffect(()=>{
@@ -91,7 +91,16 @@ export function RegionMissionsPanel({missions}:{missions:PveMissionsResponse|nul
         Défense {m.duel_report.outcome?.totalPower.defender}.
       </small>}
     </article>)}
-    {!active.length&&<p>Aucun héros actuellement en déplacement.</p>}
+    {!active.length&&<div className="mmhk-region-missions-empty">
+      <span aria-hidden="true">♞</span>
+      <strong>Le chemin des héros attend votre ordre</strong>
+      <p>Aucun héros actuellement en déplacement.</p>
+      <p>Les marches, retours et rapports apparaîtront ici lorsque vous
+        aurez confié une expédition à un héros disponible.</p>
+      {onExplore&&<button type="button" onClick={onExplore}>
+        Explorer les rencontres de la région
+      </button>}
+    </div>}
     {historical.length>0&&<details><summary>Dernières missions achevées</summary>
       {historical.map(m=><p key={m.mission_id}>{m.hero_name} · {m.encounter_name} ·
         retour confirmé à {fmt(m.returned_at??m.return_due_at)} ·

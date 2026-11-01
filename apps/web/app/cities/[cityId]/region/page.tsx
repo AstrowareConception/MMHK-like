@@ -36,7 +36,7 @@ export default async function RegionPage({
     privateApi<PveMissionsResponse>("/api/v1/me/cities/"+encodeURIComponent(cityId)+"/missions",token)
   ]);
   return (
-    <GameShell token={token} title={region.city_name}
+    <GameShell screen="region" token={token} title={region.city_name}
       eyebrow="ROYAUME · VUE RÉGIONALE"
       description={"Région ("+region.world_x+", "+region.world_y+") · "+region.world_id}
       worldId={region.world_id} cityId={region.city_id}

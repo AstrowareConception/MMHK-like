@@ -13,6 +13,8 @@ on:
       - feat/market-fixed-activity-screens-49
       # Stacked world-screen candidate, remove before merging.
       - feat/world-fixed-activity-screens-50
+      # Stacked region UI release candidate, remove before merging.
+      - feat/region-fixed-command-screens-51
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
