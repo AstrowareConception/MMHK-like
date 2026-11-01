@@ -4325,3 +4325,26 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
 .gui-game-stage[data-game-screen="heroes"] .mmhk-inventory-toolbar button:disabled{
   opacity:.6;cursor:not-allowed;
 }
+
+
+/* Actual duel screenshot review: raw JS floats such as
+   3.3000000000000003 must not overrun a scorecard, and the report title
+   must contrast with the pale paper. Formatting belongs in presentation
+   only; the Jactari/worker values remain authoritative and unmodified. */
+.gui-game-stage[data-game-screen="report"] .mmhk-mission-duel
+  .mission-duel-results>p,
+.gui-game-stage[data-game-screen="report"] .mmhk-mission-duel
+  .mission-duel-results>p strong{
+  color:#4e3525!important;
+}
+.gui-game-stage[data-game-screen="report"] .mmhk-mission-duel
+  .mission-duel-results>div span{
+  color:#664a33!important;font:12px/1.45 Georgia,serif;
+}
+.gui-game-stage[data-game-screen="report"] .mmhk-mission-duel
+  .mission-duel-results>div strong{
+  color:#4c3424!important;
+  font:small-caps 27px/1.1 Georgia,serif!important;
+  max-width:100%;overflow-wrap:anywhere;
+  font-variant-numeric:tabular-nums;
+}
