@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 import { notFound, redirect } from "next/navigation";
 import { tradeCityResources } from "../../../actions";
 import { GameShell } from "../../../../components/game-shell/game-shell";
+import { MarketGameScreen } from "../../../../components/market-game-screen";
 import { MarketplacePanel } from "../../../../components/marketplace-panel";
 import { CaravanPanel } from "../../../../components/caravan-panel";
 import { privateApi, sessionToken, type CityDetail,
@@ -26,6 +27,7 @@ export default async function MarketPage({params,searchParams}:{
     caravan_quote?:string;destination_city_id?:string;
     load_gold?:string;load_wood?:string;load_ore?:string;
     load_crystal?:string;load_gems?:string;load_sulfur?:string;load_mercury?:string;
+    program?:string;
   }>;
 }){
   const {cityId}=await params;
@@ -63,21 +65,19 @@ export default async function MarketPage({params,searchParams}:{
     : undefined;
   const quote=quoteResponse?.ok?quoteResponse.data:undefined;
   const orderId=quote?randomUUID():null;
-  return <GameShell token={token} title={"Marché de "+city.name}
+  return <GameShell screen="market" token={token} title={"Marché de "+city.name}
     eyebrow="CITÉ DU HAVRE · COMMERCE"
     description="Marchand, ventes et caravanes · contrats expérimentaux"
     worldId={city.world_id} cityId={cityId} stocks={city.stocks}>
-    <div className="market-headline">
-      <div><span className="eyebrow">REGISTRE DU COMMERCE</span>
-        <h2>La halle des échanges</h2>
-        <p>Les marchandises circulent dans les limites des stocks de votre cité.
-          Les offres sont calculées par le serveur, jamais par le navigateur.</p>
-      </div>
-      <Link className="scene-action" href={"/cities/"+cityId+"?inspect=marketplace#city-inspector"}>
-        Voir le bâtiment Marché
-      </Link>
-    </div>
-    {query.trade==="ok"&&<p role="status" className="construction-notice">
+    <MarketGameScreen cityId={cityId}
+      initialTab={query.offer?"auctions":
+        query.convoy||query.program||query.caravan_quote==="1"?"caravans":"merchant"}
+      merchantAvailable={Boolean(market?.merchant_unlocked)}
+      auctionAvailable={Boolean(offerResponse.data?.marketplace_unlocked)}
+      caravanAvailable={Boolean(caravanResponse.data?.marketplace_active&&
+        caravanResponse.data?.transport_policy)}
+      notices={<>
+            {query.trade==="ok"&&<p role="status" className="construction-notice">
       Échange confirmé : les deux stocks ont été modifiés ensemble. Consultez le registre ci-dessous.
     </p>}
     {query.trade==="conflict"&&<p role="alert" className="error">
@@ -91,36 +91,23 @@ export default async function MarketPage({params,searchParams}:{
     {query.trade==="invalid"&&<p role="alert" className="error">
       Demande d'échange invalide : contrôlez les quantités.
     </p>}
-    {!market?<p role="alert" className="error">
-      Le registre marchand est momentanément inaccessible.
-    </p>:<>
-      <div className="market-service-grid" aria-label="Services du marché">
-        <article className={"market-service "+(market.merchant_unlocked?"open":"locked")}>
-          <span aria-hidden="true">⚖</span>
-          <h3>Marchand</h3>
-          <strong>{market.merchant_unlocked?"Disponible":"Bâtiment requis"}</strong>
-          <p>Conversions immédiates avec devis, validation et journal de transactions.</p>
-        </article>
-        <article className={"market-service "+(offerResponse.data?.marketplace_unlocked?"open":"locked")}>
-          <span aria-hidden="true">♜</span>
-          <h3>Hôtel des ventes</h3>
-          <strong>{offerResponse.data?.marketplace_unlocked?
-            "Offres à prix fixe disponibles":"Service indisponible"}</strong>
-          <p>Publication, achat et retrait de lots avec dépôt séquestre en laboratoire.
-            Les enchères historiques ne sont pas encore reproduites.</p>
-          <a href="#marketplace">Consulter les offres</a>
-        </article>
-        <article className={"market-service "+(caravanResponse.data?.marketplace_active&&
-          caravanResponse.data?.transport_policy?"open":"locked")}>
-          <span aria-hidden="true">♞</span>
-          <h3>Caravanes</h3>
-          <strong>{caravanResponse.data?.marketplace_active&&caravanResponse.data?.transport_policy?
-            "Transport autorisé":"Transport verrouillé"}</strong>
-          <p>Convois réels entre vos cités, chargement mixte et livraison par worker PostgreSQL.</p>
-          <a href="#caravans">Préparer un convoi</a>
-        </article>
-      </div>
-      {!market.merchant_unlocked?(
+
+      </>}
+      merchant={<div className="mmhk-market-scroll mmhk-market-merchant-room">
+        <div className="mmhk-market-room-heading">
+          <div><span className="eyebrow">COMMERCE ET CONVERSION</span>
+            <h2>Le comptoir du marchand</h2>
+            <p>Échangez les ressources au taux proposé par le royaume.
+              Les devis sont calculés et confirmés par le serveur.</p>
+          </div>
+          <Link href={"/cities/"+cityId+"?inspect=marketplace#city-inspector"}>
+            Voir le bâtiment Marché
+          </Link>
+        </div>
+        {!market?<p role="alert" className="error">
+          Le registre marchand est momentanément inaccessible.
+        </p>:<>
+                {!market.merchant_unlocked?(
         <section className="market-locked">
           <h3>Le marché attend son ouverture</h3>
           <p>Construisez le Marché, puis attendez son achèvement effectif.
@@ -199,13 +186,26 @@ export default async function MarketPage({params,searchParams}:{
             </p>
           </>}
         </section>}
-      </>}
-      <MarketplacePanel cityId={cityId} catalog={offerResponse.ok?offerResponse.data:undefined}
+        </>}
+        <p className="notice">
+      Marchand local opérationnel uniquement lorsque le bâtiment est actif.
+      Offres à prix fixe expérimentales disponibles selon les droits du monde ;
+      enchères historiques et caravanes alliées ou répétées ne sont pas encore actives.
+      <Link href={"/cities/"+cityId}> Retourner dans la cité.</Link>
+    </p>
+      </div>}
+      auctions={<div className="mmhk-market-scroll mmhk-market-auctions-room">
+        <MarketplacePanel cityId={cityId} catalog={offerResponse.ok?offerResponse.data:undefined}
         stocks={city.stocks} notice={query.offer}/>
-      <CaravanPanel cityId={cityId} token={token}
+      </div>}
+      caravans={<div className="mmhk-market-scroll mmhk-market-caravans-room">
+        <CaravanPanel cityId={cityId} token={token}
         catalog={caravanResponse.ok?caravanResponse.data:undefined}
         stocks={city.stocks} query={query}/>
-      <section className="merchant-ledger" id="market-ledger" aria-label="Registre des échanges">
+      </div>}
+      ledger={<div className="mmhk-market-scroll mmhk-market-ledger-room">
+        {market?<>
+          <section className="merchant-ledger" id="market-ledger" aria-label="Registre des échanges">
         <h3>Transactions enregistrées</h3>
         {market.history.length?(
           <ol>{market.history.map(row=>(
@@ -220,12 +220,11 @@ export default async function MarketPage({params,searchParams}:{
           ))}</ol>
         ):<p>Aucune transaction n'a été enregistrée pour cette cité.</p>}
       </section>
-    </>}
-    <p className="notice">
-      Marchand local opérationnel uniquement lorsque le bâtiment est actif.
-      Offres à prix fixe expérimentales disponibles selon les droits du monde ;
-      enchères historiques et caravanes alliées ou répétées ne sont pas encore actives.
-      <Link href={"/cities/"+cityId}> Retourner dans la cité.</Link>
-    </p>
+        </>:<section className="merchant-ledger" id="market-ledger">
+          <h3>Transactions enregistrées</h3>
+          <p>Le registre des échanges est momentanément inaccessible.</p>
+        </section>}
+      </div>}
+    />
   </GameShell>;
 }
