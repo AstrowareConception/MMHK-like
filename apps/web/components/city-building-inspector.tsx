@@ -59,7 +59,7 @@ export function CityBuildingInspector({city,catalog,selectedBuilding,onClose,onS
       </p>}
       {next?<>
         <h4>Projet proposé : niveau {next.target_level}</h4>
-        <p>Politique {next.policy_id} · devis de laboratoire non certifié saison 2.</p>
+        <p>Devis provisoires de reconstitution · montants confirmés par votre cité avant paiement.</p>
         {next.missing_prerequisites.length>0&&<p className="city-inspector-blocked">
           Prérequis manquants : {next.missing_prerequisites.map(buildingName).join(", ")}.</p>}
         {catalog.active&&!active&&<p className="city-inspector-blocked">

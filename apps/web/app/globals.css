@@ -2685,3 +2685,437 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   min-height:21px!important;max-height:23px;
   font-size:10px!important;
 }
+
+
+/* CITY — activity windows instead of one administrative page.
+   In the desktop game frame, only the catalog, history, stock collections
+   and individual building inspector can scroll. The panorama stays visible. */
+.gui-game-stage[data-game-screen="city"] .kingdom-screen-heading{
+  display:flex;align-items:center;justify-content:center;gap:13px;
+  padding:5px 10px!important;margin-bottom:4px!important;min-height:0;
+}
+.gui-game-stage[data-game-screen="city"] .kingdom-screen-heading .eyebrow{display:none;}
+.gui-game-stage[data-game-screen="city"] .kingdom-screen-heading h1{
+  font:small-caps 21px/1.1 Georgia,serif!important;margin:0;
+}
+.gui-game-stage[data-game-screen="city"] .kingdom-screen-heading p{
+  font:11px Georgia,serif!important;margin:0;opacity:.75;
+}
+.mmhk-city-game-screen{
+  display:flex;flex-direction:column;min-width:0;min-height:0;width:100%;
+  background:#eee3ce;border:2px ridge #ad9070;color:#553d2c;
+}
+.mmhk-city-command-header{
+  display:flex;flex-wrap:wrap;align-items:center;
+  justify-content:space-between;gap:7px 12px;
+  flex:0 0 auto;min-height:47px;padding:6px 9px;
+  background:linear-gradient(#b39b83,#82705d);
+  border-bottom:2px solid #79614d;
+}
+.mmhk-city-command-header .mmhk-command-tabs{flex:0 0 auto;}
+.mmhk-city-command-header .mmhk-city-quicklinks{
+  display:flex;gap:3px;flex-wrap:wrap;align-items:center;
+}
+.mmhk-city-quicklinks a{
+  background:#e8d5b3;border:1px solid #987550;padding:5px 7px;
+  color:#523822!important;text-decoration:none;
+  font:700 10px/1.2 Arial,sans-serif;
+}
+.mmhk-city-quicklinks a:hover,.mmhk-city-quicklinks a:focus-visible{
+  outline:2px solid #f1d289;background:#fff0d0;
+}
+.mmhk-city-notices{flex:0 0 auto;min-height:0;}
+.mmhk-city-notices:empty{display:none;}
+.mmhk-city-notices .construction-notice,
+.mmhk-city-notices .error{margin:2px 6px;padding:5px 9px;font-size:11px;}
+.mmhk-city-active-screen{
+  display:flex;flex-direction:column;flex:1 1 auto;min-width:0;min-height:0;
+  overflow:hidden;background:#f4ebda;
+}
+.mmhk-city-active-screen>[role="tabpanel"]{
+  display:flex;flex-direction:column;flex:1 1 auto;
+  width:100%;height:100%;min-width:0;min-height:0;overflow:hidden;
+}
+.mmhk-city-active-screen>[hidden]{display:none!important;}
+.mmhk-city-collection{
+  box-sizing:border-box;flex:1 1 auto;min-height:0;min-width:0;
+  overflow-y:auto;overflow-x:hidden;padding:15px 17px 20px;
+  scrollbar-width:thin;scrollbar-color:#a98b60 #f1e6d2;
+  overscroll-behavior:contain;
+}
+.mmhk-city-collection h2,.mmhk-city-collection h3{
+  color:#5c3c27!important;margin:0 0 12px;
+}
+.mmhk-city-collection .resource-grid{
+  grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+  align-content:start;gap:10px;
+}
+.mmhk-city-collection .resource-grid article{
+  background:linear-gradient(#fff9ec,#e7d6b7)!important;
+  border:1px solid #b89c77;color:#59402b;
+  padding:11px;min-width:0;
+}
+.mmhk-city-collection .resource-grid strong{font-size:24px;color:#5b3d29;}
+.mmhk-city-collection .resource-grid small{color:#74583e;margin-top:4px;}
+.mmhk-city-collection .resource-heading{color:#523622;}
+.mmhk-city-collection .notice,.mmhk-city-collection p{color:#745b47;}
+.mmhk-city-collection .construction-panel{
+  margin:0!important;padding:0!important;border:0!important;
+}
+.mmhk-city-collection .construction-panel h2{font-size:23px;}
+.mmhk-city-collection .construction-panel .build-options{
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));
+  gap:11px;
+}
+.mmhk-city-collection .construction-panel .building-plan{
+  min-width:0;overflow-wrap:anywhere;
+}
+.mmhk-city-collection .construction-panel .building-plan h3{
+  color:#f3dca8!important;
+}
+.mmhk-city-collection .construction-panel .building-blockers{
+  overflow-wrap:anywhere;
+}
+.mmhk-city-collection .construction-history-entry{
+  margin-bottom:9px;overflow-wrap:anywhere;
+}
+.mmhk-city-collection .construction-history-entry strong,
+.mmhk-city-collection .construction-history-entry span,
+.mmhk-city-collection .construction-history-entry small{display:block;}
+.mmhk-city-active-screen .mmhk-city-district{
+  display:flex;flex-direction:column;flex:1 1 auto;height:100%;
+  min-height:0;min-width:0;margin:0!important;overflow:hidden;
+}
+.mmhk-city-active-screen .mmhk-city-district-heading{
+  flex:0 0 auto;min-height:39px;padding:4px 9px!important;margin:0;
+  background:#e8d6b7;border-bottom:1px solid #b89d79;
+}
+.mmhk-city-active-screen .mmhk-city-district-heading h2{
+  color:#5c3b27!important;font-size:19px;margin:0;
+}
+.mmhk-city-active-screen .mmhk-city-district-heading .eyebrow,
+.mmhk-city-active-screen .mmhk-city-district-heading p{display:none;}
+.mmhk-city-active-screen .mmhk-city-workbench{
+  flex:1 1 auto;min-height:0;min-width:0;
+  display:grid;grid-template-columns:minmax(0,1.32fr) minmax(315px,.95fr);
+  gap:8px!important;padding:7px;overflow:hidden;
+}
+.mmhk-city-active-screen .mmhk-city-scene-column{
+  display:flex;flex-direction:column;min-height:0;min-width:0;overflow:hidden;
+}
+.mmhk-city-active-screen .city-scene-section{
+  display:flex;flex-direction:column;flex:1 1 auto;
+  min-height:0;min-width:0;overflow:hidden;margin:0;
+}
+.mmhk-city-active-screen .city-scene-header{
+  flex:0 0 auto;min-height:0;margin:0 0 3px!important;gap:5px;
+}
+.mmhk-city-active-screen .city-scene-header h2{font-size:17px!important;}
+.mmhk-city-active-screen .city-scene-header p{display:none;}
+.mmhk-city-active-screen .city-scene-header .scene-action{
+  flex:0 0 auto;padding:5px 8px;font-size:11px;
+}
+.mmhk-city-active-screen .city-scene-frame{
+  box-sizing:border-box;flex:1 1 auto;min-height:0;min-width:0;
+  height:auto!important;aspect-ratio:auto!important;
+  overflow:hidden;border-width:2px!important;
+}
+.mmhk-city-active-screen .city-scene-frame .haven-city-svg{
+  width:100%!important;height:100%!important;display:block;
+}
+.mmhk-city-active-screen .haven-scene-key{
+  flex:0 0 auto;min-height:0;margin:3px 0 0;
+  font-size:10px;gap:7px;flex-wrap:wrap;
+}
+.mmhk-city-active-screen .city-scene-unmapped{
+  flex:0 0 auto;max-height:30px;overflow-y:auto;margin:2px 0!important;
+  color:#5b4436!important;font-size:10px;
+}
+.mmhk-city-active-screen .city-plan-ribbon{
+  flex:0 0 auto;min-height:0;padding:4px 2px 1px;margin:3px 0 0;
+  background:#e7d5b6;border:1px solid #c6ab83;
+}
+.mmhk-city-active-screen .city-plan-ribbon>.eyebrow{display:none;}
+.mmhk-city-active-screen .city-plan-ribbon-list{
+  display:flex;gap:5px;overflow-x:auto;overflow-y:hidden;
+  max-width:100%;min-height:0;padding:3px;
+}
+.mmhk-city-active-screen .city-plan-ribbon-list button{
+  min-width:110px!important;padding:5px 7px!important;
+  min-height:40px;font-size:11px;
+}
+.mmhk-city-active-screen .city-plan-ribbon-list button small{
+  display:block;font-size:9px;
+}
+.mmhk-city-active-screen .mmhk-city-inspector-column{
+  display:flex;flex-direction:column;min-height:0;min-width:0;
+  overflow-y:auto;overflow-x:hidden;
+  scrollbar-width:thin;scrollbar-color:#ad8e66 #eadfc9;
+  overscroll-behavior:contain;border:2px ridge #b7976b;
+  background:#ebe0cc;
+}
+.mmhk-city-active-screen .city-building-inspector{
+  margin:0!important;min-height:0!important;max-height:none;
+  padding:10px 13px!important;border:0!important;
+  background:linear-gradient(#f8f0df,#e7d4b4)!important;
+  color:#5b3e2c!important;
+}
+.mmhk-city-active-screen .city-building-inspector p,
+.mmhk-city-active-screen .city-building-inspector h4,
+.mmhk-city-active-screen .city-building-inspector strong,
+.mmhk-city-active-screen .city-building-inspector a{
+  color:#5a3e2a!important;
+}
+.mmhk-city-active-screen .city-inspector-heading h3{
+  color:#4c3223!important;font-size:22px!important;
+}
+.mmhk-city-active-screen .city-inspector-quote{
+  background:#fff7e7;border:1px solid #b69970;color:#593f2b;
+}
+.mmhk-city-active-screen .city-inspector-quote button[type="submit"]{
+  min-height:39px;
+}
+.gui-game-stage[data-game-screen="city"] .live-refresh-status{display:none;}
+@media(min-width:901px){
+  .gui-game-stage[data-game-screen="city"] .kingdom-screen-content{
+    display:flex;flex-direction:column;min-height:0;
+    padding:6px 8px!important;overflow:hidden!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .mmhk-city-game-screen{
+    flex:1 1 auto;height:100%;overflow:hidden;
+  }
+}
+@media(max-width:900px){
+  .mmhk-city-game-screen{height:auto;min-height:610px;}
+  .mmhk-city-active-screen{min-height:500px;}
+  .mmhk-city-command-header{align-items:flex-start;}
+  .mmhk-city-active-screen .mmhk-city-workbench{
+    grid-template-columns:1fr;overflow-y:auto;
+  }
+  .mmhk-city-active-screen .mmhk-city-scene-column{min-height:430px;}
+  .mmhk-city-active-screen .mmhk-city-inspector-column{
+    min-height:250px;max-height:420px;
+  }
+}
+@media(max-width:600px){
+  .mmhk-city-command-header .mmhk-command-tabs{
+    order:2;width:100%;justify-content:space-between;
+  }
+  .mmhk-city-command-header .mmhk-city-quicklinks{
+    width:100%;order:3;
+  }
+  .mmhk-city-command-header .mmhk-command-tabs button{
+    font-size:10px!important;padding:6px 5px!important;
+  }
+  .mmhk-city-collection{padding:10px;}
+}
+
+
+
+/* City screenshot finishing pass: the SVG's intrinsic 680×552 aspect ratio
+   previously made the drawn landscape taller than its flex frame, cropping
+   the fort and the bottom city plots. Absolute layout bounds the WHOLE map
+   to the scene window; viewBox automatically uses 'meet' to preserve art. */
+.gui-game-stage[data-game-screen="city"] .city-scene-frame{
+  position:relative!important;isolation:isolate;overflow:hidden!important;
+  background:#27414a;
+}
+.gui-game-stage[data-game-screen="city"] .city-scene-frame .haven-city-svg{
+  position:absolute!important;inset:0!important;
+  width:100%!important;height:100%!important;
+  max-width:100%!important;max-height:100%!important;
+  object-fit:contain!important;display:block!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-scene-header{
+  height:32px!important;min-height:32px!important;
+  align-items:center!important;overflow:hidden;
+  padding:0 2px!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-scene-header h2,
+.gui-game-stage[data-game-screen="city"] .city-scene-header .eyebrow{
+  color:#64452e!important;line-height:1.1!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-scene-header .scene-action{
+  min-height:27px!important;margin:0!important;
+  padding:5px 9px!important;white-space:nowrap;
+}
+.gui-game-stage[data-game-screen="city"] .mmhk-city-collection .mmhk-city-directory{
+  margin-top:10px;
+}
+.gui-game-stage[data-game-screen="city"] .mmhk-city-empty-history{
+  display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;gap:12px;
+  max-width:570px;min-height:255px;padding:18px;
+  margin:clamp(14px,5vh,55px) auto;
+  background:radial-gradient(ellipse at center,#ead8b7,#f3e8d600 75%);
+  color:#573d2c;
+}
+.gui-game-stage[data-game-screen="city"] .mmhk-city-empty-icon{
+  display:grid;place-items:center;width:70px;height:70px;
+  border:3px double #98784f;border-radius:50%;
+  background:linear-gradient(#e5cf9e,#c5a672);
+  color:#573e26;font:36px Georgia,serif;
+}
+.gui-game-stage[data-game-screen="city"] .mmhk-city-empty-history strong{
+  font:small-caps 23px/1.1 Georgia,serif;color:#573b28;
+}
+.gui-game-stage[data-game-screen="city"] .mmhk-city-empty-history p{
+  color:#75583f;max-width:440px;font:13px/1.55 Georgia,serif;margin:0;
+}
+.gui-game-stage[data-game-screen="city"] .mmhk-city-empty-history a{
+  display:block;padding:10px 16px;border:1px solid #987447;
+  background:linear-gradient(#f0dcac,#cba66e);text-decoration:none;
+  color:#47311e;font:bold 12px Arial,sans-serif;
+}
+.gui-game-stage[data-game-screen="city"] .mmhk-city-empty-history a:focus-visible{
+  outline:3px solid #a77834;outline-offset:2px;
+}
+@media(max-width:600px){
+  .gui-game-stage[data-game-screen="city"] .mmhk-city-empty-history{
+    min-height:200px;padding:12px;
+  }
+  .gui-game-stage[data-game-screen="city"] .mmhk-city-empty-history strong{
+    font-size:19px;
+  }
+}
+
+
+
+/* The old CityDistrict grid used align-items:start, so its items retained
+   intrinsic 495/546px heights even inside a 450px game panel. The frame
+   clipped the bottom of the map AND the inspector. Force a single bounded
+   row and let the detailed inspector, not the entire city, scroll. */
+@media(min-width:901px){
+  .gui-game-stage[data-game-screen="city"] .mmhk-city-active-screen
+    .mmhk-city-district{
+    height:100%!important;min-height:0!important;
+    flex:1 1 0!important;overflow:hidden!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .mmhk-city-active-screen
+    .mmhk-city-workbench{
+    flex:1 1 0!important;height:0!important;
+    min-height:0!important;max-height:100%!important;
+    align-items:stretch!important;
+    grid-template-rows:minmax(0,1fr)!important;
+    overflow:hidden!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .mmhk-city-active-screen
+    .mmhk-city-scene-column,
+  .gui-game-stage[data-game-screen="city"] .mmhk-city-active-screen
+    .mmhk-city-inspector-column{
+    min-height:0!important;height:100%!important;max-height:100%!important;
+    align-self:stretch!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .mmhk-city-active-screen
+    .city-scene-section{
+    flex:1 1 0!important;height:0!important;
+    min-height:0!important;max-height:100%!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .mmhk-city-active-screen
+    .city-scene-frame{
+    flex:1 1 0!important;height:0!important;
+    min-height:0!important;max-height:100%!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .mmhk-city-active-screen
+    .mmhk-district-seal{
+    width:38px!important;height:38px!important;font-size:19px;
+  }
+}
+
+
+/* Final city composition: remove redundant headings, give the actual city
+   scenery room, and present the original SVG as a framed map rather than
+   a thumbnail surrounded by empty charcoal bars. */
+@media(min-width:901px){
+  .gui-game-stage[data-game-screen="city"] .kingdom-masthead{
+    min-height:54px;padding:5px 12px;
+  }
+  .gui-game-stage[data-game-screen="city"] .kingdom-emblem{
+    height:40px;width:40px;font-size:23px;
+  }
+  .gui-game-stage[data-game-screen="city"] .kingdom-brand strong{
+    font-size:26px;
+  }
+  .gui-game-stage[data-game-screen="city"] .mmhk-city-district-heading{
+    display:none!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .city-scene-header{
+    height:25px!important;min-height:25px!important;gap:5px;
+  }
+  .gui-game-stage[data-game-screen="city"] .city-scene-header .eyebrow{
+    display:none;
+  }
+  .gui-game-stage[data-game-screen="city"] .city-scene-header h2{
+    margin:0!important;font-size:15px!important;white-space:nowrap;
+  }
+  .gui-game-stage[data-game-screen="city"] .haven-scene-key{
+    max-height:23px;white-space:nowrap;overflow:hidden;
+    gap:9px!important;margin:2px 0 0!important;
+    font-size:10px!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .haven-scene-key span:last-child{
+    display:none!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .city-plan-ribbon{
+    margin-top:2px!important;padding:0 2px!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .city-plan-ribbon-list{
+    gap:3px!important;padding:2px!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .city-plan-ribbon-list button{
+    min-height:31px!important;max-height:32px!important;
+    display:flex;align-items:center;justify-content:center;
+    flex-direction:column;gap:0;padding:2px 5px!important;
+    font-size:10px!important;line-height:1.1!important;
+  }
+  .gui-game-stage[data-game-screen="city"] .city-plan-ribbon-list button small{
+    font-size:9px!important;line-height:1.1!important;
+  }
+}
+.gui-game-stage[data-game-screen="city"] .city-scene-frame::before{
+  content:"";position:absolute;inset:-16px;pointer-events:none;
+  background:url("/themes/public-safe/haven-landscape.svg") center/cover no-repeat;
+  filter:blur(13px);opacity:.45;z-index:0;
+}
+.gui-game-stage[data-game-screen="city"] .city-scene-frame::after{
+  content:"";position:absolute;inset:0;pointer-events:none;
+  background:linear-gradient(90deg,#152c3860,transparent 22%,transparent 78%,#152c3860);
+  z-index:2;
+}
+.gui-game-stage[data-game-screen="city"] .city-scene-frame .haven-city-svg{
+  z-index:1;filter:drop-shadow(0 0 10px #1a332caa);
+}
+.gui-game-stage[data-game-screen="city"] .city-inspector-heading{
+  margin-bottom:5px!important;padding-bottom:5px!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-inspector-heading h3{
+  font-size:19px!important;line-height:1.1!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-building-inspector p{
+  margin:5px 0!important;font-size:11px!important;line-height:1.35!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-building-inspector h4{
+  font-size:16px!important;margin:7px 0 4px!important;
+}
+.gui-game-stage[data-game-screen="city"] .mmhk-build-modes{
+  margin:7px 0!important;gap:4px!important;
+}
+.gui-game-stage[data-game-screen="city"] .mmhk-build-modes button{
+  padding:6px 4px!important;min-height:30px!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-inspector-quotes{
+  margin:6px 0!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-inspector-quote{
+  padding:8px 10px!important;gap:5px!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-inspector-quote ul{
+  gap:3px!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-inspector-quote li{
+  padding:3px 5px!important;font-size:10px!important;
+}
+.gui-game-stage[data-game-screen="city"] .city-inspector-quote button[type="submit"]{
+  min-height:34px!important;padding:6px!important;
+  font-size:12px!important;
+}
