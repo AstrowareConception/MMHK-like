@@ -90,6 +90,10 @@ def main():
             opener.click()
             dialog=page.get_by_test_id("formation-advanced-dialog")
             expect(dialog).to_be_visible()
+            # Interactions inside a modal must not be mistaken for clicking
+            # the backdrop and must not submit any server-side formation.
+            dialog.get_by_role("heading",name="Répartir les effectifs").click()
+            expect(dialog).to_be_visible()
             overlay=page.get_by_test_id("formation-advanced-dialog-overlay")
             overlay.click(position={"x":3,"y":3})
             expect(dialog).to_have_count(0)
