@@ -45,7 +45,12 @@ def main():
             button.click()
             expect(page.get_by_text("Expédition enregistrée :",exact=False)).to_be_visible(timeout=25000)
             expect(page.get_by_test_id("colony-orders-screen")).to_be_visible()
-            expedition=page.get_by_test_id("colonization-order").first
+            # Await the actual accepted order after the server-action
+            # redirect. The journal can contain previous expeditions and
+            # Next.js may render its shell before the fresh RSC payload.
+            expedition=page.get_by_test_id("colonization-order").filter(
+                has_text="Nouvel Havre des Brumes")
+            expect(expedition).to_have_count(1,timeout=25000)
             expect(expedition).to_contain_text("Nouvel Havre des Brumes")
             expect(expedition).to_contain_text("En marche vers",timeout=20000)
             # Only the server-side founding worker can materialize the city.
