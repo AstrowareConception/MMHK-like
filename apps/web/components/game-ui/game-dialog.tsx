@@ -65,7 +65,7 @@ export function GameDialog({open,title,eyebrow,children,footer,onClose,busy=fals
   }
   if(!open||!mounted)return null;
   return createPortal(
-    <div className="gui-modal-overlay" onMouseDown={event=>{
+    <div className="gui-modal-overlay" onClick={event=>{
       if(event.target===event.currentTarget&&!busy)onClose();
     }} data-testid={testId?testId+"-overlay":undefined}>
       <div ref={detailRef} className={"gui-window gui-window--"+size}

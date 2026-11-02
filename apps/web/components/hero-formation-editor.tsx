@@ -241,10 +241,12 @@ export function HeroFormationEditor({cityId,formation,sheet}:{
               {formation.available_units.map(u=><option key={u.unit_code}
                 value={u.unit_code}>{u.name}</option>)}
             </select>
-            <input type="number" min="1" max="1000000"
-              disabled={!editable||!r.unit_code}
-              value={r.unit_code?r.quantity:""}
-              onChange={e=>edit(i,{quantity:Number(e.target.value)})}/>
+            {r.unit_code?<input type="number" min="1" max="1000000"
+              aria-label={"Effectif de la position "+(i+1)}
+              disabled={!editable}
+              value={r.quantity}
+              onChange={e=>edit(i,{quantity:Number(e.target.value)})}/>:
+              <span className="mmhk-form-quantity-empty">Aucun peloton</span>}
           </label>)}
         </div>
       </GameDialog>
