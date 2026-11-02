@@ -3,6 +3,7 @@
 import { cookies } from "next/headers";
 import { randomUUID } from "node:crypto";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 
 function apiUrl(path: string) {
   const base = process.env.MMHK_API_INTERNAL_URL ?? "http://127.0.0.1:8000";
@@ -571,6 +572,11 @@ export async function dispatchFoundingExpedition(form:FormData){
     // No new UUID is generated on ambiguous result. Review the journal.
   }
   if(status===401)redirect("/");
+  // A successful founding mutates the server-side expedition journal.
+  // Invalidate Next.js' cached route payload before navigating to it so
+  // the player immediately sees the accepted order, not a stale empty list.
+  if(status===201||status===200)
+    revalidatePath("/worlds/"+world+"/colonize","page");
   redirect("/worlds/"+world+"/colonize?colony="+
     (status===201||status===200?"started":status===409?"conflict":"unavailable")+
     "#colony-orders");
