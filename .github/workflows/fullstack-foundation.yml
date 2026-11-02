@@ -6,8 +6,6 @@ on:
   push:
     branches:
       - main
-      # Temporary dialog-busy accessibility QA branch; remove before merge.
-      - test/dialog-busy-focus-62
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
