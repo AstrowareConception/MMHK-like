@@ -62,7 +62,7 @@ def main():
             # assert high contrast on the actual parchment dialog.
             assert dialog.evaluate("""el=>{
               const label=el.querySelector('.mmhk-formation-edit-grid label');
-              const rgb=getComputedStyle(label).color.match(/\\d+/g).map(Number);
+              const rgb=getComputedStyle(label).color.match(/\d+/g).map(Number);
               return rgb.length>=3 && rgb[0]<130 && rgb[1]<110 && rgb[2]<90;
             }"""),"Formation labels are unreadable on modal parchment"
             assert page.evaluate("document.body.style.overflow")=="hidden"
