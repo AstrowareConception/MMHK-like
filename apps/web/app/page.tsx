@@ -58,11 +58,13 @@ export default async function Home({
         <h1>MMHK-like</h1>
         <p className="intro">Les premiers territoires du royaume.</p>
       </header>
-      <section className="panel" aria-labelledby="worlds-heading">
+      <section className="panel mmhk-entry-panel" aria-labelledby="worlds-heading">
         <div className="panel-title">
           <span className="eyebrow">FONDATIONS · PREMIER MONDE PERSISTANT</span>
           <h2 id="worlds-heading">{loggedIn ? "Mes mondes" : "Accéder au royaume"}</h2>
         </div>
+        <div className="mmhk-entry-portal">
+          <div className="mmhk-entry-controls">
         <div className="statusline" role="status">
           <span className={connected ? "dot online" : "dot offline"} />
           {connected ? "API FastAPI joignable" : "API momentanément inaccessible"}
@@ -109,7 +111,18 @@ export default async function Home({
             </form>
           </>
         )}
-        <p className="notice">Version de développement : monde et ressources
+          </div>
+          <aside className="mmhk-entry-landscape"
+            aria-label="Illustration de la vallée du Havre">
+            <div className="mmhk-entry-landscape-copy">
+              <span className="eyebrow">AUX PORTES DU ROYAUME</span>
+              <strong>Les terres du Havre</strong>
+              <p>Retrouvez votre cité, vos héros et les frontières encore
+                à explorer.</p>
+            </div>
+          </aside>
+        </div>
+        <p className="notice mmhk-entry-disclaimer">Version de développement : monde et ressources
           persistants, avec production économique expérimentale en local, sans combat PvP ni inscription
           publique. Moteur Jactari conservé comme référence historique.</p>
       </section>
