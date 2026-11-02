@@ -4499,3 +4499,13 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
     font-size:9px!important;
   }
 }
+
+
+/* Touch-capable artefact gesture: prevent browser text selection and
+   scrolling from cancelling the pointer before it reaches a game drop zone.
+   Ordinary scrollbars on the bag/reserve remain available outside tiles. */
+.gui-game-stage[data-game-screen="heroes"] .mmhk-equipment .artifact-card{
+  touch-action:none;
+  user-select:none;
+  -webkit-user-select:none;
+}

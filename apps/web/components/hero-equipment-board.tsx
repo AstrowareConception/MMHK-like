@@ -94,8 +94,23 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
         // from the source tile to a receiving region counts as a move.
         const distance=Math.hypot(e.clientX-gesture.x,e.clientY-gesture.y);
         if(distance<12)return;
+        // Touchscreens implicitly capture the pointer to the source tile,
+        // so pointerup can bubble through the SOURCE equipment slot even
+        // when the finger was released over the bag. Resolve the physical
+        // location, not the synthetic event target or the source slot.
+        const element=document.elementFromPoint(e.clientX,e.clientY);
+        const dropBag=element?.closest("#hero-bag");
+        const dropReserve=element?.closest("#hero-reserve");
+        const dropSlot=element?.closest<HTMLElement>('[data-testid="equipment-drop-zone"]');
+        const dropHero=element?.closest<HTMLElement>("[data-artifact-recipient-hero]");
+        const destination:Target|null=dropBag?{place:"bag"}:
+          dropReserve?{place:"reserve"}:
+          dropSlot?.dataset.slot?{place:"slot",slot:dropSlot.dataset.slot}:
+          dropHero?.dataset.artifactRecipientHero?
+            {place:"hero",heroId:dropHero.dataset.artifactRecipientHero}:null;
+        if(!destination)return;
         suppressClick.current=true;
-        move(target,gesture.id);
+        move(destination,gesture.id);
       },
       onDrop:(e:DragEvent<HTMLElement>)=>{
         e.preventDefault();e.stopPropagation();setHover(null);
@@ -119,7 +134,11 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
     return <div key={item.artifact_id}
       data-testid="artifact-tile" data-artifact-id={item.artifact_id}
       className={"artifact-card mmhk-item "+(isSelected?"selected":"")}
-      draggable={ready&&idle&&!pending}
+      // Chromium's native HTML drag freezes when it starts from a nested
+      // equipped slot. Bag/reserve -> equipment retains the proven native
+      // path. Equipped -> bag/reserve uses the genuine pointer gesture
+      // recognized by makeTarget.onPointerUp, with the same server action.
+      draggable={ready&&idle&&!pending&&item.location!=="equipped"}
       onPointerDown={e=>{
         if(!idle||pending||!ready||e.button!==0)return;
         pointerStart.current={id:item.artifact_id,x:e.clientX,y:e.clientY};
@@ -236,7 +255,7 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
       <h4>Confier à un autre héros</h4>
       <div className="mmhk-recipient-list">
         {heroes.filter(h=>h.hero_id!==hero.hero_id).map(h=>
-          <div key={h.hero_id}
+          <div key={h.hero_id} data-artifact-recipient-hero={h.hero_id}
             className={"mmhk-recipient "+(hover===h.name?"hover":"")}
             {...makeTarget({place:"hero",heroId:h.hero_id},h.name)}>
             <strong>{h.name}</strong><small>{h.status==="idle"?"Présent":"Indisponible"}</small>
