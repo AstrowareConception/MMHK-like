@@ -41,7 +41,7 @@ def main():
               return {viewport:innerWidth,width:document.documentElement.scrollWidth,
                 cardLeft:r.left,cardRight:r.right,
                 formVisible:getComputedStyle(form).display!=='none',
-                inputCount:form.querySelectorAll('input').length};
+                inputCount:form.querySelectorAll('input:not([type="hidden"])').length};
             }""")
             print("PUBLIC LOGIN QA",width,height,geom,flush=True)
             assert geom["width"]<=width+3,geom
