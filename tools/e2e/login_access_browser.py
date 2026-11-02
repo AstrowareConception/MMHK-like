@@ -55,7 +55,9 @@ def main():
         page.get_by_label("Identifiant").fill("ci_unknown_account_2026")
         page.get_by_label("Mot de passe").fill("invalid-demo-password")
         page.get_by_role("button",name="Entrer dans le royaume").click()
-        expect(page.get_by_role("alert")).to_contain_text(
+        # Next.js also injects an aria-live route announcer with role=alert.
+        # Target the game's own error message, not the framework announcer.
+        expect(page.locator("section.panel p.error[role='alert']")).to_contain_text(
             "Identifiants invalides ou connexion refusée",timeout=20000)
         expect(page.get_by_role("heading",name="Accéder au royaume")).to_be_visible()
         expect(page.get_by_test_id("hero-equipment-board")).to_have_count(0)
