@@ -6,8 +6,6 @@ on:
   push:
     branches:
       - main
-      # Temporary isolated browser drag experiment; remove before merging.
-      - test/native-reverse-artifact-drag-58
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
