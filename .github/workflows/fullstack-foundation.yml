@@ -6,9 +6,7 @@ on:
   push:
     branches:
       - main
-      # Temporary modal and authorization QA candidate; remove before merge.
-      - test/dialog-accessibility-and-error-states-60
-      # Temporary login/error and guest access QA branch.
+      # Temporary login/error and guest-access QA candidate; remove before merge.
       - test/login-and-denied-access-61
     paths:
       - 'apps/**'
