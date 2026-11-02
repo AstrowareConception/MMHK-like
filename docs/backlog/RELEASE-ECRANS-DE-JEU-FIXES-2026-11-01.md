@@ -1,7 +1,7 @@
 # Revue d'intégration — interfaces de jeu fixes MMHK
 
-**Date :** 1er novembre 2026  
-**Périmètre :** PR #45, #48 à #56, intégrées dans `main` avec commits conservés.
+**Date :** 1er novembre 2026 · **Mise à jour :** 2 novembre 2026  
+**Périmètre :** PR #45, #48 à #56 et #58, intégrées dans `main` avec commits conservés.
 
 ## Règle générale
 
@@ -25,6 +25,7 @@ l'interface ne crée ni ressources, ni soldats, ni droits de colonisation.
 | [#54](https://github.com/AstrowareConception/MMHK-like/pull/54) | Inventaire | Commande souris explicite pour déséquiper |
 | [#55](https://github.com/AstrowareConception/MMHK-like/pull/55) | Duel | Affichage numérique français et contraste |
 | [#56](https://github.com/AstrowareConception/MMHK-like/pull/56) | Responsive | Bandeau mobile compact et navigation conservée |
+| [#58](https://github.com/AstrowareConception/MMHK-like/pull/58) | Artefacts souris et tactile | Glisser de l'emplacement vers la besace par vrai geste pointeur ; persistance serveur |
 
 ## Validation réalisée
 
@@ -37,15 +38,13 @@ l'interface ne crée ni ressources, ni soldats, ni droits de colonisation.
   **27 captures responsive** à 1024 × 768, 900 × 800 et 390 × 844.
 - Absence de débordement horizontal dans la matrice responsive ; contrôle de la
   visibilité du panneau de jeu dès la première hauteur mobile.
-- [Campagne finale de la PR #56](https://github.com/AstrowareConception/MMHK-like/actions/runs/41344856927) :
-  quatre jobs verts.
+- [Campagne de la PR #56](https://github.com/AstrowareConception/MMHK-like/actions/runs/41344856927) : quatre jobs verts.
+- [PR #58 : validation souris et tactile](https://github.com/AstrowareConception/MMHK-like/actions/runs/41360345678) : quatre jobs verts, geste réel et persistance.
+- [Validation finale du code intégré à `main`](https://github.com/AstrowareConception/MMHK-like/actions/runs/41423623449) : quatre jobs verts, commit `9e15e5d0fe18f0dc0e15eb254accb18c0b0903ad`.
 
 ## Limites explicitement conservées
 
-- [Issue #46](https://github.com/AstrowareConception/MMHK-like/issues/46) :
-  le glisser-déposer **natif inverse** (équipement vers besace) n'est pas
-  certifié par Chromium. La commande souris « Déséquiper » et le chemin
-  clavier sont testés et persistés.
+- [Issue #46](https://github.com/AstrowareConception/MMHK-like/issues/46) : **résolue fonctionnellement et clôturée**. Le glissement inverse (équipement vers besace) est validé avec un **vrai geste pointeur souris et tactile**, persistant en base après rechargement. Pour éviter le blocage confirmé de Chromium/Playwright, ce sens n'emploie **pas** la primitive HTML Drag and Drop native ; le sens besace → équipement conserve cette primitive. La commande « Déséquiper » et le clavier restent utilisables.
 - Les règles historiques MMHK saison 2 non reconstituées ne doivent pas être
   présentées comme certaines ; les profils de laboratoire restent séparés.
 - Les tests synthétiques de colonisation contournent la limite des sept jours
@@ -53,6 +52,12 @@ l'interface ne crée ni ressources, ni soldats, ni droits de colonisation.
   peut pas désactiver sa protection.
 - Une campagne CI verte n'est pas une certification de tous les navigateurs
   ou de toutes les variantes de périphériques ; les captures servent à la revue.
+
+## Contrôles complémentaires (2 novembre)
+
+- Un relâchement **hors d'une destination autorisée** ne doit déplacer aucun objet : assertion tactile avec rechargement, ajoutée dans la PR #59 de consolidation.
+- Le test de la PR #58 demeure dans la CI de `main` ; il couvre le vrai geste souris et le toucher, sans synthèse d'événements HTML Drag and Drop.
+- [Issue #47](https://github.com/AstrowareConception/MMHK-like/issues/47) conserve les audits restant à compléter : états d'erreur, permissions, fenêtres de dialogue et navigateurs complémentaires. La livraison des écrans fixes ne prouve pas à elle seule une interface parfaite dans toutes les situations.
 
 ## Exploitation
 
