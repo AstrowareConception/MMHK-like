@@ -4509,3 +4509,40 @@ body:has(.shell:not(.kingdom-shell)) .login-form button {
   user-select:none;
   -webkit-user-select:none;
 }
+
+
+/* Formation's advanced editor lives in a createPortal outside the hero
+   board. Ancestor-based .mmhk-heritage-formation rules cannot reach it:
+   the old labels became pale on parchment, while disabled quantity inputs
+   displayed as blank near-black rectangles. Style the portal explicitly. */
+.gui-window .mmhk-formation-edit-grid{
+  grid-template-columns:repeat(auto-fit,minmax(140px,1fr));
+  gap:10px;
+}
+.gui-window .mmhk-formation-edit-grid label{
+  display:flex;flex-direction:column;min-width:0;gap:5px;
+  color:#523722!important;font:700 12px/1.35 Arial,sans-serif!important;
+}
+.gui-window .mmhk-formation-edit-grid select,
+.gui-window .mmhk-formation-edit-grid input{
+  width:100%;min-width:0;min-height:36px;
+  padding:7px 9px;color:#442d1c!important;
+  background:#fffaf0!important;border:1px solid #a78a65!important;
+  border-radius:2px;
+  font:13px/1.25 Arial,sans-serif;
+}
+.gui-window .mmhk-formation-edit-grid select:focus-visible,
+.gui-window .mmhk-formation-edit-grid input:focus-visible{
+  outline:3px solid #b38439;outline-offset:1px;
+}
+.gui-window .mmhk-formation-edit-grid select:disabled,
+.gui-window .mmhk-formation-edit-grid input:disabled{
+  background:#e7ddcc!important;
+  color:#6a5744!important;opacity:1;
+}
+.gui-window .mmhk-form-quantity-empty{
+  display:flex;align-items:center;min-height:36px;
+  padding:7px 9px;
+  border:1px dashed #bda98b;background:#eee3d1;
+  color:#705941;font:italic 12px Georgia,serif;
+}
