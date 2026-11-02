@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - main
+      # Temporary dialog-busy accessibility QA branch; remove before merge.
+      - test/dialog-busy-focus-62
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
@@ -210,6 +212,7 @@ jobs:
           python3 tools/e2e/player_visual_audit.py
           python3 tools/e2e/responsive_visual_audit.py
           python3 tools/e2e/dialog_accessibility_browser.py
+          python3 tools/e2e/dialog_busy_browser.py
           python3 tools/e2e/login_access_browser.py
       - name: Publish player visual QA captures immediately
         if: always()
