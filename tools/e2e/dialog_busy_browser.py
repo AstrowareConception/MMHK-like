@@ -23,7 +23,7 @@ def main():
         page.set_default_timeout(12000)
         errors=[]
         page.on("pageerror",lambda err:errors.append(str(err)))
-        page.goto(ROOT+"/__qa/dialog",wait_until="domcontentloaded",timeout=30000)
+        page.goto(ROOT+"/qa-dialog",wait_until="domcontentloaded",timeout=30000)
         expect(page.get_by_role("heading",name="Recette locale des fenêtres")).to_be_visible()
         opener=page.get_by_test_id("qa-open-busy")
         opener.click()
