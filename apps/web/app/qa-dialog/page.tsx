@@ -1,5 +1,5 @@
 import {notFound} from "next/navigation";
-import {DialogQaHarness} from "../../../components/game-ui/dialog-qa-harness";
+import {DialogQaHarness} from "../../components/game-ui/dialog-qa-harness";
 
 export const dynamic="force-dynamic";
 
