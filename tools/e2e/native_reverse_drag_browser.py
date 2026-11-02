@@ -180,9 +180,59 @@ def main():
             expect(touch_bag.locator(".artifact-card").filter(
                 has_text="Heaume de bronze")).to_be_visible(timeout=15000)
             expect(touch_head.locator(".artifact-card")).to_have_count(0)
-            touch_context.close()
-            print("PASS: captured touch pointer equipped -> bag and DB persistence",
+            print("TOUCH NEGATIVE: re-equip and release outside all drop zones",flush=True)
+            again=touch_bag.locator(".artifact-card").filter(
+                has_text="Heaume de bronze")
+            again.click()
+            touch_head.click()
+            equipped_again=touch_head.locator(".artifact-card").filter(
+                has_text="Heaume de bronze")
+            expect(equipped_again).to_be_visible(timeout=15000)
+            equipped_again.scroll_into_view_if_needed()
+            start=equipped_again.bounding_box()
+            masthead=touch_page.locator(".kingdom-masthead").bounding_box()
+            assert start and masthead, "Missing artefact or masthead position"
+            x=start["x"]+start["width"]/2
+            y=start["y"]+start["height"]/2
+            # The top of the game's masthead is a deliberately INVALID
+            # destination. A finger can cross another zone on the way,
+            # but release outside must never cause an artefact transfer.
+            outside_x=masthead["x"]+masthead["width"]/2
+            outside_y=masthead["y"]+masthead["height"]/2
+            assert touch_page.evaluate(
+                """([x,y]) => {
+                   const el=document.elementFromPoint(x,y);
+                   return !!el?.closest('.kingdom-masthead') &&
+                     !el.closest('#hero-bag,#hero-reserve,[data-slot]');
+                }""",[outside_x,outside_y]),"Target is not outside drop zones"
+            cdp.send("Input.dispatchTouchEvent",{
+                "type":"touchStart","touchPoints":[finger(x,y)]})
+            for i in range(1,13):
+                t=i/12
+                cdp.send("Input.dispatchTouchEvent",{
+                    "type":"touchMove","touchPoints":[finger(
+                        x+(outside_x-x)*t,y+(outside_y-y)*t)]})
+                time.sleep(.02)
+            cdp.send("Input.dispatchTouchEvent",{
+                "type":"touchEnd","touchPoints":[]})
+            expect(equipped_again).to_be_visible(timeout=15000)
+            expect(touch_bag.locator(".artifact-card").filter(
+                has_text="Heaume de bronze")).to_have_count(0)
+            touch_page.reload(wait_until="domcontentloaded")
+            expect(touch_head.locator(".artifact-card").filter(
+                has_text="Heaume de bronze")).to_be_visible(timeout=15000)
+            print("PASS: touch gesture released outside legal zones never moves an item",
                   flush=True)
+            # Restore the pristine demonstration inventory for the next
+            # authenticated test: use the real server-backed unequip button.
+            touch_head.locator(".artifact-card").filter(
+                has_text="Heaume de bronze").click()
+            touch_page.get_by_role("button",name="Déséquiper Heaume de bronze").click()
+            expect(touch_bag.locator(".artifact-card").filter(
+                has_text="Heaume de bronze")).to_be_visible(timeout=15000)
+            touch_context.close()
+            print("PASS: captured touch pointer equipped -> bag, invalid drop rejected, "
+                  "and PostgreSQL persistence verified",flush=True)
         finally:
             browser.close()
 
