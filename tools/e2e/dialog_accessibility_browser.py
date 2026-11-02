@@ -42,6 +42,7 @@ def main():
             "tab",name="Formation").click()
         expect(page.get_by_test_id("hero-formation-screen")).to_be_visible()
 
+        before_state=page.locator(".formation-state").inner_text()
         for width,height in ((1220,900),(390,844)):
             page.set_viewport_size({"width":width,"height":height})
             opener=page.get_by_role("button",name="Ajuster les effectifs…")
@@ -93,10 +94,8 @@ def main():
             overlay.click(position={"x":3,"y":3})
             expect(dialog).to_have_count(0)
             expect(opener).to_be_focused()
-            expect(page.get_by_text("Formation sauvegardée",exact=True)
-                   .or_(page.get_by_text("Formation proposée",exact=True))
-                   .or_(page.get_by_text("Disposition modifiée",exact=True))
-                  ).to_be_visible()
+            assert page.locator(".formation-state").inner_text()==before_state,(
+                "Opening or dismissing a modal changed the game formation")
         assert not errors,errors[:3]
         context.close()
 
