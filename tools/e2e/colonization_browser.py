@@ -45,7 +45,18 @@ def main():
             button.click()
             expect(page.get_by_text("Expédition enregistrée :",exact=False)).to_be_visible(timeout=25000)
             expect(page.get_by_test_id("colony-orders-screen")).to_be_visible()
-            expedition=page.get_by_test_id("colonization-order").first
+            # The journal can list older foundations first, while RSC
+            # refreshes may lag behind a newly committed server action.
+            # Match the authoritative order by name and bound the retries.
+            expedition=page.get_by_test_id("colonization-order").filter(
+                has_text="Nouvel Havre des Brumes")
+            for attempt in range(3):
+                if expedition.count()==1:
+                    break
+                page.reload(wait_until="domcontentloaded")
+                page.get_by_role("tablist",name="Écrans de colonisation").get_by_role(
+                    "tab",name="Expéditions").click()
+            expect(expedition).to_have_count(1,timeout=15000)
             expect(expedition).to_contain_text("Nouvel Havre des Brumes")
             expect(expedition).to_contain_text("En marche vers",timeout=20000)
             # Only the server-side founding worker can materialize the city.
