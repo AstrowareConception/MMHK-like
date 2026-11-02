@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - main
+      # Temporary regression-branch test; remove before merging.
+      - test/reverse-drag-negative-drop-59
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
