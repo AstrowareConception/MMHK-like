@@ -84,6 +84,8 @@ services:
       NODE_ENV: production
       MMHK_API_INTERNAL_URL: http://api:8000
       MMHK_PREVIEW_LOOPBACK_ONLY: "true"
+      # Opt-in harness route is available ONLY in localhost-only stacks.
+      MMHK_LOCAL_DIALOG_QA: "enabled"
     depends_on:
       api:
         condition: service_healthy
