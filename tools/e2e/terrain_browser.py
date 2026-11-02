@@ -55,7 +55,12 @@ def main():
             page.locator('input[name="colonyName"]').fill("Territoire qualifié de la Brume")
             start.click()
             expect(page.get_by_text("Expédition enregistrée :",exact=False)).to_be_visible(timeout=25000)
-            order=page.get_by_test_id("colonization-order").first
+            # Earlier worker-confirmed foundations remain in the same
+            # journal. Resolve the new transaction by its actual name,
+            # never by incidental list order or DOM position.
+            order=page.get_by_test_id("colonization-order").filter(
+                has_text="Territoire qualifié de la Brume")
+            expect(order).to_have_count(1,timeout=20000)
             expect(order).to_contain_text("Territoire qualifié de la Brume")
             expect(order).to_contain_text("Cité fondée et opérationnelle",timeout=120000)
             order.get_by_role("link",name="Entrer dans la cité fondée").click()
