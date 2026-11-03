@@ -24,8 +24,10 @@ export function PrivateScreenFailure({scope,status,retryHref}:Props){
         "Réessayez lorsque le serveur répondra de nouveau. Cette action ne modifie ni les ressources ni les ordres en cours."}
       </p>
       <nav aria-label="Actions de reprise" className="mmhk-private-error-actions">
-        {!denied&&<Link href={retryHref} className="mmhk-private-retry"
-          data-testid="private-screen-retry">Réessayer l’affichage</Link>}
+        {/* Hard GET navigation bypasses any RSC payload prefetched during
+            the outage; it must not resubmit a game command. */}
+        {!denied&&<a href={retryHref} className="mmhk-private-retry"
+          data-testid="private-screen-retry">Réessayer l’affichage</a>}
         <Link href="/">Revenir à mes mondes</Link>
       </nav>
     </section>
