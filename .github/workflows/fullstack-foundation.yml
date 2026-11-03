@@ -6,8 +6,6 @@ on:
   push:
     branches:
       - main
-      # Temporary authenticated outage/recovery QA branch; remove before merge.
-      - test/session-api-outage-63
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
