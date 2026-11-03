@@ -208,6 +208,11 @@ export async function moveCityArtifact(data:FormData) {
     status=response.status;
   }catch {/* Uncertain command: never silently replay with a new UUID. */}
   if(status===401)redirect("/");
+  // The artifact was moved by FastAPI. Invalidate the hero equipment route
+  // before redirect so Next.js cannot replay a stale RSC inventory snapshot
+  // after this server-side mutation (notably after an API interruption).
+  if(status===200||status===201)
+    revalidatePath("/cities/"+cityId+"/heroes","page");
   redirect(back+"&artifact="+(status===200||status===201?"ok":status===409?"conflict":
     status===404?"missing":"unavailable"));
 }
