@@ -4687,3 +4687,25 @@ body:has(.mmhk-entry-panel) .masthead h1{
     font-size:10px;
   }
 }
+
+
+/* Resilient entry states: preserve a signed-in player's session when the
+   upstream API is temporarily unavailable. No private game data is rendered. */
+.mmhk-entry-recovery{display:grid;gap:11px;max-width:45rem;padding:9px 0;}
+.mmhk-entry-recovery .error{margin:0;}
+.mmhk-entry-recovery form{margin:0;}
+.mmhk-entry-recovery button{
+  display:block;width:100%;min-height:43px;padding:10px 15px;
+  font:700 13px/1.35 Arial,sans-serif;cursor:pointer;
+  border:2px ridge #b89b66;border-radius:3px;
+}
+.mmhk-entry-recovery .mmhk-entry-retry{
+  background:linear-gradient(#efdaa9,#bc965f);color:#3f3022;
+}
+.mmhk-entry-recovery .mmhk-entry-signout{
+  background:#213845;color:#f5e3c5;border-color:#9b8868;
+}
+.mmhk-entry-recovery button:focus-visible{
+  outline:3px solid #f2cc83;outline-offset:2px;
+}
+.mmhk-entry-recovery button:hover{filter:brightness(1.12);}

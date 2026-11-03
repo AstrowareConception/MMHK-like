@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - main
+      # Temporary authenticated outage/recovery QA branch; remove before merge.
+      - test/session-api-outage-63
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
@@ -212,6 +214,19 @@ jobs:
           python3 tools/e2e/dialog_accessibility_browser.py
           python3 tools/e2e/dialog_busy_browser.py
           python3 tools/e2e/login_access_browser.py
+      - name: Verify real API outage, preserved session, recovery and 401 boundary
+        run: |
+          export MMHK_E2E_URL="http://127.0.0.1:3000"
+          export MMHK_E2E_USERNAME="demo_ci"
+          export MMHK_E2E_PASSWORD="$(cat .ci-e2e-password)"
+          python3 -u tools/e2e/session_outage_browser.py
+      - name: Restore local API after outage regression, even if its test failed
+        if: always()
+        run: |
+          if [ -f .env.local ]; then
+            docker compose --env-file .env.local -f compose.local.yaml \
+              up -d --wait --no-build --no-deps api
+          fi
       - name: Publish player visual QA captures immediately
         if: always()
         uses: actions/upload-artifact@v4

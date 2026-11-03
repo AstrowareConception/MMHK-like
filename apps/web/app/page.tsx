@@ -33,7 +33,13 @@ export default async function Home({
     token ? privateApi<World[]>("/api/v1/me/worlds", token) : null,
   ]);
   const connected = health?.status === "ok" && engine?.engine === "Jactari";
-  const loggedIn = !!token && worlds?.ok;
+  const loggedIn = Boolean(token && worlds?.ok);
+  // A temporary API outage is not an expired login. Keep the HttpOnly
+  // cookie untouched; only an explicit sign-out should remove it.
+  const serviceUnavailable = Boolean(token && worlds && !worlds.ok &&
+    worlds.status !== 401 && worlds.status !== 403);
+  const accessForbidden = Boolean(token && worlds?.status === 403);
+  const sessionRejected = Boolean(token && worlds?.status === 401);
   if (loggedIn && token) {
     return <GameShell token={token} title="Mes royaumes" eyebrow="PORTAIL · GUERRE DES LARMES"
       description="Votre domaine, vos cités et les chroniques du royaume.">
@@ -61,39 +67,56 @@ export default async function Home({
       <section className="panel mmhk-entry-panel" aria-labelledby="worlds-heading">
         <div className="panel-title">
           <span className="eyebrow">FONDATIONS · PREMIER MONDE PERSISTANT</span>
-          <h2 id="worlds-heading">{loggedIn ? "Mes mondes" : "Accéder au royaume"}</h2>
+          <h2 id="worlds-heading">{serviceUnavailable ? "Service momentanément indisponible" :
+            accessForbidden ? "Accès au royaume refusé" : "Accéder au royaume"}</h2>
         </div>
         <div className="mmhk-entry-portal">
           <div className="mmhk-entry-controls">
         <div className="statusline" role="status">
           <span className={connected ? "dot online" : "dot offline"} />
-          {connected ? "API FastAPI joignable" : "API momentanément inaccessible"}
+          {serviceUnavailable ? "Service des royaumes momentanément inaccessible" :
+            accessForbidden ? "Accès à vos mondes refusé" :
+            connected ? "API FastAPI joignable" : "API momentanément inaccessible"}
         </div>
-        {loggedIn ? (
-          <>
-            <nav className="nav">
-              <span>Votre compte est connecté.</span>
-              <form action={signOut}><button type="submit">Déconnexion</button></form>
-            </nav>
-            <div className="tile-links">
-              {worlds.data?.map((world) => (
-                <Link className="tile-link"
-                  href={`/worlds/${encodeURIComponent(world.world_id)}`}
-                  key={world.world_id}>
-                  <span className="eyebrow">MONDE DISPONIBLE</span>
-                  <strong>{world.name}</strong>
-                  <span>Carte {world.world_size} × {world.world_size}</span>
-                </Link>
-              ))}
-            </div>
-            {worlds.data?.length === 0 && (
-              <p>Votre compte n'est associé à aucun monde pour le moment.</p>
-            )}
-          </>
+        {serviceUnavailable ? (
+          <section className="mmhk-entry-recovery" data-testid="session-service-unavailable">
+            <p className="error" role="alert">
+              Le royaume ne répond pas actuellement. Votre session est conservée ;
+              vous n’avez pas besoin de ressaisir votre mot de passe.
+            </p>
+            <p className="form-intro">Aucune cité ni ressource privée n’est affichée tant
+              que le serveur ne peut pas confirmer votre accès. Réessayez une fois
+              le service rétabli : cette action ne déclenche aucune opération de jeu.</p>
+            <form action="/" method="get">
+              <button type="submit" className="mmhk-entry-retry">
+                Réessayer d’accéder au royaume
+              </button>
+            </form>
+            <form action={signOut}>
+              <button type="submit" className="mmhk-entry-signout">
+                Se déconnecter volontairement
+              </button>
+            </form>
+          </section>
+        ) : accessForbidden ? (
+          <section className="mmhk-entry-recovery" data-testid="session-access-forbidden">
+            <p className="error" role="alert">
+              Votre compte n’est pas autorisé à consulter les mondes de ce royaume.
+            </p>
+            <p className="form-intro">L’accès a été refusé par le serveur.
+              Aucune donnée privée ne peut être affichée.</p>
+            <form action={signOut}>
+              <button type="submit" className="mmhk-entry-signout">
+                Se déconnecter
+              </button>
+            </form>
+          </section>
         ) : (
           <>
             <p className="form-intro">Connectez-vous avec un compte provisionné
               par l'administrateur de ce laboratoire.</p>
+            {sessionRejected && <p className="error" role="alert">
+              Votre session a expiré ou a été refusée. Connectez-vous de nouveau.</p>}
             {error === "limited" && <p className="error" role="alert">
               Trop de tentatives de connexion. Réessayez dans quelques minutes.</p>}
             {error === "credentials" && <p className="error" role="alert">
