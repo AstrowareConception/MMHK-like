@@ -6,8 +6,6 @@ on:
   push:
     branches:
       - main
-      # Temporary private-screen recovery QA; remove before integration.
-      - test/private-screen-error-states-64
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
