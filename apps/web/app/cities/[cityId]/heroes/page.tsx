@@ -5,6 +5,7 @@ import {HeroGameScreen,type HeroScreenTab} from "../../../../components/hero-gam
 import {GamePanel} from "../../../../components/game-ui/game-panel";
 import {HeroFormationEditor} from "../../../../components/hero-formation-editor";
 import {GameShell} from "../../../../components/game-shell/game-shell";
+import {PrivateScreenFailure} from "../../../../components/game-ui/private-screen-failure";
 import {resolveAssetUrl} from "../../../../lib/assets/runtime";
 import {privateApi,sessionToken,type ArtifactInventory,
   type CityDetail,type CityForces,type HeroFormation} from "../../../../lib/server-api";
@@ -26,10 +27,10 @@ export default async function HeroesPage({params,searchParams}:{
   if(cityR.status===401||forcesR.status===401||artR.status===401)redirect("/");
   if(cityR.status===404||forcesR.status===404||artR.status===404)notFound();
   const city=cityR.data,forces=forcesR.data,inventory=artR.data;
-  if(!city||!forces||!inventory)return <main className="shell">
-    <p>Le registre des héros est momentanément inaccessible.</p>
-    <Link href={"/cities/"+cityId}>Retour à la cité</Link>
-  </main>;
+  if(!city||!forces||!inventory)
+    return <PrivateScreenFailure
+      status={[cityR,forcesR,artR].some(r=>r.status===403)?403:503}
+      scope="Héros" retryHref={"/cities/"+cityId+"/heroes"}/>;
   const selected=forces.heroes.find(h=>h.hero_id===query.hero)??forces.heroes[0];
   const formation=selected?await privateApi<HeroFormation>(
     "/api/v1/me/cities/"+cityId+"/heroes/"+selected.hero_id+"/formation",token):null;

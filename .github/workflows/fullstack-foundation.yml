@@ -225,6 +225,19 @@ jobs:
             docker compose --env-file .env.local -f compose.local.yaml \
               up -d --wait --no-build --no-deps api
           fi
+      - name: Verify private world and city outage screens with real API failure
+        run: |
+          export MMHK_E2E_URL="http://127.0.0.1:3000"
+          export MMHK_E2E_USERNAME="demo_ci"
+          export MMHK_E2E_PASSWORD="$(cat .ci-e2e-password)"
+          python3 -u tools/e2e/private_route_outage_browser.py
+      - name: Restore local API after private-route failure regression
+        if: always()
+        run: |
+          if [ -f .env.local ]; then
+            docker compose --env-file .env.local -f compose.local.yaml \
+              up -d --wait --no-build --no-deps api
+          fi
       - name: Publish player visual QA captures immediately
         if: always()
         uses: actions/upload-artifact@v4

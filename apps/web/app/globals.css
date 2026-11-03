@@ -4709,3 +4709,38 @@ body:has(.mmhk-entry-panel) .masthead h1{
   outline:3px solid #f2cc83;outline-offset:2px;
 }
 .mmhk-entry-recovery button:hover{filter:brightness(1.12);}
+
+/* Explicit private-screen failures: no fallback world/city data is rendered,
+   and recovery is a GET navigation instead of replaying any command. */
+.mmhk-private-error-shell{min-height:min(100dvh,900px);display:grid;place-items:center;}
+.mmhk-private-error{
+  width:min(100%,680px);padding:clamp(20px,4vw,36px);
+  border:3px ridge #aa9064;background:linear-gradient(150deg,#24363e,#10212c);
+  color:#eadfc6;box-shadow:0 16px 40px #0007;
+}
+.mmhk-private-error h1{
+  font:small-caps clamp(23px,3vw,36px)/1.2 Georgia,serif;
+  color:#f5e1b5;margin:12px 0 16px;
+}
+.mmhk-private-error p{line-height:1.6;max-width:62ch;}
+.mmhk-private-error p[role="alert"]{
+  padding:12px 14px;border-left:4px solid #e6a278;
+  background:#6b302c55;color:#ffebd8;
+}
+.mmhk-private-error-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:24px;}
+.mmhk-private-error-actions a{
+  display:inline-flex;align-items:center;justify-content:center;min-height:44px;
+  padding:9px 16px;border:2px ridge #b89b66;
+  background:#233b47;color:#f5e7cc;font:700 13px/1.3 Arial,sans-serif;
+  text-decoration:none;
+}
+.mmhk-private-error-actions a.mmhk-private-retry{
+  background:linear-gradient(#efdaa9,#bc965f);color:#392c21;
+}
+.mmhk-private-error-actions a:focus-visible{
+  outline:3px solid #f2cc83;outline-offset:3px;
+}
+@media(max-width:520px){
+  .mmhk-private-error-actions{flex-direction:column;}
+  .mmhk-private-error-actions a{width:100%;}
+}

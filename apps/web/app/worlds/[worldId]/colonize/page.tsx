@@ -2,6 +2,7 @@ import Link from "next/link";
 import {randomUUID} from "node:crypto";
 import {notFound,redirect} from "next/navigation";
 import {GameShell} from "../../../../components/game-shell/game-shell";
+import {PrivateScreenFailure} from "../../../../components/game-ui/private-screen-failure";
 import {LiveRefresh} from "../../../../components/live-refresh";
 import {ColonyGameScreen} from "../../../../components/colony-game-screen";
 import {dispatchFoundingExpedition,reclaimFailedFounding} from "../../../actions";
@@ -53,8 +54,8 @@ export default async function ColonizePage({params,searchParams}:{
   if(catalogResponse.status===401)redirect("/");
   if(catalogResponse.status===404)notFound();
   if(!catalogResponse.ok||!catalogResponse.data)
-    return <main className="shell"><p>Les droits de colonisation sont momentanément indisponibles.</p>
-      <Link href={"/worlds/"+worldId}>Revenir au monde</Link></main>;
+    return <PrivateScreenFailure status={catalogResponse.status}
+      scope="Colonisation" retryHref={"/worlds/"+encodeURIComponent(worldId)+"/colonize"}/>;
   const colony=catalogResponse.data;
   const selectedSite=colony.qualified_sites.find(s=>
     (String(s.x)===query.x&&String(s.y)===query.y) ||
