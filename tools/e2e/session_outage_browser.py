@@ -9,6 +9,7 @@ restores API health and retries without ever entering credentials again.
 from __future__ import annotations
 
 import os
+import re
 import subprocess
 import time
 from pathlib import Path
@@ -47,7 +48,7 @@ def main():
             page.get_by_label("Mot de passe").fill(os.environ["MMHK_E2E_PASSWORD"])
             page.get_by_role("button", name="Entrer dans le royaume").click()
             expect(page.get_by_role("heading", name="Mes mondes")).to_be_visible()
-            expect(page.get_by_role("link", name="Royaume de démonstration")).to_be_visible()
+            expect(page.get_by_role("link", name=re.compile("Royaume de démonstration"))).to_be_visible()
             original = cookie_value(context)
 
             docker("stop", "api")
@@ -65,7 +66,7 @@ def main():
                         "button", name="Réessayer d’accéder au royaume")).to_be_visible()
                     expect(page.get_by_label("Identifiant")).to_have_count(0)
                     expect(page.get_by_role(
-                        "link",name="Royaume de démonstration")).to_have_count(0)
+                        "link",name=re.compile("Royaume de démonstration"))).to_have_count(0)
                     assert cookie_value(context)==original, "Session lost during outage"
                     width_px=page.evaluate("document.documentElement.scrollWidth")
                     assert width_px<=width+3,(width,width_px)
@@ -84,7 +85,7 @@ def main():
             expect(page.get_by_role("heading",name="Mes mondes")).to_be_visible(
                 timeout=25000)
             expect(page.get_by_role(
-                "link",name="Royaume de démonstration")).to_be_visible()
+                "link",name=re.compile("Royaume de démonstration"))).to_be_visible()
             assert cookie_value(context)==original, "Retry replaced player session"
             assert not errors, errors[:3]
             print("PASS: same preserved session resumes when FastAPI is healthy",
@@ -103,7 +104,7 @@ def main():
             expect(page.get_by_label("Identifiant")).to_be_visible()
             expect(page.get_by_test_id("session-service-unavailable")).to_have_count(0)
             expect(page.get_by_role(
-                "link",name="Royaume de démonstration")).to_have_count(0)
+                "link",name=re.compile("Royaume de démonstration"))).to_have_count(0)
             print("PASS: invalid synthetic cookie returns login state (401), "
                   "never an outage banner",flush=True)
         finally:
