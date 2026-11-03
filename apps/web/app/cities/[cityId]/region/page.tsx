@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { GameShell } from "../../../../components/game-shell/game-shell";
+import {PrivateScreenFailure} from "../../../../components/game-ui/private-screen-failure";
 import { RegionScene } from "../../../../components/region-scene";
 import {LiveRefresh} from "../../../../components/live-refresh";
 import { privateApi, sessionToken, type RegionView, type CityDetail, type CityForces, type PveMissionsResponse } from "../../../../lib/server-api";
@@ -25,10 +26,9 @@ export default async function RegionPage({
   );
   if (response.status === 401) redirect("/");
   if (response.status === 404) notFound();
-  if (!response.ok || !response.data) {
-    return <main className="shell"><p>La région est momentanément inaccessible.</p>
-      <Link href="/">Retour aux mondes</Link></main>;
-  }
+  if (!response.ok || !response.data)
+    return <PrivateScreenFailure status={response.status}
+      scope="Région" retryHref={"/cities/"+encodeURIComponent(cityId)+"/region"}/>;
   const region = response.data;
   const [ownCity,forces,missions]=await Promise.all([
     privateApi<CityDetail>("/api/v1/me/cities/"+encodeURIComponent(cityId),token),

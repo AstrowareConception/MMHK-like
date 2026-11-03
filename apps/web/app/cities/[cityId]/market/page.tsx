@@ -3,6 +3,7 @@ import { randomUUID } from "node:crypto";
 import { notFound, redirect } from "next/navigation";
 import { tradeCityResources } from "../../../actions";
 import { GameShell } from "../../../../components/game-shell/game-shell";
+import {PrivateScreenFailure} from "../../../../components/game-ui/private-screen-failure";
 import { MarketGameScreen } from "../../../../components/market-game-screen";
 import { MarketplacePanel } from "../../../../components/marketplace-panel";
 import { CaravanPanel } from "../../../../components/caravan-panel";
@@ -46,8 +47,10 @@ export default async function MarketPage({params,searchParams}:{
   if(cityResponse.status===404||marketResponse.status===404||offerResponse.status===404||
      caravanResponse.status===404)notFound();
   if(!cityResponse.ok||!cityResponse.data)
-    return <main className="shell"><p>La cité est momentanément inaccessible.</p>
-      <Link href="/">Retour aux mondes</Link></main>;
+    return <PrivateScreenFailure
+      status={cityResponse.status===403||marketResponse.status===403||
+        offerResponse.status===403||caravanResponse.status===403?403:cityResponse.status}
+      scope="Marché" retryHref={"/cities/"+cityId+"/market"}/>;
   const city=cityResponse.data;
   const market=marketResponse.ok?marketResponse.data:undefined;
   const requested=[query.pay_resource,query.receive_resource,query.pay_amount]

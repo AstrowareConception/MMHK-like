@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - main
+      # Temporary private-screen recovery QA; remove before integration.
+      - test/private-screen-error-states-64
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
@@ -219,6 +221,19 @@ jobs:
           export MMHK_E2E_PASSWORD="$(cat .ci-e2e-password)"
           python3 -u tools/e2e/session_outage_browser.py
       - name: Restore local API after outage regression, even if its test failed
+        if: always()
+        run: |
+          if [ -f .env.local ]; then
+            docker compose --env-file .env.local -f compose.local.yaml \
+              up -d --wait --no-build --no-deps api
+          fi
+      - name: Verify private world and city outage screens with real API failure
+        run: |
+          export MMHK_E2E_URL="http://127.0.0.1:3000"
+          export MMHK_E2E_USERNAME="demo_ci"
+          export MMHK_E2E_PASSWORD="$(cat .ci-e2e-password)"
+          python3 -u tools/e2e/private_route_outage_browser.py
+      - name: Restore local API after private-route failure regression
         if: always()
         run: |
           if [ -f .env.local ]; then

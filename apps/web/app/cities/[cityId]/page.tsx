@@ -8,6 +8,7 @@ import { LiveRefresh } from "../../../components/live-refresh";
 import { notFound, redirect } from "next/navigation";
 import { startUrbanConstruction } from "../../actions";
 import { GameShell } from "../../../components/game-shell/game-shell";
+import {PrivateScreenFailure} from "../../../components/game-ui/private-screen-failure";
 import { privateApi, sessionToken, type CityDetail, type ConstructionCatalog } from "../../../lib/server-api";
 
 export const dynamic = "force-dynamic";
@@ -50,8 +51,8 @@ export default async function CityPage({
   if (answer.status === 401) redirect("/");
   if (answer.status === 404) notFound();
   if (!answer.ok || !answer.data)
-    return <main className="shell"><p>La ville est momentanément inaccessible.</p>
-      <Link href="/">Retour</Link></main>;
+    return <PrivateScreenFailure status={answer.status}
+      scope="Cité" retryHref={"/cities/"+encodeURIComponent(cityId)}/>;
   const city = answer.data;
   return (
     <GameShell token={token} title={city.name}

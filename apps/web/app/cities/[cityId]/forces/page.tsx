@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {notFound,redirect} from "next/navigation";
 import {GameShell} from "../../../../components/game-shell/game-shell";
+import {PrivateScreenFailure} from "../../../../components/game-ui/private-screen-failure";
 import {resolveAssetUrl} from "../../../../lib/assets/runtime";
 import {CityForcesPanel} from "../../../../components/city-forces-panel";
 import {privateApi,sessionToken,type CityDetail,type CityForces} from "../../../../lib/server-api";
@@ -19,10 +20,10 @@ export default async function ForcesPage({params,searchParams}:{
   ]);
   if(city.status===401||forces.status===401)redirect("/");
   if(city.status===404||forces.status===404)notFound();
-  if(!city.ok||!city.data||!forces.ok||!forces.data){
-    return <main className="shell"><p>Les forces de cette cité sont indisponibles.</p>
-      <Link href={"/cities/"+cityId}>Retour à la cité</Link></main>;
-  }
+  if(!city.ok||!city.data||!forces.ok||!forces.data)
+    return <PrivateScreenFailure
+      status={city.status===403||forces.status===403?403:503}
+      scope="Forces" retryHref={"/cities/"+cityId+"/forces"}/>;
   return <GameShell token={token} title="Forces et garnisons" screen="forces" eyebrow="ROYAUME · COMMANDEMENT"
     description={"Réserve de troupes, taverne et affectations · "+city.data.name}
     worldId={city.data.world_id} cityId={cityId} stocks={city.data.stocks}>

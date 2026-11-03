@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound, redirect } from "next/navigation";
 import { GameShell } from "../../../components/game-shell/game-shell";
+import {PrivateScreenFailure} from "../../../components/game-ui/private-screen-failure";
 import { WorldAtlas } from "../../../components/world-atlas";
 import { WorldGameScreen } from "../../../components/world-game-screen";
 import { privateApi, sessionToken, type WorldOverview, type CityDetail,
@@ -21,10 +22,9 @@ export default async function WorldPage({
   );
   if (result.status === 401) redirect("/");
   if (result.status === 404) notFound();
-  if (!result.ok || !result.data) {
-    return <main className="shell"><p>Le monde est momentanément inaccessible.</p>
-      <Link href="/">Retour aux mondes</Link></main>;
-  }
+  if (!result.ok || !result.data)
+    return <PrivateScreenFailure status={result.status}
+      scope="Carte du monde" retryHref={"/worlds/"+encodeURIComponent(worldId)}/>;
   const world = result.data;
   const currentCity=world.cities[0];
   const [details,colonyResponse,influenceResponse]=await Promise.all([
