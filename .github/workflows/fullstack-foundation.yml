@@ -6,8 +6,6 @@ on:
   push:
     branches:
       - main
-      # Temporary cross-owner POST authorization QA candidate; remove before merge.
-      - test/two-player-write-boundaries-67
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'

@@ -155,7 +155,7 @@ def verify_live_writes(fixture):
         "cross_target_denials":8,"second_city_unchanged":True,
         "destination_indistinguishable":2
     },result
-    print("PASS: 42 cross-owner POSTs rejected with 404/no-store, "
+    print("PASS: 40 foreign-path 404s and 2 indistinguishable 409s, no-store; "
           "including indirect IDs and unmodified second-player resources",
           flush=True)
 
