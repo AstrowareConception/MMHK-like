@@ -65,6 +65,24 @@ jobs:
           node-version: '22'
       - name: Install API and test dependencies
         run: python -m pip install -e './apps/api[dev]'
+      - name: Validate local QA launcher and Docker isolation helpers
+        run: |
+          python3 -m py_compile tools/local/qa.py tools/e2e/compose_qa.py tools/e2e/logout_offline_browser.py
+          python3 tools/local/qa.py --help
+          python3 - <<'PY'
+          import os,sys
+          sys.path.insert(0,"tools/e2e")
+          from compose_qa import compose_cli
+          original=compose_cli()
+          assert original==["docker","compose","--env-file",".env.local","-f","compose.local.yaml"]
+          os.environ["MMHK_E2E_COMPOSE_PROJECT"]="mmhk-qa-test01"
+          os.environ["MMHK_E2E_ENV_FILE"]="/tmp/mmhk-qa-test.env"
+          isolated=compose_cli()
+          assert "mmhk-qa-test01" in isolated
+          assert isolated.index("--env-file")+1==isolated.index("/tmp/mmhk-qa-test.env")
+          assert "mmhk-local" not in isolated
+          print("PASS: local QA always targets an independent project")
+          PY
       - name: Compile session lifecycle browser fixture before expensive E2E
         run: python3 -m py_compile tools/e2e/session_lifecycle_browser.py
       - name: Check security QA Python syntax before the expensive browser run
