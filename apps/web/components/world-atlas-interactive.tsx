@@ -8,6 +8,19 @@ import {
   worldDelta, worldWrap, type MapCoordinate, type MapScale
 } from "../lib/map-geometry";
 
+type RegionInspection = {
+  world_id:string;x:number;y:number;
+  city:{city_id:string;name:string;ownership:"own"|"discovered"}|null;
+  city_known:boolean;mines:string[];mines_known:boolean;
+  special_site:{kind:string;label:string}|null;
+  colonization_site_qualified:boolean;
+  terrain:string|null;terrain_known:boolean;
+};
+const MINE_LABELS:Record<string,string>={
+  gold:"Or",wood:"Bois",ore:"Minerai",crystal:"Cristal",
+  gems:"Gemmes",sulfur:"Soufre",mercury:"Mercure"
+};
+
 type Drag = { pointerId:number; startX:number; startY:number; dx:number; dy:number; moved:boolean };
 const {width:W,height:H,cx:CX,cy:CY}=MAP_VIEW;
 const readable=(coord:MapCoordinate|null):string=>coord?"("+coord.x+", "+coord.y+")":"—";
@@ -34,6 +47,9 @@ export function WorldAtlasInteractive({world,cities,qualifiedSites=[],cityMines=
   const [zoom,setZoom]=useState<MapScale>("detail");
   const [hover,setHover]=useState<MapCoordinate|null>(null);
   const [selected,setSelected]=useState<MapCoordinate|null>(null);
+  const [inspection,setInspection]=useState<RegionInspection|null>(null);
+  const [inspectionError,setInspectionError]=useState("");
+  const [inspecting,setInspecting]=useState(false);
   const [jumpX,setJumpX]=useState(String(home.x));
   const [jumpY,setJumpY]=useState(String(home.y));
   const [error,setError]=useState("");
@@ -51,6 +67,21 @@ export function WorldAtlasInteractive({world,cities,qualifiedSites=[],cityMines=
   const background=zoom==="detail"
     ?(detailBackground??politicalBackground):(politicalBackground??detailBackground);
   const storageKey="mmhk-map-camera:"+world.world_id;
+  useEffect(()=>{
+    if(!selected){setInspection(null);setInspectionError("");setInspecting(false);return;}
+    const abort=new AbortController();
+    setInspection(null);setInspectionError("");setInspecting(true);
+    fetch("/api/worlds/"+encodeURIComponent(world.world_id)+"/regions/"+
+      selected.x+"/"+selected.y,{cache:"no-store",signal:abort.signal})
+      .then(async response=>{
+        if(!response.ok)throw new Error("La fiche de région n'est pas accessible.");
+        return await response.json() as RegionInspection;
+      })
+      .then(data=>{if(!abort.signal.aborted)setInspection(data);})
+      .catch(()=>{if(!abort.signal.aborted)setInspectionError("Données territoriales indisponibles.");})
+      .finally(()=>{if(!abort.signal.aborted)setInspecting(false);});
+    return ()=>abort.abort();
+  },[selected?.x,selected?.y,world.world_id]);
 
   useEffect(()=>{
     try {
@@ -403,14 +434,20 @@ export function WorldAtlasInteractive({world,cities,qualifiedSites=[],cityMines=
         <small>{selected?"Coordonnées du monde · "+selected.x+" / "+selected.y:"Cliquez sur une case de la carte pour examiner ce qui en est connu."}</small>
       </div>
       {selected&&<>
+        {inspecting&&<p role="status">Consultation du registre territorial…</p>}
+        {inspectionError&&<p role="alert">{inspectionError} Les informations affichées ci-dessous sont partielles.</p>}
         <div className="mmhk-inspector-facts">
-          <div><span>Occupation</span><strong>{cityOnSelection?"Votre cité":selectedForeign?"Cité découverte":"Aucune cité connue"}</strong></div>
+          <div><span>Occupation</span><strong>{inspection?.city?.ownership==="own"?"Votre cité":inspection?.city?.ownership==="discovered"?"Cité découverte":cityOnSelection?"Votre cité":selectedForeign?"Cité découverte":"Occupation inconnue"}</strong></div>
           <div><span>Contrôle</span><strong>{selectedInfluence?.controller??"Non renseigné"}</strong></div>
-          <div><span>Mines</span><strong>{ownMines.length?ownMines.join(" · "):selectedQualified?.mine_types.length
-            ?selectedQualified.mine_types.join(" · ")
-            :selectedInfluence?.is_mine?"Mine signalée · type inconnu":"Non renseignées"}</strong></div>
-          <div><span>Lieu remarquable</span><strong>{selectedSite?selectedSite.label:"Aucun site connu"}</strong></div>
+          <div><span>Mines</span><strong>{inspection?.mines_known
+            ?(inspection.mines.length?inspection.mines.map(m=>MINE_LABELS[m]??m).join(" · "):"Aucune mine déclarée")
+            :ownMines.length?ownMines.map(m=>MINE_LABELS[m]??m).join(" · ")
+            :selectedQualified?.mine_types.length
+              ?selectedQualified.mine_types.map(m=>MINE_LABELS[m]??m).join(" · ")
+              :"Non renseignées"}</strong></div>
+          <div><span>Lieu remarquable</span><strong>{inspection?.special_site?.label??selectedSite?.label??"Aucun site connu"}</strong></div>
         </div>
+        {inspection?.terrain_known&&<p>Terrain connu : {inspection.terrain??"Non précisé"}</p>}
         {cityOnSelection&&<p>Votre cité de {cityOnSelection.name} occupe cette région.</p>}
         {selectedForeign&&<p>La cité {selectedForeign.name} a été découverte. Les données militaires privées restent masquées.</p>}
         {!cityOnSelection&&!selectedForeign&&!selectedQualified&&
