@@ -136,6 +136,12 @@ export default async function MissionReportPage({params}:{
                 metric(duel.interpretation.attacker.simulated_losses)} /
                 {duel.interpretation.defender.overwhelming_victory?"Victoire écrasante (sentinelle −1)":
                   metric(duel.interpretation.defender.simulated_losses)}</strong></div>
+            {duel.interpretation.ordinary_attacker_loss_projection&&
+              <div><span>Projection des morts attaquantes (profil ordinaire 30 %, non appliquée)</span>
+                <strong>{metric(duel.interpretation.ordinary_attacker_loss_projection.permanent_deaths)}
+                  {" sur "}{metric(duel.interpretation.ordinary_attacker_loss_projection.dispersed)}
+                  {" dispersées"}</strong>
+              </div>}
             <div><span>Effets persistants sur le royaume</span>
               <strong>Aucun · ni morts, ni XP, ni butin, ni libération</strong></div>
           </>}
