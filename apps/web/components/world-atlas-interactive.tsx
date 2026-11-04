@@ -23,8 +23,9 @@ const CORNERS = [
   {id:"south-east",x:527,y:391,dx:1,dy:1,symbol:"↘",label:"Flèche de carte : sud-est"}
 ] as const;
 
-export function WorldAtlasInteractive({world,cities,qualifiedSites=[],detailBackground,politicalBackground}:{
-  world:WorldOverview; cities:City[]; qualifiedSites?:ColonizationCatalog["qualified_sites"]; detailBackground:string|null; politicalBackground:string|null;
+export function WorldAtlasInteractive({world,cities,qualifiedSites=[],cityMines=[],detailBackground,politicalBackground}:{
+  world:WorldOverview; cities:City[]; qualifiedSites?:ColonizationCatalog["qualified_sites"];
+  cityMines?:{cityId:string;mines:string[]}[]; detailBackground:string|null; politicalBackground:string|null;
 }) {
   const size=world.world_size;
   const first=cities[0];
@@ -218,6 +219,7 @@ export function WorldAtlasInteractive({world,cities,qualifiedSites=[],detailBack
       stroke={stroke} strokeWidth={width} pointerEvents="none"/>;
   };
   const cityOnSelection=cities.find(city=>city.x===selected?.x&&city.y===selected?.y);
+  const ownMines=cityMines.find(entry=>entry.cityId===cityOnSelection?.city_id)?.mines??[];
 
   return <section className="world-atlas-wrap" aria-labelledby="world-atlas-heading">
     <div className="map-section-heading">
@@ -404,7 +406,7 @@ export function WorldAtlasInteractive({world,cities,qualifiedSites=[],detailBack
         <div className="mmhk-inspector-facts">
           <div><span>Occupation</span><strong>{cityOnSelection?"Votre cité":selectedForeign?"Cité découverte":"Aucune cité connue"}</strong></div>
           <div><span>Contrôle</span><strong>{selectedInfluence?.controller??"Non renseigné"}</strong></div>
-          <div><span>Mines</span><strong>{selectedQualified?.mine_types.length
+          <div><span>Mines</span><strong>{ownMines.length?ownMines.join(" · "):selectedQualified?.mine_types.length
             ?selectedQualified.mine_types.join(" · ")
             :selectedInfluence?.is_mine?"Mine signalée · type inconnu":"Non renseignées"}</strong></div>
           <div><span>Lieu remarquable</span><strong>{selectedSite?selectedSite.label:"Aucun site connu"}</strong></div>
