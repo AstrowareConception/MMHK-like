@@ -58,9 +58,11 @@ export default async function RegionPage({
           </Link>
         </div>
         <p className="notice">
-          La région présente une grille schématique et des types de mines
-          enregistrés, sans localiser artificiellement les mines, les PNJ
-          ni les bâtiments régionaux. Aucune action militaire n'est possible ici.
+          Les mines de votre cité possèdent désormais des emplacements stables
+          dans la région. Ces configurations sont générées pour notre reconstruction,
+          et ne prétendent pas reproduire des positions historiques certifiées.
+          Les autres terrains restent non cartographiés ; les missions et rencontres
+          disponibles sont gérées séparément par le serveur.
         </p>
     </GameShell>
   );
