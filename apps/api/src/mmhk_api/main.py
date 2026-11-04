@@ -38,7 +38,7 @@ from .region_inspection import inspect_region
 from .military_readiness import military_readiness
 from .timeline import timeline_for_player
 from .artifacts import artifact_inventory, move_artifact
-from .region_pve import preview_duel
+from .region_pve import preview_duel, preview_ordinary_line_sequence
 from .pve_missions import start_pve_mission,missions_for_city,report_for_mission
 from .formations import formation_for_hero,save_formation
 from .forces import city_forces, recruit_units, hire_hero, RecruitmentNotFound, RecruitmentConflict, transfer_units
@@ -792,6 +792,28 @@ def my_pve_preview(city_id:UUID,encounter_id:UUID,command:PreviewBattleCommand,
         raise HTTPException(status_code=404,detail="Encounter, city or hero not found") from exc
     except RecruitmentConflict as exc:
         raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+class PreviewLineSequenceCommand(StrictDTO):
+    hero_id: UUID
+
+
+@app.post("/api/v1/me/cities/{city_id}/encounters/{encounter_id}/preview-lines")
+def my_pve_lines_preview(city_id:UUID,encounter_id:UUID,
+                         command:PreviewLineSequenceCommand,
+                         db:_db,player:_player)->dict:
+    """US-COM-008 experimental, strictly read-only ordered stack duel."""
+    try:
+        return preview_ordinary_line_sequence(
+            db,owner=player,city_id=city_id,
+            encounter_id=encounter_id,hero_id=command.hero_id,
+        )
+    except RecruitmentNotFound as exc:
+        raise HTTPException(status_code=404,detail="Encounter, city or hero not found") from exc
+    except RecruitmentConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=409,detail="Unsupported ordinary stack sequence") from exc
 
 
 class PveMissionRequest(StrictDTO):
