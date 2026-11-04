@@ -14,6 +14,11 @@ import psycopg
 POLICY = "deposits-layout-v1"
 
 
+class DepositLayoutConflict(ValueError):
+    """A persisted region cannot safely receive its required deposit layout."""
+
+
+
 def calculate_deposit_positions(
     world_id: str, x: int, y: int, resources: list[str],
     mine_positions: list[tuple[str,int,int]] | None = None,
@@ -77,7 +82,7 @@ def provision_deposits(
         (world_id,x,y),
     ).fetchone()
     if row is None:
-        raise ValueError("Provision the region resources first")
+        raise DepositLayoutConflict("Provision the region resources first")
     resources=list(row[0])
     existing=db.execute(
         """SELECT slot,resource,i,j FROM world_region_deposits
@@ -89,7 +94,7 @@ def provision_deposits(
                 for slot,resource,i,j in existing]
         if (len(result)!=4 or [p["resource"] for p in result]!=resources
             or [p["slot"] for p in result]!=list(range(4))):
-            raise ValueError("Persisted deposit layout is incomplete or inconsistent")
+            raise DepositLayoutConflict("Persisted deposit layout is incomplete or inconsistent")
         return result
     city=db.execute(
         "SELECT city_id FROM cities WHERE world_id=%s AND x=%s AND y=%s",
@@ -101,9 +106,12 @@ def provision_deposits(
             """SELECT resource,i,j FROM city_mine_positions
                WHERE city_id=%s ORDER BY resource""",(city[0],),
         ).fetchall()
-    result=calculate_deposit_positions(
-        world_id,x,y,resources,mine_positions,
-    )
+    try:
+        result=calculate_deposit_positions(
+            world_id,x,y,resources,mine_positions,
+        )
+    except ValueError as exc:
+        raise DepositLayoutConflict(str(exc)) from exc
     for p in result:
         db.execute(
             """INSERT INTO world_region_deposits
