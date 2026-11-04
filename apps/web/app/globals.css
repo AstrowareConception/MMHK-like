@@ -4744,3 +4744,22 @@ body:has(.mmhk-entry-panel) .masthead h1{
   .mmhk-private-error-actions{flex-direction:column;}
   .mmhk-private-error-actions a{width:100%;}
 }
+
+/* Original atlas inspector: native panel, no captured historical UI. */
+.mmhk-region-inspector {padding:18px;border:1px solid #98805a;background:linear-gradient(160deg,#efe1c4,#d4bd97);color:#30291f;box-shadow:inset 0 0 0 3px #b89a6a40,0 10px 25px #0005}
+.mmhk-inspector-header {display:flex;flex-direction:column;gap:4px;padding-bottom:13px;border-bottom:1px solid #8b7458}
+.mmhk-inspector-header .eyebrow{color:#79603b}
+.mmhk-inspector-header strong{font:small-caps 26px/1.1 Georgia,serif;color:#352b21}
+.mmhk-inspector-header small,.mmhk-inspector-disclaimer{font:12px/1.5 system-ui,sans-serif;color:#685743}
+.mmhk-inspector-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:14px 0}
+.mmhk-inspector-facts>div{border:1px solid #a88d67;padding:9px;background:#fffaee80;min-width:0}
+.mmhk-inspector-facts span{display:block;text-transform:uppercase;font:700 10px/1.5 system-ui,sans-serif;letter-spacing:.08em;color:#715a3f}
+.mmhk-inspector-facts strong{font:600 13px/1.4 system-ui,sans-serif;color:#30271d;overflow-wrap:anywhere}
+.mmhk-region-inspector p{font:13px/1.5 system-ui,sans-serif;color:#4c3c2c}
+.mmhk-inspector-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin:15px 0}
+.mmhk-inspector-actions a,.mmhk-inspector-actions button{display:flex;align-items:center;justify-content:center;text-align:center;font:700 12px/1.3 system-ui,sans-serif;min-height:42px;padding:9px 6px;border:1px solid #7b6140;border-radius:2px;background:#394b4b;color:#fff1ce;text-decoration:none}
+.mmhk-inspector-actions a:hover{background:#546b65}
+.mmhk-inspector-actions .primary{background:#72502f;color:#fff2d3}
+.mmhk-inspector-actions button:disabled{cursor:not-allowed;background:#b4a591;color:#655847;opacity:.85}
+@media(max-width:900px){.mmhk-inspector-facts,.mmhk-inspector-actions{grid-template-columns:1fr 1fr}}
+@media(max-width:460px){.mmhk-inspector-facts,.mmhk-inspector-actions{grid-template-columns:1fr}}
