@@ -33,6 +33,8 @@ class FakeDB:
             self.rows=self.formation
         elif "FROM hero_army_units a" in normalized:
             self.rows=self.formation
+        elif "FROM hero_basic_combat_profiles" in normalized:
+            self.rows=[]
         elif "SELECT count(*) FROM hero_formation_slots" in normalized:
             self.rows=[(len(self.formation),)]
         else:
