@@ -15,6 +15,7 @@ import psycopg
 from psycopg.types.json import Jsonb
 
 from .worlds import RESOURCE_NAMES
+from .region_resource_consistency import region_accepts_mines
 
 NEWBIE_DAYS = 7
 NEWBIE_SECONDS = NEWBIE_DAYS * 86400
@@ -470,7 +471,10 @@ def quote_colony(db:psycopg.Connection,*,owner:UUID,world_id:str,
     if type(x) is not int or type(y) is not int or not 1<=x<=size or not 1<=y<=size:
         raise ColonizationConflict("Coordinates outside your campaign world")
     source=_source(db,world_id=world_id,owner=owner,city_id=source_city_id)
-    *_,qualification=_approved_site(db,world_id=world_id,owner=owner,x=x,y=y)
+    approved=_approved_site(db,world_id=world_id,owner=owner,x=x,y=y)
+    qualification=approved[-1]
+    if not region_accepts_mines(db,world_id,x,y,approved[0]):
+        raise ColonizationConflict("The configured mines contradict this region's recorded resources")
     policy=_active_policy(db,world_id)
     if not policy:
         raise ColonizationConflict("Colonization policy is not enabled for this world")
@@ -562,6 +566,8 @@ def start_colonization(db:psycopg.Connection,*,owner:UUID,world_id:str,
         mines,rates,caps,tick,site_ref,qualification=_approved_site(
             db,world_id=world_id,owner=owner,x=x,y=y,lock=True,
         )
+        if not region_accepts_mines(db,world_id,x,y,mines):
+            raise ColonizationConflict("The configured mines contradict this region's recorded resources")
         if not _site_clear(db,world_id=world_id,x=x,y=y):
             raise ColonizationConflict("Location unavailable or already reserved")
         duration=distance*policy["seconds_per_step"]
@@ -724,6 +730,9 @@ def run_colonization_batch(
                 or not region_owned or not site_present or occupied or special):
                 result.append(_block(db,row,now,"founding_site_or_rights_changed"))
                 continue
+            if not region_accepts_mines(db,world,x,y,mines):
+                result.append(_block(db,row,now,"regional_resource_profile_conflict"))
+                continue
             # Operator-configured recruitment profiles may be disabled between
             # payment and arrival. Do not commit an unusable settlement
             # indefinitely: return a blocked order with recoverable escrow.
@@ -756,6 +765,29 @@ def run_colonization_batch(
                             "INSERT INTO city_mines(city_id,resource) VALUES(%s,%s)",
                             (new_city_id,kind),
                         )
+                    # The city's initial mine profile is consistent with the
+                    # regional registry. Populate an absent four-slot record
+                    # only when all four types are explicitly known. Three
+                    # mines are insufficient to guess the missing fourth.
+                    if len(mines)==4:
+                        db.execute(
+                            """INSERT INTO world_region_resources
+                               (world_id,x,y,resources,generation_policy,source_ref)
+                               VALUES(%s,%s,%s,%s,'existing-city-v1',%s)
+                               ON CONFLICT (world_id,x,y) DO NOTHING""",
+                            (world,x,y,sorted(mines),
+                             "colonization-mines:"+str(new_city_id)),
+                        )
+                    db.execute(
+                        """INSERT INTO world_region_resource_discoveries
+                           (world_id,x,y,viewer_account_id)
+                           SELECT %s,%s,%s,%s
+                           WHERE EXISTS (
+                             SELECT 1 FROM world_region_resources
+                             WHERE world_id=%s AND x=%s AND y=%s
+                           ) ON CONFLICT DO NOTHING""",
+                        (world,x,y,owner,world,x,y),
+                    )
                     db.execute(
                         """INSERT INTO city_economy_clock
                            (city_id,tick_seconds,last_tick_at,enabled)
