@@ -12,6 +12,7 @@ from uuid import UUID
 import psycopg
 from psycopg.types.json import Jsonb
 from jactari.duel import resolve_stack_duel
+from .pve_report_interpretation import interpret_duel
 from .forces import _owned_city, RecruitmentNotFound, RecruitmentConflict
 
 def start_pve_mission(db:psycopg.Connection,*,owner:UUID,city_id:UUID,
@@ -174,7 +175,8 @@ def advance_pve_missions(db:psycopg.Connection,*,max_orders:int=25,
                     "modifiers":{}
                 })
                 report={"scope":"LAB-SINGLE-STACK","preview_only":True,
-                        "outcome":outcome,"no_losses_applied":True,"no_rewards":True}
+                        "outcome":outcome,"interpretation":interpret_duel(outcome),
+                        "no_losses_applied":True,"no_rewards":True}
                 # Late workers do not consume part of the return leg.
                 # Return duration begins with the confirmed arrival timestamp.
                 confirmed_return=now+timedelta(seconds=travel_seconds)
