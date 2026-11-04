@@ -28,8 +28,8 @@ token=json.load(sys.stdin)["token"]
 digest=hashlib.sha256(token.encode("utf-8")).digest()
 with connect() as db:
     affected=db.execute(
-        """UPDATE sessions SET expires_at=now()-interval '1 second'
-           WHERE token_digest=%s AND expires_at > now()""",(digest,)
+        "UPDATE sessions SET expires_at=now()-interval '1 second' "
+        "WHERE token_digest=%s AND expires_at > now()",(digest,)
     ).rowcount
 assert affected==1,"Only the chosen session should expire"
 print(json.dumps({"expired":True}))
