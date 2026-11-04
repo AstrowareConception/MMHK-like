@@ -121,6 +121,7 @@ export type RegionView = {
   mine_types_unlocated: string[];
   mine_positions_known: boolean;
   mine_positions: {resource:string;i:number;j:number}[];
+  natural_deposits: {slot:number;resource:string;i:number;j:number}[];
   regional_resources: string[] | null;
   regional_resources_policy: string | null;
   layout_policy: string;
