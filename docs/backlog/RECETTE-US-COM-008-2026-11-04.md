@@ -57,3 +57,21 @@ persistée des rencontres et de l'exploitation économique réelle.
 Ne déclarer une US terminée qu'après vérification de ses cinq CA
 sur fixture versionnée, tests PostgreSQL, recette navigateur et
 acceptation explicitement consignée.
+
+## Extension US-COM-004 — contre-armes qualifiées (4 novembre 2026)
+
+Le laboratoire enchaînant les pelotons recalcule à présent à chaque échange
+le bonus du triangle I/R/C, selon les classifications réellement
+renseignées par l'opérateur. Les nouveaux événements portent
+`counter_weapons` (classes, bonus directionnels, provenance) et
+`total_power` (puissances du duel après bonus).
+
+Un peloton gagnant peut rencontrer ensuite un type d'unité contre
+lequel il est désavantagé : l'avantage n'est donc pas figé au début
+de la bataille. Les unités sans classification restent explicitement
+inconnues, et ne reçoivent pas de bonus inféré.
+
+Cela ajoute une preuve technique candidate pour les CA01–CA03 de
+US-COM-008 et pour US-COM-004. Les autres phases historiques de combat,
+la persistance et la DoD sont toujours hors périmètre.
+Voir [recette US-COM-004](RECETTE-US-COM-004-2026-11-04.md).
