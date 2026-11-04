@@ -64,7 +64,7 @@ export function RegionDiscoveryBoard({region}:{
             <title>{"Case "+i+", "+j}</title>
             <polygon points={regionPolygon(i,j)}
               fill={active?"#b89661":d?"#567569":center&&city?"#77684f":"#547166"}
-              fillOpacity={active?.55:.28}
+              fillOpacity={active ? 0.55 : 0.28}
               stroke={active?"#f8e4ad":"#b5b99b"} strokeOpacity={active?1:.48}
               strokeWidth={active?3:1}/>
             {d&&<g pointerEvents="none">
