@@ -264,3 +264,36 @@ bonus fixe par unité.
 
 Le suivi CSV et la fiche source COM-005 sont synchronisés.
 Voir `RECETTE-US-COM-005-2026-11-04.md` pour les limitations et la recette.
+
+## Complément — talent conditionnel source-qualifié US-COM-005 (4 novembre)
+
+Nouvelle tranche sans nouvelle US acceptée ni changement du total des
+candidats : **78/300 code candidat**, 222 encore non vérifiées,
+**0/300 acceptée dans le registre**.
+
+Le laboratoire Jactari reçoit désormais un talent expérimental
+conditionné par un **avantage de contre-arme effectif**. Sa valeur
+est une hypothèse de test saisie par opérateur, avec provenance ;
+aucun nom ou coefficient historique n'est inféré.
+
+- Module `conditional_hero_talents.py` : active le bonus lorsque
+  I>C, R>I ou C>R et le neutralise autrement (E, inconnu,
+  armes égales, désavantage).
+- Migration V098 et `conditional_talent_qualification.py` :
+  profil optionnel par héros, autorisé seulement si un profil
+  de base V097 est disponible, avec source obligatoire.
+- CLI `qualify-counter-talent` : qualification opérateur.
+- `pve_stack_sequence.py` : réévaluation de la condition à
+  **chaque échange**, bonus additif distinct du contre-armement
+  et des caractéristiques de base du héros.
+- `region_pve.py` et `region-encounter-panel.tsx` : lecture
+  du profil et visibilité de son activation et de sa provenance.
+- Tests nouveaux `test_conditional_hero_talents.py`,
+  `test_conditional_talent_qualification.py`, compléments
+  `test_pve_stack_preview.py`.
+
+US-COM-005-CA02 dispose désormais de **preuves candidates écrites**
+pour l'inactivation hors condition, mais ni CA01–05 ni la DoD
+ne sont considérés acceptés. Les autres talents, tirs préalables,
+magie, pertes durables, XP et libération régionale restent
+des dépendances ouvertes de la tranche L1.
