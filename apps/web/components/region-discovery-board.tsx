@@ -106,6 +106,12 @@ export function RegionDiscoveryBoard({region}:{
       {region.special_site&&<p>Site : {region.special_site.label}</p>}
       {city?.ownership==="own"&&<Link className="scene-action"
         href={"/cities/"+city.city_id+"/region"}>Ouvrir la région de votre cité</Link>}
+      {region.colonization_site_qualified&&<Link className="scene-action"
+        href={"/worlds/"+encodeURIComponent(region.world_id)+"/colonize?"+
+          new URLSearchParams({x:String(region.x),y:String(region.y)}).toString()+
+          "#colony-form"}>
+        Examiner une fondation sur cette région
+      </Link>}
       <p className="map-qualification">Les emplacements non renseignés ne sont pas nécessairement libres.
         Cette carte n'indique aucun terrain, adversaire ou chemin qui n'ait été révélé par le serveur.</p>
       <Link className="scene-action" href={"/worlds/"+encodeURIComponent(region.world_id)}>
