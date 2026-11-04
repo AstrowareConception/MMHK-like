@@ -9,13 +9,14 @@ from __future__ import annotations
 
 import json
 import os
+from compose_qa import compose_cli
 import re
 import subprocess
 from pathlib import Path
 from playwright.sync_api import sync_playwright,expect
 
 ROOT=os.environ["MMHK_E2E_URL"].rstrip("/")
-COMPOSE=["docker","compose","--env-file",".env.local","-f","compose.local.yaml"]
+COMPOSE=compose_cli()
 OUT=Path("test-output/visuals")
 OUT.mkdir(parents=True,exist_ok=True)
 

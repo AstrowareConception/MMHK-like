@@ -53,21 +53,26 @@ export async function signIn(data: FormData) {
 export async function signOut() {
   const jar = await cookies();
   const token = jar.get("mmhk_session")?.value;
+  let revoked = !token;
   if (token) {
     try {
-      await fetch(apiUrl("/api/v1/sessions/current"), {
+      const response = await fetch(apiUrl("/api/v1/sessions/current"), {
         method: "DELETE",
         headers: { Authorization: `Bearer ${token}` },
         cache: "no-store",
         signal: AbortSignal.timeout(4000),
       });
+      // 204: server revoked the session. 401: already expired or invalid.
+      // 429, 503, 5xx, timeout or any unexpected status cannot prove it.
+      revoked = response.status === 204 || response.status === 401;
     } catch {
-      // Local cookie deletion is still essential if the API is unavailable.
-      // Server session expires naturally; surface monitoring is future work.
+      revoked = false;
     }
   }
+  // Never retain a browser-login cookie after voluntary logout; distinguish
+  // local-only signout from revocation CONFIRMED by FastAPI.
   jar.delete("mmhk_session");
-  redirect("/");
+  redirect(revoked ? "/?logout=confirmed" : "/?logout=local");
 }
 
 /**

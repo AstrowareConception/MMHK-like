@@ -9,6 +9,7 @@ restores API health and retries without ever entering credentials again.
 from __future__ import annotations
 
 import os
+from compose_qa import compose_cli
 import re
 import subprocess
 import time
@@ -18,8 +19,7 @@ from playwright.sync_api import expect, sync_playwright
 BASE = os.environ["MMHK_E2E_URL"].rstrip("/")
 ART = Path("test-output/visuals")
 ART.mkdir(parents=True, exist_ok=True)
-COMPOSE = ["docker","compose","--env-file",".env.local",
-           "-f","compose.local.yaml"]
+COMPOSE = compose_cli()
 
 def docker(*args):
     result = subprocess.run([*COMPOSE, *args], check=False,

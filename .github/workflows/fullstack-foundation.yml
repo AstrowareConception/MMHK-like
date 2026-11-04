@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - main
+      # Temporary local QA and logout-visibility candidate; remove before merge.
+      - feat/local-qa-offline-logout-70
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
@@ -220,6 +222,19 @@ jobs:
           python3 tools/e2e/dialog_busy_browser.py
           python3 tools/e2e/login_access_browser.py
           python3 -u tools/e2e/cross_browser_access_browser.py
+      - name: Verify truthful logout when FastAPI is unavailable
+        run: |
+          export MMHK_E2E_URL="http://127.0.0.1:3000"
+          export MMHK_E2E_USERNAME="demo_ci"
+          export MMHK_E2E_PASSWORD="$(cat .ci-e2e-password)"
+          python3 -u tools/e2e/logout_offline_browser.py
+      - name: Restore FastAPI after offline logout test even on failure
+        if: always()
+        run: |
+          if [ -f .env.local ]; then
+            docker compose --env-file .env.local -f compose.local.yaml \
+              up -d --wait --no-build --no-deps api
+          fi
       - name: Verify two real sessions, targeted expiry, logout and blocked writes
         run: |
           export MMHK_E2E_URL="http://127.0.0.1:3000"
