@@ -666,6 +666,22 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 - [ ] Les décisions de la Conversation et les preuves de fidélité sont reliées à cette fiche ; les variantes volontaires sont signalées.
 - [ ] La revue et l’acceptation fonctionnelle sont enregistrées ; aucune case ci-dessus n’est considérée cochée par la rédaction du backlog.
 
+### Suivi d'implémentation (4 novembre 2026 — candidat partiel)
+
+- **US-COM-008 :** le module `pve_stack_sequence.py` enchaîne
+  jusqu'à sept pelotons ordinaires ; une dispersion ne réintroduit pas
+  d'effectifs et le survivant continue avec ses unités restantes.
+- **Complément lié à US-COM-004 :** lorsque la classe I/R/C/E est
+  renseignée depuis le catalogue qualifié, le bonus de contre-arme
+  est recalculé à chaque échange, et non fixé une fois pour toute
+  la bataille. Les classes inconnues ne reçoivent aucun bonus présumé.
+- **Recette toujours en attente :** les tirs préalables, les bonus,
+  les sorts, les pertes persistantes et les tests transactionnels
+  empêchent encore de valider CA01–CA05 et la DoD.
+- **Justificatifs :** [recette US-COM-008](../RECETTE-US-COM-008-2026-11-04.md)
+  et [recette US-COM-004](../RECETTE-US-COM-004-2026-11-04.md).
+
+
 ---
 
 <a id="us-com-009"></a>
