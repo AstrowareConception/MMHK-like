@@ -168,3 +168,51 @@ Tests ciblés : `pytest -q apps/api/tests/test_world_region_deposits.py`.
 Les tests PostgreSQL et l'E2E navigateur doivent être exécutés dans
 l'environnement Docker du projet : l'ajout des fichiers ne constitue
 pas une validation d'exécution.
+
+## Audit d'intégrité et fondations : tranche V094 (outil de diagnostic)
+
+Une commande d'administration **en lecture seule** est disponible pour
+rechercher les incohérences entre compositions, gisements et mines :
+
+```bash
+python -m mmhk_api.manage audit-world-regions \
+  --world-id local-sandbox --limit 400
+```
+
+Le rapport JSON donne `inspected`, `truncated`, `affected_regions` et
+`findings` avec les coordonnées et catégories d'anomalies. La commande
+n'exécute aucune génération ni réparation.
+
+Les anomalies recherchées couvrent notamment :
+- une cité sans composition régionale ;
+- un registre de gisements incomplet (moins de quatre emplacements) ;
+- une discordance entre les quatre ressources et les quatre gisements ;
+- des positions invalides ou partagées ;
+- une mine sans position ou dont la ressource ne figure pas dans la région ;
+- une mine éloignée du gisement correspondant.
+
+Les anciennes mines ne sont **jamais déplacées automatiquement** par
+cet audit. La résolution des anomalies nécessite une décision explicite
+de l'opérateur et une sauvegarde préalable.
+
+Lors de la fondation, le worker appelle désormais le provisionnement
+des gisements dans la transaction de création de la cité. Si les données
+régionales existantes sont corrompues, l'ordre passe à l'état bloqué
+`invalid_regional_deposit_layout`, sans cité partiellement créée.
+L'expédition reste éligible au mécanisme de restitution existant.
+
+### Tests à réaliser avant validation fonctionnelle
+
+```bash
+python -m mmhk_api.manage migrate
+pytest -q apps/api/tests/test_region_integrity.py
+pytest -q apps/api/tests/test_world_region_deposits.py
+pytest -q apps/api/tests/test_region_resource_consistency.py
+```
+
+Vérifier aussi sur PostgreSQL réel : migrations successives, ville
+ancienne à quatre mines, région avec doublon de ressource, colonie à
+trois mines, redémarrage du worker et nouvel audit sans anomalie.
+
+La présence des tests dans le dépôt ne prouve pas leur exécution :
+l'intégration Docker et le parcours Playwright restent à vérifier.
