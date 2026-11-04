@@ -4763,3 +4763,22 @@ body:has(.mmhk-entry-panel) .masthead h1{
 .mmhk-inspector-actions button:disabled{cursor:not-allowed;background:#b4a591;color:#655847;opacity:.85}
 @media(max-width:900px){.mmhk-inspector-facts,.mmhk-inspector-actions{grid-template-columns:1fr 1fr}}
 @media(max-width:460px){.mmhk-inspector-facts,.mmhk-inspector-actions{grid-template-columns:1fr}}
+
+/* Strategic atlas: original vector cartography and contextual inspector. */
+.world-atlas-wrap{width:100%;min-width:0}
+.world-map-workbench{align-items:stretch}
+.world-atlas-interactive{background:#152e36;outline-offset:3px;box-shadow:inset 0 0 0 2px #92774a,0 18px 32px #0006}
+.world-map-mine,.world-discovered-city,.world-map-site{cursor:pointer}
+.world-map-mine:focus-visible,.world-discovered-city:focus-visible,.world-map-site:focus-visible{outline:2px solid #f6d58d;outline-offset:3px}
+.mmhk-map-render-modes{display:flex;align-items:center;gap:4px;flex-wrap:wrap;border:1px solid #91764d;padding:4px;background:#172832}
+.mmhk-map-render-modes button{border:1px solid #6e7062;padding:7px 11px;background:#293c43;color:#d2c3a3;border-radius:2px;font:700 12px/1.3 Arial,sans-serif}
+.mmhk-map-render-modes button[aria-pressed="true"]{background:#cfb17b;color:#29261f;border-color:#f0d29a}
+.mmhk-map-render-modes button:disabled{opacity:.45;cursor:not-allowed}
+.world-map-sidebar{min-width:0}
+.world-map-sidebar .mmhk-region-inspector{margin-top:12px}
+@media(max-width:680px){
+  .mmhk-map-render-modes{width:100%}
+  .mmhk-map-render-modes button{flex:1}
+  .mmhk-region-inspector{padding:12px}
+  .mmhk-inspector-header strong{font-size:22px}
+}
