@@ -52,10 +52,22 @@ def venv_python():
     path=WORK/"venv"
     python=path/("Scripts/python.exe" if os.name=="nt" else "bin/python")
     if not python.is_file():
-        print("Installation locale isolee de Playwright...",flush=True)
         venv.EnvBuilder(with_pip=True).create(path)
-        p=subprocess.run([str(python),"-m","pip","install","--disable-pip-version-check",
-                          "--quiet","playwright=="+PLAYWRIGHT_VERSION],check=False)
+    # A half-installed virtualenv can already contain python.exe but no
+    # Playwright. Always verify the pinned module, repairing it when needed.
+    probe=subprocess.run(
+        [str(python),"-c",
+         "import importlib.metadata as m; assert m.version('playwright')=='"+
+         PLAYWRIGHT_VERSION+"'"],
+        cwd=ROOT,capture_output=True,check=False
+    )
+    if probe.returncode:
+        print("Installation locale isolee de Playwright...",flush=True)
+        p=subprocess.run(
+            [str(python),"-m","pip","install","--disable-pip-version-check",
+             "--quiet","playwright=="+PLAYWRIGHT_VERSION],
+            cwd=ROOT,check=False
+        )
         if p.returncode:
             raise RuntimeError("Installation Playwright impossible dans .qa-local/venv")
     return python
