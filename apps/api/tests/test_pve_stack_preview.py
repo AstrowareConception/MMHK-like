@@ -8,7 +8,7 @@ from mmhk_api.region_pve import preview_ordinary_line_sequence
 
 
 class FakeDB:
-    def __init__(self, *, own=True, hero="idle", formation=None, profile=None):
+    def __init__(self, *, own=True, hero="idle", formation=None, profile=None, talent=None):
         self.city=uuid4()
         self.hero=uuid4()
         self.encounter=uuid4()
@@ -16,6 +16,7 @@ class FakeDB:
         self.own=own
         self.hero_state=hero
         self.profile=profile
+        self.talent=talent
         self.formation=formation if formation is not None else [
             ("militia",12,20,"I"),("archers",5,12,"R")
         ]
@@ -36,6 +37,8 @@ class FakeDB:
             self.rows=self.formation
         elif "FROM hero_basic_combat_profiles" in normalized:
             self.rows=[self.profile] if self.profile is not None else []
+        elif "FROM hero_conditional_counter_talents" in normalized:
+            self.rows=[self.talent] if self.talent is not None else []
         elif "SELECT count(*) FROM hero_formation_slots" in normalized:
             self.rows=[(len(self.formation),)]
         else:
@@ -105,4 +108,26 @@ def test_explicit_hero_profile_applies_percentage_and_flat_bonus():
     assert event["total_power"]["attacker"]==10800.0
     assert event["hero_attributes"]["source_ref"]=="LAB-HERO-10"
     assert event["hero_attributes"]["conditional_talents_applied"] is False
+    assert all(q.startswith("SELECT") for q,_ in db.queries)
+
+
+def test_source_qualified_conditional_talent_applies_only_when_counter_active():
+    from decimal import Decimal
+    db=FakeDB(formation=[("militia",100,100,"I")],
+              profile=(0,0,Decimal("0"),Decimal("0"),"LAB-HERO"),
+              talent=(Decimal("0.15"),"LAB-TALENT"))
+    result=preview(db)
+    assert result["attacker_conditional_talent_configured"] is True
+    event=result["sequence"]["events"][0]
+    assert event["conditional_talent"]["active"] is True
+    assert event["counter_weapons"]["attacker_bonus"]=="0.50"
+    assert event["total_power"]["attacker"]==16500.0
+    assert all(q.startswith("SELECT") for q,_ in db.queries)
+
+
+def test_conditional_talent_without_basic_hero_profile_fails_closed():
+    from decimal import Decimal
+    db=FakeDB(talent=(Decimal("0.15"),"LAB-TALENT"))
+    with pytest.raises(RecruitmentConflict,match="requires qualified"):
+        preview(db)
     assert all(q.startswith("SELECT") for q,_ in db.queries)
