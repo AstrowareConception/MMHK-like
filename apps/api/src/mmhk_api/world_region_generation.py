@@ -12,6 +12,7 @@ from uuid import UUID
 import psycopg
 
 from .worlds import RESOURCE_NAMES
+from .world_region_deposits import provision_deposits
 
 POLICY = "regional-composition-v1"
 RARE = ("crystal", "gems", "sulfur", "mercury")
@@ -114,6 +115,7 @@ def provision_region(
            WHERE world_id=%s AND x=%s AND y=%s""",
         (world_id, x, y),
     ).fetchone()
+    deposits = provision_deposits(db,world_id=world_id,x=x,y=y)
     if reveal_to is not None:
         authorized = db.execute(
             """SELECT 1 FROM world_memberships
@@ -132,6 +134,7 @@ def provision_region(
     return {
         "world_id": world_id, "x": x, "y": y,
         "resources": list(result[0]),
+        "deposits": deposits,
         "generation_policy": result[1], "source_ref": result[2],
         "historically_certified": False,
     }
