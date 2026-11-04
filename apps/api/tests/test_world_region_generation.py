@@ -73,8 +73,10 @@ class QualifiedRegionDB:
         return self.current
 
 
-def test_qualified_three_mine_site_keeps_its_resources():
+def test_qualified_three_mine_site_keeps_its_resources(monkeypatch):
     from mmhk_api.world_region_generation import provision_region
+    monkeypatch.setattr("mmhk_api.world_region_generation.provision_deposits",
+                        lambda *args, **kwargs: [])
     db=QualifiedRegionDB([(["gold","wood","sulfur"],"operator-proof")])
     result=provision_region(db,world_id="sandbox",x=8,y=10)
     assert set(["gold","wood","sulfur"]).issubset(result["resources"])
