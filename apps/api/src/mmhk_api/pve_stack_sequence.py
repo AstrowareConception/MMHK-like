@@ -13,6 +13,7 @@ from math import isfinite
 from jactari.duel import resolve_stack_duel
 from .counter_weapons import counter_weapon_bonuses
 from .hero_combat_modifiers import hero_combat_modifiers
+from .conditional_hero_talents import conditional_attack_talent
 
 MAX_STACKS = 7
 MAX_EXCHANGES = 98
@@ -45,7 +46,8 @@ def _validate_army(stacks: list[dict[str, Any]], label: str) -> list[dict]:
 
 
 def resolve_ordinary_lines(attacker: list[dict], defender: list[dict],
-                           *, attacker_hero: dict | None = None) -> dict:
+                           *, attacker_hero: dict | None = None,
+                           attacker_talent: dict | None = None) -> dict:
     """Pure, deterministic, unmodified stack sequence.
 
     Only neutral, single-pair arithmetic is qualified here. The loser of an
@@ -56,6 +58,8 @@ def resolve_ordinary_lines(attacker: list[dict], defender: list[dict],
     # This PvE laboratory supports only an explicitly qualified ATTACKER
     # hero; the neutral defender has no hero and gains no fictional stats.
     hero = hero_combat_modifiers(**attacker_hero) if attacker_hero is not None else None
+    if attacker_talent is not None and hero is None:
+        raise ValueError("Conditional hero talent requires qualified hero attributes")
     a = _validate_army(attacker, "attacker")
     d = _validate_army(defender, "defender")
     events: list[dict] = []
@@ -67,12 +71,18 @@ def resolve_ordinary_lines(attacker: list[dict], defender: list[dict],
         left, right = a[a_index], d[d_index]
         before_a, before_d = left["remaining"], right["remaining"]
         counter = counter_weapon_bonuses(left["weapon_code"],right["weapon_code"])
+        talent = conditional_attack_talent(
+            attacker_weapon=left["weapon_code"],
+            defender_weapon=right["weapon_code"],
+            **attacker_talent,
+        ) if attacker_talent is not None else None
         result = resolve_stack_duel({
             "attacker": {"count": before_a, "unitPower": left["unit_power"]},
             "defender": {"count": before_d, "unitPower": right["unit_power"]},
             "modifiers": {
                 "attackWeapon": float(counter["attacker_bonus"]),
                 "attackStackHero": float(hero["attackStackHero"]) if hero else 0,
+                "attackSpecial": float(talent["additional_attack_fraction"]) if talent else 0,
                 "attackUnitsHero": float(hero["attackUnitsHero"]) if hero else 0,
                 "defendWeapon": float(counter["defender_bonus"]),
             },
@@ -105,6 +115,7 @@ def resolve_ordinary_lines(attacker: list[dict], defender: list[dict],
             "jactari_draw": result["draw"],
             "counter_weapons": counter,
             "hero_attributes": hero,
+            "conditional_talent": talent,
             "total_power": result["totalPower"],
             "attacker_survives_to_next_exchange": not lost_a,
             "defender_survives_to_next_exchange": not lost_d,
@@ -134,12 +145,13 @@ def resolve_ordinary_lines(attacker: list[dict], defender: list[dict],
         "historically_certified": False,
         "counter_weapon_policy": "jactari-counter-weapons-v1",
         "attacker_hero_profile_applied": hero is not None,
+        "attacker_conditional_talent_configured": attacker_talent is not None,
         "attacker_hero_profile": hero,
         "weapon_classification_complete": all(
             t["weapon_code"] is not None for t in [*a,*d]
         ),
         "excluded_mechanics": [
-            "pre_shots", "hero_conditional_talents", "magic",
+            "pre_shots", "other_hero_talents", "magic",
             "summons", "resurrections", "admission", "npc_casualty_policy",
         ],
     }
