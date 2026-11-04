@@ -242,3 +242,26 @@ qu'un ordre militaire est déjà disponible.
 4. Vérifier les quatre gisements et leurs coordonnées régionales.
 5. Vérifier qu'une cité étrangère non découverte et ses mines restent cachées.
 6. Vérifier les retours à l'atlas et à la région complète de sa propre cité.
+
+## Correctif V094 : conformité aux décisions P0 de génération
+
+L'audit du 4 novembre 2026 a identifié que le profil
+`regional-composition-v1` rendait l'or et le bois obligatoires
+dans toutes les régions ordinaires, contrairement aux décisions
+Q11–Q15. Le nouveau `regional-composition-v2` applique :
+- cité initiale Havre : or + bois + minerai + cristal, inchangée ;
+- autres régions : trois ou quatre types parmi sept, sans type obligatoire ;
+- au plus une seule paire, sans triple ni seconde paire ;
+- probabilités symétriques pour cristal, gemmes, soufre et mercure ;
+- occurrence d'une paire à 12,5 % comme hypothèse expérimentale à ajuster.
+
+La migration 094 autorise ce nouvel identifiant de politique.
+**Aucune composition V1 déjà persistée n'est modifiée automatiquement**,
+car cela déplacerait ou invaliderait des choix coloniaux et gisements.
+Les mondes existants doivent faire l'objet d'une revue opérateur
+avant toute régénération volontaire et contrôlée.
+
+Voir `docs/backlog/ETAT-AVANCEMENT-2026-11-04.md` pour les exigences
+et les US concernées. Les paragraphes antérieurs décrivant des régions
+ordinaires avec or/bois fixes sont de l'historique du profil V1,
+pas les règles désormais applicables à V2.
