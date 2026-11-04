@@ -198,6 +198,14 @@ export function RegionSceneInteractive({region,background,forces,missions,initia
               Aucune position inconnue n'est révélée par cet écran.</p></div>
         </div>
         <div className="region-legend">
+      <div><strong>Quatre ressources de la région</strong>
+        <p data-testid="owned-region-four-resources">
+          {region.regional_resources?.map(r=>MINE_LABELS[r]??r).join(" · ")
+            ??"Registre régional non encore provisionné"}
+        </p>
+        <small>Ressources territoriales, distinctes des mines construites.
+          La présence d'un gisement ne donne pas automatiquement une exploitation.</small>
+      </div>
       <div><strong>Mines rattachées à cette cité</strong>
         <p>{region.mine_types_unlocated.map(k=>MINE_LABELS[k]??k).join(" · ")||"Aucune mine enregistrée"}</p>
         <small>{region.mine_positions_known
