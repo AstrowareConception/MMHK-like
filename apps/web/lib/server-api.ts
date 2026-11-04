@@ -187,6 +187,7 @@ export type LineSequencePreview={
   preview_only:true;
   hero_id:string;hero_name:string;encounter_id:string;encounter_name:string;
   historically_certified:false;note:string;
+  weapon_classification_complete:boolean;
   sequence:{
     scope:string;policy_id:string;verdict:"attacker"|"defender"|"draw";
     events:{
@@ -196,9 +197,17 @@ export type LineSequencePreview={
       remaining:{attacker:number;defender:number};
       dispersed:{attacker:boolean;defender:boolean};
       jactari_false_draw:number;jactari_draw:boolean;
+      total_power:{attacker:number;defender:number};
+      counter_weapons:{
+        attacker_weapon:"I"|"R"|"C"|"E"|null;
+        defender_weapon:"I"|"R"|"C"|"E"|null;
+        attacker_bonus:string;defender_bonus:string;
+        qualified:boolean;policy_id:string;historically_certified_s2:false;
+      };
       attacker_survives_to_next_exchange:boolean;
       defender_survives_to_next_exchange:boolean;
     }[];
+    counter_weapon_policy:string;weapon_classification_complete:boolean;
     permanent_losses_applied:false;experience_awarded:false;loot_awarded:false;
     region_liberated:false;historically_certified:false;
     excluded_mechanics:string[];
