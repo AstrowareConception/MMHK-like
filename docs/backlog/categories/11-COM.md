@@ -335,6 +335,25 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 - [ ] Les décisions de la Conversation et les preuves de fidélité sont reliées à cette fiche ; les variantes volontaires sont signalées.
 - [ ] La revue et l’acceptation fonctionnelle sont enregistrées ; aucune case ci-dessus n’est considérée cochée par la rédaction du backlog.
 
+### Suivi d'implémentation (4 novembre 2026 — non accepté)
+
+- **État technique :** sous-ensemble de la story implémenté dans le
+  laboratoire Jactari multi-pelotons ; le triangle I/R/C donne un bonus
+  directionnel de 50 %, le type E n'a pas de relation inventée.
+- **Fichiers :** `apps/api/src/mmhk_api/counter_weapons.py`,
+  `apps/api/src/mmhk_api/pve_stack_sequence.py`,
+  `apps/api/src/mmhk_api/weapon_qualification.py` et migrations V095–V096.
+- **Tests écrits :** `test_counter_weapons.py` et
+  `test_weapon_qualification.py`. Les cinq critères ne sont pas encore
+  acceptés ni confirmés par une recette d'intégration.
+- **Écart connu :** classifications d'unités non automatiquement renseignées,
+  talents spécialisés et conformité numérique S2 non certifiés ;
+  aucun ordre ou perte réelle n'est appliqué.
+- **Recette :** [dossier de preuves et blocages](../RECETTE-US-COM-004-2026-11-04.md).
+  La présente story reste **à affiner / non acceptée** ; les cases de DoD
+  ci-dessus ne sont pas cochées.
+
+
 ---
 
 <a id="us-com-005"></a>
