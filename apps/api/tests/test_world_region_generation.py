@@ -14,7 +14,25 @@ def test_four_resources_are_stable_and_valid():
         assert len(slots)==4
         assert set(slots)<=possibilities
         assert slots==composition_for("sandbox",x,7)
-        assert "gold" in slots and "wood" in slots
+        assert len(set(slots)) in (3,4)
+        assert max(Counter(slots).values())<=2
+        assert sum(v==2 for v in Counter(slots).values())<=1
+
+
+def test_no_resource_is_mandatory_in_ordinary_regions():
+    samples=[composition_for("sandbox",x,y)
+             for x in range(1,50) for y in range(1,15)]
+    for kind in ("gold","wood","ore","crystal","gems","sulfur","mercury"):
+        assert any(kind not in slots for slots in samples)
+        assert any(kind in slots for slots in samples)
+
+
+def test_all_four_rare_resources_are_symmetrical_over_sample():
+    samples=[composition_for("sandbox",x,y)
+             for x in range(1,70) for y in range(1,20)]
+    counts=Counter(r for slots in samples for r in slots)
+    rare=[counts[k] for k in ("crystal","gems","sulfur","mercury")]
+    assert max(rare)-min(rare)<len(samples)*0.15
 
 
 def test_regions_can_have_duplicate_rare_slots():
