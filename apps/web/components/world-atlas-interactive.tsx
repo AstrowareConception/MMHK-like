@@ -16,6 +16,7 @@ type RegionInspection = {
   colonization_site_qualified:boolean;
   regional_resources:string[]|null;regional_resources_known:boolean;
   regional_resources_policy:string|null;
+  natural_deposits:{slot:number;resource:string;i:number;j:number}[];
   terrain:string|null;terrain_known:boolean;
 };
 const MINE_LABELS:Record<string,string>={
@@ -454,6 +455,20 @@ export function WorldAtlasInteractive({world,cities,qualifiedSites=[],cityMines=
           </strong></div>
           <div><span>Lieu remarquable</span><strong>{inspection?.special_site?.label??selectedSite?.label??"Aucun site connu"}</strong></div>
         </div>
+        {inspection?.natural_deposits?.length>0&&<div className="mmhk-inspector-deposit-preview">
+          <strong>Emplacements des gisements</strong>
+          <div className="mmhk-inspector-deposit-grid" aria-label="Plan régional des quatre gisements, 5 par 5">
+            {Array.from({length:25},(_,n)=>{
+              const i=n%5,j=Math.floor(n/5);
+              const deposit=inspection.natural_deposits.find(d=>d.i===i&&d.j===j);
+              return <span key={i+":"+j} className={deposit?"has-deposit":i===2&&j===2?"is-city":""}
+                title={deposit?(MINE_LABELS[deposit.resource]??deposit.resource)+" · ("+i+","+j+")":i===2&&j===2?"Emplacement de la cité":"Terrain non cartographié"}>
+                {deposit?"◆":i===2&&j===2?"⌂":"·"}
+              </span>;
+            })}
+          </div>
+          <small>Schéma régional · un gisement ne signifie pas une mine active.</small>
+        </div>}
         {inspection?.terrain_known&&<p>Terrain connu : {inspection.terrain??"Non précisé"}</p>}
         {cityOnSelection&&<p>Votre cité de {cityOnSelection.name} occupe cette région.</p>}
         {selectedForeign&&<p>La cité {selectedForeign.name} a été découverte. Les données militaires privées restent masquées.</p>}
