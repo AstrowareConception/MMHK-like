@@ -14,6 +14,8 @@ type RegionInspection = {
   city_known:boolean;mines:string[];mines_known:boolean;
   special_site:{kind:string;label:string}|null;
   colonization_site_qualified:boolean;
+  regional_resources:string[]|null;regional_resources_known:boolean;
+  regional_resources_policy:string|null;
   terrain:string|null;terrain_known:boolean;
 };
 const MINE_LABELS:Record<string,string>={
@@ -445,13 +447,21 @@ export function WorldAtlasInteractive({world,cities,qualifiedSites=[],cityMines=
             :selectedQualified?.mine_types.length
               ?selectedQualified.mine_types.map(m=>MINE_LABELS[m]??m).join(" · ")
               :"Non renseignées"}</strong></div>
+          <div><span>Quatre ressources régionales</span><strong data-testid="region-four-resources">
+            {inspection?.regional_resources_known&&inspection.regional_resources
+              ?inspection.regional_resources.map(resource=>MINE_LABELS[resource]??resource).join(" · ")
+              :"Non découvertes"}
+          </strong></div>
           <div><span>Lieu remarquable</span><strong>{inspection?.special_site?.label??selectedSite?.label??"Aucun site connu"}</strong></div>
         </div>
         {inspection?.terrain_known&&<p>Terrain connu : {inspection.terrain??"Non précisé"}</p>}
         {cityOnSelection&&<p>Votre cité de {cityOnSelection.name} occupe cette région.</p>}
         {selectedForeign&&<p>La cité {selectedForeign.name} a été découverte. Les données militaires privées restent masquées.</p>}
         {!cityOnSelection&&!selectedForeign&&!selectedQualified&&
-          <p>Le terrain et les quatre ressources de cette région ne sont pas encore connus du serveur. Aucune mine n'est inventée.</p>}
+          <p>{inspection?.regional_resources_known
+            ?"La composition régionale est connue, mais le terrain et les exploitations ne sont pas forcément reconnus."
+            :"Les ressources et le terrain de cette région ne sont pas encore découverts."}
+          </p>}
         <div className="mmhk-inspector-actions">
           {cityOnSelection&&<Link href={"/cities/"+cityOnSelection.city_id+"/region"}>Explorer la région</Link>}
           {cityOnSelection&&<Link href={"/cities/"+cityOnSelection.city_id}>Entrer dans la cité</Link>}
