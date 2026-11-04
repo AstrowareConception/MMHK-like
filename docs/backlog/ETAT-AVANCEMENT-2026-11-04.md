@@ -9,11 +9,11 @@
 
 Le rapprochement couvre **300/300 fiches** : `data/backlog/implementation-review-2026-11-04.csv`.
 Il distingue :
-- **76 fiches avec un chemin de code candidat à examiner** : présence d'un
+- **77 fiches avec un chemin de code candidat à examiner** : présence d'un
   composant ou d'un flux potentiellement pertinent ; il manque encore des
   vérifications de critères, et certaines fonctions ne couvrent qu'une
   partie de l'US.
-- **224 fiches non vérifiées individuellement** : il ne s'agit PAS d'une
+- **223 fiches non vérifiées individuellement** : il ne s'agit PAS d'une
   affirmation que leur code n'existe pas.
 - **0 fiche déclarée acceptée dans cet audit** : l'équipe produit n'a pas
   consigné cinq résultats CA et DoD pour chaque fiche ; le taux d'acceptation
@@ -214,3 +214,31 @@ inventée) ont des tests écrits. Les critères CA04–CA05, les règles
 complètes de combat et la DoD nécessitent encore une recette.
 **US-COM-008 est un candidat partiel, pas une story achevée.**
 Voir `docs/backlog/RECETTE-US-COM-008-2026-11-04.md`.
+
+## Complément — US-COM-004 : contre-armes I/R/C (4 novembre 2026)
+
+**US-COM-004 — Appliquer les contre-armes** devient un
+`code_candidat_a_recetter`, **non acceptée**.
+
+- Triangle retrouvé dans CODE-01-COMBAT : **I > C, R > I, C > R**,
+  avec +50 % exclusivement pour le camp avantagé ; la classe **E**
+  n'entre pas dans le triangle.
+- Nouvelle règle pure `counter_weapons.py` ; calcul appliqué
+  à chaque échange du laboratoire `pve_stack_sequence.py`.
+  Les valeurs restent **NULL** pour les types d'armes non qualifiés,
+  afin de ne pas inventer des contre-armes à partir de noms d'unités.
+- Migrations `095_counter_weapon_classification.sql` et
+  `096_weapon_classification_provenance.sql` : classification et
+  référence obligatoire de provenance.
+- Commandes administrateur `qualify-unit-weapon` et
+  `qualify-encounter-weapon` ; aucune mutation joueur.
+- Tests unitaires écrits pour CA01, CA02, CA03
+  (100 infanterie p100 contre 100 cavalerie p100 → 15 000 / 10 000).
+  CA04 et CA05 exigent encore recette serveur et navigateur.
+- Fiche source mise à jour, ainsi que
+  `RECETTE-US-COM-004-2026-11-04.md` et le registre CSV.
+
+**Blocages :** types d'armes du catalogue à qualifier par source,
+talents, fidélité S2, résolution PvE/PvP persistante et DoD.
+Le volet US-COM-008 reste partiel mais réutilise désormais ces règles
+de contre-armes à chaque échange.
