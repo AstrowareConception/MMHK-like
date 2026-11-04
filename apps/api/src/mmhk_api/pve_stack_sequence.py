@@ -1,8 +1,8 @@
 """Bounded multi-stack sequencing laboratory for US-COM-008.
 
 This module intentionally reuses the verified single-stack Jactari port
-without pretending to reproduce spells, pre-shots, hero bonuses, counterarm
-and resurrection. It resolves an ordered encounter without persistent effects.
+without pretending to reproduce spells, pre-shots, hero bonuses
+and resurrection. Counter-weapons are applied only with known weapon codes. It resolves an ordered encounter without persistent effects.
 A stack dispersed once never returns to the active line.
 """
 from __future__ import annotations
@@ -11,6 +11,7 @@ from typing import Any
 from math import isfinite
 
 from jactari.duel import resolve_stack_duel
+from .counter_weapons import counter_weapon_bonuses
 
 MAX_STACKS = 7
 MAX_EXCHANGES = 98
@@ -21,9 +22,13 @@ def _validate_army(stacks: list[dict[str, Any]], label: str) -> list[dict]:
         raise ValueError(f"{label}: expected one to seven ordinary stacks")
     result = []
     for index, stack in enumerate(stacks):
-        if not isinstance(stack, dict) or set(stack) != {"unit_code", "count", "unit_power"}:
+        if (not isinstance(stack, dict) or
+            not {"unit_code", "count", "unit_power"}.issubset(stack)
+            or set(stack) - {"unit_code", "count", "unit_power", "weapon_code"}):
             raise ValueError(f"{label}: malformed stack")
         code, count, power = (stack["unit_code"], stack["count"], stack["unit_power"])
+        weapon = stack.get("weapon_code")
+        counter_weapon_bonuses(weapon, weapon)  # Validate without guessing a class.
         if (not isinstance(code, str) or not 1 <= len(code) <= 48
             or not code.replace("_", "").isalnum()
             or type(count) is not int or not 1 <= count <= 1_000_000
@@ -32,7 +37,8 @@ def _validate_army(stacks: list[dict[str, Any]], label: str) -> list[dict]:
             raise ValueError(f"{label}: invalid unit stack")
         result.append({
             "position": index + 1, "unit_code": code, "initial": count,
-            "remaining": count, "unit_power": float(power), "dispersed": False,
+            "remaining": count, "unit_power": float(power),
+            "weapon_code": weapon, "dispersed": False,
         })
     return result
 
@@ -55,10 +61,14 @@ def resolve_ordinary_lines(attacker: list[dict], defender: list[dict]) -> dict:
             raise RuntimeError("Unexpectedly long laboratory combat")
         left, right = a[a_index], d[d_index]
         before_a, before_d = left["remaining"], right["remaining"]
+        counter = counter_weapon_bonuses(left["weapon_code"],right["weapon_code"])
         result = resolve_stack_duel({
             "attacker": {"count": before_a, "unitPower": left["unit_power"]},
             "defender": {"count": before_d, "unitPower": right["unit_power"]},
-            "modifiers": {},
+            "modifiers": {
+                "attackWeapon": float(counter["attacker_bonus"]),
+                "defendWeapon": float(counter["defender_bonus"]),
+            },
         })
         ra = result["remaining"]["attacker"]
         rd = result["remaining"]["defender"]
@@ -86,6 +96,8 @@ def resolve_ordinary_lines(attacker: list[dict], defender: list[dict]) -> dict:
             "dispersed": {"attacker": lost_a, "defender": lost_d},
             "jactari_false_draw": result["falseDraw"],
             "jactari_draw": result["draw"],
+            "counter_weapons": counter,
+            "total_power": result["totalPower"],
             "attacker_survives_to_next_exchange": not lost_a,
             "defender_survives_to_next_exchange": not lost_d,
         })
@@ -112,8 +124,12 @@ def resolve_ordinary_lines(attacker: list[dict], defender: list[dict]) -> dict:
         "loot_awarded": False,
         "region_liberated": False,
         "historically_certified": False,
+        "counter_weapon_policy": "jactari-counter-weapons-v1",
+        "weapon_classification_complete": all(
+            t["weapon_code"] is not None for t in [*a,*d]
+        ),
         "excluded_mechanics": [
-            "pre_shots", "counter_weapons", "hero_modifiers", "magic",
+            "pre_shots", "hero_modifiers", "magic",
             "summons", "resurrections", "admission", "npc_casualty_policy",
         ],
     }
