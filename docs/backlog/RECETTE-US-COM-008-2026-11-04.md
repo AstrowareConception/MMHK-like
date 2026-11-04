@@ -75,3 +75,17 @@ Cela ajoute une preuve technique candidate pour les CA01–CA03 de
 US-COM-008 et pour US-COM-004. Les autres phases historiques de combat,
 la persistance et la DoD sont toujours hors périmètre.
 Voir [recette US-COM-004](RECETTE-US-COM-004-2026-11-04.md).
+
+## Extension US-COM-005 — caractéristiques de base du héros
+
+Le moteur expérimental peut également inclure des points d'attaque
+explicitement qualifiés et un bonus fixe par unité pour le héros
+attaquant. Ces termes sont ajoutés, séparément, aux autres
+modificateurs de l'échange. Leur provenance est consultable dans le
+rapport et aucun bonus n'est inféré de l'archétype du héros.
+
+**Limite :** ce n'est pas encore le moteur complet des bonus du
+héros : talents conditionnels, sorts, artefacts et spécificités S2
+restent exclus. L'US-COM-008 ne devient donc pas acceptée.
+
+Voir [recette US-COM-005](RECETTE-US-COM-005-2026-11-04.md).
