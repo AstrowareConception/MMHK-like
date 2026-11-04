@@ -1,5 +1,5 @@
 import {NextResponse} from "next/server";
-import {privateApi,sessionToken} from "../../../../../../lib/server-api";
+import {privateApi,sessionToken} from "../../../../../../../lib/server-api";
 
 export const dynamic="force-dynamic";
 
