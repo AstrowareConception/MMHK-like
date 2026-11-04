@@ -8,13 +8,14 @@ from mmhk_api.region_pve import preview_ordinary_line_sequence
 
 
 class FakeDB:
-    def __init__(self, *, own=True, hero="idle", formation=None):
+    def __init__(self, *, own=True, hero="idle", formation=None, profile=None):
         self.city=uuid4()
         self.hero=uuid4()
         self.encounter=uuid4()
         self.owner=uuid4()
         self.own=own
         self.hero_state=hero
+        self.profile=profile
         self.formation=formation if formation is not None else [
             ("militia",12,20,"I"),("archers",5,12,"R")
         ]
@@ -34,7 +35,7 @@ class FakeDB:
         elif "FROM hero_army_units a" in normalized:
             self.rows=self.formation
         elif "FROM hero_basic_combat_profiles" in normalized:
-            self.rows=[]
+            self.rows=[self.profile] if self.profile is not None else []
         elif "SELECT count(*) FROM hero_formation_slots" in normalized:
             self.rows=[(len(self.formation),)]
         else:
@@ -90,4 +91,18 @@ def test_unknown_weapon_remains_unqualified_without_name_based_guess():
     event=result["sequence"]["events"][0]
     assert event["counter_weapons"]["qualified"] is False
     assert event["counter_weapons"]["attacker_bonus"]=="0"
+    assert all(q.startswith("SELECT") for q,_ in db.queries)
+
+
+def test_explicit_hero_profile_applies_percentage_and_flat_bonus():
+    from decimal import Decimal
+    db=FakeDB(formation=[("militia",100,100,"E")],
+              profile=(10,0,Decimal("3"),Decimal("0"),"LAB-HERO-10"))
+    # Neutral defender has 3 creatures of power 10, no hero profile.
+    result=preview(db)
+    assert result["attacker_hero_profile_applied"] is True
+    event=result["sequence"]["events"][0]
+    assert event["total_power"]["attacker"]==10800.0
+    assert event["hero_attributes"]["source_ref"]=="LAB-HERO-10"
+    assert event["hero_attributes"]["conditional_talents_applied"] is False
     assert all(q.startswith("SELECT") for q,_ in db.queries)
