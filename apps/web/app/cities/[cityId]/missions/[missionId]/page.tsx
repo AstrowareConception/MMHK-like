@@ -121,6 +121,24 @@ export default async function MissionReportPage({params}:{
         {duel?<div className="mission-duel-results">
           <p><strong>Rapport enregistré au contact</strong> — simulation mono-peloton,
             sans pertes permanentes, récompense, XP ou libération de la case.</p>
+          {duel.interpretation&&<div className="mmhk-mission-verdict" role="status">
+            <span>Verdict du duel simulé</span>
+            <strong>{duel.interpretation.verdict==="attacker"?"Avantage de l'attaquant":
+              duel.interpretation.verdict==="defender"?"Avantage du défenseur":
+              duel.interpretation.verdict==="draw"?"Égalité":"Résultat non tranché"}</strong>
+          </div>}
+          {duel.interpretation&&<>
+            <div><span>Dispersion de l'attaquant / du défenseur</span>
+              <strong>{duel.interpretation.attacker.dispersed?"Oui":"Non"} /
+                {duel.interpretation.defender.dispersed?"Oui":"Non"}</strong></div>
+            <div><span>Pertes théoriques Jactari, non appliquées</span>
+              <strong>{duel.interpretation.attacker.overwhelming_victory?"Victoire écrasante (sentinelle −1)":
+                metric(duel.interpretation.attacker.simulated_losses)} /
+                {duel.interpretation.defender.overwhelming_victory?"Victoire écrasante (sentinelle −1)":
+                  metric(duel.interpretation.defender.simulated_losses)}</strong></div>
+            <div><span>Effets persistants sur le royaume</span>
+              <strong>Aucun · ni morts, ni XP, ni butin, ni libération</strong></div>
+          </>}
           <div><span>Puissance de l'attaquant</span>
             <strong>{metric(duel.outcome?.totalPower?.attacker)}</strong></div>
           <div><span>Puissance des défenseurs</span>
