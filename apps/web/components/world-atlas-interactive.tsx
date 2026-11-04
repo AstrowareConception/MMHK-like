@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent, type PointerEvent as ReactPointerEvent } from "react";
-import type { City, WorldOverview } from "../lib/server-api";
+import type { City, WorldOverview, ColonizationCatalog } from "../lib/server-api";
 import {
   MAP_VIEW, TILE_METRICS, polygonAt, screenToWorld, tileFromPoint, tileToPoint,
   worldDelta, worldWrap, type MapCoordinate, type MapScale
@@ -23,8 +23,8 @@ const CORNERS = [
   {id:"south-east",x:527,y:391,dx:1,dy:1,symbol:"↘",label:"Flèche de carte : sud-est"}
 ] as const;
 
-export function WorldAtlasInteractive({world,cities,detailBackground,politicalBackground}:{
-  world:WorldOverview; cities:City[]; detailBackground:string|null; politicalBackground:string|null;
+export function WorldAtlasInteractive({world,cities,qualifiedSites=[],detailBackground,politicalBackground}:{
+  world:WorldOverview; cities:City[]; qualifiedSites?:ColonizationCatalog["qualified_sites"]; detailBackground:string|null; politicalBackground:string|null;
 }) {
   const size=world.world_size;
   const first=cities[0];
@@ -105,6 +105,7 @@ export function WorldAtlasInteractive({world,cities,detailBackground,politicalBa
     return {cell,...pos};
   }).filter(p=>p.x>=8-hw&&p.x<=W-8+hw&&p.y>=8-hh&&p.y<=H-8+hh),
   [world.visible_influence,center,size,hw,hh]);
+  const selectedQualified=qualifiedSites.find(site=>site.x===selected?.x&&site.y===selected?.y);
   const selectedForeign=world.discovered_cities.find(city=>city.x===selected?.x&&city.y===selected?.y);
   const selectedSite=world.visible_sites.find(site=>site.x===selected?.x&&site.y===selected?.y);
   const selectedInfluence=world.visible_influence.find(tile=>tile.x===selected?.x&&tile.y===selected?.y);
@@ -350,25 +351,42 @@ export function WorldAtlasInteractive({world,cities,detailBackground,politicalBa
         onClick={()=>{centerOn(city.x,city.y);setSelected({x:city.x,y:city.y});}}
         aria-label={"Recentrer sur "+city.name}>⌖ {city.name} ({city.x}, {city.y})</button>)}
     </div>
-    <div className="map-selected-info" aria-live="polite">
-      <strong>{selected?"Région "+readable(selected):"Sélectionnez une région"}</strong>
-      {cityOnSelection
-        ?<Link href={"/cities/"+cityOnSelection.city_id+"/region"}>Explorer {cityOnSelection.name}</Link>
-        :selectedForeign
-        ?<span>Cité découverte : {selectedForeign.name} · informations privées non disponibles</span>
-        :selectedSite
-        ?<span>{kindLabels[selectedSite.kind]} : {selectedSite.label} · emplacement découvert</span>
-        :selectedInfluence
-        ?<span>Influence connue : {selectedInfluence.controller} ·
-          {" "}{selectedInfluence.observed_at.slice(0,10)}
-          {selectedInfluence.is_mine&&selected&&
-            <Link className="world-colony-link"
-              href={"/worlds/"+world.world_id+"/colonize?x="+selected.x+"&y="+selected.y}>
-              Examiner pour colonisation
-            </Link>}
-          </span>
-        :<span>Contenu non découvert : aucune information géographique ou militaire supposée.</span>}
-    </div>
+    <section className="mmhk-region-inspector" aria-live="polite" data-testid="world-region-inspector">
+      <div className="mmhk-inspector-header">
+        <span className="eyebrow">INSPECTION TERRITORIALE</span>
+        <strong>{selected?"Région "+readable(selected):"Choisissez une case"}</strong>
+        <small>{selected?"Coordonnées du monde · "+selected.x+" / "+selected.y:"Cliquez sur une case de la carte pour examiner ce qui en est connu."}</small>
+      </div>
+      {selected&&<>
+        <div className="mmhk-inspector-facts">
+          <div><span>Occupation</span><strong>{cityOnSelection?"Votre cité":selectedForeign?"Cité découverte":"Aucune cité connue"}</strong></div>
+          <div><span>Contrôle</span><strong>{selectedInfluence?.controller??"Non renseigné"}</strong></div>
+          <div><span>Mines</span><strong>{selectedQualified?.mine_types.length
+            ?selectedQualified.mine_types.join(" · ")
+            :selectedInfluence?.is_mine?"Mine signalée · type inconnu":"Non renseignées"}</strong></div>
+          <div><span>Lieu remarquable</span><strong>{selectedSite?selectedSite.label:"Aucun site connu"}</strong></div>
+        </div>
+        {cityOnSelection&&<p>Votre cité de {cityOnSelection.name} occupe cette région.</p>}
+        {selectedForeign&&<p>La cité {selectedForeign.name} a été découverte. Les données militaires privées restent masquées.</p>}
+        {!cityOnSelection&&!selectedForeign&&!selectedQualified&&
+          <p>Le terrain et les quatre ressources de cette région ne sont pas encore connus du serveur. Aucune mine n'est inventée.</p>}
+        <div className="mmhk-inspector-actions">
+          {cityOnSelection&&<Link href={"/cities/"+cityOnSelection.city_id+"/region"}>Explorer la région</Link>}
+          {cityOnSelection&&<Link href={"/cities/"+cityOnSelection.city_id}>Entrer dans la cité</Link>}
+          {selectedQualified&&<Link className="primary" href={"/worlds/"+world.world_id+"/colonize?"+
+            new URLSearchParams({x:String(selected.x),y:String(selected.y)}).toString()+"#colony-form"}>
+            Préparer une colonisation
+          </Link>}
+          {!selectedQualified&&<button type="button" disabled title="La région n'est pas qualifiée pour la colonisation">
+            Colonisation indisponible</button>}
+          <button type="button" disabled title="Les ordres d'attaque ne sont pas encore disponibles sur la carte">
+            Attaquer · indisponible</button>
+          <button type="button" disabled title="Les ordres de pillage ne sont pas encore disponibles sur la carte">
+            Piller · indisponible</button>
+        </div>
+        <small className="mmhk-inspector-disclaimer">Les ordres militaires seront activés lorsque le serveur pourra vérifier la cible, le héros, les troupes et les protections.</small>
+      </>}
+    </section>
     <div className="world-layer-legend">
       <span>⌂ Vos villes : {cities.length}</span>
       <span>⌂ Cités découvertes : {world.discovered_cities.length}</span>
