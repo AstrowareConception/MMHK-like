@@ -7,7 +7,7 @@ separate verified branches. No database state is mutated here.
 """
 from __future__ import annotations
 
-from decimal import Decimal, ROUND_DOWN, InvalidOperation
+from decimal import Decimal, ROUND_DOWN
 
 BASE_FACTOR = Decimal("0.30")
 
@@ -54,7 +54,7 @@ def ordinary_hero_permanent_losses(
         "factor":str(loss_factor),
         "unrounded":str(raw),
         "permanent_deaths":deaths,
-        "survivors":dispersed-deaths,
+        "nonfatal_dispersions":dispersed-deaths,
         "policy_id":"jactari-ordinary-hero-0.30-v1",
         "special_branches_excluded":True,
         "effects_applied":False,
