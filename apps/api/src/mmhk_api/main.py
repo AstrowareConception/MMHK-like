@@ -34,6 +34,7 @@ from .marketplace import (
     publish_offer, buy_offer, withdraw_offer,
 )
 from .map_views import MapNotFound, own_region, world_overview
+from .region_inspection import inspect_region
 from .timeline import timeline_for_player
 from .artifacts import artifact_inventory, move_artifact
 from .region_pve import preview_duel
@@ -875,6 +876,17 @@ def my_world_overview(world_id: str, db: _db, player: _player) -> dict:
         return world_overview(db, player, world_id)
     except MapNotFound as exc:
         raise HTTPException(status_code=404, detail="World not found") from exc
+
+
+@app.get("/api/v1/me/worlds/{world_id}/regions/{x}/{y}")
+def my_world_region(world_id: str, x: int, y: int, db: _db, player: _player) -> dict:
+    """Strictly account-scoped inspection, unknown content remains unknown."""
+    try:
+        return inspect_region(db, player, world_id, x, y)
+    except MapNotFound as exc:
+        raise HTTPException(status_code=404, detail="World not found") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
 
 
 @app.get("/api/v1/me/cities/{city_id}/region")
