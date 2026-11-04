@@ -24,8 +24,17 @@ const COLORS:Record<string,string>={
   gems:"#c39be0",sulfur:"#e8d46f",mercury:"#b4dce2"
 };
 
-export function RegionDiscoveryBoard({region}:{
-  region:WorldRegionInspection;
+type MilitaryReadiness={
+  target_kind:"own_city"|"discovered_opponent"|"target_not_identified";
+  target_name:string|null;
+  heroes:{city_id:string;city_name:string;hero_id:string;hero_name:string;
+    status:string;troop_count:number;distance_steps:number;
+    preparation_ready:boolean}[];
+  attack_enabled:boolean;raid_enabled:boolean;blocking_reasons:string[];
+};
+
+export function RegionDiscoveryBoard({region,military}:{
+  region:WorldRegionInspection;military:MilitaryReadiness|null;
 }){
   const [selected,setSelected]=useState({i:2,j:2});
   const mine=region.natural_deposits?.find(d=>d.i===selected.i&&d.j===selected.j);
@@ -112,6 +121,33 @@ export function RegionDiscoveryBoard({region}:{
           "#colony-form"}>
         Examiner une fondation sur cette région
       </Link>}
+      <section className="mmhk-discovery-military" aria-label="Préparation des expéditions militaires">
+        <h4>Préparation militaire</h4>
+        {!military?<p>État des armées momentanément indisponible.</p>:<>
+          <p>{military.target_kind==="own_city"
+            ?"Votre propre cité ne peut pas être attaquée."
+            :military.target_kind==="discovered_opponent"
+              ?"Cité adverse découverte : "+military.target_name
+              :"Aucune cible militaire confirmée à cette position."}</p>
+          <div className="mmhk-discovery-hero-list">
+            {military.heroes.map(hero=><div key={hero.hero_id}
+              className="mmhk-discovery-hero">
+              <strong>{hero.hero_name}</strong>
+              <small>{hero.city_name} · {hero.troop_count.toLocaleString("fr-FR")} soldats ·
+                {hero.distance_steps} cases</small>
+              <small>{hero.status==="idle"?"Disponible":"Occupé"}
+                {hero.preparation_ready?" · Armée affectée":" · Non prêt au départ"}</small>
+            </div>)}
+            {!military.heroes.length&&<p>Aucun héros engagé dans vos cités.</p>}
+          </div>
+          <div className="mmhk-discovery-locked-orders">
+            <button type="button" disabled title="Les ordres PvP ne sont pas encore disponibles">Attaquer · verrouillé</button>
+            <button type="button" disabled title="Le pillage PvP reste indisponible">Piller · verrouillé</button>
+          </div>
+          <small>Préparation informative uniquement. Aucun départ, coût,
+            pillage ou combat n'est déclenché depuis cet écran.</small>
+        </>}
+      </section>
       <p className="map-qualification">Les emplacements non renseignés ne sont pas nécessairement libres.
         Cette carte n'indique aucun terrain, adversaire ou chemin qui n'ait été révélé par le serveur.</p>
       <Link className="scene-action" href={"/worlds/"+encodeURIComponent(region.world_id)}>
