@@ -314,8 +314,11 @@ export function WorldAtlasInteractive({world,cities,qualifiedSites=[],detailBack
               fill="#fff2c2" stroke="#1b2832" strokeWidth="3" paintOrder="stroke">
               {site.label}</text>
           </g>)}
-        {marks.map(({city,x,y})=><Link href={"/cities/"+city.city_id+"/region"} key={city.city_id}
-          aria-label={"Ouvrir la région de "+city.name+", coordonnées "+city.x+", "+city.y}>
+        {marks.map(({city,x,y})=><g key={city.city_id} data-map-control="true" role="button" tabIndex={0}
+          onPointerDown={e=>e.stopPropagation()}
+          onClick={()=>setSelected({x:city.x,y:city.y})}
+          onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();setSelected({x:city.x,y:city.y});}}}
+          aria-label={"Sélectionner la région de "+city.name+", coordonnées "+city.x+", "+city.y}>
           <title>{city.name+" ("+city.x+", "+city.y+")"}</title>
           <circle cx={x} cy={y} r="17" fill="#182a30" opacity=".8"/>
           <path d={"M "+x+" "+(y-15)+" L "+(x+11)+" "+y+" L "+x+" "+(y+15)+" L "+(x-11)+" "+y+" Z"}
@@ -323,7 +326,7 @@ export function WorldAtlasInteractive({world,cities,qualifiedSites=[],detailBack
           <circle cx={x} cy={y} r="3" fill="#2e444a"/>
           <text x={x} y={y+27} fill="#fff1c9" fontSize="12" fontWeight="bold"
             textAnchor="middle" stroke="#15232c" strokeWidth="3" paintOrder="stroke">{city.name}</text>
-        </Link>)}
+        </g>)}
       </g>
       {CORNERS.map(corner=><g key={corner.id} data-map-control="true"
         className="map-edge-control" role="button" tabIndex={0}
