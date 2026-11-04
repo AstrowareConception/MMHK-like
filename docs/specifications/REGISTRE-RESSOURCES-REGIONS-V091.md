@@ -53,3 +53,44 @@ pytest -q apps/api/tests/test_region_inspection_contract.py
 ```
 
 Les validations SQL réelles et l'E2E Playwright de cette migration restent à exécuter sur la stack Docker de développement avant toute utilisation au-delà du laboratoire.
+
+## Cohérence à la colonisation — raccordement métier
+
+La fonction pure `profile_fits_region` impose que chaque type de mine
+proposé par une expédition figure dans au moins un des quatre emplacements
+de ressources du registre. **Il n'est pas nécessaire d'exploiter toutes
+les ressources d'une région** : les profils de fondation à trois mines
+restent autorisés si ces trois types sont effectivement présents.
+
+Les ressources régionales peuvent être répétées. Les mines d'une cité,
+elles, restent uniques par type dans le modèle économique actuel.
+Par exemple, `or,bois,gemmes,gemmes` est compatible avec trois mines
+`or,bois,gemmes`, mais pas avec une mine de minerai.
+
+Le contrôle s'exécute :
+- avant la présentation du devis de colonisation ;
+- dans la transaction qui réserve les coûts et expédie le héros ;
+- à l'arrivée de l'expédition, avant de créer la nouvelle cité.
+
+À l'arrivée, une incompatibilité apparue pendant le trajet bloque
+l'ordre selon le mécanisme existant d'expédition bloquée et de restitution.
+Il n'y a donc pas de fondation silencieuse avec des mines contradictoires.
+
+Si la région dispose déjà d'une composition persistée, celle-ci est
+**préservée**, sans modifier ni les mines ni les ressources. Si aucune
+composition n'existe, une cité nouvelle avec exactement quatre types de
+mines permet d'initialiser ce registre sans conjecture. Si seules trois
+mines sont définies, l'emplacement régional manquant n'est pas inventé :
+le registre reste à qualifier par l'opérateur.
+
+Une fondation correctement enregistrée révèle les ressources régionales
+au propriétaire de la nouvelle ville, lorsque le registre existe.
+
+### Vérifications complémentaires
+
+```bash
+pytest -q apps/api/tests/test_region_resource_consistency.py
+```
+
+Les contrôles unitaires ne remplacent pas les essais transactionnels
+PostgreSQL du worker de colonisation ni les vérifications Playwright.
