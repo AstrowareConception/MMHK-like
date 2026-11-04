@@ -90,6 +90,23 @@ def inspect_region(db: psycopg.Connection, owner: UUID, world_id: str, x: int, y
     if not own and (dynamic or qualified):
         mines = [v for v in (dynamic or qualified)[0] if v in RESOURCE_NAMES]
 
+    # Resource composition is a separate, persistent regional fact. Membership
+    # alone does not reveal it. Own-city coordinates are always visible.
+    composition = db.execute(
+        """SELECT r.resources,r.generation_policy
+           FROM world_region_resources r
+           WHERE r.world_id=%s AND r.x=%s AND r.y=%s AND (
+             EXISTS (
+               SELECT 1 FROM cities c WHERE c.world_id=r.world_id
+                 AND c.x=r.x AND c.y=r.y AND c.owner_account_id=%s
+             ) OR EXISTS (
+               SELECT 1 FROM world_region_resource_discoveries d
+               WHERE d.world_id=r.world_id AND d.x=r.x AND d.y=r.y
+                 AND d.viewer_account_id=%s
+             )
+           )""",
+        (world_id, x, y, owner, owner),
+    ).fetchone()
     return {
         "world_id": world_id, "x": x, "y": y,
         "city": ({"city_id": str(own[0]), "name": own[1], "ownership": "own"}
@@ -101,6 +118,9 @@ def inspect_region(db: psycopg.Connection, owner: UUID, world_id: str, x: int, y
         "mines_known": bool(own or qualified or dynamic),
         "special_site": {"kind": site[0], "label": site[1]} if site else None,
         "colonization_site_qualified": bool(qualified or dynamic),
+        "regional_resources": list(composition[0]) if composition else None,
+        "regional_resources_known": bool(composition),
+        "regional_resources_policy": composition[1] if composition else None,
         "terrain": None,
         "terrain_known": False,
         "historically_certified": False,
