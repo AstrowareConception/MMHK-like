@@ -75,6 +75,12 @@ if data["expected"]==401:
 print(json.dumps({"get_status":get_status,"denied_write":data["expected"]==401}))
 """
 
+# Parse the two embedded Python snippets before interacting with Docker.
+# A malformed fixture must never trigger partial changes in the CI database.
+import ast
+ast.parse(EXPIRE,filename="<local-session-expiry>")
+ast.parse(PROBE,filename="<local-session-probe>")
+
 def inside_api(code,payload):
     result=subprocess.run(
         [*COMPOSE,"exec","-T","api","python","-c",code],
