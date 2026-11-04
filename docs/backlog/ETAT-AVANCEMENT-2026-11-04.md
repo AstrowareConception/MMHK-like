@@ -9,11 +9,11 @@
 
 Le rapprochement couvre **300/300 fiches** : `data/backlog/implementation-review-2026-11-04.csv`.
 Il distingue :
-- **75 fiches avec un chemin de code candidat à examiner** : présence d'un
+- **76 fiches avec un chemin de code candidat à examiner** : présence d'un
   composant ou d'un flux potentiellement pertinent ; il manque encore des
   vérifications de critères, et certaines fonctions ne couvrent qu'une
   partie de l'US.
-- **225 fiches non vérifiées individuellement** : il ne s'agit PAS d'une
+- **224 fiches non vérifiées individuellement** : il ne s'agit PAS d'une
   affirmation que leur code n'existe pas.
 - **0 fiche déclarée acceptée dans cet audit** : l'équipe produit n'a pas
   consigné cinq résultats CA et DoD pour chaque fiche ; le taux d'acceptation
@@ -200,3 +200,17 @@ l'intégration transactionnelle et la preuve des cinq critères d'acceptation.
 
 Tests ajoutés : `apps/api/tests/test_pve_casualties.py` et
 compléments de `test_pve_report_interpretation.py`.
+
+## Complément — US-COM-008 : enchaînement expérimental des pelotons
+
+Le module `pve_stack_sequence.py` orchestre jusqu'à sept pelotons
+ordinaires par camp autour du duel élémentaire Jactari. Une
+prévisualisation propriétaire, en lecture seule, est désormais
+accessible dans la région depuis le héros et ses unités réellement
+affectées ; elle ne lance pas de mission et ne modifie pas de stock.
+
+Les critères CA01–CA03 (survivant, dispersion, absence de fatigue
+inventée) ont des tests écrits. Les critères CA04–CA05, les règles
+complètes de combat et la DoD nécessitent encore une recette.
+**US-COM-008 est un candidat partiel, pas une story achevée.**
+Voir `docs/backlog/RECETTE-US-COM-008-2026-11-04.md`.
