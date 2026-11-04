@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - main
+      # Temporary cross-owner POST authorization QA candidate; remove before merge.
+      - test/two-player-write-boundaries-67
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
@@ -63,6 +65,10 @@ jobs:
           node-version: '22'
       - name: Install API and test dependencies
         run: python -m pip install -e './apps/api[dev]'
+      - name: Check security QA Python syntax before the expensive browser run
+        run: |
+          python3 -m py_compile tools/e2e/two_player_isolation_browser.py
+          python3 -m py_compile tools/e2e/two_player_write_contract.py
       - name: Verify Python Jactari and PostgreSQL world/session isolation
         run: python -m pytest -q apps/api/tests
       - name: Validate opt-in worker Compose configuration
