@@ -79,3 +79,13 @@ def test_invalid_formation_is_refused():
     db=FakeDB(formation=[("militia",3,None,"I")])
     with pytest.raises(RecruitmentConflict):
         preview(db)
+
+
+def test_unknown_weapon_remains_unqualified_without_name_based_guess():
+    db=FakeDB(formation=[("militia",12,20,None)])
+    result=preview(db)
+    assert result["weapon_classification_complete"] is False
+    event=result["sequence"]["events"][0]
+    assert event["counter_weapons"]["qualified"] is False
+    assert event["counter_weapons"]["attacker_bonus"]=="0"
+    assert all(q.startswith("SELECT") for q,_ in db.queries)
