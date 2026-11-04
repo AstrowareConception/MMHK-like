@@ -89,3 +89,21 @@ héros : talents conditionnels, sorts, artefacts et spécificités S2
 restent exclus. L'US-COM-008 ne devient donc pas acceptée.
 
 Voir [recette US-COM-005](RECETTE-US-COM-005-2026-11-04.md).
+
+## Extension des échanges : talent conditionnel (US-COM-005)
+
+Lorsque l'opérateur a enregistré un profil de héros et un coefficient
+de talent **expérimental** qualifiés, le moteur recalcule à chaque
+rencontre avec un peloton adverse l'existence de la relation I>C,
+R>I ou C>R. Ce bonus n'est jamais simplement « acquis » à tout
+le combat : une confrontation suivante hors condition l'annule.
+Un type d'arme inconnu empêche son activation.
+
+Le rapport d'échange expose `conditional_talent.active`, le
+coefficient effectivement appliqué et sa provenance. Les profils
+de héros non qualifiés ne reçoivent aucun talent par défaut.
+
+Ce travail enrichit les CA01–CA03 candidats d'US-COM-008,
+mais les autres phases Jactari et tous les effets persistants
+restent absents. **US-COM-008 n'est pas acceptée.**
+Voir [recette US-COM-005](RECETTE-US-COM-005-2026-11-04.md).
