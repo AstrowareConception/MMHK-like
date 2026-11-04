@@ -35,6 +35,7 @@ from .marketplace import (
 )
 from .map_views import MapNotFound, own_region, world_overview
 from .region_inspection import inspect_region
+from .military_readiness import military_readiness
 from .timeline import timeline_for_player
 from .artifacts import artifact_inventory, move_artifact
 from .region_pve import preview_duel
@@ -883,6 +884,18 @@ def my_world_region(world_id: str, x: int, y: int, db: _db, player: _player) -> 
     """Strictly account-scoped inspection, unknown content remains unknown."""
     try:
         return inspect_region(db, player, world_id, x, y)
+    except MapNotFound as exc:
+        raise HTTPException(status_code=404, detail="World not found") from exc
+    except ValueError as exc:
+        raise HTTPException(status_code=422, detail=str(exc)) from exc
+
+
+@app.get("/api/v1/me/worlds/{world_id}/regions/{x}/{y}/military-readiness")
+def my_region_military_readiness(world_id: str, x: int, y: int,
+                                 db: _db, player: _player) -> dict:
+    """Read-only preparation, not an attack or raid dispatch."""
+    try:
+        return military_readiness(db, player, world_id, x, y)
     except MapNotFound as exc:
         raise HTTPException(status_code=404, detail="World not found") from exc
     except ValueError as exc:
