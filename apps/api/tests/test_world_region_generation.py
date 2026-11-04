@@ -44,3 +44,50 @@ def test_overlarge_or_invalid_batches_rejected_before_sql(bounds):
             x_min=bounds[0],y_min=bounds[1],
             x_max=bounds[2],y_max=bounds[3]
         )
+
+
+class QualifiedRegionDB:
+    """Deterministic test double for operator-approved terrain preservation."""
+    def __init__(self, qualified):
+        self.qualified=qualified
+        self.record=None
+        self.current=None
+    def execute(self, sql, params):
+        if "SELECT world_size FROM worlds" in sql:
+            self.current=(100,)
+        elif "SELECT city_id FROM cities" in sql:
+            self.current=None
+        elif "SELECT mine_types,source_ref" in sql:
+            self.current=self.qualified
+        elif "INSERT INTO world_region_resources" in sql:
+            self.record=list(params[3])
+            self.current=None
+        elif "SELECT resources,generation_policy,source_ref" in sql:
+            self.current=(self.record,"regional-composition-v1","test-source")
+        else:
+            raise AssertionError("Unexpected SQL in provisioning: "+sql)
+        return self
+    def fetchone(self):
+        return self.current
+    def fetchall(self):
+        return self.current
+
+
+def test_qualified_three_mine_site_keeps_its_resources():
+    from mmhk_api.world_region_generation import provision_region
+    db=QualifiedRegionDB([(["gold","wood","sulfur"],"operator-proof")])
+    result=provision_region(db,world_id="sandbox",x=8,y=10)
+    assert set(["gold","wood","sulfur"]).issubset(result["resources"])
+    assert len(result["resources"])==4
+    assert len(set(result["resources"]))==4
+
+
+def test_conflicting_qualified_profiles_require_operator_resolution():
+    from mmhk_api.world_region_generation import provision_region
+    db=QualifiedRegionDB([
+        (["gold","wood","ore"],"operator-one"),
+        (["gold","wood","crystal"],"operator-two"),
+    ])
+    with pytest.raises(ValueError,match="Conflicting"):
+        provision_region(db,world_id="sandbox",x=8,y=10)
+    assert db.record is None
