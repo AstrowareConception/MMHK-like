@@ -4782,3 +4782,15 @@ body:has(.mmhk-entry-panel) .masthead h1{
   .mmhk-region-inspector{padding:12px}
   .mmhk-inspector-header strong{font-size:22px}
 }
+
+/* Persistent regional mine buildings (original vector sprites). */
+.mmhk-regional-mine-marker{filter:drop-shadow(0 4px 3px #07151bad)}
+.region-selectable-cell:has(.mmhk-regional-mine-marker){cursor:pointer}
+.mmhk-region-mines-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;margin-top:12px}
+.mmhk-region-mines-list button{min-height:37px;padding:7px 9px;text-align:left;
+  font:700 12px/1.3 Arial,sans-serif;border:1px solid #9d8055;
+  background:linear-gradient(160deg,#4c5f60,#293d42);color:#f2e2b8;
+  border-radius:3px}
+.mmhk-region-mines-list button:hover,.mmhk-region-mines-list button:focus-visible{
+  background:#6a7059;border-color:#f4d594;color:#fff3c9}
+@media(max-width:520px){.mmhk-region-mines-list{grid-template-columns:1fr}}
