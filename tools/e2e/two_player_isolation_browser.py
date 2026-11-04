@@ -126,6 +126,19 @@ def verify_live_api(fixture):
     print("PASS: 22 foreign API GET/POST concealment checks, "
           "own-world scoping, independent bearers, 401 and no-store",flush=True)
 
+def worker_control(*command):
+    """Pause ONLY the disposable local worker while taking rowset snapshots.
+
+    This avoids mistaking legitimate production ticks and asynchronous
+    completions for unauthorized game mutations in the test itself.
+    """
+    result=subprocess.run(
+        [*COMPOSE,*command],capture_output=True,text=True,
+        check=False,timeout=180)
+    if result.returncode:
+        raise RuntimeError("Unable to control disposable CI worker")
+
+
 def verify_live_writes(fixture):
     """Run the hardened two-account POST matrix inside disposable FastAPI.
 
@@ -153,11 +166,15 @@ def verify_live_writes(fixture):
     assert result=={
         "shared_world":True,"users":2,"foreign_write_denials":42,
         "cross_target_denials":8,"second_city_unchanged":True,
-        "destination_indistinguishable":2
+        "destination_indistinguishable":2,
+        "both_cities_unchanged":True,"journals_unchanged":True,
+        "journal_tables_checked":18,"city_tables_checked":14,
+        "replay_success":2,"replay_conflict":2,"cross_replay_denial":2
     },result
-    print("PASS: 40 foreign-path 404s and 2 indistinguishable 409s, no-store; "
-          "including indirect IDs and unmodified second-player resources",
-          flush=True)
+    print("PASS: 42 cross-account write denials (40 concealed 404, "
+          "2 indistinguishable 409); BOTH cities and 18 order journals "
+          "unchanged; 2 safe owner replays, 2 altered-UUID conflicts, "
+          "2 rejected foreign replay attempts",flush=True)
 
 
 def check_cookie(context):
@@ -175,7 +192,14 @@ def login(page,username,password):
 def main():
     fixture=create_local_player()
     verify_live_api(fixture)
-    verify_live_writes(fixture)
+    # The worker is normally vital to the game. Pause it only around the
+    # security snapshots, and always resume it before Chromium navigation
+    # or the CI's PostgreSQL backup validation.
+    worker_control("stop","worker")
+    try:
+        verify_live_writes(fixture)
+    finally:
+        worker_control("up","-d","--wait","--no-build","--no-deps","worker")
     with sync_playwright() as pw:
         browser=pw.chromium.launch(headless=True)
         a=browser.new_context(viewport={"width":1220,"height":900})
