@@ -169,7 +169,7 @@ Les tests PostgreSQL et l'E2E navigateur doivent être exécutés dans
 l'environnement Docker du projet : l'ajout des fichiers ne constitue
 pas une validation d'exécution.
 
-## Audit d'intégrité et fondations : tranche V094 (outil de diagnostic)
+## Audit d'intégrité et fondations : outillage complémentaire (sans migration SQL)
 
 Une commande d'administration **en lecture seule** est disponible pour
 rechercher les incohérences entre compositions, gisements et mines :
@@ -216,3 +216,29 @@ trois mines, redémarrage du worker et nouvel audit sans anomalie.
 
 La présence des tests dans le dépôt ne prouve pas leur exécution :
 l'intégration Docker et le parcours Playwright restent à vérifier.
+
+## Reconnaissance de toutes les régions du monde
+
+La carte du monde propose désormais **Ouvrir la région** sur toute
+coordonnée sélectionnée. La nouvelle page
+`/worlds/{worldId}/regions/{x}/{y}` consulte le serveur sous l'identité
+du joueur et affiche une grille SVG 5 × 5 accessible par clic et clavier.
+
+Elle indique les quatre ressources et les positions des gisements
+**uniquement lorsqu'elles sont découvertes et autorisées**. Les
+emplacements inconnus restent neutres : absence de donnée ne signifie
+pas absence de terrain, d'armée ou de ville ennemie.
+
+Une cité appartenant au joueur conserve un accès vers son écran
+régional complet (missions, mines, armées). Les régions sans cité
+peuvent maintenant être explorées visuellement sans faire croire
+qu'un ordre militaire est déjà disponible.
+
+### Parcours manuel recommandé
+
+1. Sélectionner une case quelconque du monde, puis ouvrir sa région.
+2. Vérifier l'absence de renseignement pour une case non découverte.
+3. Révéler explicitement une région à un compte de test autorisé.
+4. Vérifier les quatre gisements et leurs coordonnées régionales.
+5. Vérifier qu'une cité étrangère non découverte et ses mines restent cachées.
+6. Vérifier les retours à l'atlas et à la région complète de sa propre cité.
