@@ -432,6 +432,24 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 - [ ] Les décisions de la Conversation et les preuves de fidélité sont reliées à cette fiche ; les variantes volontaires sont signalées.
 - [ ] La revue et l’acceptation fonctionnelle sont enregistrées ; aucune case ci-dessus n’est considérée cochée par la rédaction du backlog.
 
+### Suivi d'implémentation (4 novembre 2026 — candidat partiel)
+
+- **Module :** `hero_combat_modifiers.py` — attaque/défense à
+  0,5 % par point, bonus fixe par unité traité séparément du pourcentage.
+- **Données :** migration V097, profils de héros explicitement qualifiés
+  par référence de provenance. Aucune statistique inventée à partir
+  du niveau, de l'archétype ou de la faction.
+- **Laboratoire PvE :** utilisation de l'attaque du héros dans chaque
+  échange de pelotons ; provenance et bonus affichés au joueur.
+- **Preuves candidates :** tests `test_hero_combat_modifiers.py`,
+  `test_hero_combat_qualification.py` ; exemple 10 800 avec
+  100 unités p100, 10 points d'attaque et +3 fixe par unité.
+- **Limites :** défense du héros non mobilisée contre un PNJ sans
+  héros, talents conditionnels et autres modificateurs non appliqués.
+  Les CA01–CA05 et la DoD ne sont pas validés.
+- **Dossier :** [Recette détaillée US-COM-005](../RECETTE-US-COM-005-2026-11-04.md).
+
+
 ---
 
 <a id="us-com-006"></a>
