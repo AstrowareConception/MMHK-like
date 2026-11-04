@@ -6,6 +6,20 @@ Chaque fiche contient la formulation « En tant que…, je souhaite… afin de�
 
 **Statut : backlog préparé pour l’affinage.** Aucune fiche n’est déclarée développée, estimée ou acceptée. Les 1 500 critères sont spécifiés ; aucun test de gameplay n’a été exécuté à cette étape. Les preuves existantes documentent des mécanismes mais ne certifient pas toutes les valeurs de la saison cible.
 
+## Suivi d'implémentation — 4 novembre 2026
+
+Un [audit transversal des 300 US](ETAT-AVANCEMENT-2026-11-04.md)
+et un [registre de revue par identifiant](../../data/backlog/implementation-review-2026-11-04.csv)
+permettent de retrouver les composants candidats, les écarts P0 et les
+validations restant à exécuter. Le suivi vérifie les **300 IDs** sans
+assimiler présence de code et recette fonctionnelle. Contrôle reproductible :
+`node tools/validate-implementation-review.mjs`.
+
+À ce stade, 74 fiches possèdent un point d'entrée technique **candidat**
+et 226 doivent encore être examinées individuellement. Aucune des
+1 500 confirmations n'est déclarée validée à partir de cette seule revue.
+Il ne s'agit ni d'un score de complétion ni d'une acceptation produit.
+
 ## Parcours de lecture
 
 | Besoin | Accès |
