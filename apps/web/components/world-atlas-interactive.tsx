@@ -455,12 +455,12 @@ export function WorldAtlasInteractive({world,cities,qualifiedSites=[],cityMines=
           </strong></div>
           <div><span>Lieu remarquable</span><strong>{inspection?.special_site?.label??selectedSite?.label??"Aucun site connu"}</strong></div>
         </div>
-        {inspection?.natural_deposits?.length>0&&<div className="mmhk-inspector-deposit-preview">
+        {(inspection?.natural_deposits?.length??0)>0&&<div className="mmhk-inspector-deposit-preview">
           <strong>Emplacements des gisements</strong>
           <div className="mmhk-inspector-deposit-grid" aria-label="Plan régional des quatre gisements, 5 par 5">
             {Array.from({length:25},(_,n)=>{
               const i=n%5,j=Math.floor(n/5);
-              const deposit=inspection.natural_deposits.find(d=>d.i===i&&d.j===j);
+              const deposit=inspection?.natural_deposits.find(d=>d.i===i&&d.j===j);
               return <span key={i+":"+j} className={deposit?"has-deposit":i===2&&j===2?"is-city":""}
                 title={deposit?(MINE_LABELS[deposit.resource]??deposit.resource)+" · ("+i+","+j+")":i===2&&j===2?"Emplacement de la cité":"Terrain non cartographié"}>
                 {deposit?"◆":i===2&&j===2?"⌂":"·"}
