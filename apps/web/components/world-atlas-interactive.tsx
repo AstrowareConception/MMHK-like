@@ -478,6 +478,11 @@ export function WorldAtlasInteractive({world,cities,qualifiedSites=[],cityMines=
             :"Les ressources et le terrain de cette région ne sont pas encore découverts."}
           </p>}
         <div className="mmhk-inspector-actions">
+          <Link className="primary" data-testid="inspect-world-region-link"
+            href={"/worlds/"+encodeURIComponent(world.world_id)+
+              "/regions/"+selected.x+"/"+selected.y}>
+            Ouvrir la région
+          </Link>
           {cityOnSelection&&<Link href={"/cities/"+cityOnSelection.city_id+"/region"}>Explorer la région</Link>}
           {cityOnSelection&&<Link href={"/cities/"+cityOnSelection.city_id}>Entrer dans la cité</Link>}
           {selectedQualified&&<Link className="primary" href={"/worlds/"+world.world_id+"/colonize?"+
