@@ -66,7 +66,7 @@ export function RegionSceneInteractive({region,background,forces,missions,initia
       <span>Survol local : <strong data-testid="region-hover">{cellLabel(hover)}</strong></span>
       <span>Sélection locale : <strong data-testid="region-selection">{cellLabel(selected)}</strong></span>
       <div className="mmhk-map-render-modes" role="group" aria-label="Habillage régional">
-        <button type="button" aria-pressed={useNativeArt} onClick={()=>setUseNativeArt(true)}>Carte originale</button>
+        <button type="button" aria-pressed={useNativeArt} onClick={()=>setUseNativeArt(true)}>Atlas illustré</button>
         <button type="button" aria-pressed={!useNativeArt} disabled={!background} onClick={()=>setUseNativeArt(false)}>Décor historique</button>
       </div>
       <label className="map-grid-switch"><input type="checkbox" checked={showGuide}
@@ -109,9 +109,9 @@ export function RegionSceneInteractive({region,background,forces,missions,initia
             strokeWidth={chosen?3:hovered?3:1}
             strokeOpacity={chosen||hovered?1:showGuide?.6:0}
             vectorEffect="non-scaling-stroke"/>
-          {useNativeArt&&!owned&&ornament.variant!=="none"&&<g pointerEvents="none"
+          {useNativeArt&&!owned&&!mine&&!encounter&&ornament.variant!=="none"&&<g pointerEvents="none"
             transform={"translate("+cx+" "+cy+") rotate("+(ornament.rotation*90)+")"}
-            opacity={ornament.shade===0?.28:ornament.shade===1?.38:.48}>
+            opacity={ornament.shade===0 ? 0.28 : ornament.shade===1 ? 0.38 : 0.48}>
             {ornament.variant==="grass"&&<>
               <path d="M-20 4l5-11 5 11m9 7l6-12 5 12m13-2l4-9 5 9" fill="none" stroke="#b1c99c" strokeWidth="2"/>
               <path d="M-13 9l4-7m18 10l3-7" stroke="#1b322a" strokeWidth="2"/>
