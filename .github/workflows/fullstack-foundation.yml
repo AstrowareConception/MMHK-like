@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - main
+      # Temporary two-player permissions QA branch; remove before merge.
+      - test/two-player-isolation-66
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
@@ -311,6 +313,13 @@ jobs:
           MMHK_E2E_USERNAME="demo_ci" \
           MMHK_E2E_PASSWORD="$password" \
           python3 tools/e2e/terrain_browser.py
+
+      - name: Verify real two-account ownership in one shared world
+        run: |
+          export MMHK_E2E_URL="http://127.0.0.1:3000"
+          export MMHK_E2E_USERNAME="demo_ci"
+          export MMHK_E2E_PASSWORD="$(cat .ci-e2e-password)"
+          python3 -u tools/e2e/two_player_isolation_browser.py
 
       - name: Diagnose SSR failure after authenticated browser navigation
         if: failure()
