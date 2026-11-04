@@ -58,3 +58,19 @@ Tests unitaires de validation :
 Les tests d'intégration PostgreSQL et Playwright doivent encore confirmer
 le déroulement complet de migration et de navigation dans l'environnement
 local.
+
+## Habillage cartographique original (tranche suivante)
+
+Le composant `region-scene-interactive.tsx` propose désormais **Atlas illustré**
+et **Décor historique**, lorsque les images privées sont disponibles.
+La fonction pure `regionOrnaments(world_id,x,y)` génère une composition
+vectorielle stable (ornements de végétation, pierres, maçonneries et motifs
+de cheminement). Cette variation dépend seulement des coordonnées mondiales
+et ne modifie aucun état PostgreSQL.
+
+**Important :** il s'agit d'ornementation graphique, pas de données
+topographiques, de routes traversables ou de sites remarquables révélés.
+Les mines, rencontres et cités continuent à être dessinées exclusivement
+à partir des registres serveur. Les ornements sont masqués sur les cases
+occupées par une mine, une cité ou une rencontre pour éviter toute confusion.
+Les mines portent également un signe minéral coloré selon leur ressource.
