@@ -123,6 +123,10 @@ export function RegionEncounterPanel({encounter,forces,cityId,missions}:{
       <p>{lineReport.sequence.events.length} échanges · Verdict provisoire :
         {lineReport.sequence.verdict==="attacker"?" attaquant":
          lineReport.sequence.verdict==="defender"?" défenseur":" égalité"}</p>
+      <p role="status">{lineReport.weapon_classification_complete
+        ?"Types d'armes renseignés : les avantages I/R/C sont appliqués à chaque échange."
+        :"Classification d'armes incomplète : aucun avantage n'est inventé pour les unités non qualifiées."}
+      </p>
       <ol className="mmhk-regional-line-events">
         {lineReport.sequence.events.map(event=><li key={event.exchange}>
           <strong>Échange {event.exchange}</strong>
@@ -130,12 +134,23 @@ export function RegionEncounterPanel({encounter,forces,cityId,missions}:{
             contre {event.defender_position} ({event.defender_unit_code})</span>
           <small>Attaquant {event.started.attacker} → {event.remaining.attacker} ·
             Défenseur {event.started.defender} → {event.remaining.defender}</small>
+          <small>Puissances calculées : {event.total_power.attacker.toLocaleString("fr-FR")} /
+            {event.total_power.defender.toLocaleString("fr-FR")}</small>
+          <small>Contre-armes :
+            {event.counter_weapons.qualified
+              ? " "+(event.counter_weapons.attacker_weapon??"—")+" / "+
+                (event.counter_weapons.defender_weapon??"—")+
+                " · Bonus attaque "+(Number(event.counter_weapons.attacker_bonus)*100)+" %"+
+                " · Bonus défense "+(Number(event.counter_weapons.defender_bonus)*100)+" %"
+              :" non qualifiées pour cet échange"}
+          </small>
           <small>{event.dispersed.attacker?"Attaquant dispersé. ":""}
             {event.dispersed.defender?"Défenseur dispersé. ":""}</small>
         </li>)}
       </ol>
-      <small>Sans contre-armes, magie, bonus, tirs préalables, XP, pertes
-        définitives ni libération de mine. Ce n'est pas un devis de bataille.</small>
+      <small>Contre-armes appliquées seulement si leurs types sont renseignés.
+        Sans magie, bonus du héros, tirs préalables, XP, pertes définitives ni
+        libération de mine. Ceci n'est pas un devis de bataille.</small>
     </div>}
     {report&&<div className="encounter-report" role="status">
       <strong>Rapport de simulation — sans effet sur la partie</strong>
