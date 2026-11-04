@@ -4841,3 +4841,12 @@ body:has(.mmhk-entry-panel) .masthead h1{
   color:#5b5044;font:700 12px/1.3 system-ui,sans-serif;cursor:not-allowed;opacity:1}
 .mmhk-discovery-military>small{display:block;color:#725d44;font:11px/1.5 system-ui,sans-serif}
 @media(max-width:480px){.mmhk-discovery-locked-orders{grid-template-columns:1fr}}
+
+/* US-COM-008: explicitly non-mutating, bounded Jactari line preview. */
+.mmhk-regional-line-events{display:grid;gap:6px;margin:10px 0;padding-left:22px}
+.mmhk-regional-line-events li{padding:8px 10px;border:1px solid #99815c;
+  background:#21383b;color:#ead9b7}
+.mmhk-regional-line-events li strong,.mmhk-regional-line-events li span,
+.mmhk-regional-line-events li small{display:block;margin:2px 0}
+.mmhk-regional-line-events li small{font-size:11px;color:#bfc9bb}
+.encounter-preview-controls button{min-height:38px}
