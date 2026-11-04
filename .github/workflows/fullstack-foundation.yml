@@ -6,6 +6,8 @@ on:
   push:
     branches:
       - main
+      # Temporary symmetric snapshots and command replay QA branch; remove before merge.
+      - test/two-player-replay-integrity-68
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
