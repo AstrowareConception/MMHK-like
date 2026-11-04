@@ -131,6 +131,17 @@ def preview_ordinary_line_sequence(
         "defense_per_unit":profile[3],
         "source_ref":profile[4],
     } if profile else None)
+    talent_row = db.execute(
+        """SELECT additional_attack_fraction,source_ref
+           FROM hero_conditional_counter_talents WHERE hero_id=%s""",
+        (hero_id,),
+    ).fetchone()
+    if talent_row and qualified_hero is None:
+        raise RecruitmentConflict("Conditional talent requires qualified hero combat profile")
+    qualified_talent=({
+        "additional_bonus":talent_row[0],
+        "source_ref":talent_row[1],
+    } if talent_row else None)
     report = resolve_ordinary_lines(
         [{"unit_code":code,"count":int(count),"unit_power":float(power),
           "weapon_code":weapon}
@@ -138,6 +149,7 @@ def preview_ordinary_line_sequence(
         [{"unit_code":monster[1],"count":int(monster[2]),
           "unit_power":float(monster[3]),"weapon_code":monster[4]}],
         attacker_hero=qualified_hero,
+        attacker_talent=qualified_talent,
     )
     return {
         "scope":report["scope"],"preview_only":True,
@@ -146,6 +158,7 @@ def preview_ordinary_line_sequence(
         "sequence":report,
         "weapon_classification_complete":report["weapon_classification_complete"],
         "attacker_hero_profile_applied":report["attacker_hero_profile_applied"],
+        "attacker_conditional_talent_configured":report["attacker_conditional_talent_configured"],
         "historically_certified":False,
         "note":"Partial ordinary-stack Jactari laboratory; no permanent effects.",
     }
