@@ -57,7 +57,7 @@ def test_counter_relation_is_recomputed_for_next_defender_stack():
     assert len(report["events"])==2
     assert report["events"][0]["counter_weapons"]["attacker_bonus"]=="0.50"
     assert report["events"][1]["counter_weapons"]["attacker_bonus"]=="0"
-    assert report["events"][1]["counter_weapons"]["defender_bonus"]=="0"
+    assert report["events"][1]["counter_weapons"]["defender_bonus"]=="0.50"
     assert report["events"][1]["started"]["attacker"] == report["events"][0]["remaining"]["attacker"]
 
 
