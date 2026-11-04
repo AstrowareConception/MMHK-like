@@ -1,7 +1,7 @@
 """Read-only world/region projections for the first MMHK-like browser map.
 
-Only account-owned cities are returned. No enemy fog, mine placements,
-territory control, visible map tiles or population are guessed.
+Only account-owned cities are returned. Mine positions are persisted project
+layouts, not guessed historical coordinates. Enemy fog and terrain stay hidden.
 """
 from __future__ import annotations
 
@@ -120,10 +120,10 @@ def world_overview(db: psycopg.Connection, account_id: UUID, world_id: str) -> d
 
 
 def own_region(db: psycopg.Connection, account_id: UUID, city_id: UUID) -> dict:
-    """Schematic 5x5 region with city at centre and unlocated mine types.
+    """Owned 5x5 region with persisted experimental mine positions.
 
-    5x5 centre is the documented UI *proposal*, not yet an authoritative
-    per-cell terrain or mine-position dataset.
+    The city centre is reserved. Other regional terrain remains unknown;
+    mine positioning is project cartography, not certified MMHK S2 data.
     """
     row = db.execute(
         """SELECT c.city_id,c.world_id,c.name,c.x,c.y,w.world_size
