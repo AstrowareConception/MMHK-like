@@ -4804,3 +4804,28 @@ body:has(.mmhk-entry-panel) .masthead h1{
 .mmhk-inspector-deposit-grid span{display:grid;place-items:center;aspect-ratio:1;border:1px solid #bca88d;background:#d3c9b2;color:#8d806a;font:700 18px Georgia,serif}
 .mmhk-inspector-deposit-grid span.has-deposit{background:#536b60;color:#f6daa0;border-color:#8e774f}
 .mmhk-inspector-deposit-grid span.is-city{background:#857052;color:#fff0ce;border-color:#67553c}
+
+/* Server-authorized regional reconnaissance: custom SVG tactical map. */
+.mmhk-discovery-layout{display:grid;grid-template-columns:minmax(0,1.85fr) minmax(260px,1fr);
+  gap:18px;align-items:start;min-width:0}
+.mmhk-discovery-map{min-width:0}
+.mmhk-discovery-layout .region-scene{width:100%;height:auto;display:block;max-width:100%;
+  background:#233c39;border:2px solid #998052;box-shadow:0 12px 26px #06121a8c}
+.mmhk-discovery-layout .region-selectable-cell{cursor:pointer}
+.mmhk-discovery-layout .region-selectable-cell:focus-visible{outline:3px solid #f5d68f}
+.mmhk-region-inspector{border:2px solid #98805a;padding:18px;
+  background:linear-gradient(155deg,#f0e2c7,#d5bf9b);color:#34291d;
+  min-width:0;box-shadow:0 14px 28px #0005}
+.mmhk-region-inspector .eyebrow{color:#79603b}
+.mmhk-region-inspector h3{font:small-caps 27px/1.15 Georgia,serif;color:#362d20;margin:8px 0}
+.mmhk-region-inspector h4{font:700 12px/1.4 Arial,sans-serif;letter-spacing:.06em;
+  text-transform:uppercase;color:#6a5237;margin:18px 0 5px}
+.mmhk-region-inspector p{font:13px/1.55 system-ui,sans-serif;color:#4f3e2e;
+  overflow-wrap:anywhere}
+.mmhk-region-inspector strong{display:inline;font-weight:700}
+.mmhk-region-inspector .scene-action{display:block;text-align:center;background:#35494c;
+  color:#f6e2b4;text-decoration:none;margin-top:14px}
+.mmhk-region-inspector .map-qualification{font-size:11px;color:#665642}
+@media(max-width:960px){.mmhk-discovery-layout{grid-template-columns:minmax(0,1fr)}}
+@media(max-width:600px){.mmhk-discovery-layout{gap:10px}
+  .mmhk-region-inspector{padding:12px}}
