@@ -153,3 +153,26 @@ pytest -q apps/api/tests/test_region_integrity.py
 L'audit a été réalisé par inspection de fichiers accessibles via GitHub.
 Il n'est pas une exécution de la suite Docker, des migrations PostgreSQL,
 de Playwright ou des 1 500 critères d'acceptation.
+
+## Complément de suivi — tranche PvE COM-017 (4 novembre 2026)
+
+**US-COM-017 — Lire les étapes d'une bataille** : un nouveau candidat
+technique affine la restitution des rapports mono-peloton :
+`pve_report_interpretation.py` interprète le verdict du duel Jactari,
+la dispersion, les pertes **théoriques** et la sentinelle `-1`
+(« victoire écrasante », jamais une perte négative). Le worker joint
+l'interprétation au rapport de mission enregistré à l'arrivée.
+L'interface de rapport affiche l'interprétation lorsqu'elle existe ;
+les anciens rapports sans ce champ restent consultables.
+
+Le rapport distingue formellement le résultat simulé des **effets métier
+non appliqués** : pas de mort définitive, de gain XP, de butin, ni de
+libération de mine. Les tests ciblés
+`apps/api/tests/test_pve_report_interpretation.py` ont été ajoutés,
+mais **ni recette CA01–CA05, ni DoD, ni validation PostgreSQL/E2E
+n'ont encore été enregistrées**.
+
+**US-COM-014, US-COM-016, US-REG-003, US-REG-004** restent bloquées
+par la définition complète des pertes et des récompenses, et par
+la résolution réelle des rencontres. Ne pas marquer ces US comme
+terminées au seul motif que le rapport est plus lisible.
