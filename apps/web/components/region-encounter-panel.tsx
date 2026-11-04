@@ -131,6 +131,10 @@ export function RegionEncounterPanel({encounter,forces,cityId,missions}:{
         ?"Types d'armes renseignés : les avantages I/R/C sont appliqués à chaque échange."
         :"Classification d'armes incomplète : aucun avantage n'est inventé pour les unités non qualifiées."}
       </p>
+      {lineReport.attacker_conditional_talent_configured&&<p>
+        Talent du héros : activé échange par échange uniquement si l'unité
+        attaquante possède l'avantage de contre-arme correspondant.
+      </p>}
       <ol className="mmhk-regional-line-events">
         {lineReport.sequence.events.map(event=><li key={event.exchange}>
           <strong>Échange {event.exchange}</strong>
@@ -148,6 +152,13 @@ export function RegionEncounterPanel({encounter,forces,cityId,missions}:{
                 " · Source : "+event.hero_attributes.source_ref
               :" caractéristiques non renseignées"}
           </small>
+          {event.conditional_talent&&<small>
+            Talent conditionnel expérimental : {event.conditional_talent.active
+              ?"actif (+ "+(Number(event.conditional_talent.additional_attack_fraction)*100)+" %)"
+              :"inactif (+ 0 %)"}
+            {" · Condition : avantage de contre-arme du héros"}
+            {" · Source : "+event.conditional_talent.source_ref}
+          </small>}
           <small>Contre-armes :
             {event.counter_weapons.qualified
               ? " "+(event.counter_weapons.attacker_weapon??"—")+" / "+
@@ -161,7 +172,7 @@ export function RegionEncounterPanel({encounter,forces,cityId,missions}:{
         </li>)}
       </ol>
       <small>Contre-armes appliquées seulement si leurs types sont renseignés.
-        Sans magie, talents conditionnels, tirs préalables, XP, pertes définitives ni
+        Sans magie, autres talents, tirs préalables, XP, pertes définitives ni
         libération de mine. Ceci n'est pas un devis de bataille.</small>
     </div>}
     {report&&<div className="encounter-report" role="status">
