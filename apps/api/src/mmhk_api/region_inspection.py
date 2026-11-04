@@ -58,8 +58,22 @@ def inspect_region(db: psycopg.Connection, owner: UUID, world_id: str, x: int, y
            JOIN map_influence_cells i
              ON i.world_id=p.world_id AND i.x=p.x AND i.y=p.y
            WHERE p.world_id=%s AND p.x=%s AND p.y=%s AND p.enabled
-             AND i.controller_account_id=%s""",
-        (world_id, x, y, owner),
+             AND i.controller_account_id=%s
+             AND (
+               NOT EXISTS (
+                 SELECT 1 FROM world_influence_policies wp
+                 WHERE wp.world_id=p.world_id AND wp.enabled
+               ) OR EXISTS (
+                 SELECT 1 FROM world_influence_cells wc
+                 WHERE wc.world_id=p.world_id AND wc.x=p.x AND wc.y=p.y
+                   AND wc.state='controlled' AND wc.owner_account_id=%s
+                   AND EXISTS(
+                     SELECT 1 FROM world_influence_policies wp
+                     WHERE wp.world_id=p.world_id AND wp.enabled AND wp.revision>0
+                   )
+               )
+             )""",
+        (world_id, x, y, owner, owner),
     ).fetchone()
     if qualified and not own:
         mines = [v for v in qualified[0] if v in RESOURCE_NAMES]
