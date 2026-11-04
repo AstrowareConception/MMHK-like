@@ -40,6 +40,7 @@ export function WorldAtlasInteractive({world,cities,qualifiedSites=[],detailBack
   // The recovered background already contains the original grid. Do not add
   // a second visible grid by default; an optional *diagnostic* overlay remains.
   const [showGrid,setShowGrid]=useState(false);
+  const [cartographic,setCartographic]=useState(true);
   const [showSites,setShowSites]=useState(true);
   const [showInfluence,setShowInfluence]=useState(true);
   const [showDiscoveredCities,setShowDiscoveredCities]=useState(true);
@@ -95,6 +96,11 @@ export function WorldAtlasInteractive({world,cities,qualifiedSites=[],detailBack
     return {city,...pos};
   }).filter(p=>p.x>=25&&p.x<=W-25&&p.y>=25&&p.y<=H-36),
   [world.discovered_cities,center,size,hw,hh]);
+  const mineMarks=useMemo(()=>qualifiedSites.map(site=>{
+    const pos=tileToPoint(worldDelta(site.x,center.x,size),worldDelta(site.y,center.y,size),hw,hh);
+    return {site,...pos};
+  }).filter(p=>p.x>=25&&p.x<=W-25&&p.y>=25&&p.y<=H-36),
+  [qualifiedSites,center,size,hw,hh]);
   const siteMarks=useMemo(()=>world.visible_sites.map(site=>{
     const pos=tileToPoint(worldDelta(site.x,center.x,size),worldDelta(site.y,center.y,size),hw,hh);
     return {site,...pos};
@@ -116,7 +122,7 @@ export function WorldAtlasInteractive({world,cities,qualifiedSites=[],detailBack
 
   // Build the optional diagnostic grid within the actual viewport, and only
   // when requested. Raster grids are *not* historical server terrain.
-  const drawGrid=showGrid || !background;
+  const drawGrid=showGrid || cartographic || !background;
   const lines=useMemo(()=>{
     if(!drawGrid)return [];
     const cells:{i:number;j:number;x:number;y:number}[]=[];
@@ -246,6 +252,12 @@ export function WorldAtlasInteractive({world,cities,qualifiedSites=[],detailBack
         <label><input type="checkbox" checked={showInfluence}
           onChange={e=>setShowInfluence(e.target.checked)}/>Influence connue</label>
       </div>
+      <div className="mmhk-map-render-modes" role="group" aria-label="Style de la carte">
+        <button type="button" aria-pressed={cartographic}
+          onClick={()=>setCartographic(true)}>Carte stratégique</button>
+        <button type="button" aria-pressed={!cartographic} disabled={!background}
+          onClick={()=>setCartographic(false)}>Illustration historique</button>
+      </div>
       <label className="map-grid-switch">
         <input type="checkbox" checked={showGrid} onChange={event=>setShowGrid(event.target.checked)}/>
         Grille indicative
@@ -256,7 +268,7 @@ export function WorldAtlasInteractive({world,cities,qualifiedSites=[],detailBack
       <span>Centre : <strong data-testid="world-center">{readable(center)}</strong></span>
       <span>Survol : <strong data-testid="world-hover">{readable(hover)}</strong></span>
       <span>Sélection : <strong data-testid="world-selection">{readable(selected)}</strong></span>
-      <span>{!background?"Grille schématique de substitution":showGrid?"Grille de diagnostic (non historique)":"Grille d’origine préservée"}</span>
+      <span>{cartographic?"Atlas interactif · informations découvertes seulement":!background?"Grille schématique de substitution":showGrid?"Grille de diagnostic (non historique)":"Illustration historique"}</span>
     </div>
     <div className="world-map-workbench">
     <svg ref={svgRef} className="world-atlas world-atlas-interactive" viewBox="0 0 680 500"
@@ -266,14 +278,29 @@ export function WorldAtlasInteractive({world,cities,qualifiedSites=[],detailBack
       onPointerDown={onPointerDown} onPointerMove={onPointerMove} onPointerUp={onPointerUp}
       onPointerCancel={()=>{drag.current=null;setPan({x:0,y:0});}}
       onPointerLeave={()=>{if(!drag.current)setHover(null);}}>
-      <defs><clipPath id="mmhk-world-viewport"><rect x="8" y="8" width="664" height="484" rx="3"/></clipPath></defs>
-      <rect x="8" y="8" width="664" height="484" fill="#1d3942"/>
-      {background&&<image href={background} x="8" y="8" width="664" height="484"
+      <defs>
+        <clipPath id="mmhk-world-viewport"><rect x="8" y="8" width="664" height="484" rx="3"/></clipPath>
+        <linearGradient id="mmhk-atlas-void" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor="#243f46"/><stop offset=".55" stopColor="#183139"/>
+          <stop offset="1" stopColor="#0c1d28"/>
+        </linearGradient>
+        <linearGradient id="mmhk-atlas-tile" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#38534e"/><stop offset="1" stopColor="#223a3b"/>
+        </linearGradient>
+      </defs>
+      <rect x="8" y="8" width="664" height="484" fill="url(#mmhk-atlas-void)"/>
+      {!cartographic&&background&&<image href={background} x="8" y="8" width="664" height="484"
         preserveAspectRatio="xMidYMid slice" pointerEvents="none"/>}
       <g clipPath="url(#mmhk-world-viewport)" transform={"translate("+pan.x+" "+pan.y+")"}>
         {drawGrid&&<g className="map-diagnostic-grid" pointerEvents="none">
           {lines.map(cell=><polygon key={cell.i+":"+cell.j} points={polygonAt(cell.x,cell.y,hw,hh)}
-            fill="none" stroke="#f6e9b3" strokeOpacity=".18" strokeWidth=".5"/>)}
+            fill={cartographic
+              ?((cell.i+cell.j)%4===0?"#3b554f":(cell.i-cell.j)%5===0?"#2d4745":"url(#mmhk-atlas-tile)")
+              :"none"}
+            fillOpacity={cartographic?.92:0}
+            stroke={cartographic?"#a4ae91":"#f6e9b3"}
+            strokeOpacity={cartographic?.31:.18}
+            strokeWidth={cartographic?.8:.5}/>)}
         </g>}
         {showInfluence&&influenceTiles.map(({cell,x,y})=>
           <polygon key={"influence-"+cell.x+"-"+cell.y} data-world-influence={cell.x+","+cell.y}
@@ -285,6 +312,17 @@ export function WorldAtlasInteractive({world,cities,qualifiedSites=[],detailBack
           </polygon>)}
         {highlight(selected,"#dbad55","#f9d997",.23,2.2)}
         {highlight(hover,"#f9e5a8","#fff6c6",.25,1.7)}
+        {mineMarks.map(({site,x,y})=>
+          <g key={"mine-"+site.x+"-"+site.y} role="button" tabIndex={0}
+            data-map-control="true" className="world-map-mine"
+            aria-label={"Mines déclarées en région "+site.x+", "+site.y}
+            onPointerDown={e=>e.stopPropagation()}
+            onClick={()=>setSelected({x:site.x,y:site.y})}
+            onKeyDown={e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();setSelected({x:site.x,y:site.y});}}}>
+            <title>{"Mines connues : "+site.mine_types.join(", ")}</title>
+            <circle cx={x} cy={y} r="14" fill="#2e3431" stroke="#e5b66f" strokeWidth="2"/>
+            <text x={x} y={y+5} textAnchor="middle" fontSize="17" fill="#f8dc9a">◆</text>
+          </g>)}
         {showDiscoveredCities&&discoveredMarks.map(({city,x,y})=>
           <g key={"discovered-"+city.city_id} data-map-control="true" role="button"
             tabIndex={0} className="world-discovered-city"
@@ -343,6 +381,8 @@ export function WorldAtlasInteractive({world,cities,qualifiedSites=[],detailBack
           fontWeight="bold" pointerEvents="none">{corner.symbol}</text>
       </g>)}
       <text x="17" y="28" fill="#f0d89b" fontSize="12" pointerEvents="none">NORD</text>
+      {cartographic&&<text x="662" y="28" textAnchor="end" fill="#ead1a1"
+        fontSize="11" pointerEvents="none">TERRA INCOGNITA · TERRAIN NON CARTOGRAPHIÉ</text>}
       <rect x="13" y="461" width="382" height="24" rx="3" fill="#101f28dd" pointerEvents="none"/>
       <text x="24" y="478" fontSize="11" fill="#efdeb3" pointerEvents="none">
         Flèches • glisser • molette • clavier · exploration sans mission
@@ -395,13 +435,14 @@ export function WorldAtlasInteractive({world,cities,qualifiedSites=[],detailBack
       <span>⌂ Cités découvertes : {world.discovered_cities.length}</span>
       <span>✦ Sites découverts : {world.visible_sites.length}</span>
       <span>◇ Cases d'influence connues : {world.visible_influence.length}</span>
+      <span>◆ Régions minières qualifiées : {qualifiedSites.length}</span>
     </div>
     <p className="map-qualification">
-      Le décor historique est une image illustrative fixe et contient déjà son quadrillage.
-      Les coordonnées et les hitboxes sont des repères de navigation modernes, non une carte
-      des terrains confirmée par le serveur. L'influence affichée provient soit
-      des cases qualifiées, soit d'une projection de laboratoire activée par le monde ;
-      les frontières adverses non découvertes restent cachées.
+      L'atlas stratégique est dessiné avec nos propres éléments vectoriels.
+      Ses losanges neutres n'indiquent aucun biome ni relief réel : seules les
+      mines qualifiées, cités et découvertes fournies par le serveur apparaissent.
+      L'illustration historique reste une référence visuelle, sans correspondance
+      géographique garantie. Les frontières adverses non découvertes restent cachées.
     </p>
     </aside>
     </div>
