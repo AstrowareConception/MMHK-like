@@ -63,6 +63,19 @@ les données locales ; ne l'utilisez pas pour simplement relancer le jeu.
 Le prototype demeure **local et expérimental**, sans jeu PvP public
 ni déploiement sur le VPS.
 
+## Tester le jeu et sa sécurité localement, sans toucher à votre partie
+
+Le lanceur **`tester.bat`** (Windows) ou **`sh tester.sh`** (macOS/Linux)
+crée un projet Docker QA **entièrement séparé** de votre monde `joueurdemo`.
+Il exécute les contrôles visuels, les simulations de panne API, les deux
+sessions, le refus des écritures croisées, la protection contre les UUID
+rejoués et la vérification des journaux PostgreSQL. Les données QA sont
+supprimées automatiquement (option `--keep` pour conserver volontairement
+ce bac d'essai). Utilisez **`tester.bat full`** pour les parcours longs
+du jeu. Aucun compte ni mot de passe existant n'est nécessaire.
+
+**[Guide des tests locaux et de leur sécurité](docs/TESTS-LOCAUX.md)**.
+
 ## Démarrer la version locale complète avec Docker
 
 Le prototype applicatif s'exécute désormais avec **PostgreSQL, Redis,
