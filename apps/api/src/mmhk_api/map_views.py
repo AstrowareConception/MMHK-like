@@ -143,11 +143,22 @@ def own_region(db: psycopg.Connection, account_id: UUID, city_id: UUID) -> dict:
             (city_id,),
         ).fetchall()
     ]
+    placements = [
+        {"resource": resource, "i": int(i), "j": int(j)}
+        for resource, i, j in db.execute(
+            """SELECT resource,i,j FROM city_mine_positions
+               WHERE city_id=%s ORDER BY resource""",
+            (city_id,),
+        ).fetchall()
+    ]
+    placed_by_cell = {(p["i"], p["j"]): p["resource"] for p in placements}
     cells = [
         {
             "i": i,
             "j": j,
-            "kind": "owned_city" if (i, j) == (2, 2) else "unmapped",
+            "kind": "owned_city" if (i, j) == (2, 2)
+                    else "mine" if (i, j) in placed_by_cell else "unmapped",
+            "resource": placed_by_cell.get((i, j)),
             "city_id": city_id if (i, j) == (2, 2) else None,
         }
         for j in range(5) for i in range(5)
@@ -171,9 +182,11 @@ def own_region(db: psycopg.Connection, account_id: UUID, city_id: UUID) -> dict:
         "world_size": size,
         "region_width": 5,
         "region_height": 5,
-        "cell_layout": "illustrative_unmapped",
+        "cell_layout": "persistent_mine_positions_v1",
         "mine_types_unlocated": mines,
-        "mine_positions_known": False,
+        "mine_positions_known": len(placements) == len(mines),
+        "mine_positions": placements,
+        "layout_policy": "regional-layout-v1",
         "cells": cells,
         "surrounding_world_regions": surrounding_world_regions,
         "historical_regional_terrain_certified": False,
