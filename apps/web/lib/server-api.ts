@@ -189,6 +189,7 @@ export type LineSequencePreview={
   historically_certified:false;note:string;
   weapon_classification_complete:boolean;
   attacker_hero_profile_applied:boolean;
+  attacker_conditional_talent_configured:boolean;
   sequence:{
     scope:string;policy_id:string;verdict:"attacker"|"defender"|"draw";
     events:{
@@ -207,6 +208,13 @@ export type LineSequencePreview={
         conditional_talents_applied:false;
         historically_certified_s2:false;
       }|null;
+      conditional_talent:{
+        active:boolean;additional_attack_fraction:string;
+        configured_fraction:string;
+        condition:"attacker_counter_weapon_advantage";
+        source_ref:string;policy_id:string;
+        historically_certified_s2:false;
+      }|null;
       counter_weapons:{
         attacker_weapon:"I"|"R"|"C"|"E"|null;
         defender_weapon:"I"|"R"|"C"|"E"|null;
@@ -218,6 +226,7 @@ export type LineSequencePreview={
     }[];
     counter_weapon_policy:string;weapon_classification_complete:boolean;
     attacker_hero_profile_applied:boolean;
+    attacker_conditional_talent_configured:boolean;
     permanent_losses_applied:false;experience_awarded:false;loot_awarded:false;
     region_liberated:false;historically_certified:false;
     excluded_mechanics:string[];
