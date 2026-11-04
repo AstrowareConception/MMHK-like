@@ -444,8 +444,13 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 - **Preuves candidates :** tests `test_hero_combat_modifiers.py`,
   `test_hero_combat_qualification.py` ; exemple 10 800 avec
   100 unités p100, 10 points d'attaque et +3 fixe par unité.
+- **Extension conditionnelle (laboratoire) :** un talent optionnel
+  déclenche un bonus additif uniquement si le héros attaquant
+  bénéficie réellement de la contre-arme. La condition est recalculée
+  pour chaque peloton, sans coefficient historique inventé.
+  Table V098, qualification via CLI et tests ciblés.
 - **Limites :** défense du héros non mobilisée contre un PNJ sans
-  héros, talents conditionnels et autres modificateurs non appliqués.
+  héros, autres talents historiques et modificateurs non appliqués.
   Les CA01–CA05 et la DoD ne sont pas validés.
 - **Dossier :** [Recette détaillée US-COM-005](../RECETTE-US-COM-005-2026-11-04.md).
 
