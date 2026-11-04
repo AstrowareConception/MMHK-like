@@ -152,7 +152,8 @@ def verify_live_writes(fixture):
     result=json.loads(run.stdout.strip())
     assert result=={
         "shared_world":True,"users":2,"foreign_write_denials":42,
-        "cross_target_denials":8,"second_city_unchanged":True
+        "cross_target_denials":8,"second_city_unchanged":True,
+        "destination_indistinguishable":2
     },result
     print("PASS: 42 cross-owner POSTs rejected with 404/no-store, "
           "including indirect IDs and unmodified second-player resources",
