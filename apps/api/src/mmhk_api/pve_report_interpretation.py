@@ -6,6 +6,8 @@ dead soldiers. False draws are kept explicit and never treated as loot rights.
 """
 from __future__ import annotations
 
+from .pve_casualties import ordinary_hero_permanent_losses
+
 
 def interpret_duel(outcome: dict) -> dict:
     if not isinstance(outcome,dict):
@@ -51,6 +53,11 @@ def interpret_duel(outcome: dict) -> dict:
             "remaining":rd,
             "dispersed":defender_disperse,
         },
+        # Only the attacking ordinary hero stack has a qualified baseline.
+        # This is a conditional PREVIEW, never applied to hero_army_units.
+        "ordinary_attacker_loss_projection":ordinary_hero_permanent_losses(
+            0 if la==-1 else la,
+        ),
         "persistent_effects_applied":False,
         "terrain_liberated":False,
         "xp_awarded":False,
