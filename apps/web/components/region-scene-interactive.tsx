@@ -27,6 +27,7 @@ export function RegionSceneInteractive({region,background,forces,missions,initia
   const known=region.cells.find(c=>c.i===selected.i&&c.j===selected.j);
   const currentEncounter=region.encounters?.find(e=>e.i===selected.i&&e.j===selected.j)??null;
   const selectedMine=region.mine_positions.find(m=>m.i===selected.i&&m.j===selected.j);
+  const selectedDeposit=region.natural_deposits.find(d=>d.i===selected.i&&d.j===selected.j);
   const activate=(cell:RegionCell)=>setSelected({i:cell.i,j:cell.j});
   const key=(e:KeyboardEvent<SVGGElement>,cell:RegionCell)=>{
     if(e.key==="Enter"||e.key===" "){e.preventDefault();activate(cell);}
@@ -63,7 +64,7 @@ export function RegionSceneInteractive({region,background,forces,missions,initia
     <div className="map-section-heading">
       <div><span className="eyebrow">RÉGION · VUE 5 × 5</span>
         <h2 id="region-view-title">Autour de {region.city_name}</h2></div>
-      <span className="map-section-legend">25 cases · {region.mine_positions.length} mines positionnées</span>
+      <span className="map-section-legend">25 cases · {region.natural_deposits.length} gisements · {region.mine_positions.length} mines</span>
     </div>
     <div className="map-coordinate-status" role="status" aria-live="off">
       <span>Région du monde : <strong>({region.world_x}, {region.world_y})</strong></span>
@@ -95,6 +96,7 @@ export function RegionSceneInteractive({region,background,forces,missions,initia
         const owned=cell.kind==="owned_city";
         const ornament=ornaments[cell.j*5+cell.i];
         const mine=cell.kind==="mine"?cell.resource:null;
+        const deposit=region.natural_deposits.find(d=>d.i===cell.i&&d.j===cell.j);
         const chosen=cell.i===selected.i&&cell.j===selected.j;
         const hovered=cell.i===hover?.i&&cell.j===hover?.j;
         return <g key={cell.i+":"+cell.j} data-region-i={cell.i} data-region-j={cell.j}
@@ -141,6 +143,18 @@ export function RegionSceneInteractive({region,background,forces,missions,initia
             <text x={cx} y={cy+26} textAnchor="middle" fontSize="12"
               fill="#fff3d1" stroke="#172e36" strokeWidth="3" paintOrder="stroke">Ville</text>
           </a>}
+          {deposit&&!mine&&!owned&&<g pointerEvents="none" className="mmhk-regional-deposit-marker">
+            <ellipse cx={cx} cy={cy+5} rx="20" ry="10" fill="#111f22" fillOpacity=".58"/>
+            <path d={"M"+(cx-16)+" "+(cy+5)+"l7-15 11-5 13 10-4 14-15 5Z"}
+              fill={MINE_COLORS[deposit.resource]??"#b8ab90"}
+              stroke="#293942" strokeWidth="2"/>
+            <path d={"M"+(cx-9)+" "+(cy-10)+"l5 11 15-6"}
+              fill="none" stroke="#fff7d2" strokeOpacity=".65" strokeWidth="1.5"/>
+            <text x={cx} y={cy+23} textAnchor="middle" fontSize="10"
+              fill="#fff4d5" stroke="#14242a" strokeWidth="3" paintOrder="stroke">
+              {MINE_LABELS[deposit.resource]??deposit.resource}
+            </text>
+          </g>}
           {mine&&<g pointerEvents="none" className="mmhk-regional-mine-marker">
             <path d={"M"+(cx-23)+" "+(cy+1)+"L"+(cx-14)+" "+(cy-24)+"L"+cx+" "+(cy-33)+
               "L"+(cx+17)+" "+(cy-19)+"L"+(cx+24)+" "+(cy+1)+"Z"}
@@ -157,7 +171,7 @@ export function RegionSceneInteractive({region,background,forces,missions,initia
           {encounter&&<image href={encounter.unit_code==="wolves"?
             "/themes/public-safe/region-wolf.svg":"/themes/public-safe/region-bandit.svg"}
             x={cx-25} y={cy-48} width="50" height="50" pointerEvents="none"/>}
-          {!owned&&!mine&&!encounter&&(hovered||chosen||!background)&&<text x={cx} y={cy+4} textAnchor="middle"
+          {!owned&&!mine&&!deposit&&!encounter&&(hovered||chosen||!background)&&<text x={cx} y={cy+4} textAnchor="middle"
             fill="#fff3cf" fontSize="12" pointerEvents="none">?</text>}
         </g>;
       })}
@@ -170,7 +184,8 @@ export function RegionSceneInteractive({region,background,forces,missions,initia
     <div className="region-selected-details" role="status">
       <strong>{"Case sélectionnée "+cellLabel(selected)}</strong>
       <span>{known?.kind==="owned_city"?"Cité du joueur : "+region.city_name:
-        selectedMine?"Mine de "+(MINE_LABELS[selectedMine.resource]??selectedMine.resource)+" · emplacement enregistré":
+        selectedMine?"Mine exploitée : "+(MINE_LABELS[selectedMine.resource]??selectedMine.resource)+" · position enregistrée":
+        selectedDeposit?"Gisement de "+(MINE_LABELS[selectedDeposit.resource]??selectedDeposit.resource)+" · non exploité":
         currentEncounter?"Rencontre : "+currentEncounter.name+" · "+currentEncounter.unit_count+" créatures":
         "Terrain, forêt, mine, site ou PNJ : non cartographié"}</span>
       {known?.kind==="owned_city"&&<a href={"/cities/"+region.city_id}>Entrer dans la cité</a>}
@@ -198,6 +213,17 @@ export function RegionSceneInteractive({region,background,forces,missions,initia
               Aucune position inconnue n'est révélée par cet écran.</p></div>
         </div>
         <div className="region-legend">
+      <div><strong>Gisements naturels localisés</strong>
+        {region.natural_deposits.length===0
+          ?<p>Positions non encore provisionnées par le registre territorial.</p>
+          :<div className="mmhk-region-mines-list">
+            {region.natural_deposits.map(d=><button key={d.slot} type="button"
+              onClick={()=>{setSelected({i:d.i,j:d.j});select("map");}}>
+              ◇ {MINE_LABELS[d.resource]??d.resource} · ({d.i},{d.j})
+            </button>)}
+          </div>}
+        <small>Les gisements ne génèrent aucune production sans mine exploitée.</small>
+      </div>
       <div><strong>Quatre ressources de la région</strong>
         <p data-testid="owned-region-four-resources">
           {region.regional_resources?.map(r=>MINE_LABELS[r]??r).join(" · ")
