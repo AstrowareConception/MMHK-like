@@ -26,12 +26,23 @@ export default async function WorldRegionPage({params}:{
     return <PrivateScreenFailure status={result.status} scope="Région"
       retryHref={"/worlds/"+worldId+"/regions/"+x+"/"+y}/>;
   const region=result.data;
+  const militaryResponse=await privateApi<{
+    target_kind:"own_city"|"discovered_opponent"|"target_not_identified";
+    target_name:string|null;
+    heroes:{city_id:string;city_name:string;hero_id:string;hero_name:string;
+      status:string;troop_count:number;distance_steps:number;
+      preparation_ready:boolean}[];
+    attack_enabled:boolean;raid_enabled:boolean;blocking_reasons:string[];
+  }>(
+    "/api/v1/me/worlds/"+encodeURIComponent(worldId)+
+    "/regions/"+x+"/"+y+"/military-readiness",token,
+  );
   return <GameShell screen="region" token={token}
     title={"Région "+region.x+", "+region.y}
     eyebrow="MONDE · RECONNAISSANCE TERRITORIALE"
     description="Gisements naturels et découvertes autorisées"
     worldId={worldId} cityId={region.city?.ownership==="own"?region.city.city_id:undefined}>
-    <RegionDiscoveryBoard region={region}/>
+    <RegionDiscoveryBoard region={region} military={militaryResponse.ok?militaryResponse.data??null:null}/>
     <div className="region-actions">
       <Link className="scene-action" href={"/worlds/"+worldId}>Retour à l'atlas</Link>
     </div>
