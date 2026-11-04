@@ -69,7 +69,8 @@ def resolve_ordinary_lines(attacker: list[dict], defender: list[dict]) -> dict:
         if (type(ra) is not int or type(rd) is not int
             or not 0 <= ra <= before_a or not 0 <= rd <= before_d
             or not (lost_a or lost_d)
-            or (lost_a and ra != 0) or (lost_d and rd != 0)):
+            or (lost_a and ra != 0) or (lost_d and rd != 0)
+            or (not lost_a and ra == 0) or (not lost_d and rd == 0)):
             raise ValueError("Unsupported or inconsistent Jactari duel outcome")
         left["remaining"], right["remaining"] = ra, rd
         left["dispersed"] = lost_a
