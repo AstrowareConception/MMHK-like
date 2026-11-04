@@ -22,6 +22,7 @@ from .world_region_generation import provision_rectangle
 from .region_integrity import audit_world_regions
 from .weapon_qualification import qualify_unit_weapon,qualify_encounter_weapon
 from .hero_combat_qualification import qualify_hero_basic_combat
+from .conditional_talent_qualification import qualify_conditional_counter_talent
 
 
 def main() -> None:
@@ -119,12 +120,24 @@ def main() -> None:
     hero_combat.add_argument("--attack-per-unit",type=Decimal,default=Decimal("0"))
     hero_combat.add_argument("--defense-per-unit",type=Decimal,default=Decimal("0"))
     hero_combat.add_argument("--source-ref",required=True)
+    hero_talent=sub.add_parser(
+        "qualify-counter-talent",
+        help="Operator-only experimental talent conditional on counter-weapon advantage",
+    )
+    hero_talent.add_argument("--hero-id",type=UUID,required=True)
+    hero_talent.add_argument("--bonus",type=Decimal,required=True)
+    hero_talent.add_argument("--source-ref",required=True)
     args = parser.parse_args()
 
     with connect() as db:
         if args.command == "migrate":
             applied = migrate(db)
             print("Applied schema revisions:", applied or "already current")
+        elif args.command == "qualify-counter-talent":
+            print(json.dumps(qualify_conditional_counter_talent(
+                db,hero_id=args.hero_id,
+                additional_bonus=args.bonus,source_ref=args.source_ref,
+            ),ensure_ascii=False))
         elif args.command == "qualify-hero-combat":
             print(json.dumps(qualify_hero_basic_combat(
                 db,hero_id=args.hero_id,attack_points=args.attack,
