@@ -123,6 +123,10 @@ export function RegionEncounterPanel({encounter,forces,cityId,missions}:{
       <p>{lineReport.sequence.events.length} échanges · Verdict provisoire :
         {lineReport.sequence.verdict==="attacker"?" attaquant":
          lineReport.sequence.verdict==="defender"?" défenseur":" égalité"}</p>
+      <p role="status">{lineReport.attacker_hero_profile_applied
+        ?"Caractéristiques de combat du héros qualifiées : attaque +0,5 % par point."
+        :"Caractéristiques de combat du héros non qualifiées : aucun bonus de héros supposé."}
+      </p>
       <p role="status">{lineReport.weapon_classification_complete
         ?"Types d'armes renseignés : les avantages I/R/C sont appliqués à chaque échange."
         :"Classification d'armes incomplète : aucun avantage n'est inventé pour les unités non qualifiées."}
@@ -136,6 +140,14 @@ export function RegionEncounterPanel({encounter,forces,cityId,missions}:{
             Défenseur {event.started.defender} → {event.remaining.defender}</small>
           <small>Puissances calculées : {event.total_power.attacker.toLocaleString("fr-FR")} /
             {event.total_power.defender.toLocaleString("fr-FR")}</small>
+          <small>Héros :
+            {event.hero_attributes
+              ?" "+event.hero_attributes.attack_points+" points d'attaque"+
+                " · +"+(Number(event.hero_attributes.attackStackHero)*100)+" %"+
+                " · +"+event.hero_attributes.attackUnitsHero+" par unité"+
+                " · Source : "+event.hero_attributes.source_ref
+              :" caractéristiques non renseignées"}
+          </small>
           <small>Contre-armes :
             {event.counter_weapons.qualified
               ? " "+(event.counter_weapons.attacker_weapon??"—")+" / "+
@@ -149,7 +161,7 @@ export function RegionEncounterPanel({encounter,forces,cityId,missions}:{
         </li>)}
       </ol>
       <small>Contre-armes appliquées seulement si leurs types sont renseignés.
-        Sans magie, bonus du héros, tirs préalables, XP, pertes définitives ni
+        Sans magie, talents conditionnels, tirs préalables, XP, pertes définitives ni
         libération de mine. Ceci n'est pas un devis de bataille.</small>
     </div>}
     {report&&<div className="encounter-report" role="status">
