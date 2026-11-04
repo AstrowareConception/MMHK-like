@@ -9,11 +9,11 @@
 
 Le rapprochement couvre **300/300 fiches** : `data/backlog/implementation-review-2026-11-04.csv`.
 Il distingue :
-- **77 fiches avec un chemin de code candidat à examiner** : présence d'un
+- **78 fiches avec un chemin de code candidat à examiner** : présence d'un
   composant ou d'un flux potentiellement pertinent ; il manque encore des
   vérifications de critères, et certaines fonctions ne couvrent qu'une
   partie de l'US.
-- **223 fiches non vérifiées individuellement** : il ne s'agit PAS d'une
+- **222 fiches non vérifiées individuellement** : il ne s'agit PAS d'une
   affirmation que leur code n'existe pas.
 - **0 fiche déclarée acceptée dans cet audit** : l'équipe produit n'a pas
   consigné cinq résultats CA et DoD pour chaque fiche ; le taux d'acceptation
@@ -242,3 +242,25 @@ Voir `docs/backlog/RECETTE-US-COM-008-2026-11-04.md`.
 talents, fidélité S2, résolution PvE/PvP persistante et DoD.
 Le volet US-COM-008 reste partiel mais réutilise désormais ces règles
 de contre-armes à chaque échange.
+
+## Complément — US-COM-005 : caractéristiques de héros (4 novembre 2026)
+
+**US-COM-005 — Appliquer les bonus du héros** entre dans les candidats
+techniques **non acceptés** : `hero_combat_modifiers.py` applique
+le coefficient de 0,5 % par point d'attaque/défense et dissocie le
+bonus fixe par unité.
+
+- Migration V097 : profils de héros optionnels qualifiés par provenance.
+  Aucune dérivation automatique à partir du niveau ou de l'archétype.
+- Commande opérateur `qualify-hero-combat` ; lecture par
+  `preview_ordinary_line_sequence` pour les propres héros.
+- Attaque du héros appliquée aux échanges PvE de laboratoire ;
+  pas de défense de héros fictive aux PNJ.
+- Tests écrits : exemple 10 800 (100 unités × p100, 10 points
+  d'attaque à +0,5 % chacun, +3 fixe/unité), refus des
+  profils incomplets et qualification administrative.
+- Les talents conditionnels, les bonus d'artefacts, la magie,
+  la fidélité de saison 2 et les cinq CA/DoD restent ouverts.
+
+Le suivi CSV et la fiche source COM-005 sont synchronisés.
+Voir `RECETTE-US-COM-005-2026-11-04.md` pour les limitations et la recette.
