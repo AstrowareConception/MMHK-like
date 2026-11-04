@@ -72,3 +72,71 @@ Tests écrits :
 `test_hero_combat_modifiers.py`,
 `test_hero_combat_qualification.py` et
 `test_pve_stack_preview.py`. Exécution CI et PostgreSQL à confirmer.
+
+## Extension : talent conditionnel de contre-arme — laboratoire
+
+Les sources Jactari indiquent que **certains** talents spécialisés ne
+s'appliquent que lorsqu'une relation de contre-arme existe. Elles ne
+justifient pas de leur attribuer automatiquement un nom, une magnitude
+ou un palier à tous les héros de saison 2.
+
+Le nouveau module `conditional_hero_talents.py` met en œuvre une
+**variante de laboratoire explicitement qualifiée**, avec une condition
+unique : le peloton du héros attaquant possède l'avantage I>C, R>I ou C>R.
+
+- Le bonus est exprimé en fraction additive de puissance de base.
+- Il s'ajoute aux contre-armes et à l'attaque du héros seulement si
+  la condition est effectivement satisfaite, à chaque échange.
+- Un type d'arme `E`, inconnu (`NULL`), égal ou défavorable
+  n'active pas le bonus.
+- Le bonus n'est pas transféré au peloton suivant sans nouveau
+  contrôle ; un changement d'adversaire recalcule son activation.
+- Aucun niveau, talent, nom ou coefficient n'est déduit du nom du
+  héros, de sa faction, de son rang ou du catalogue historique.
+
+### Stockage et activation explicite
+
+Migration `098_hero_conditional_counter_talents.sql` : une
+configuration optionnelle par héros, avec coefficient et provenance.
+Un profil de combat de base déjà qualifié est requis avant
+l'enregistrement d'un talent. Seule la CLI administrative expose
+l'écriture de ce profil.
+
+Exemple **fictif de test** :
+
+```bash
+python -m mmhk_api.manage migrate
+python -m mmhk_api.manage qualify-counter-talent \
+  --hero-id UUID_DU_HEROS \
+  --bonus 0.15 \
+  --source-ref LAB-TALENT-CONTRE-ARME-015
+```
+
+L'exemple ne définit pas les véritables statistiques d'un talent S2.
+
+Pour 100 unités de puissance 100 ayant I contre C, avec un héros
+qualifié à zéro point d'attaque et un bonus conditionnel fictif
+de +15 %, le laboratoire calcule 10 000 + 5 000 (contre-arme) +
+1 500 (talent) = **16 500**. Lorsque le même peloton affronte
+ensuite une unité R, le bonus conditionnel tombe à zéro.
+
+### Avancement des CA
+
+- **CA01 :** cas conditionnel de laboratoire ajouté ; les vrais talents
+  historiques et leurs effets ne sont pas encore certifiés.
+- **CA02 :** tests écrits pour les conditions inactives, les classes
+  inconnues, les mauvais adversaires et la réévaluation à chaque échange.
+- **CA03 :** le bonus fixe reste distinct du pourcentage ; fixture
+  précédente conservée.
+- **CA04 :** calcul purement déterministe ; aucun ordre métier ni test
+  de reprise worker effectué pour cette variante.
+- **CA05 :** la route existante vérifie la propriété de la cité et
+  du héros ; test multi-comptes sur PostgreSQL encore nécessaire.
+
+Tests ajoutés :
+`test_conditional_hero_talents.py`,
+`test_conditional_talent_qualification.py` et compléments de
+`test_pve_stack_preview.py`.
+
+**US-COM-005 demeure partielle et non acceptée.** Aucun peloton n'est
+débité, aucun XP attribué et aucune case libérée par cette tranche.
