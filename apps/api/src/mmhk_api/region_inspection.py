@@ -107,6 +107,17 @@ def inspect_region(db: psycopg.Connection, owner: UUID, world_id: str, x: int, y
            )""",
         (world_id, x, y, owner, owner),
     ).fetchone()
+    deposits = []
+    if composition:
+        deposits = [
+            {"slot": int(slot), "resource": resource,
+             "i": int(i), "j": int(j)}
+            for slot,resource,i,j in db.execute(
+                """SELECT slot,resource,i,j FROM world_region_deposits
+                   WHERE world_id=%s AND x=%s AND y=%s ORDER BY slot""",
+                (world_id,x,y),
+            ).fetchall()
+        ]
     return {
         "world_id": world_id, "x": x, "y": y,
         "city": ({"city_id": str(own[0]), "name": own[1], "ownership": "own"}
@@ -120,6 +131,7 @@ def inspect_region(db: psycopg.Connection, owner: UUID, world_id: str, x: int, y
         "colonization_site_qualified": bool(qualified or dynamic),
         "regional_resources": list(composition[0]) if composition else None,
         "regional_resources_known": bool(composition),
+        "natural_deposits": deposits,
         "regional_resources_policy": composition[1] if composition else None,
         "terrain": None,
         "terrain_known": False,
