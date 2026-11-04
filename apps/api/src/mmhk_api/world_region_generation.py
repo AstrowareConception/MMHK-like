@@ -68,9 +68,39 @@ def provision_region(
         policy = "existing-city-v1"
         source = "existing-city-mines:" + str(city[0])
     else:
-        proposed = list(composition_for(world_id, x, y))
-        policy = POLICY
-        source = "procedural:" + POLICY
+        # Respect previously qualified mining sites before synthesizing any
+        # remaining experimental resource slot. This prevents a world batch
+        # from invalidating an operator-approved colonization location.
+        qualified = db.execute(
+            """SELECT mine_types,source_ref FROM world_colonizable_terrain
+               WHERE world_id=%s AND x=%s AND y=%s AND enabled
+               UNION ALL
+               SELECT mine_types,source_ref FROM colonization_site_profiles
+               WHERE world_id=%s AND x=%s AND y=%s AND enabled
+               LIMIT 2""",
+            (world_id, x, y, world_id, x, y),
+        ).fetchall()
+        if qualified:
+            signatures = {tuple(sorted(row[0])) for row in qualified}
+            if len(signatures) != 1:
+                raise ValueError("Conflicting operator-qualified regional mine profiles")
+            approved = list(next(iter(signatures)))
+            if len(approved) not in (3,4) or len(set(approved)) != len(approved):
+                raise ValueError("Invalid operator-qualified mine composition")
+            proposed = approved[:]
+            if len(proposed) == 3:
+                # The fourth slot is a declared procedural hypothesis, not
+                # an additional operational mine or a historical assertion.
+                candidate = composition_for(world_id, x, y)
+                proposed.append(next((r for r in candidate if r not in proposed),
+                                     next(r for r in RESOURCE_NAMES if r not in proposed)))
+            policy = POLICY
+            source = "qualified-site-plus-procedural:" + ",".join(row[1] for row in qualified)
+            source = source[:255]
+        else:
+            proposed = list(composition_for(world_id, x, y))
+            policy = POLICY
+            source = "procedural:" + POLICY
     db.execute(
         """INSERT INTO world_region_resources
            (world_id,x,y,resources,generation_policy,source_ref)
