@@ -116,6 +116,38 @@ def test_seven_day_protection_is_visible_and_never_bypassed_by_post(colony):
     assert stock(colony["source"])==before
     assert client.get(route(colony),headers=h).json()["expeditions"]==[]
 
+def test_foreign_colony_source_is_404_even_during_newcomer_protection(colony):
+    """A shared-world member must not learn private source eligibility.
+
+    A protected legitimate owner still sees 409 for a second city. A second
+    account that joins that same world but does NOT own the source must see
+    404 before any newcomer cooldown or policy details can be disclosed.
+    """
+    with psycopg.connect(URL) as db:
+        foreign=db.execute(
+            "SELECT account_id FROM accounts WHERE username=%s",
+            (colony["other_username"],),
+        ).fetchone()[0]
+        db.execute(
+            """INSERT INTO world_memberships(world_id,account_id)
+               VALUES(%s,%s) ON CONFLICT DO NOTHING""",
+            (colony["world"],foreign),
+        )
+    before=stock(colony["source"])
+    own=send(colony)
+    assert own.status_code==409,own.text
+    outsider=client.post(route(colony),
+        headers=headers(colony["other_username"]),json=order(colony))
+    assert outsider.status_code==404,outsider.text
+    assert "Seven-day" not in outsider.text
+    assert stock(colony["source"])==before
+    with psycopg.connect(URL) as db:
+        assert db.execute(
+            "SELECT count(*) FROM colonization_orders WHERE world_id=%s",
+            (colony["world"],),
+        ).fetchone()[0]==0
+
+
 def test_founding_creates_real_child_city_and_returns_hero_without_double_debit(colony):
     unlocked(colony)
     h=headers(colony["username"])
