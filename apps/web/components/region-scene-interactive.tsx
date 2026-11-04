@@ -8,6 +8,10 @@ import {regionOrnaments} from "../lib/region-ornaments";
 
 const MINE_LABELS:Record<string,string>={gold:"Or",wood:"Bois",ore:"Minerai",crystal:"Cristal",
   gems:"Gemmes",sulfur:"Soufre",mercury:"Mercure"};
+const MINE_COLORS:Record<string,string>={
+  gold:"#f3cf70",wood:"#87ba73",ore:"#b9c4cf",crystal:"#70d8e4",
+  gems:"#e1a0ee",sulfur:"#f3da63",mercury:"#b6e2e9"
+};
 const cellLabel=(c:RegionCell|null)=>c?"("+c.i+", "+c.j+")":"—";
 
 export function RegionSceneInteractive({region,background,forces,missions,initialSelection}:{region:RegionView;background:string|null;forces:CityForces|null;missions:PveMissionsResponse|null;initialSelection?:RegionCell}){
@@ -145,7 +149,7 @@ export function RegionSceneInteractive({region,background,forces,missions,initia
               fill="none" stroke="#f0d7a3" strokeWidth="2"/>
             <rect x={cx-9} y={cy-14} width="18" height="15" rx="2"
               fill="#182930" stroke="#c7ad76" strokeWidth="1.5"/>
-            <text x={cx} y={cy-2} textAnchor="middle" fontSize="14" fill="#f4cf78">◆</text>
+            <text x={cx} y={cy-2} textAnchor="middle" fontSize="14" fill={MINE_COLORS[mine]??"#f4cf78"}>◆</text>
             <text x={cx} y={cy+23} textAnchor="middle" fontSize="11" fontWeight="bold"
               fill="#fff2cd" stroke="#102630" strokeWidth="3" paintOrder="stroke">
               {MINE_LABELS[mine]??mine}</text>
