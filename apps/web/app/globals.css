@@ -4794,3 +4794,13 @@ body:has(.mmhk-entry-panel) .masthead h1{
 .mmhk-region-mines-list button:hover,.mmhk-region-mines-list button:focus-visible{
   background:#6a7059;border-color:#f4d594;color:#fff3c9}
 @media(max-width:520px){.mmhk-region-mines-list{grid-template-columns:1fr}}
+
+/* Region deposits: natural sites are visually distinct from operational mines. */
+.mmhk-regional-deposit-marker{filter:drop-shadow(0 3px 3px #071a1e)}
+.mmhk-inspector-deposit-preview{margin:13px 0;padding:12px;border:1px solid #ac9269;background:#f4ebd6a6;color:#443627}
+.mmhk-inspector-deposit-preview>strong{font:700 13px/1.4 system-ui,sans-serif;color:#443627;margin-bottom:9px}
+.mmhk-inspector-deposit-preview small{display:block;margin-top:8px;font:11px/1.5 system-ui,sans-serif;color:#715c43}
+.mmhk-inspector-deposit-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:4px;max-width:260px;margin:8px auto}
+.mmhk-inspector-deposit-grid span{display:grid;place-items:center;aspect-ratio:1;border:1px solid #bca88d;background:#d3c9b2;color:#8d806a;font:700 18px Georgia,serif}
+.mmhk-inspector-deposit-grid span.has-deposit{background:#536b60;color:#f6daa0;border-color:#8e774f}
+.mmhk-inspector-deposit-grid span.is-city{background:#857052;color:#fff0ce;border-color:#67553c}
