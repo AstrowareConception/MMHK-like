@@ -17,6 +17,7 @@ from .building_effects import configure_effect_profile, set_building_operational
 from uuid import UUID
 from .security import create_account, USERNAME
 from .worlds import seed_first_haven_city
+from .world_region_generation import provision_rectangle
 
 
 def main() -> None:
@@ -75,12 +76,31 @@ def main() -> None:
         help="Delete expired authentication buckets and old anonymous events",
     )
     prune.add_argument("--retention-days", type=int, default=30)
+    regions = sub.add_parser(
+        "provision-world-regions",
+        help="Persist up to 400 experiment-only four-resource world regions",
+    )
+    regions.add_argument("--world-id",required=True)
+    regions.add_argument("--x-min",type=int,required=True)
+    regions.add_argument("--y-min",type=int,required=True)
+    regions.add_argument("--x-max",type=int,required=True)
+    regions.add_argument("--y-max",type=int,required=True)
+    regions.add_argument("--reveal-to-account",type=UUID,
+                         help="Optional world member allowed to see the generated slots")
     args = parser.parse_args()
 
     with connect() as db:
         if args.command == "migrate":
             applied = migrate(db)
             print("Applied schema revisions:", applied or "already current")
+        elif args.command == "provision-world-regions":
+            count = provision_rectangle(
+                db, world_id=args.world_id,
+                x_min=args.x_min, y_min=args.y_min,
+                x_max=args.x_max, y_max=args.y_max,
+                reveal_to=args.reveal_to_account,
+            )
+            print(f"Provisioned {count} region coordinates (existing rows preserved)")
         elif args.command == "create-account":
             if not USERNAME.fullmatch(args.username):
                 parser.error("username must be 3..32 lowercase letters, digits or underscore")
