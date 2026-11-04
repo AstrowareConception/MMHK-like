@@ -155,7 +155,7 @@ us_id,priorite,besoin,etat_audit,preuve_code_candidate,dod,commentaire
 "US-COM-014","P0","Calculer les morts définitives","implementation_non_verifiee","","non_acceptee","Examiner les dépendances, sources et preuves de code avant classement."
 "US-COM-015","P0","Traiter les armées particulières","implementation_non_verifiee","","non_acceptee","Examiner les dépendances, sources et preuves de code avant classement."
 "US-COM-016","P0","Recevoir l’expérience du combat","implementation_non_verifiee","","non_acceptee","Examiner les dépendances, sources et preuves de code avant classement."
-"US-COM-017","P0","Lire les étapes d’une bataille","code_candidat_a_recetter","apps/api/src/mmhk_api/pve_missions.py","non_acceptee","Rapprocher les cinq CA et la DoD avec tests exécutés."
+"US-COM-017","P0","Lire les étapes d’une bataille","code_candidat_a_recetter","apps/api/src/mmhk_api/pve_report_interpretation.py","non_acceptee","Rapport mono-peloton enrichi. CA01 partiel ; CA02-05 et DoD à recetter. Voir docs/backlog/RECETTE-US-COM-017-2026-11-04.md."
 "US-COM-018","P2","Simuler une composition autorisée","implementation_non_verifiee","","non_acceptee","Examiner les dépendances, sources et preuves de code avant classement."
 "US-MON-001","P0","Explorer le monde","code_candidat_a_recetter","apps/web/components/world-atlas-interactive.tsx","non_acceptee","Rapprocher les cinq CA et la DoD avec tests exécutés."
 "US-MON-002","P1","Passer en vue politique","code_candidat_a_recetter","apps/web/components/world-atlas-interactive.tsx","non_acceptee","Rapprocher les cinq CA et la DoD avec tests exécutés."
