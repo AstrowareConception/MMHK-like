@@ -48,34 +48,83 @@ def signin(name,password):
     assert status==200 and data and data.get("access_token"),"Login failed"
     return data["access_token"]
 
-def city_snapshot(city_id):
-    """Snapshot the second player's actual resource and object balances."""
+# Snapshots deliberately cover BOTH owners and every principal order/ledger
+# table. The parent E2E script pauses the disposable worker for the duration
+# of this transaction so legitimate production ticks cannot change the baseline.
+CITY_TABLES=(
+    "cities","city_stocks","city_mines","city_mine_rates",
+    "city_economy_clock","urban_city_buildings","city_recruit_pools",
+    "city_garrison_units","city_hero_offers","city_heroes",
+    "city_artifacts","hero_formation_slots","region_encounters"
+)
+JOURNAL_TABLES=(
+    "urban_construction_orders","urban_construction_events",
+    "unit_recruitment_orders","hero_hire_orders","hero_unit_transfer_orders",
+    "artifact_transfer_orders","hero_formation_orders",
+    "city_merchant_orders","marketplace_orders","marketplace_offers",
+    "caravan_shipments","caravan_shipment_events","caravan_dispatch_programs",
+    "caravan_program_stop_orders","pve_missions","pve_mission_events",
+    "colonization_orders","colonization_order_events"
+)
+
+def rows_as_state(db,query,params=()):
+    # Sort full row representations to detect value changes as well as new
+    # inserts, without relying on an arbitrary PostgreSQL scan order.
+    return tuple(sorted(repr(row) for row in db.execute(query,params).fetchall()))
+
+def complete_snapshot():
     with connect() as db:
-        stocks=db.execute(
-            "SELECT resource,amount FROM city_stocks WHERE city_id=%s ORDER BY resource",
-            (city_id,)
-        ).fetchall()
-        arts=db.execute(
-            """SELECT artifact_id,location,hero_id,equipped_slot
-               FROM city_artifacts WHERE city_id=%s ORDER BY artifact_id""",
-            (city_id,)
-        ).fetchall()
-        heroes=db.execute(
-            """SELECT hero_id,owner_account_id,name,level,experience
-               FROM city_heroes WHERE city_id=%s ORDER BY hero_id""",
-            (city_id,)
-        ).fetchall()
-        return {
-            "stocks":tuple(stocks),"artifacts":tuple(arts),"heroes":tuple(heroes)
+        cities={}
+        for label,city_id in (("a",d["a_city"]),("b",d["b_city"])):
+            rows={
+                table:rows_as_state(db,
+                    "SELECT * FROM "+table+" WHERE city_id=%s",(city_id,))
+                for table in CITY_TABLES
+            }
+            rows["hero_army_units"]=rows_as_state(db,
+                """SELECT a.* FROM hero_army_units a
+                   JOIN city_heroes h ON h.hero_id=a.hero_id
+                   WHERE h.city_id=%s""",(city_id,))
+            cities[label]=rows
+        journals={
+            table:rows_as_state(db,"SELECT * FROM "+table)
+            for table in JOURNAL_TABLES
         }
+    return {"cities":cities,"journals":journals}
+
+def accepted_replay_seed(token):
+    """Create ONLY on the disposable second account, prior to snapshots.
+
+    Both are valid authenticated operations, not fake database inserts.
+    """
+    operations=(
+        ("artifact","/api/v1/me/cities/"+d["b_city"]+"/artifacts/move",{
+            "order_id":uid(),"artifact_id":d["b_artifact"],
+            "operation":"to_reserve","target_hero_id":None
+        }),
+        ("formation","/api/v1/me/cities/"+d["b_city"]+
+            "/heroes/"+d["b_hero"]+"/formation",{
+            "order_id":uid(),"positions":[]
+        })
+    )
+    accepted=[]
+    for label,path,body in operations:
+        code,receipt,headers=request(path,token=token,body=body)
+        assert code==201 and receipt and receipt.get("replayed") is False,(
+            "Could not create a real replay baseline",label,code
+        )
+        assert "no-store" in headers.get("Cache-Control","").lower()
+        accepted.append((label,path,body,receipt))
+    return accepted
 
 a=signin(d["a_username"],d["a_password"])
 b=signin(d["b_username"],d["b_password"])
 assert a!=b,"Two users must have independent access tokens"
 
-# No changes to the legitimate second player's resources, owned artifacts or
-# hero roster are permitted. This city has no background production clock.
-before=city_snapshot(d["b_city"])
+# First establish two real accepted commands owned by B; both become
+# immutable replay baselines, then freeze both player cities and all ledgers.
+accepted=accepted_replay_seed(b)
+before=complete_snapshot()
 checks=0
 cross_target=0
 destination_indistinguishable=0
@@ -202,16 +251,58 @@ for actor,foreign,foreign_hero,foreign_art,own in (
         if "from own city" in label:
             cross_target+=1
 
-# Mutation controls: a successful 200/201 from an unauthorized request would
-# be caught above. The independently seeded second player's stocks/objects and
-# roster must also be byte-for-byte stable after all 42 attempts.
-after=city_snapshot(d["b_city"])
-assert after==before,"Unauthorized attempts changed foreign private state"
+# Successful identical retries are idempotent (200, replayed=True),
+# while changed intent with the SAME UUID must be rejected (409). The other
+# legitimate member of the world must not replay B's private receipts (404).
+replay_success=0
+replay_conflict=0
+cross_replay_denial=0
+for label,path,body,original in accepted:
+    code,receipt,headers=request(path,token=b,body=body)
+    assert code==200 and receipt and receipt.get("replayed") is True,(
+        "Identical owner retry must be idempotent",label,code
+    )
+    assert {k:v for k,v in receipt.items() if k!="replayed"}=={
+        k:v for k,v in original.items() if k!="replayed"
+    },("Replay receipt does not match original",label)
+    assert "no-store" in headers.get("Cache-Control","").lower()
+    replay_success+=1
+    changed={**body}
+    if label=="artifact":
+        changed["operation"]="to_bag"
+    else:
+        changed["positions"]=[{
+            "position":1,"unit_code":"militia","quantity":1
+        }]
+    conflict,_,headers=request(path,token=b,body=changed)
+    assert conflict==409,("Reused UUID with altered intent",label,conflict)
+    assert "no-store" in headers.get("Cache-Control","").lower()
+    replay_conflict+=1
+    denied,_,headers=request(path,token=a,body=body)
+    assert denied==404,("Foreign account replayed B receipt",label,denied)
+    assert "no-store" in headers.get("Cache-Control","").lower()
+    cross_replay_denial+=1
+
+# The two legitimate city states AND complete order/journal rowsets must be
+# byte-for-byte identical after the 42 forgery attempts and six replay probes.
+after=complete_snapshot()
+assert after["cities"]==before["cities"],(
+    "Unauthorized or replayed request modified one of the two cities"
+)
+assert after["journals"]==before["journals"],(
+    "Unauthorized or replayed request changed game order journals"
+)
 assert checks==42 and cross_target==8 and destination_indistinguishable==2,(
     checks,cross_target,destination_indistinguishable
 )
+assert (replay_success,replay_conflict,cross_replay_denial)==(2,2,2)
 print(json.dumps({
     "shared_world":True,"users":2,"foreign_write_denials":checks,
     "cross_target_denials":cross_target,"second_city_unchanged":True,
-    "destination_indistinguishable":destination_indistinguishable
+    "destination_indistinguishable":destination_indistinguishable,
+    "both_cities_unchanged":True,"journals_unchanged":True,
+    "journal_tables_checked":len(JOURNAL_TABLES),
+    "city_tables_checked":len(CITY_TABLES)+1,
+    "replay_success":replay_success,"replay_conflict":replay_conflict,
+    "cross_replay_denial":cross_replay_denial
 }))
