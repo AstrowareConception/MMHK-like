@@ -16,7 +16,7 @@ class FakeDB:
         self.own=own
         self.hero_state=hero
         self.formation=formation if formation is not None else [
-            ("militia",12,20),("archers",5,12)
+            ("militia",12,20,"I"),("archers",5,12,"R")
         ]
         self.queries=[]
         self.rows=[]
@@ -26,7 +26,7 @@ class FakeDB:
         if "SELECT c.city_id FROM cities c" in normalized:
             self.rows=[(self.city,)] if self.own else []
         elif "SELECT name,unit_code,unit_count,unit_power" in normalized:
-            self.rows=[("Wolves","wolves",3,10,)] if self.own else []
+            self.rows=[("Wolves","wolves",3,10,"C")] if self.own else []
         elif "SELECT name,status FROM city_heroes" in normalized:
             self.rows=[("Hero",self.hero_state)] if self.own else []
         elif "FROM hero_formation_slots s" in normalized:
@@ -56,6 +56,8 @@ def test_multistack_preview_uses_own_hero_and_no_writes():
     result=preview(db)
     assert result["preview_only"] is True
     assert result["sequence"]["events"]
+    assert result["weapon_classification_complete"] is True
+    assert result["sequence"]["events"][0]["counter_weapons"]["qualified"] is True
     assert not result["sequence"]["permanent_losses_applied"]
     assert all(q.startswith("SELECT") for q,_ in db.queries)
 
@@ -74,6 +76,6 @@ def test_busy_hero_is_refused():
 
 
 def test_invalid_formation_is_refused():
-    db=FakeDB(formation=[("militia",3,None)])
+    db=FakeDB(formation=[("militia",3,None,"I")])
     with pytest.raises(RecruitmentConflict):
         preview(db)
