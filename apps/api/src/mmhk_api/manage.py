@@ -19,6 +19,7 @@ from .security import create_account, USERNAME
 from .worlds import seed_first_haven_city
 from .world_region_generation import provision_rectangle
 from .region_integrity import audit_world_regions
+from .weapon_qualification import qualify_unit_weapon,qualify_encounter_weapon
 
 
 def main() -> None:
@@ -94,12 +95,34 @@ def main() -> None:
     )
     audit.add_argument("--world-id",required=True)
     audit.add_argument("--limit",type=int,default=400)
+    unit_weapon=sub.add_parser(
+        "qualify-unit-weapon",help="Set a known I/R/C/E weapon classification with provenance",
+    )
+    unit_weapon.add_argument("--unit-code",required=True)
+    unit_weapon.add_argument("--weapon-type",choices=("I","R","C","E"),required=True)
+    unit_weapon.add_argument("--source-ref",required=True)
+    encounter_weapon=sub.add_parser(
+        "qualify-encounter-weapon",help="Set encounter weapon with provenance",
+    )
+    encounter_weapon.add_argument("--encounter-id",type=UUID,required=True)
+    encounter_weapon.add_argument("--weapon-type",choices=("I","R","C","E"),required=True)
+    encounter_weapon.add_argument("--source-ref",required=True)
     args = parser.parse_args()
 
     with connect() as db:
         if args.command == "migrate":
             applied = migrate(db)
             print("Applied schema revisions:", applied or "already current")
+        elif args.command == "qualify-unit-weapon":
+            print(json.dumps(qualify_unit_weapon(
+                db,unit_code=args.unit_code,weapon=args.weapon_type,
+                source_ref=args.source_ref,
+            ),ensure_ascii=False))
+        elif args.command == "qualify-encounter-weapon":
+            print(json.dumps(qualify_encounter_weapon(
+                db,encounter_id=args.encounter_id,weapon=args.weapon_type,
+                source_ref=args.source_ref,
+            ),ensure_ascii=False))
         elif args.command == "audit-world-regions":
             report = audit_world_regions(
                 db,world_id=args.world_id,limit=args.limit,
