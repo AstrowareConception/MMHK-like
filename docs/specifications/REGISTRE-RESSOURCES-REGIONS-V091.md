@@ -114,3 +114,57 @@ qualification discordante ne réécrit pas leur composition. Les devis,
 départs et arrivées des fondations vérifient désormais cette cohérence.
 Tests dédiés : `test_world_region_generation.py` et
 `test_region_resource_consistency.py`.
+
+## V092–V093 : localisation des quatre gisements sur la carte 5 × 5
+
+La migration `092_world_region_deposits.sql` ajoute
+`world_region_deposits`, avec quatre entrées (`slot = 0..3`)
+par région provisionnée. Chaque entrée indique `resource,i,j`.
+Les contraintes SQL imposent des positions distinctes dans la grille
+5 × 5, en dehors de la case centrale réservée à la ville.
+
+Un **gisement naturel** est une information territoriale, alors qu'une
+**mine** est une exploitation économique déjà présente dans
+`city_mines`. Ainsi, deux gisements de gemmes peuvent exister dans
+une même région tout en conservant le modèle actuel à une seule mine
+économique de gemmes par cité.
+
+Le générateur `world_region_deposits.provision_deposits` :
+- respecte les coordonnées des mines existantes lorsque leurs ressources
+  correspondent à la composition enregistrée ;
+- attribue les gisements restants à des cases libres par un calcul SHA-256
+  déterministe et versionné ;
+- refuse de réécrire un ensemble de positions incomplet ou contradictoire ;
+- fonctionne uniquement depuis l'administration, en complément du
+  provisionnement des quatre ressources.
+
+La migration `093_mines_follow_natural_deposits.sql` actualise le
+déclencheur de placement des **nouvelles** mines : lorsque les gisements
+sont connus, une mine utilise prioritairement la case d'un gisement de
+même ressource. Les anciennes mines ne sont jamais déplacées.
+
+La projection FastAPI de la région propriétaire expose
+`natural_deposits` séparément de `mine_positions`.
+L'inspection d'une région depuis la carte du monde ne transmet les
+positions que lorsque la composition des ressources est déjà visible
+au joueur. La vue régionale illustre les gisements non exploités
+et les mines bâties avec deux symboles différents.
+
+### Procédure de mise à jour
+
+Après sauvegarde, appliquer les migrations en ordre :
+
+```bash
+python -m mmhk_api.manage migrate
+python -m mmhk_api.manage provision-world-regions \
+  --world-id local-sandbox --x-min 1 --y-min 1 --x-max 10 --y-max 10
+```
+
+Le second appel complète aussi les positions des gisements des régions
+déjà présentes, sans en modifier les compositions.
+
+Tests ciblés : `pytest -q apps/api/tests/test_world_region_deposits.py`.
+
+Les tests PostgreSQL et l'E2E navigateur doivent être exécutés dans
+l'environnement Docker du projet : l'ajout des fichiers ne constitue
+pas une validation d'exécution.
