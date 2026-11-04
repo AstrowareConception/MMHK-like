@@ -16,6 +16,7 @@ from psycopg.types.json import Jsonb
 
 from .worlds import RESOURCE_NAMES
 from .region_resource_consistency import region_accepts_mines
+from .world_region_deposits import provision_deposits
 
 NEWBIE_DAYS = 7
 NEWBIE_SECONDS = NEWBIE_DAYS * 86400
@@ -778,6 +779,15 @@ def run_colonization_batch(
                             (world,x,y,sorted(mines),
                              "colonization-mines:"+str(new_city_id)),
                         )
+                    # Preserve the complete four-deposit plan at founding.
+                    # Existing terrain is never moved, and the new mine layout
+                    # has already followed any matching registered deposit.
+                    if db.execute(
+                        """SELECT 1 FROM world_region_resources
+                           WHERE world_id=%s AND x=%s AND y=%s""",
+                        (world,x,y),
+                    ).fetchone():
+                        provision_deposits(db,world_id=world,x=x,y=y)
                     db.execute(
                         """INSERT INTO world_region_resource_discoveries
                            (world_id,x,y,viewer_account_id)
