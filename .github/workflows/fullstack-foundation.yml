@@ -6,8 +6,6 @@ on:
   push:
     branches:
       - main
-      # Temporary token expiry and logout QA candidate; remove before merge.
-      - test/session-expiration-revocation-69
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
