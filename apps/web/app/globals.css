@@ -4829,3 +4829,15 @@ body:has(.mmhk-entry-panel) .masthead h1{
 @media(max-width:960px){.mmhk-discovery-layout{grid-template-columns:minmax(0,1fr)}}
 @media(max-width:600px){.mmhk-discovery-layout{gap:10px}
   .mmhk-region-inspector{padding:12px}}
+
+/* Read-only military readiness; no interactive combat until the PvP server is available. */
+.mmhk-discovery-military{border-top:1px solid #a88a60;margin-top:16px;padding-top:5px}
+.mmhk-discovery-hero-list{display:grid;gap:6px;margin:10px 0;max-height:220px;overflow-y:auto}
+.mmhk-discovery-hero{background:#f6ecdb;border:1px solid #ae9676;padding:9px 10px}
+.mmhk-discovery-hero strong{display:block;color:#3b2d1e;font:700 13px/1.4 system-ui,sans-serif}
+.mmhk-discovery-hero small{display:block;color:#70573e;font:11px/1.5 system-ui,sans-serif}
+.mmhk-discovery-locked-orders{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin:10px 0}
+.mmhk-discovery-locked-orders button:disabled{border:1px solid #b3a38e;background:#b9ab98;
+  color:#5b5044;font:700 12px/1.3 system-ui,sans-serif;cursor:not-allowed;opacity:1}
+.mmhk-discovery-military>small{display:block;color:#725d44;font:11px/1.5 system-ui,sans-serif}
+@media(max-width:480px){.mmhk-discovery-locked-orders{grid-template-columns:1fr}}
