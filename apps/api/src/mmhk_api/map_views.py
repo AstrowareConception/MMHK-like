@@ -168,6 +168,14 @@ def own_region(db: psycopg.Connection, account_id: UUID, city_id: UUID) -> dict:
            WHERE world_id=%s AND x=%s AND y=%s""",
         (world_id, x, y),
     ).fetchone()
+    deposits = [
+        {"slot": int(slot), "resource": resource, "i": int(i), "j": int(j)}
+        for slot,resource,i,j in db.execute(
+            """SELECT slot,resource,i,j FROM world_region_deposits
+               WHERE world_id=%s AND x=%s AND y=%s ORDER BY slot""",
+            (world_id,x,y),
+        ).fetchall()
+    ]
     surrounding_world_regions = [
         {
             "dx": dx,
@@ -191,6 +199,7 @@ def own_region(db: psycopg.Connection, account_id: UUID, city_id: UUID) -> dict:
         "mine_types_unlocated": mines,
         "mine_positions_known": len(placements) == len(mines),
         "mine_positions": placements,
+        "natural_deposits": deposits,
         "regional_resources": list(registered_resources[0]) if registered_resources else None,
         "regional_resources_policy": registered_resources[1] if registered_resources else None,
         "layout_policy": "regional-layout-v1",
