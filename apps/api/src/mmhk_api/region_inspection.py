@@ -1,0 +1,82 @@
+"""Account-scoped territorial inspection, no speculative resource generation.
+
+A coordinate is always inspectable inside a member's world. Its unknown
+content is not equivalent to an empty or unoccupied region.
+"""
+from __future__ import annotations
+
+from uuid import UUID
+import psycopg
+
+from .map_views import MapNotFound
+from .worlds import RESOURCE_NAMES
+
+
+def inspect_region(db: psycopg.Connection, owner: UUID, world_id: str, x: int, y: int) -> dict:
+    membership = db.execute(
+        """SELECT w.world_size FROM worlds w JOIN world_memberships m
+             ON m.world_id=w.world_id
+           WHERE w.world_id=%s AND m.account_id=%s""", (world_id, owner),
+    ).fetchone()
+    if membership is None:
+        raise MapNotFound
+    size = int(membership[0])
+    if not 1 <= x <= size or not 1 <= y <= size:
+        raise ValueError("Coordinates outside world boundaries")
+
+    own = db.execute(
+        """SELECT city_id,name FROM cities
+           WHERE world_id=%s AND x=%s AND y=%s AND owner_account_id=%s""",
+        (world_id, x, y, owner),
+    ).fetchone()
+    foreign = None
+    if not own:
+        foreign = db.execute(
+            """SELECT c.city_id,c.name FROM map_city_discoveries d
+               JOIN cities c ON c.city_id=d.city_id AND c.world_id=d.world_id
+               WHERE d.world_id=%s AND d.viewer_account_id=%s
+                 AND c.x=%s AND c.y=%s AND c.owner_account_id<>%s""",
+            (world_id, owner, x, y, owner),
+        ).fetchone()
+    mines = []
+    if own:
+        mines = [r[0] for r in db.execute(
+            "SELECT resource FROM city_mines WHERE city_id=%s ORDER BY resource",
+            (own[0],),
+        ).fetchall()]
+
+    site = db.execute(
+        """SELECT s.kind,s.label FROM map_site_discoveries d
+           JOIN map_world_sites s ON s.site_id=d.site_id AND s.world_id=d.world_id
+           WHERE d.world_id=%s AND d.viewer_account_id=%s AND s.x=%s AND s.y=%s
+           LIMIT 1""", (world_id, owner, x, y),
+    ).fetchone()
+    # Use the same authorization test as colonization: no unrestricted lookup
+    # into hidden colony profiles of other accounts.
+    qualified = db.execute(
+        """SELECT p.mine_types FROM colonization_site_profiles p
+           JOIN map_influence_cells i
+             ON i.world_id=p.world_id AND i.x=p.x AND i.y=p.y
+           WHERE p.world_id=%s AND p.x=%s AND p.y=%s AND p.enabled
+             AND i.controller_account_id=%s""",
+        (world_id, x, y, owner),
+    ).fetchone()
+    if qualified and not own:
+        mines = [v for v in qualified[0] if v in RESOURCE_NAMES]
+
+    return {
+        "world_id": world_id, "x": x, "y": y,
+        "city": ({"city_id": str(own[0]), "name": own[1], "ownership": "own"}
+                 if own else
+                 {"city_id": str(foreign[0]), "name": foreign[1], "ownership": "discovered"}
+                 if foreign else None),
+        "city_known": bool(own or foreign),
+        "mines": mines,
+        "mines_known": bool(own or qualified),
+        "special_site": {"kind": site[0], "label": site[1]} if site else None,
+        "colonization_site_qualified": bool(qualified),
+        "terrain": None,
+        "terrain_known": False,
+        "historically_certified": False,
+        "note": "Unknown means not discovered; no claim about hidden occupants or terrain.",
+    }
