@@ -6,8 +6,6 @@ on:
   push:
     branches:
       - main
-      # Temporary two-player permissions QA branch; remove before merge.
-      - test/two-player-isolation-66
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
