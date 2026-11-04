@@ -15,8 +15,8 @@ validations restant à exécuter. Le suivi vérifie les **300 IDs** sans
 assimiler présence de code et recette fonctionnelle. Contrôle reproductible :
 `node tools/validate-implementation-review.mjs`.
 
-À ce stade, 76 fiches possèdent un point d'entrée technique **candidat**
-et 224 doivent encore être examinées individuellement. Aucune des
+À ce stade, 77 fiches possèdent un point d'entrée technique **candidat**
+et 223 doivent encore être examinées individuellement. Aucune des
 1 500 confirmations n'est déclarée validée à partir de cette seule revue.
 Il ne s'agit ni d'un score de complétion ni d'une acceptation produit.
 
