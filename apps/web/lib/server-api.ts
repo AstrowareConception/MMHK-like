@@ -187,6 +187,11 @@ export type PveInterpretation={
   false_draw:number;
   attacker:{simulated_losses:number;overwhelming_victory:boolean;remaining:number;dispersed:boolean};
   defender:{simulated_losses:number;overwhelming_victory:boolean;remaining:number;dispersed:boolean};
+  ordinary_attacker_loss_projection?:{
+    dispersed:number;factor:string;unrounded:string;
+    permanent_deaths:number;nonfatal_dispersions:number;
+    policy_id:string;special_branches_excluded:boolean;effects_applied:false;
+  };
   persistent_effects_applied:false;terrain_liberated:false;
   xp_awarded:false;loot_awarded:false;model:string;
 };
