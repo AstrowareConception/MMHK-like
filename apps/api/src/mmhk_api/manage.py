@@ -8,6 +8,7 @@ from __future__ import annotations
 import argparse
 import getpass
 import json
+from decimal import Decimal
 
 from .db import connect, migrate
 from .login_limits import prune_login_history
@@ -20,6 +21,7 @@ from .worlds import seed_first_haven_city
 from .world_region_generation import provision_rectangle
 from .region_integrity import audit_world_regions
 from .weapon_qualification import qualify_unit_weapon,qualify_encounter_weapon
+from .hero_combat_qualification import qualify_hero_basic_combat
 
 
 def main() -> None:
@@ -107,12 +109,30 @@ def main() -> None:
     encounter_weapon.add_argument("--encounter-id",type=UUID,required=True)
     encounter_weapon.add_argument("--weapon-type",choices=("I","R","C","E"),required=True)
     encounter_weapon.add_argument("--source-ref",required=True)
+    hero_combat=sub.add_parser(
+        "qualify-hero-combat",
+        help="Operator-only hero basic attack/defense with explicit source",
+    )
+    hero_combat.add_argument("--hero-id",type=UUID,required=True)
+    hero_combat.add_argument("--attack",type=int,required=True)
+    hero_combat.add_argument("--defense",type=int,required=True)
+    hero_combat.add_argument("--attack-per-unit",type=Decimal,default=Decimal("0"))
+    hero_combat.add_argument("--defense-per-unit",type=Decimal,default=Decimal("0"))
+    hero_combat.add_argument("--source-ref",required=True)
     args = parser.parse_args()
 
     with connect() as db:
         if args.command == "migrate":
             applied = migrate(db)
             print("Applied schema revisions:", applied or "already current")
+        elif args.command == "qualify-hero-combat":
+            print(json.dumps(qualify_hero_basic_combat(
+                db,hero_id=args.hero_id,attack_points=args.attack,
+                defense_points=args.defense,
+                attack_per_unit=args.attack_per_unit,
+                defense_per_unit=args.defense_per_unit,
+                source_ref=args.source_ref,
+            ),ensure_ascii=False))
         elif args.command == "qualify-unit-weapon":
             print(json.dumps(qualify_unit_weapon(
                 db,unit_code=args.unit_code,weapon=args.weapon_type,
