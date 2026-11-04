@@ -9,11 +9,11 @@
 
 Le rapprochement couvre **300/300 fiches** : `data/backlog/implementation-review-2026-11-04.csv`.
 Il distingue :
-- **74 fiches avec un chemin de code candidat à examiner** : présence d'un
+- **75 fiches avec un chemin de code candidat à examiner** : présence d'un
   composant ou d'un flux potentiellement pertinent ; il manque encore des
   vérifications de critères, et certaines fonctions ne couvrent qu'une
   partie de l'US.
-- **226 fiches non vérifiées individuellement** : il ne s'agit PAS d'une
+- **225 fiches non vérifiées individuellement** : il ne s'agit PAS d'une
   affirmation que leur code n'existe pas.
 - **0 fiche déclarée acceptée dans cet audit** : l'équipe produit n'a pas
   consigné cinq résultats CA et DoD pour chaque fiche ; le taux d'acceptation
@@ -176,3 +176,27 @@ n'ont encore été enregistrées**.
 par la définition complète des pertes et des récompenses, et par
 la résolution réelle des rencontres. Ne pas marquer ces US comme
 terminées au seul motif que le rapport est plus lisible.
+
+## Complément du 4 novembre — tranche US-COM-014 (calcul vérifiable)
+
+Un calculateur **pur, limité aux unités ordinaires avec héros** est maintenant
+ajouté : `apps/api/src/mmhk_api/pve_casualties.py`.
+
+- Base Jactari `0,30`, minimum d'un mort uniquement pour un résultat
+  strictement positif inférieur à un et aucune perte minimale si dispersion 0.
+- Cas contrôlés US-COM-014-CA03 : 50 dispersés → 15 morts, 100 → 30.
+- Toute branche PNJ, sans héros ou unité non ordinaire est refusée par
+  `UnsupportedCasualtyProfile` ; les facteurs modifiés nécessitent une
+  qualification explicite.
+- Le calcul est **non mutatif**. Il n'applique aucune perte, ne libère
+  aucun gisement et n'attribue aucun XP ni butin.
+- Les nouveaux rapports de laboratoire incluent une projection **attacker
+  only**, explicitement étiquetée, distincte des pertes persistantes.
+
+Le statut de **US-COM-014** passe seulement à
+`code_candidat_a_recetter` dans l'inventaire du backlog. Il reste
+**non accepté** jusqu'à la couverture des branches spéciales,
+l'intégration transactionnelle et la preuve des cinq critères d'acceptation.
+
+Tests ajoutés : `apps/api/tests/test_pve_casualties.py` et
+compléments de `test_pve_report_interpretation.py`.
