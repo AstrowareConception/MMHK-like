@@ -16,7 +16,7 @@ def test_ordinary_hero_jactari_baseline(dispersed,expected):
     result=ordinary_hero_permanent_losses(dispersed)
     assert result["permanent_deaths"]==expected
     assert result["effects_applied"] is False
-    assert result["survivors"]==dispersed-expected
+    assert result["nonfatal_dispersions"]==dispersed-expected
 
 
 @pytest.mark.parametrize("dispersed",[-1,-2,True,1.5,"12"])
