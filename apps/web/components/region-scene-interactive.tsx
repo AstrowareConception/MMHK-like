@@ -1,9 +1,10 @@
 "use client";
-import {useState,type KeyboardEvent} from "react";
+import {useMemo,useState,type KeyboardEvent} from "react";
 import type {RegionView,CityForces,PveMissionsResponse} from "../lib/server-api";
 import {RegionEncounterPanel} from "./region-encounter-panel";
 import {RegionJourneyLayer,RegionMissionsPanel} from "./region-missions";
 import {REGION_VIEW,regionCellCenter,regionPolygon,type RegionCell} from "../lib/region-geometry";
+import {regionOrnaments} from "../lib/region-ornaments";
 
 const MINE_LABELS:Record<string,string>={gold:"Or",wood:"Bois",ore:"Minerai",crystal:"Cristal",
   gems:"Gemmes",sulfur:"Soufre",mercury:"Mercure"};
@@ -13,6 +14,8 @@ export function RegionSceneInteractive({region,background,forces,missions,initia
   const [hover,setHover]=useState<RegionCell|null>(null);
   const [selected,setSelected]=useState<RegionCell>(initialSelection??{i:2,j:2});
   const [showGuide,setShowGuide]=useState(!background);
+  const [useNativeArt,setUseNativeArt]=useState(true);
+  const ornaments=useMemo(()=>regionOrnaments(region.world_id,region.world_x,region.world_y),[region.world_id,region.world_x,region.world_y]);
   const [view,setView]=useState<"map"|"missions"|"intel">("map");
   const tabs=[{id:"map",label:"Carte"},{id:"missions",label:"Missions"},
     {id:"intel",label:"Renseignements"}] as const;
@@ -62,6 +65,10 @@ export function RegionSceneInteractive({region,background,forces,missions,initia
       <span>Région du monde : <strong>({region.world_x}, {region.world_y})</strong></span>
       <span>Survol local : <strong data-testid="region-hover">{cellLabel(hover)}</strong></span>
       <span>Sélection locale : <strong data-testid="region-selection">{cellLabel(selected)}</strong></span>
+      <div className="mmhk-map-render-modes" role="group" aria-label="Habillage régional">
+        <button type="button" aria-pressed={useNativeArt} onClick={()=>setUseNativeArt(true)}>Carte originale</button>
+        <button type="button" aria-pressed={!useNativeArt} disabled={!background} onClick={()=>setUseNativeArt(false)}>Décor historique</button>
+      </div>
       <label className="map-grid-switch"><input type="checkbox" checked={showGuide}
         onChange={e=>setShowGuide(e.target.checked)}/>Afficher le quadrillage</label>
     </div>
@@ -69,13 +76,20 @@ export function RegionSceneInteractive({region,background,forces,missions,initia
       aria-label="25 cases régionales : survol, sélection et ville centrale"
       role="group" onMouseLeave={()=>setHover(null)}>
       <rect width="680" height="562" fill="#203a42"/>
-      {background?<image href={background} x="0" y="0" width="680" height="562"
+      {!useNativeArt&&background?<image href={background} x="0" y="0" width="680" height="562"
         preserveAspectRatio="xMidYMid meet" pointerEvents="none"/>:
-        <path d="M0 230 L200 100 L400 185 L680 72 L680 562 L0 562Z" fill="#426f56" pointerEvents="none"/>}
+        <g pointerEvents="none">
+          <rect width="680" height="562" fill="#233d39"/>
+          <path d="M0 100 Q220 15 365 135 T680 100 L680 562 L0 562Z" fill="#355b50"/>
+          <path d="M0 365 Q230 235 390 382 T680 280 L680 562 L0 562Z" fill="#263f37"/>
+          <path d="M0 415 Q240 315 370 446 T680 395" fill="none" stroke="#8a936e" strokeOpacity=".24" strokeWidth="14"/>
+          <path d="M0 415 Q240 315 370 446 T680 395" fill="none" stroke="#d3b989" strokeOpacity=".26" strokeWidth="2"/>
+        </g>}
       {region.cells.map(cell=>{
         const {x:cx,y:cy}=regionCellCenter(cell.i,cell.j);
         const encounter=region.encounters?.find(e=>e.i===cell.i&&e.j===cell.j);
         const owned=cell.kind==="owned_city";
+        const ornament=ornaments[cell.j*5+cell.i];
         const mine=cell.kind==="mine"?cell.resource:null;
         const chosen=cell.i===selected.i&&cell.j===selected.j;
         const hovered=cell.i===hover?.i&&cell.j===hover?.j;
@@ -90,11 +104,28 @@ export function RegionSceneInteractive({region,background,forces,missions,initia
           <polygon points={regionPolygon(cell.i,cell.j)}
             data-testid={"region-tile-"+cell.i+"-"+cell.j}
             fill={chosen?"#c79c4f":owned?"#a48b60":mine?"#c69b54":"#7da18a"}
-            fillOpacity={chosen?.32:owned?.22:background?.005:.23}
+            fillOpacity={chosen?.32:owned?.22:!useNativeArt&&background?.005:.23}
             stroke={chosen?"#ffe7a3":hovered?"#fff4c8":"#c0d0c2"}
             strokeWidth={chosen?3:hovered?3:1}
             strokeOpacity={chosen||hovered?1:showGuide?.6:0}
             vectorEffect="non-scaling-stroke"/>
+          {useNativeArt&&!owned&&ornament.variant!=="none"&&<g pointerEvents="none"
+            transform={"translate("+cx+" "+cy+") rotate("+(ornament.rotation*90)+")"}
+            opacity={ornament.shade===0?.28:ornament.shade===1?.38:.48}>
+            {ornament.variant==="grass"&&<>
+              <path d="M-20 4l5-11 5 11m9 7l6-12 5 12m13-2l4-9 5 9" fill="none" stroke="#b1c99c" strokeWidth="2"/>
+              <path d="M-13 9l4-7m18 10l3-7" stroke="#1b322a" strokeWidth="2"/>
+            </>}
+            {ornament.variant==="stone"&&<>
+              <path d="M-23 10l7-15 13-3 8 14-10 8Z" fill="#9b9d88" stroke="#293b38" strokeWidth="2"/>
+              <path d="M10 12l4-11 10-3 7 13Z" fill="#c3b9a0" stroke="#35433f" strokeWidth="2"/>
+            </>}
+            {ornament.variant==="ruin"&&<>
+              <path d="M-17 12V-7h9V8h17v-19h8v23" fill="none" stroke="#b6a78b" strokeWidth="5"/>
+              <path d="M-23 13h49" stroke="#514e43" strokeWidth="4"/>
+            </>}
+            {ornament.variant==="trail"&&<path d="M-25 11Q-5-11 7-3T29-15" fill="none" stroke="#d0b88a" strokeWidth="6" strokeDasharray="9 7"/>}
+          </g>}
           {owned&&<a href={"/cities/"+region.city_id}
             aria-label={"Entrer dans la ville "+region.city_name}>
             <path d={"M"+(cx-18)+" "+(cy+6)+"L"+(cx-18)+" "+(cy-27)+"L"+cx+" "+(cy-43)+
@@ -129,7 +160,7 @@ export function RegionSceneInteractive({region,background,forces,missions,initia
       <RegionJourneyLayer missions={missions}/>
       <rect x="8" y="523" width="430" height="28" rx="3" fill="#10232cdd" pointerEvents="none"/>
       <text x="20" y="542" fontSize="11" fill="#f1dfb8" pointerEvents="none">
-        Mines positionnées · terrains et reliefs encore non cartographiés
+        Illustrations décoratives · reliefs et terrains non certifiés
       </text>
     </svg>
     <div className="region-selected-details" role="status">
