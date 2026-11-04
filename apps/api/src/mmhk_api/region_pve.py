@@ -1,7 +1,9 @@
-"""Visibility-safe regional encounters and a no-side-effects Jactari duel lab.
+"""Visibility-safe regional encounters and Jactari combat laboratories.
 
-Only one-stack PvE currently has an equivalent Python Jactari oracle.
-The laboratory DOES NOT consume units, liberate tiles, award loot, or XP.
+The single-stack port is also sequenced experimentally across ordinary army
+slots, applying weapon counters only when classes are operator-qualified.
+Neither laboratory consumes units, liberates tiles, awards loot or XP.
+Full S2 historical equivalence is NOT certified.
 """
 from __future__ import annotations
 from uuid import UUID
