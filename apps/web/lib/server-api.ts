@@ -182,6 +182,29 @@ export type DuelPreview = {
     draw:boolean;note:string};
 };
 
+export type LineSequencePreview={
+  scope:"LAB-ORDINARY-STACK-SEQUENCE";
+  preview_only:true;
+  hero_id:string;hero_name:string;encounter_id:string;encounter_name:string;
+  historically_certified:false;note:string;
+  sequence:{
+    scope:string;policy_id:string;verdict:"attacker"|"defender"|"draw";
+    events:{
+      exchange:number;attacker_position:number;defender_position:number;
+      attacker_unit_code:string;defender_unit_code:string;
+      started:{attacker:number;defender:number};
+      remaining:{attacker:number;defender:number};
+      dispersed:{attacker:boolean;defender:boolean};
+      jactari_false_draw:number;jactari_draw:boolean;
+      attacker_survives_to_next_exchange:boolean;
+      defender_survives_to_next_exchange:boolean;
+    }[];
+    permanent_losses_applied:false;experience_awarded:false;loot_awarded:false;
+    region_liberated:false;historically_certified:false;
+    excluded_mechanics:string[];
+  };
+};
+
 export type PveInterpretation={
   verdict:"attacker"|"defender"|"draw"|"unresolved";
   false_draw:number;
