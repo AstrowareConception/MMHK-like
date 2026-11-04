@@ -530,6 +530,12 @@ def start_colonization(db:psycopg.Connection,*,owner:UUID,world_id:str,
                 previous[9]!=expected_policy_id):
                 raise ColonizationConflict("Order identifier already used")
             return _receipt(previous,replayed=True)
+        # Check city ownership before applying player-specific eligibility
+        # rules. A foreign city must be concealed as 404, not exposed as a
+        # 409 newcomer-policy refusal. This read does not alter lock ordering:
+        # _source(..., lock=True) below remains the authoritative locked check.
+        # Existing accepted-order replays above stay unchanged.
+        _source(db,world_id=world_id,owner=owner,city_id=source_city_id)
         now=_now(db)
         if now<joined+timedelta(days=NEWBIE_DAYS):
             raise ColonizationConflict("Seven-day newcomer protection forbids a second city")

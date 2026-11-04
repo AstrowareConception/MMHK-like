@@ -126,6 +126,40 @@ def verify_live_api(fixture):
     print("PASS: 22 foreign API GET/POST concealment checks, "
           "own-world scoping, independent bearers, 401 and no-store",flush=True)
 
+def verify_live_writes(fixture):
+    """Run the hardened two-account POST matrix inside disposable FastAPI.
+
+    Its only input is a JSON pipe; no account secrets or bearer appear in
+    command arguments, job logs or screenshot artifacts.
+    """
+    path=Path("tools/e2e/two_player_write_contract.py")
+    assert path.is_file(),"Missing two-account write authorization contract"
+    payload=dict(fixture)
+    payload.update({
+        "a_username":os.environ["MMHK_E2E_USERNAME"],
+        "a_password":os.environ["MMHK_E2E_PASSWORD"]
+    })
+    run=subprocess.run(
+        [*COMPOSE,"exec","-T","api","python","-c",
+         path.read_text(encoding="utf-8")],
+        input=json.dumps(payload),capture_output=True,text=True,
+        check=False,timeout=190)
+    if run.returncode:
+        # Only the case name/status of a denied write may be printed; not the
+        # input JSON or any private credential used for setup.
+        raise AssertionError("Cross-account write authorization failed: "+
+                             run.stderr[-1700:])
+    result=json.loads(run.stdout.strip())
+    assert result=={
+        "shared_world":True,"users":2,"foreign_write_denials":42,
+        "cross_target_denials":8,"second_city_unchanged":True,
+        "destination_indistinguishable":2
+    },result
+    print("PASS: 40 foreign-path 404s and 2 indistinguishable 409s, no-store; "
+          "including indirect IDs and unmodified second-player resources",
+          flush=True)
+
+
 def check_cookie(context):
     cookies=[c for c in context.cookies() if c["name"]=="mmhk_session"]
     assert len(cookies)==1 and cookies[0]["httpOnly"]
@@ -141,6 +175,7 @@ def login(page,username,password):
 def main():
     fixture=create_local_player()
     verify_live_api(fixture)
+    verify_live_writes(fixture)
     with sync_playwright() as pw:
         browser=pw.chromium.launch(headless=True)
         a=browser.new_context(viewport={"width":1220,"height":900})
