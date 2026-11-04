@@ -14,7 +14,7 @@ import psycopg
 from .worlds import RESOURCE_NAMES
 from .world_region_deposits import provision_deposits
 
-POLICY = "regional-composition-v1"
+POLICY = "regional-composition-v2"
 RARE = ("crystal", "gems", "sulfur", "mercury")
 
 
@@ -23,17 +23,32 @@ def composition_for(world_id: str, x: int, y: int) -> tuple[str, str, str, str]:
         type(v) is not int or v < 1 for v in (x, y)
     ):
         raise ValueError("Invalid region identity")
-    entropy = sha256(f"{POLICY}:{world_id}:{x}:{y}".encode()).digest()
-    rare = RARE[entropy[0] % len(RARE)]
-    # Model hypothesis: gold/wood/ore are common. The second unusual pattern
-    # deliberately permits a duplicate rare resource in a minority of regions.
-    if entropy[1] < 20:
-        result = ["gold", "wood", rare, rare]
+    # P0 Q11-Q15: ordinary regions have NO mandatory gold/wood/ore.
+    # Pick three or four distinct types without replacement from all seven.
+    # At most one duplicate, never a triple or two pairs. Every rare type
+    # has symmetrical probability. The exact weights are a LAB hypothesis.
+    seed=f"{POLICY}:{world_id}:{x}:{y}"
+    ranked=sorted(
+        RESOURCE_NAMES,
+        key=lambda resource:sha256(f"{seed}:{resource}".encode()).digest(),
+    )
+    entropy=sha256(seed.encode()).digest()
+    if entropy[0] < 32:
+        # 12.5% laboratory hypothesis for one duplicate resource.
+        unique=ranked[:3]
+        duplicate=unique[entropy[1] % 3]
+        result=[*unique,duplicate]
     else:
-        result = ["gold", "wood", "ore", rare]
-    rotation = entropy[2] % 4
-    return tuple(result[rotation:] + result[:rotation])
-
+        result=ranked[:4]
+    # Shuffle the presentation independently of the resource selection.
+    return tuple(
+        resource for _,resource in sorted(
+            enumerate(result),
+            key=lambda pair:sha256(
+                f"{seed}:slot:{pair[0]}:{pair[1]}".encode()
+            ).digest(),
+        )
+    )
 
 def provision_region(
     db: psycopg.Connection, *, world_id: str, x: int, y: int,
