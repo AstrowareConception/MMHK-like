@@ -142,6 +142,62 @@ def test_expiring_and_revoking_sessions(scenario):
     assert client.get("/api/v1/me/worlds", headers=headers).status_code == 401
 
 
+def test_session_expiry_is_token_scoped_and_revocation_blocks_writes(scenario):
+    """One expired token cannot operate, while another session survives.
+
+    A revocation must not target all sessions for the same account; protected
+    writes are rejected *before* construction can reach the game ledger.
+    """
+    import hashlib
+
+    token_a, headers_a = _headers(
+        scenario["username"], "secure-test-password-123"
+    )
+    token_b, headers_b = _headers(
+        scenario["username"], "secure-test-password-123"
+    )
+    assert token_a != token_b
+    city_id = scenario["city"]
+
+    with psycopg.connect(URL) as db:
+        digest = hashlib.sha256(token_a.encode("utf-8")).digest()
+        changed = db.execute(
+            """UPDATE sessions SET expires_at=now()-interval '1 second'
+               WHERE token_digest=%s AND expires_at > now()""",
+            (digest,),
+        ).rowcount
+        assert changed == 1
+
+    assert client.get("/api/v1/me/worlds", headers=headers_a).status_code == 401
+    assert client.get("/api/v1/me/worlds", headers=headers_b).status_code == 200
+    order_id = uuid4()
+    attack = client.post(
+        f"/api/v1/me/cities/{city_id}/construction",
+        headers=headers_a,
+        json={"order_id":str(order_id),
+              "building_code":"village_hall","mode":"normal"},
+    )
+    assert attack.status_code == 401
+    assert "no-store" in attack.headers.get("Cache-Control", "")
+    with psycopg.connect(URL) as db:
+        assert db.execute(
+            "SELECT count(*) FROM urban_construction_orders WHERE order_id=%s",
+            (order_id,),
+        ).fetchone()[0] == 0
+
+    assert client.delete(
+        "/api/v1/sessions/current", headers=headers_b
+    ).status_code == 204
+    assert client.get("/api/v1/me/worlds", headers=headers_b).status_code == 401
+    assert client.post(
+        f"/api/v1/me/cities/{city_id}/construction",
+        headers=headers_b,
+        json={"order_id":str(uuid4()),
+              "building_code":"village_hall","mode":"normal"},
+    ).status_code == 401
+    assert client.get("/api/v1/me/worlds", headers=headers_a).status_code == 401
+
+
 def test_server_rejects_cross_world_or_invalid_seed_data(scenario):
     with psycopg.connect(URL) as db:
         with pytest.raises(ValueError, match="outside"):
