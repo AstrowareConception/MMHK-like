@@ -75,8 +75,20 @@ def inspect_region(db: psycopg.Connection, owner: UUID, world_id: str, x: int, y
              )""",
         (world_id, x, y, owner, owner),
     ).fetchone()
-    if qualified and not own:
-        mines = [v for v in qualified[0] if v in RESOURCE_NAMES]
+    # Dynamic worlds may have a separately registered terrain profile. Reveal
+    # it ONLY when the latest territory projection confirms our ownership.
+    dynamic = db.execute(
+        """SELECT t.mine_types FROM world_colonizable_terrain t
+           JOIN world_influence_cells i
+             ON i.world_id=t.world_id AND i.x=t.x AND i.y=t.y
+           JOIN world_influence_policies wp ON wp.world_id=t.world_id
+           WHERE t.world_id=%s AND t.x=%s AND t.y=%s AND t.enabled
+             AND wp.enabled AND wp.revision>0
+             AND i.state='controlled' AND i.owner_account_id=%s""",
+        (world_id, x, y, owner),
+    ).fetchone()
+    if not own and (dynamic or qualified):
+        mines = [v for v in (dynamic or qualified)[0] if v in RESOURCE_NAMES]
 
     return {
         "world_id": world_id, "x": x, "y": y,
@@ -86,9 +98,9 @@ def inspect_region(db: psycopg.Connection, owner: UUID, world_id: str, x: int, y
                  if foreign else None),
         "city_known": bool(own or foreign),
         "mines": mines,
-        "mines_known": bool(own or qualified),
+        "mines_known": bool(own or qualified or dynamic),
         "special_site": {"kind": site[0], "label": site[1]} if site else None,
-        "colonization_site_qualified": bool(qualified),
+        "colonization_site_qualified": bool(qualified or dynamic),
         "terrain": None,
         "terrain_known": False,
         "historically_certified": False,
