@@ -4,16 +4,16 @@ from jactari.duel import resolve_stack_duel
 from mmhk_api.pve_report_interpretation import interpret_duel
 
 
-def duel(attacker, defender):
+def duel(attacker, defender, modifiers=None):
     return resolve_stack_duel({
         "attacker":{"count":attacker,"unitPower":10},
         "defender":{"count":defender,"unitPower":10},
-        "modifiers":{},
+        "modifiers":modifiers or {},
     })
 
 
 def test_overwhelming_victory_sentinel_is_not_negative_casualty():
-    outcome=duel(100,1)
+    outcome=duel(100,1,{"attackStackHero":2})
     result=interpret_duel(outcome)
     assert outcome["losses"]["attacker"] == -1
     assert result["attacker"]["simulated_losses"]==0
@@ -23,7 +23,7 @@ def test_overwhelming_victory_sentinel_is_not_negative_casualty():
 
 
 def test_defender_can_overwhelm_attacker_without_negative_losses():
-    result=interpret_duel(duel(1,100))
+    result=interpret_duel(duel(1,100,{"defendStackHero":2}))
     assert result["defender"]["overwhelming_victory"] is True
     assert result["defender"]["simulated_losses"]==0
     assert result["verdict"]=="defender"
