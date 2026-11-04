@@ -38,7 +38,8 @@ def request(path,token=None,body=None):
                 json.loads(raw) if raw else None
             ),response.headers
     except urllib.error.HTTPError as error:
-        return error.code,None,error.headers
+        raw=error.read()
+        return error.code,(json.loads(raw) if raw else None),error.headers
 
 def signin(name,password):
     status,data,_=request("/api/v1/sessions",body={
@@ -77,6 +78,10 @@ assert a!=b,"Two users must have independent access tokens"
 before=city_snapshot(d["b_city"])
 checks=0
 cross_target=0
+destination_indistinguishable=0
+seven_resources={name:(1 if name=="wood" else 0) for name in (
+    "gold","wood","ore","crystal","gems","sulfur","mercury"
+)}
 for actor,foreign,foreign_hero,foreign_art,own in (
     (a,d["b_city"],d["b_hero"],d["b_artifact"],d["a_city"]),
     (b,d["a_city"],d["a_hero"],d["a_artifact"],d["b_city"])
@@ -109,11 +114,11 @@ for actor,foreign,foreign_hero,foreign_art,own in (
         }),
         ("send caravan",city+"/caravans",{
             "shipment_id":uid(),"destination_city_id":own,
-            "cargo":{"wood":1},"expected_policy_id":"QA-DENIED-CONTRACT"
+            "cargo":seven_resources,"expected_policy_id":"QA-DENIED-CONTRACT"
         }),
         ("schedule caravan",city+"/caravans/programs",{
             "program_id":uid(),"destination_city_id":own,
-            "cargo_template":{"wood":1},"expected_policy_id":"QA-DENIED-CONTRACT",
+            "cargo_template":seven_resources,"expected_policy_id":"QA-DENIED-CONTRACT",
             "quantity_mode":"exact","shipments_total":2,"wait_seconds":60
         }),
         ("stop caravan program",city+"/caravans/programs/"+program+"/stop",{
@@ -172,12 +177,24 @@ for actor,foreign,foreign_hero,foreign_art,own in (
         ("foreign caravan destination from own city",
          "/api/v1/me/cities/"+own+"/caravans",{
             "shipment_id":uid(),"destination_city_id":foreign,
-            "cargo":{"wood":1},"expected_policy_id":"QA-DENIED-CONTRACT"
+            "cargo":seven_resources,"expected_policy_id":"QA-DENIED-CONTRACT"
         })
     ]
     for label,path,body in operations:
-        status,_,headers=request(path,token=actor,body=body)
-        assert status==404,(label,status)
+        status,response,headers=request(path,token=actor,body=body)
+        # Foreign path ownership is concealed with 404. An own-city
+        # caravan to an unavailable destination instead returns the same
+        # generic 409 whether that UUID is foreign or nonexistent.
+        destination_case=label=="foreign caravan destination from own city"
+        assert status==(409 if destination_case else 404),(label,status)
+        if destination_case:
+            absent={**body,"shipment_id":uid(),"destination_city_id":uid()}
+            absent_status,absent_body,_=request(path,token=actor,body=absent)
+            assert absent_status==409 and absent_body==response,(
+                "Destination error reveals whether the city exists",
+                absent_status,status
+            )
+            destination_indistinguishable+=1
         assert "no-store" in headers.get("Cache-Control","").lower(),(
             "Missing private API no-store header",label
         )
@@ -190,8 +207,11 @@ for actor,foreign,foreign_hero,foreign_art,own in (
 # roster must also be byte-for-byte stable after all 42 attempts.
 after=city_snapshot(d["b_city"])
 assert after==before,"Unauthorized attempts changed foreign private state"
-assert checks==42 and cross_target==8,(checks,cross_target)
+assert checks==42 and cross_target==8 and destination_indistinguishable==2,(
+    checks,cross_target,destination_indistinguishable
+)
 print(json.dumps({
     "shared_world":True,"users":2,"foreign_write_denials":checks,
-    "cross_target_denials":cross_target,"second_city_unchanged":True
+    "cross_target_denials":cross_target,"second_city_unchanged":True,
+    "destination_indistinguishable":destination_indistinguishable
 }))
