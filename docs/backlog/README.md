@@ -4,7 +4,7 @@
 
 Chaque fiche contient la formulation « En tant que…, je souhaite… afin de… », les **3 C**, **cinq critères d’acceptation** (trois propres au parcours et deux transversaux), un examen **INVEST**, les dépendances, sources, incertitudes et la **Definition of Done** applicable.
 
-**Statut : backlog préparé pour l’affinage.** Aucune fiche n’est déclarée développée, estimée ou acceptée. Les 1 500 critères sont spécifiés ; aucun test de gameplay n’a été exécuté à cette étape. Les preuves existantes documentent des mécanismes mais ne certifient pas toutes les valeurs de la saison cible.
+**Statut du référentiel d’origine : backlog préparé pour l’affinage.** Lors de sa rédaction, aucune fiche n’était déclarée développée, estimée ou acceptée. Depuis, les composants candidats et leur recette sont suivis séparément ci-dessous : leur présence ne vaut pas validation d’une US. Les 1 500 critères restent la base de l’acceptation ; les preuves historiques disponibles ne certifient pas toutes les valeurs de la saison cible.
 
 ## Suivi d'implémentation — 4 novembre 2026
 
