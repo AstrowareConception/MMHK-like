@@ -6,8 +6,6 @@ on:
   push:
     branches:
       - main
-      # Temporary Firefox/WebKit QA candidate; remove before merge.
-      - test/firefox-webkit-ui-65
     paths:
       - 'apps/**'
       - 'tools/jactari-port/core.mjs'
