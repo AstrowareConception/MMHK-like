@@ -2,7 +2,7 @@
 import {useState} from "react";
 import {launchRegionalPveMission} from "../app/actions";
 import Link from "next/link";
-import type {CityForces,DuelPreview,RegionEncounter,PveMissionsResponse} from "../lib/server-api";
+import type {CityForces,DuelPreview,LineSequencePreview,RegionEncounter,PveMissionsResponse} from "../lib/server-api";
 
 export function RegionEncounterPanel({encounter,forces,cityId,missions}:{
   encounter:RegionEncounter|null;forces:CityForces|null;cityId:string;missions:PveMissionsResponse|null;
@@ -15,6 +15,7 @@ export function RegionEncounterPanel({encounter,forces,cityId,missions}:{
   const [chosen,setChosen]=useState("");
   const [busy,setBusy]=useState(false);
   const [report,setReport]=useState<DuelPreview|null>(null);
+  const [lineReport,setLineReport]=useState<LineSequencePreview|null>(null);
   const [error,setError]=useState("");
   const active=pairs.find(p=>p.key===chosen)??pairs[0];
   const activeJourneys=missions?.missions.filter(m=>m.stage!=="completed")??[];
@@ -24,6 +25,24 @@ export function RegionEncounterPanel({encounter,forces,cityId,missions}:{
   const plannedSeconds=encounter&&availablePolicy?
     (Math.abs(encounter.i-2)+Math.abs(encounter.j-2))*availablePolicy.seconds_per_step:null;
 
+  const previewLines=async()=>{
+    if(!encounter||!active||busy)return;
+    setBusy(true);setLineReport(null);setError("");
+    try{
+      const response=await fetch("/api/region-lines",{
+        method:"POST",headers:{"Content-Type":"application/json"},cache:"no-store",
+        body:JSON.stringify({
+          city_id:cityId,encounter_id:encounter.encounter_id,
+          hero_id:active.hero.hero_id
+        })
+      });
+      const data=await response.json();
+      if(!response.ok)throw new Error(typeof data.error==="string"
+        ?data.error:"Simulation de la formation refusée");
+      setLineReport(data as LineSequencePreview);
+    }catch(err){setError(err instanceof Error?err.message:"Simulation indisponible");}
+    finally{setBusy(false);}
+  };
   const preview=async()=>{
     if(!encounter||!active||busy)return;
     setBusy(true);setReport(null);setError("");
@@ -59,13 +78,16 @@ export function RegionEncounterPanel({encounter,forces,cityId,missions}:{
     {pairs.length?<div className="encounter-preview-controls">
       <label>Héros et peloton
         <select aria-label="Héros et peloton pour la simulation" value={active?.key??""}
-          onChange={e=>{setChosen(e.target.value);setReport(null);}}>
+          onChange={e=>{setChosen(e.target.value);setReport(null);setLineReport(null);}}>
           {pairs.map(({key,hero,army})=><option key={key} value={key}>
             {hero.name} · {army.quantity} {army.name}</option>)}
         </select>
       </label>
       <button type="button" disabled={busy} onClick={preview}>
         {busy?"Simulation en cours":"Tester un duel Jactari"}
+      </button>
+      <button type="button" disabled={busy} onClick={previewLines}>
+        {busy?"Simulation en cours":"Tester la formation (7 pelotons max.)"}
       </button>
     </div>:<div className="encounter-no-army">
       Aucun héros disponible ne possède de peloton. <Link href={"/cities/"+cityId+"/forces"}>
@@ -95,6 +117,26 @@ export function RegionEncounterPanel({encounter,forces,cityId,missions}:{
         Le héros reste indisponible jusqu'à son arrivée réelle à la cité.</small>
     </div>
     {error&&<p className="error" role="alert">{error}</p>}
+    {lineReport&&<div className="encounter-report" role="status"
+      data-testid="region-line-sequence-preview">
+      <strong>Enchaînement expérimental — aucun effet sur la partie</strong>
+      <p>{lineReport.sequence.events.length} échanges · Verdict provisoire :
+        {lineReport.sequence.verdict==="attacker"?" attaquant":
+         lineReport.sequence.verdict==="defender"?" défenseur":" égalité"}</p>
+      <ol className="mmhk-regional-line-events">
+        {lineReport.sequence.events.map(event=><li key={event.exchange}>
+          <strong>Échange {event.exchange}</strong>
+          <span>Peloton {event.attacker_position} ({event.attacker_unit_code})
+            contre {event.defender_position} ({event.defender_unit_code})</span>
+          <small>Attaquant {event.started.attacker} → {event.remaining.attacker} ·
+            Défenseur {event.started.defender} → {event.remaining.defender}</small>
+          <small>{event.dispersed.attacker?"Attaquant dispersé. ":""}
+            {event.dispersed.defender?"Défenseur dispersé. ":""}</small>
+        </li>)}
+      </ol>
+      <small>Sans contre-armes, magie, bonus, tirs préalables, XP, pertes
+        définitives ni libération de mine. Ce n'est pas un devis de bataille.</small>
+    </div>}
     {report&&<div className="encounter-report" role="status">
       <strong>Rapport de simulation — sans effet sur la partie</strong>
       <div><span>Puissance de {report.hero_name}</span><b>{report.outcome.totalPower.attacker}</b></div>
