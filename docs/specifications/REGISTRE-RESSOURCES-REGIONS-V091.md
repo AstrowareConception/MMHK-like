@@ -94,3 +94,23 @@ pytest -q apps/api/tests/test_region_resource_consistency.py
 
 Les contrôles unitaires ne remplacent pas les essais transactionnels
 PostgreSQL du worker de colonisation ni les vérifications Playwright.
+
+## Sites qualifiés préexistants — règle de priorité
+
+Lorsqu'un opérateur provisionne une région sans cité, le générateur
+recherche au préalable ses profils coloniaux actifs
+(`world_colonizable_terrain` ou `colonization_site_profiles`).
+Les types de mines déjà explicitement approuvés sont conservés.
+
+Avec trois ressources qualifiées, la quatrième est ajoutée de manière
+déterministe, comme **hypothèse de laboratoire identifiée par sa provenance**.
+Cette quatrième ressource ne crée pas de mine productive.
+Avec quatre types, la composition est reprise telle quelle. Deux
+profils actifs et contradictoires entraînent un refus de provisionnement
+jusqu'à résolution par l'opérateur.
+
+Les régions déjà provisionnées restent immuables : une nouvelle
+qualification discordante ne réécrit pas leur composition. Les devis,
+départs et arrivées des fondations vérifient désormais cette cohérence.
+Tests dédiés : `test_world_region_generation.py` et
+`test_region_resource_consistency.py`.
