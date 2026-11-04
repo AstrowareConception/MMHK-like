@@ -1,0 +1,59 @@
+# US-COM-008 — Tranche technique de l'enchaînement des pelotons
+
+Date : 4 novembre 2026. **État : code candidat, non accepté**.
+
+Le besoin défini dans le backlog est de permettre au survivant d'un
+échange d'affronter le peloton suivant avec ses effectifs restants,
+sans réintégrer un peloton dispersé et sans malus de fatigue inventé.
+
+## Implémentation candidate
+
+- `apps/api/src/mmhk_api/pve_stack_sequence.py` : orchestration pure,
+  déterministe, maximum sept pelotons ordinaires par camp et 98 échanges
+  de sécurité. Elle appelle `jactari.duel.resolve_stack_duel` à chaque
+  échange et conserve les effectifs restants du survivant.
+- `apps/api/src/mmhk_api/region_pve.py` :
+  `preview_ordinary_line_sequence` lit les rencontres autorisées,
+  la formation du héros propriétaire et les puissances du catalogue.
+- `POST /api/v1/me/cities/{city_id}/encounters/{encounter_id}/preview-lines`
+  : API **en lecture seule**, authentifiée et filtrée par propriété.
+- `apps/web/app/api/region-lines/route.ts` : relais Next.js sans
+  divulgation du bearer au navigateur.
+- `apps/web/components/region-encounter-panel.tsx` : bouton
+  « Tester la formation » et liste des échanges conservée localement
+  dans le navigateur, sans modification du monde.
+
+Les tests candidats `test_pve_stack_sequence.py` et
+`test_pve_stack_preview.py` couvrent une chaîne de pelotons, la
+dispersion, la reproductibilité, les profils inadmissibles et
+l'absence de requête d'écriture.
+
+## Correspondance avec les cinq critères de l'US
+
+| Critère | État de vérification |
+| --- | --- |
+| CA01 : le survivant poursuit à effectif restant | Algorithme implémenté ; test écrit, non exécuté |
+| CA02 : un peloton dispersé ne rejoue pas intact | Algorithme implémenté ; test écrit, non exécuté |
+| CA03 : plusieurs victoires sans fatigue ajoutée | Algorithme implémenté ; test écrit, non exécuté |
+| CA04 : reprise/idempotence | Fonction pure, sans ordre ; tests de reprise du vrai worker absents |
+| CA05 : droits et visibilité | Authentification et scoping SQL ; validation multi-joueur E2E absente |
+
+**Definition of Done : non satisfaite.** L'US demande la fidélité au
+résultat réel du combat ; cette première version n'intègre pas les
+tirs préalables, les contre-armes, les bonus de héros, la magie,
+l'admission/fuite PvE, les invocations, les résurrections et les pertes
+persistantes. Le résultat ne doit donc pas être utilisé par un worker
+pour libérer une case, tuer des unités, délivrer de l'expérience ou
+attribuer un butin.
+
+## Prochaines dépendances métier
+
+**US-COM-004 (contre-armes)** et **US-COM-001 (préparer la bataille)**
+restent les dépendances indispensables pour établir des résultats
+complets, suivies des US-COM-011, 013, 014, 016 et 017.
+**US-REG-003/004** dépendent de la résolution correctement
+persistée des rencontres et de l'exploitation économique réelle.
+
+Ne déclarer une US terminée qu'après vérification de ses cinq CA
+sur fixture versionnée, tests PostgreSQL, recette navigateur et
+acceptation explicitement consignée.
