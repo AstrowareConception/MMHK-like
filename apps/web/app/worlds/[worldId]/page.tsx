@@ -49,7 +49,8 @@ export default async function WorldPage({
       worldId={world.world_id} cityId={currentCity?.city_id}
       stocks={cityDetail?.ok?cityDetail.data?.stocks:undefined}>
         <WorldGameScreen worldId={world.world_id} worldName={world.name}
-          map={<WorldAtlas world={world} cities={world.cities} qualifiedSites={colonies?.qualified_sites??[]}/>}
+          map={<WorldAtlas world={world} cities={world.cities} qualifiedSites={colonies?.qualified_sites??[]}
+            cityMines={cityModels.map(({city,detail})=>({cityId:city.city_id,mines:detail?.mines??[]}))}/>}
           cities={<div className="mmhk-world-scroll mmhk-world-city-room">
             <h2>Mes cités</h2>
         <div className="tile-links">
