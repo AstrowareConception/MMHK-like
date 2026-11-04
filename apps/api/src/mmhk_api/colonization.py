@@ -16,7 +16,7 @@ from psycopg.types.json import Jsonb
 
 from .worlds import RESOURCE_NAMES
 from .region_resource_consistency import region_accepts_mines
-from .world_region_deposits import provision_deposits
+from .world_region_deposits import DepositLayoutConflict, provision_deposits
 
 NEWBIE_DAYS = 7
 NEWBIE_SECONDS = NEWBIE_DAYS * 86400
@@ -827,6 +827,12 @@ def run_colonization_batch(
                             (uuid4(),new_city_id,entry["name"],entry["archetype"],
                              entry["gold_cost"],policy),
                         )
+            except DepositLayoutConflict:
+                # The savepoint has rolled back the incomplete city.
+                # Preserve escrow as a blocked order for a controlled refund,
+                # rather than retrying a fundamentally invalid terrain plan.
+                result.append(_block(db,row,now,"invalid_regional_deposit_layout"))
+                continue
             except psycopg.errors.UniqueViolation:
                 result.append(_block(db,row,now,"founding_destination_occupied"))
                 continue
