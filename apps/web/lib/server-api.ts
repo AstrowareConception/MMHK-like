@@ -117,13 +117,16 @@ export type RegionView = {
   world_size: number;
   region_width: 5;
   region_height: 5;
-  cell_layout: "illustrative_unmapped";
+  cell_layout: "persistent_mine_positions_v1";
   mine_types_unlocated: string[];
-  mine_positions_known: false;
+  mine_positions_known: boolean;
+  mine_positions: {resource:string;i:number;j:number}[];
+  layout_policy: string;
   cells: {
     i: number;
     j: number;
-    kind: "owned_city" | "unmapped";
+    kind: "owned_city" | "mine" | "unmapped";
+    resource: string | null;
     city_id: string | null;
   }[];
   surrounding_world_regions: {
