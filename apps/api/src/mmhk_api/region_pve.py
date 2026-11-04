@@ -69,7 +69,7 @@ def preview_ordinary_line_sequence(
     """
     _owned_city(db, owner, city_id)
     monster = db.execute(
-        """SELECT name,unit_code,unit_count,unit_power
+        """SELECT name,unit_code,unit_count,unit_power,combat_weapon_code
            FROM region_encounters
            WHERE encounter_id=%s AND city_id=%s AND NOT resolved""",
         (encounter_id,city_id),
@@ -86,7 +86,7 @@ def preview_ordinary_line_sequence(
     if hero[1]!="idle":
         raise RecruitmentConflict("Hero is not available for preview")
     formations = db.execute(
-        """SELECT s.unit_code,s.quantity,p.lab_duel_power
+        """SELECT s.unit_code,s.quantity,p.lab_duel_power,p.combat_weapon_code
            FROM hero_formation_slots s
            JOIN city_unit_profiles p ON p.unit_code=s.unit_code
            JOIN hero_army_units a
@@ -98,7 +98,7 @@ def preview_ordinary_line_sequence(
     ).fetchall()
     if not formations:
         formations = db.execute(
-            """SELECT a.unit_code,a.quantity,p.lab_duel_power
+            """SELECT a.unit_code,a.quantity,p.lab_duel_power,p.combat_weapon_code
                FROM hero_army_units a
                JOIN city_unit_profiles p ON p.unit_code=a.unit_code
                WHERE a.hero_id=%s AND a.quantity>0
@@ -106,7 +106,7 @@ def preview_ordinary_line_sequence(
             (hero_id,),
         ).fetchall()
     if (not 1<=len(formations)<=7
-        or any(power is None for _,_,power in formations)):
+        or any(power is None for _,_,power,_ in formations)):
         raise RecruitmentConflict("A complete eligible ordinary formation is required")
     # Fail closed if a configured formation includes unsupported entries:
     # bypassing them would silently make the army weaker or stronger.
@@ -117,16 +117,18 @@ def preview_ordinary_line_sequence(
     if declared and declared!=len(formations):
         raise RecruitmentConflict("Formation contains invalid or unavailable slots")
     report = resolve_ordinary_lines(
-        [{"unit_code":code,"count":int(count),"unit_power":float(power)}
-         for code,count,power in formations],
+        [{"unit_code":code,"count":int(count),"unit_power":float(power),
+          "weapon_code":weapon}
+         for code,count,power,weapon in formations],
         [{"unit_code":monster[1],"count":int(monster[2]),
-          "unit_power":float(monster[3])}],
+          "unit_power":float(monster[3]),"weapon_code":monster[4]}],
     )
     return {
         "scope":report["scope"],"preview_only":True,
         "hero_id":str(hero_id),"hero_name":hero[0],
         "encounter_id":str(encounter_id),"encounter_name":monster[0],
         "sequence":report,
+        "weapon_classification_complete":report["weapon_classification_complete"],
         "historically_certified":False,
         "note":"Partial ordinary-stack Jactari laboratory; no permanent effects.",
     }
