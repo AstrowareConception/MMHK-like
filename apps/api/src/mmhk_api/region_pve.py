@@ -118,12 +118,26 @@ def preview_ordinary_line_sequence(
     ).fetchone()[0]
     if declared and declared!=len(formations):
         raise RecruitmentConflict("Formation contains invalid or unavailable slots")
+    profile = db.execute(
+        """SELECT attack_points,defense_points,attack_per_unit,
+                  defense_per_unit,source_ref
+           FROM hero_basic_combat_profiles WHERE hero_id=%s""",
+        (hero_id,),
+    ).fetchone()
+    qualified_hero = ({
+        "attack_points":profile[0],
+        "defense_points":profile[1],
+        "attack_per_unit":profile[2],
+        "defense_per_unit":profile[3],
+        "source_ref":profile[4],
+    } if profile else None)
     report = resolve_ordinary_lines(
         [{"unit_code":code,"count":int(count),"unit_power":float(power),
           "weapon_code":weapon}
          for code,count,power,weapon in formations],
         [{"unit_code":monster[1],"count":int(monster[2]),
           "unit_power":float(monster[3]),"weapon_code":monster[4]}],
+        attacker_hero=qualified_hero,
     )
     return {
         "scope":report["scope"],"preview_only":True,
@@ -131,6 +145,7 @@ def preview_ordinary_line_sequence(
         "encounter_id":str(encounter_id),"encounter_name":monster[0],
         "sequence":report,
         "weapon_classification_complete":report["weapon_classification_complete"],
+        "attacker_hero_profile_applied":report["attacker_hero_profile_applied"],
         "historically_certified":False,
         "note":"Partial ordinary-stack Jactari laboratory; no permanent effects.",
     }
