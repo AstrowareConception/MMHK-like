@@ -8,6 +8,7 @@ from __future__ import annotations
 
 from .pve_casualties import ordinary_hero_permanent_losses
 from .jactari_duel_ending import classify_jactari_exchange
+from .jactari_overwhelming import explain_overwhelming
 
 
 def interpret_duel(outcome: dict) -> dict:
@@ -39,6 +40,8 @@ def interpret_duel(outcome: dict) -> dict:
         "verdict":verdict,
         "false_draw":ending["false_draw_marker"],
         "ending":ending,
+        "overwhelming":explain_overwhelming(outcome)
+          if "basePower" in outcome and "totalPower" in outcome else None,
         "attacker": {
             "simulated_losses":0 if la==-1 else la,
             "overwhelming_victory":la==-1,
