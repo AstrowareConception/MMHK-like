@@ -154,10 +154,16 @@ def test_real_paid_upgrade_replay_and_correct_tick_boundary(city):
     with psycopg.connect(URL,autocommit=True) as db:
         first=run_economy_batch(db,now_at=started+timedelta(hours=3),
                                 max_cities=1)[0]
-        assert first["ticks"]==2
-        # V104 already suppresses the initial pre-activation tick.
-        assert first["credits"]["gold"]==83
-        assert first["upgrades_completed"][0]["target_level"]==2
+        assert first["ticks"]==1
+        # V104 first splits at activation: the tick begun BEFORE the
+        # player opened the mine earns no gold at all.
+        assert first["credits"]["gold"]==0
+        assert first["upgrades_completed"]==[]
+        middle=run_economy_batch(db,now_at=started+timedelta(hours=3),
+                                 max_cities=1)[0]
+        assert middle["ticks"]==1
+        assert middle["credits"]["gold"]==83
+        assert middle["upgrades_completed"][0]["target_level"]==2
         later=run_economy_batch(db,now_at=started+timedelta(hours=3),
                                 max_cities=1)[0]
         assert later["ticks"]==1
