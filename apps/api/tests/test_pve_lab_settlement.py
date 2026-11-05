@@ -159,3 +159,46 @@ def test_pure_qualified_path_has_ledger_and_exact_debits():
     assert result["total_deaths"] == 30
     assert db.current == {"militia": 85, "archers": 35}
     assert db.ledger == 1 and db.deleted_formation
+
+
+
+def test_duplicated_unit_codes_are_aggregated_only_after_per_slot_rounding():
+    original={"attacker":[
+        {"position":1,"unit_code":"militia","count":3},
+        {"position":7,"unit_code":"militia","count":5},
+    ]}
+    result={
+        "verdict":"defender","weapon_classification_complete":True,
+        "pre_shots":{"configured":False},
+        "events":[{"ending":{"kind":"ordinary"}}],
+        "attacker":[
+            {"position":1,"unit_code":"militia","initial":3,"remaining":0},
+            {"position":7,"unit_code":"militia","initial":5,"remaining":2},
+        ],
+    }
+    plan=plan_attacker_losses(policy(),original,result)
+    assert [e["permanent_deaths"] for e in plan["entries"]]==[1,1]
+    assert plan["total_deaths"]==2
+    db=FakeDB()
+    db.current={"militia":8}
+    saved=settle_attacker_if_qualified(
+        db,mission_id=uuid4(),hero_id=uuid4(),
+        snapshot=policy(),verified_line=original,sequence=result,
+    )
+    assert saved["status"]=="applied"
+    assert db.current["militia"]==6
+    assert sum("UPDATE hero_army_units SET" in q for q in db.queries)==1
+    assert db.ledger==1
+
+
+def test_concurrent_stock_edit_refuses_before_any_debit_or_ledger():
+    db=FakeDB()
+    db.current["militia"]=99
+    with pytest.raises(ValueError,match="stock differs"):
+        settle_attacker_if_qualified(
+            db,mission_id=uuid4(),hero_id=uuid4(),
+            snapshot=policy(),verified_line=frozen(),sequence=sequence(),
+        )
+    assert db.current=={"militia":99,"archers":50}
+    assert db.ledger==0
+    assert not db.deleted_formation
