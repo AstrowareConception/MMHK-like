@@ -135,6 +135,34 @@ export function RegionEncounterPanel({encounter,forces,cityId,missions}:{
         Talent du héros : activé échange par échange uniquement si l'unité
         attaquante possède l'avantage de contre-arme correspondant.
       </p>}
+      <div className="mmhk-pre-shot-phase" data-testid="combat-pre-shot-phase">
+        <strong>Phase préalable — avant les duels</strong>
+        {lineReport.sequence.pre_shots.configured?<>
+          <p>Les tirs des deux camps sont calculés sur les effectifs initiaux,
+            puis appliqués ensemble avant les échanges ordinaires.</p>
+          <ol>
+            {lineReport.sequence.pre_shots.events.map(shot=><li key={shot.order}>
+              <strong>{shot.kind==="barrage"?"Barrage":
+                shot.kind==="ballista"?"Balistes":"Bombardement"}</strong>
+              {" · "+(shot.side==="attacker"?"Attaquant":"Défenseur")}
+              {" · Puissance "+shot.shot_power.toLocaleString("fr-FR")}
+              <small>Source : {shot.source_ref} · {shot.percent} %</small>
+            </li>)}
+          </ol>
+          <p>Pertes simulées avant duel — attaquant :
+            {" "+lineReport.sequence.pre_shots.simulated_losses.attacker.reduce((n,v)=>n+v,0)}
+            {" · Défenseur : "+
+              lineReport.sequence.pre_shots.simulated_losses.defender.reduce((n,v)=>n+v,0)}
+          </p>
+          {lineReport.sequence.pre_shots.overlap_capped&&<small>
+            Plusieurs tirs visaient les mêmes unités : le résultat
+            a été borné aux effectifs initiaux.
+          </small>}
+        </>:<p>Aucune capacité de tir préalable n'est qualifiée pour cette simulation.
+          Aucun tir n'a été ajouté automatiquement.</p>}
+        <small>Ces pertes sont temporaires dans le laboratoire :
+          elles ne retirent aucune unité des armées en base.</small>
+      </div>
       <ol className="mmhk-regional-line-events">
         {lineReport.sequence.events.map(event=><li key={event.exchange}>
           <strong>Échange {event.exchange}</strong>
