@@ -206,7 +206,7 @@ def qualify_lab_neutral_defender(
                JOIN cities c ON c.city_id=e.city_id
                JOIN pve_travel_policies t ON t.world_id=c.world_id
                WHERE e.encounter_id=%s AND NOT e.resolved
-                 AND t.policy_id LIKE 'LAB-%' AND NOT t.historically_certified
+                 AND left(t.policy_id,4)='LAB-' AND NOT t.historically_certified
                FOR UPDATE OF e""",(encounter_id,),
         ).fetchone()
         if row is None:
