@@ -306,6 +306,14 @@ export type PveInterpretation={
   xp_awarded:false;loot_awarded:false;model:string;
 };
 
+export type PveEngagementInputs={
+  source_status:"frozen_at_departure"|"legacy_live_at_arrival";
+  combat_scope:"LAB-SINGLE-STACK-V1";
+  attacker:{unit_code:string;unit_count:number;unit_power:number};
+  defender:{policy_id:string;unit_code:string|null;
+    unit_count:number;unit_power:number;source_ref:string|null};
+};
+
 export type PveMission={
   mission_id:string;hero_id:string;hero_name:string;encounter_name:string;
   target_i:number;target_j:number;stage:"outbound"|"returning"|"completed";
@@ -313,6 +321,7 @@ export type PveMission={
   started_at:string;arrival_due_at:string;return_due_at:string;
   arrived_at:string|null;returned_at:string|null;
   duel_report:{scope:string;preview_only:boolean;
+    engagement_inputs?:PveEngagementInputs;
     admission?:PveAdmission;fled_before_combat?:boolean;
     outcome:{
       totalPower:{attacker:number;defender:number};remaining:{attacker:number;defender:number}
