@@ -82,3 +82,57 @@ base jetable ; la migration est à sens unique.
 Tests : `test_pve_ordinary_line_snapshot.py`,
 `test_pve_mission_flight.py`, `test_pve_missions_integration.py`,
 `test_pve_snapshot_audit.py`. Dossier qualité V100 conservé.
+
+
+
+## V102 — règlement permanent ciblé, activable uniquement en laboratoire
+
+La migration `102_pve_lab_attacker_casualty_settlement.sql` prépare
+un registre append-only `pve_lab_casualty_settlements` et un instantané
+`attacker_settlement_snapshot` automatiquement capturé au départ. Ce
+dernier conserve la politique administrateur et la preuve d'un héros
+qualifié **à zéro modificateur**, sans talents ni tirs préalables.
+Une autorisation activée, désactivée ou modifiée *après* le départ
+n'altère pas la mission déjà engagée.
+
+**Par défaut**, aucune politique n'existe et **aucune mort n'est appliquée**.
+Pour activer ce comportement sur un monde d'essais, son profil de trajet
+doit explicitement commencer par `LAB-` et ne pas être certifié historique.
+L'administrateur doit exécuter (en dehors du site joueur) :
+
+```bash
+python -m mmhk_api.manage configure-lab-pve-casualties \
+  --world-id MON-MONDE-TEST \
+  --enabled yes \
+  --source-ref LAB-DECISION-EXPLICITE \
+  --acknowledge-experimental
+```
+
+Pour désactiver les **missions futures**, utiliser `--enabled no`.
+Cela ne modifie jamais les politiques gelées des missions en cours.
+
+Le règlement des morts ne s'applique qu'aux unités ordinaires
+de l'attaquant : les dispersions de chaque peloton sont converties
+par le coefficient Jactari qualifié `0,30`, avec minimum conditionnel
+d'une unité. Les pertes par code unité sont regroupées, vérifiées contre
+les effectifs exacts gelés au départ, puis débitées en une transaction
+avec le rapport, la transition de mission et un registre immuable.
+L'ancienne formation doit être revalidée au retour si des pertes
+effectives ont eu lieu. Les héros et les PNJ ne subissent aucune autre
+conséquence implicite.
+
+**Refus d'appliquer des morts :** manque de classe d'arme, absence d'un
+profil de héros explicitement qualifié à zéro, résultat de fuite,
+égalité/faux nul, tirs spéciaux et autres profils non pris en charge.
+La raison du non-règlement est enregistrée dans le rapport. Les anciennes
+missions V100/V101 ne sont jamais régularisées rétroactivement.
+
+Cette tranche **n'applique ni pertes aux PNJ, ni expérience, ni butin,
+ni changement territorial, ni règles de talents/magie**. Elle n'est
+pas une certification de fidélité à la saison historique et ne valide
+aucune US. Les profils sans héros et les autres branches restent
+à caractériser avec les sources.
+
+Tests : `test_pve_lab_settlement.py`,
+`test_pve_missions_integration.py`, PostgreSQL 17 sur base jetable,
+puis CI Next.js et parcours complet Docker/Chromium post-fusion.
