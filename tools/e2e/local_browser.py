@@ -93,16 +93,30 @@ def main() -> int:
             # Native resolution matches original historical region imagery.
             expect(page.locator("svg.region-scene")).to_have_attribute("viewBox", "0 0 680 562")
             expect(page.locator(".region-selectable-cell")).to_have_count(25)
-            # The region is explicitly a 25-cell schematic, not made-up mine positions.
-            expect(page.get_by_text("25 emplacements schématiques")).to_be_visible()
-            # US-REG-001 + US-UIX-003: a genuine local 5x5 tile,
-            # with unknown terrain left explicitly undiscovered.
-            target = page.locator('[data-region-i="1"][data-region-j="2"] polygon')
+            # The region now exposes 25 cells with registered deposits and
+            # stable mine locations. Unknown cells remain explicitly unknown;
+            # do not assume a fixed coordinate is empty after provisioning.
+            expect(page.locator(".map-section-legend").filter(
+                has_text=re.compile(r"25 cases · \\d+ gisements · \\d+ mines")
+            )).to_be_visible()
+            unknown=page.locator(
+                '.region-selectable-cell[aria-label*="non cartographiée"]'
+            ).first
+            expect(unknown).to_be_visible()
+            local_i=int(unknown.get_attribute("data-region-i"))
+            local_j=int(unknown.get_attribute("data-region-j"))
+            target=unknown.locator("polygon")
             target.hover()
-            expect(page.get_by_test_id("region-hover")).to_have_text("(1, 2)")
+            expect(page.get_by_test_id("region-hover")).to_have_text(
+                f"({local_i}, {local_j})"
+            )
             target.click()
-            expect(page.get_by_test_id("region-selection")).to_have_text("(1, 2)")
-            expect(page.get_by_text("Terrain, forêt, mine, site ou PNJ : non cartographié")).to_be_visible()
+            expect(page.get_by_test_id("region-selection")).to_have_text(
+                f"({local_i}, {local_j})"
+            )
+            expect(page.get_by_text(
+                "Terrain, forêt, mine, site ou PNJ : non cartographié"
+            )).to_be_visible()
             page.get_by_role("link", name="Entrer en ville").first.click()
             expect(page.get_by_role("heading", level=1, name="Premier Havre", exact=True)).to_be_visible()
             expect(page.get_by_test_id("city-game-screen")).to_be_visible()
