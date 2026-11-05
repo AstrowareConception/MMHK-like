@@ -160,6 +160,9 @@ def mine_upgrades_for_city(
            FROM city_lab_mine_levels l
            JOIN city_lab_mine_unlocks g
              ON g.city_id=l.city_id AND g.resource=l.resource
+           JOIN cities c ON c.city_id=l.city_id
+           JOIN pve_travel_policies t ON t.world_id=c.world_id
+             AND left(t.policy_id,4)='LAB-' AND NOT t.historically_certified
            LEFT JOIN city_lab_mine_level_qualifications q
              ON q.city_id=l.city_id AND q.resource=l.resource
              AND q.target_level=l.level+1
