@@ -646,3 +646,39 @@ export async function activateRegionalLabMine(form:FormData) {
     status===409?"conflict":status===404?"missing":"unavailable"
   )+"#lab-mines");
 }
+
+
+
+/** G11 LAB: charge once in PostgreSQL, then let the economy clock finish. */
+export async function startQualifiedMineUpgrade(form:FormData){
+  const cityId=form.get("cityId"),resource=form.get("resource"),
+    heroId=form.get("heroId"),orderId=form.get("orderId");
+  const uuid=/^[0-9a-f-]{36}$/i;
+  if(typeof cityId!=="string"||!uuid.test(cityId)||
+    typeof heroId!=="string"||!uuid.test(heroId)||
+    typeof orderId!=="string"||!uuid.test(orderId)||
+    typeof resource!=="string"||
+    !/^(gold|wood|ore|crystal|gems|sulfur|mercury)$/.test(resource))
+    redirect("/");
+  const token=(await cookies()).get("mmhk_session")?.value;
+  if(!token)redirect("/");
+  let status=503;
+  try {
+    const response=await fetch(apiUrl("/api/v1/me/cities/"+cityId+"/mine-upgrades"),{
+      method:"POST",
+      headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
+      body:JSON.stringify({order_id:orderId,hero_id:heroId,resource}),
+      cache:"no-store",signal:AbortSignal.timeout(7000),
+    });
+    status=response.status;
+  }catch{/* Unknown result: consult the mine order before retrying. */}
+  if(status===401)redirect("/");
+  if(status===200||status===201){
+    revalidatePath("/cities/"+cityId+"/mines/levels","page");
+    revalidatePath("/cities/"+cityId,"page");
+  }
+  redirect("/cities/"+cityId+"/mines/levels?upgrade="+(
+    status===200||status===201?"started":
+    status===409?"conflict":status===404?"missing":"unavailable"
+  )+"#qualified-g11-mine-upgrades");
+}

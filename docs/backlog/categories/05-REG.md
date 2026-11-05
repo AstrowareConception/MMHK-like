@@ -344,6 +344,10 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 
 **Priorité proposée :** P0 · **Phases :** Early game, Mid game, End game / Guerre des Larmes · **Preuve principale :** DOC · **Statut :** à affiner.
 
+**Livraison technique du profil LAB (05/11/2026) : terminée, tests exécutés.** V106 : la mine V104 activée reçoit un niveau G11 explicitement qualifié, un héros constructeur admissible, un coût et une échéance. Le débit est unique ; le vieux rendement subsiste pendant les travaux et le nouveau ne s'applique qu'après réconciliation des ticks.
+**Preuves :** PR #78 ; apps/api/tests/test_lab_mine_upgrades.py ; apps/api/src/mmhk_api/mine_upgrades.py ; docs/backlog/QUALITE-MINES-NIVEAUX-V106-2026-11-05.md.
+**Reste pour la DoD historique :** Niveaux réels historiques, prérequis du héros S2, modes rapide/économique, extensions et règles de cumul ; réception des cinq CA et DoD du backlog classique. Les cinq critères classiques et la revue produit restent **non acceptés**. [Suivi actualisé](../SUIVI-LIVRAISONS-2026-11-05.md).
+
 ### 1. Card — besoin du joueur
 
 > En tant que joueur, je souhaite augmenter son niveau afin de accroître son rendement.

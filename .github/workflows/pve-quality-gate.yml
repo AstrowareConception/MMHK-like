@@ -9,6 +9,7 @@ on:
       - 'apps/api/src/mmhk_api/lab_mine_activation.py'
       - 'apps/api/src/mmhk_api/economy.py'
       - 'apps/api/src/mmhk_api/mine_level_reference.py'
+      - 'apps/api/src/mmhk_api/mine_upgrades.py'
       - 'apps/api/src/mmhk_api/worlds.py'
       - 'apps/api/src/mmhk_api/main.py'
       - 'apps/api/src/mmhk_api/manage.py'
@@ -17,6 +18,7 @@ on:
       - 'apps/api/tests/test_pve_*.py'
       - 'apps/api/tests/test_lab_mine_activation.py'
       - 'apps/api/tests/test_mine_level_reference.py'
+      - 'apps/api/tests/test_lab_mine_upgrades.py'
       - 'apps/web/**'
       - 'tools/e2e/local_browser.py'
       - 'data/backlog/**'
@@ -69,6 +71,7 @@ jobs:
             apps/api/src/mmhk_api/pve_missions.py \
             apps/api/src/mmhk_api/lab_mine_activation.py \
             apps/api/src/mmhk_api/mine_level_reference.py \
+            apps/api/src/mmhk_api/mine_upgrades.py \
             apps/api/src/mmhk_api/economy.py \
             apps/api/src/mmhk_api/worlds.py \
             apps/api/src/mmhk_api/main.py \
@@ -82,9 +85,10 @@ jobs:
             apps/api/tests/test_pve_neutral_resolution.py \
             apps/api/tests/test_lab_mine_activation.py \
             apps/api/tests/test_mine_level_reference.py \
+            apps/api/tests/test_lab_mine_upgrades.py \
             apps/api/tests/test_pve_missions_integration.py \
             tools/e2e/local_browser.py
-      - name: Apply actual PostgreSQL migrations, including V104
+      - name: Apply actual PostgreSQL migrations, including V106
         run: python -m mmhk_api.manage migrate
       - name: Test frozen opponents, legacy missions, and API worker replay
         run: |
@@ -94,7 +98,8 @@ jobs:
             apps/api/tests/test_pve_mission_flight.py \
             apps/api/tests/test_pve_missions_integration.py \
             apps/api/tests/test_lab_mine_activation.py \
-            apps/api/tests/test_mine_level_reference.py
+            apps/api/tests/test_mine_level_reference.py \
+            apps/api/tests/test_lab_mine_upgrades.py
       - name: Verify full Python regression suite
         run: python -m pytest -q apps/api/tests
       - name: Validate all 300 US are still tracked

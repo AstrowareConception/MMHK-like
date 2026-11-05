@@ -22,6 +22,7 @@ from .world_region_generation import provision_rectangle
 from .region_integrity import audit_world_regions
 from .pve_snapshot_audit import audit_active_pve_snapshots
 from .lab_mine_activation import qualify_lab_mine_unlock
+from .mine_upgrades import qualify_lab_mine_upgrade
 from .pve_lab_settlement import configure_lab_casualties
 from .pve_neutral_resolution import (
     qualify_lab_neutral_defender,configure_lab_neutral_resolution,
@@ -178,12 +179,31 @@ def main() -> None:
     mine_gate.add_argument("--encounter-id",required=True,type=UUID)
     mine_gate.add_argument("--source-ref",required=True)
     mine_gate.add_argument("--acknowledge-experimental",action="store_true")
+    mine_upgrades=sub.add_parser(
+        "qualify-lab-mine-level",
+        help="Attest existing L1 G11 rate and a documented next hero requirement",
+    )
+    mine_upgrades.add_argument("--city-id",type=UUID,required=True)
+    mine_upgrades.add_argument("--resource",required=True)
+    mine_upgrades.add_argument("--target-level",type=int,required=True)
+    mine_upgrades.add_argument("--required-hero-level",type=int,required=True)
+    mine_upgrades.add_argument("--source-ref",required=True)
+    mine_upgrades.add_argument("--acknowledge-experimental",action="store_true")
     args = parser.parse_args()
 
     with connect() as db:
         if args.command == "migrate":
             applied = migrate(db)
             print("Applied schema revisions:", applied or "already current")
+        elif args.command == "qualify-lab-mine-level":
+            if not args.acknowledge_experimental:
+                parser.error("G11 mine qualifications need --acknowledge-experimental")
+            print(json.dumps(qualify_lab_mine_upgrade(
+                db,city_id=args.city_id,resource=args.resource,
+                target_level=args.target_level,
+                required_hero_level=args.required_hero_level,
+                source_ref=args.source_ref,
+            ),ensure_ascii=False))
         elif args.command == "qualify-lab-mine-gate":
             if not args.acknowledge_experimental:
                 parser.error("LAB mine enrollment requires --acknowledge-experimental")

@@ -12,6 +12,7 @@ from uuid import UUID
 import psycopg
 
 from .worlds import HAVEN_FIRST_MINES
+from .mine_upgrades import complete_mine_upgrades_at_clock
 
 _DAY = Decimal(86400)
 _PRECISION = Decimal("0.000000000000000001")
@@ -132,6 +133,9 @@ def run_economy_batch(
             if row is None:
                 break
             city_id, tick_seconds, previous_at, revision = row
+            # A job already due at the current economic cursor can safely
+            # change rates before any further production is calculated.
+            complete_mine_upgrades_at_clock(db,city_id,previous_at)
             elapsed = now - previous_at
             elapsed_microseconds = ((elapsed.days * 86400 + elapsed.seconds) * 1_000_000
                                     + elapsed.microseconds)
@@ -179,6 +183,20 @@ def run_economy_batch(
                 cut = (micros + tick_seconds * 1000000 - 1) // (
                     tick_seconds * 1000000)
                 ticks = min(ticks, max(1, cut))
+            # Split on the first tick boundary at/after each G11 completion.
+            # All ticks starting before due_at retain the pre-upgrade rate.
+            upgrade_deadlines=db.execute(
+                """SELECT due_at FROM city_lab_mine_upgrade_orders
+                   WHERE city_id=%s AND status='building' AND due_at>%s
+                   ORDER BY due_at""",(city_id,previous_at),
+            ).fetchall()
+            for (deadline,) in upgrade_deadlines:
+                delta_due=deadline-previous_at
+                micros=((delta_due.days*86400+delta_due.seconds)*1_000_000
+                        +delta_due.microseconds)
+                cutoff=(micros+tick_seconds*1_000_000-1)//(
+                    tick_seconds*1_000_000)
+                ticks=min(ticks,max(1,cutoff))
             if ticks < 1:
                 raise RuntimeError("Due-city clock calculation violated its invariant")
             delta = timedelta(seconds=ticks * tick_seconds)
@@ -258,9 +276,11 @@ def run_economy_batch(
                  psycopg.types.json.Jsonb(credits),
                  psycopg.types.json.Jsonb(overflow)),
             )
+            completed_upgrades=complete_mine_upgrades_at_clock(db,city_id,to_at)
             events.append({
                 "city_id": str(city_id), "revision": revision + 1,
                 "ticks": ticks, "to_at": to_at.isoformat(),
                 "credits": credits, "overflow": overflow,
+                "upgrades_completed": completed_upgrades,
             })
     return events

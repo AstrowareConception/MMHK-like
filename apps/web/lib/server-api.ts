@@ -332,6 +332,24 @@ export type PveLabAttackerSettlement={
     simulated_remaining:number;dispersed:number;permanent_deaths:number;
     conversion_policy_id:string}[];
 };
+export type LabMineUpgradeOrder={
+  order_id:string;resource:string;hero_id:string;from_level:number;
+  target_level:number;cost_gold:number;started_at:string;due_at:string;
+  status:"building"|"completed";completed_at:string|null;
+  historically_certified_s2:false;replayed?:boolean;
+};
+export type LabMineUpgradesResponse={
+  city_id:string;policy_id:string;historically_certified_s2:false;
+  available_heroes:{hero_id:string;name:string;level:number;status:string}[];
+  mines:{resource:string;level:number;required_hero_level:number|null;
+    qualification_source_ref:string|null;gate_activated:boolean;
+    quote:{from_level:number;target_level:number;cost_gold:number;
+      duration_seconds:number;old_rate:string;new_rate:string;
+      source_ref:string;policy_id:string;mode:"normal";
+      historically_certified_s2:false}|null;
+    active_order:LabMineUpgradeOrder|null;
+  }[];
+};
 export type G11MineLevelStep={
   from_level:number;to_level:number;cost_gold:number;
   base_duration_hours:number;base_daily_before:number;
