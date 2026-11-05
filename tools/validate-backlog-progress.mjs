@@ -51,5 +51,5 @@ for(let i=0;i<model.stories.length;i++){
     else throw Error("Invalid implementationLab status "+s.id);
   }
 }
-if(done!==0||partial!==0)throw Error("Progress inventory differs");
+if(done!==3||partial!==12)throw Error("Progress inventory differs");
 console.log("OK — 300/300 US; "+done+" technically done LAB; "+partial+" partially delivered LAB; 0 historical accepted.");

@@ -180,6 +180,10 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 
 **Priorité proposée :** P0 · **Phases :** Early game, Mid game, End game / Guerre des Larmes · **Preuve principale :** DOC · **Statut :** à affiner.
 
+**Livraison technique du profil LAB (05/11/2026) : terminée, tests exécutés.** V103 : rencontre neutre à profil qualifié retirée après victoire ; transaction, reprise, refus et confidentialité testés. Ce n’est pas une conquête de territoire historique.
+**Preuves :** PR #75 ; apps/api/tests/test_pve_missions_integration.py ; CI 42055391105.
+**Reste pour la DoD historique :** PNJ spéciaux, fidélité S2 et acceptation métier des cinq CA. Les cinq critères du backlog classique et la revue produit restent **non acceptés**. [Suivi actualisé](../SUIVI-LIVRAISONS-2026-11-05.md).
+
 ### 1. Card — besoin du joueur
 
 > En tant que joueur, je souhaite engager un combat contre ses occupants afin de accéder à son exploitation.
@@ -257,6 +261,10 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 ## US-REG-004 — Exploiter une mine libérée
 
 **Priorité proposée :** P0 · **Phases :** Early game, Mid game, End game / Guerre des Larmes · **Preuve principale :** DOC · **Statut :** à affiner.
+
+**Livraison technique du profil LAB (05/11/2026) : terminée, tests exécutés.** V104 : gisement réel et mine existante qualifiés, activation propriétaire idempotente et production sans crédit rétroactif.
+**Preuves :** PR #76 ; apps/api/tests/test_lab_mine_activation.py ; CI 42065652207.
+**Reste pour la DoD historique :** règles historiques G11, niveaux, extensions et réception produit des cinq CA. Les cinq critères du backlog classique et la revue produit restent **non acceptés**. [Suivi actualisé](../SUIVI-LIVRAISONS-2026-11-05.md).
 
 ### 1. Card — besoin du joueur
 

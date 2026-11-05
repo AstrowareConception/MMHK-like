@@ -108,6 +108,10 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 
 **Priorité proposée :** P0 · **Phases :** Early game, Mid game, End game / Guerre des Larmes · **Preuve principale :** DOC · **Statut :** à affiner.
 
+**Livraison technique du profil LAB (05/11/2026) : partielle, tests exécutés.** V100–V103 : mission PvE à temps serveur, combat 1–7 pelotons figés et conséquences partielles, sans XP/butin.
+**Preuves :** PR #71–75 ; apps/api/tests/test_pve_missions_integration.py ; CI 42055391105.
+**Reste pour la DoD historique :** combat complet Jactari/MMHK, progression, récompenses, magie et armées spéciales. Les cinq critères du backlog classique et la revue produit restent **non acceptés**. [Suivi actualisé](../SUIVI-LIVRAISONS-2026-11-05.md).
+
 ### 1. Card — besoin du joueur
 
 > En tant que joueur, je souhaite confirmer l’attaque d’une rencontre admissible afin de libérer une région ou progresser.
@@ -294,6 +298,10 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 ## US-COM-004 — Appliquer les contre-armes
 
 **Priorité proposée :** P0 · **Phases :** Early game, Mid game, End game / Guerre des Larmes · **Preuve principale :** OBS-CODE · **Statut :** à affiner.
+
+**Livraison technique du profil LAB (05/11/2026) : partielle, tests exécutés.** Classes d’armes qualifiées et comparaison différentielle de duels ordinaires ; aucune classe inconnue inventée.
+**Preuves :** apps/api/tests/test_pve_stack_sequence.py ; CI 42065652207.
+**Reste pour la DoD historique :** catalogue complet et bonus conditionnels de la saison cible. Les cinq critères du backlog classique et la revue produit restent **non acceptés**. [Suivi actualisé](../SUIVI-LIVRAISONS-2026-11-05.md).
 
 ### 1. Card — besoin du joueur
 
@@ -674,6 +682,10 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 
 **Priorité proposée :** P0 · **Phases :** Early game, Mid game, End game / Guerre des Larmes · **Preuve principale :** OBS-CODE · **Statut :** à affiner.
 
+**Livraison technique du profil LAB (05/11/2026) : partielle, tests exécutés.** V101 : lignes de 1 à 7 positions, séquence déterministe, positions non contiguës conservées.
+**Preuves :** PR #72 ; apps/api/tests/test_pve_stack_sequence.py ; CI 42025473547.
+**Reste pour la DoD historique :** magie, héros, capacités et conformité historique de toute la séquence. Les cinq critères du backlog classique et la revue produit restent **non acceptés**. [Suivi actualisé](../SUIVI-LIVRAISONS-2026-11-05.md).
+
 ### 1. Card — besoin du joueur
 
 > En tant que joueur, je souhaite voir mon survivant affronter la ligne suivante afin de comprendre l’ordre de bataille.
@@ -879,6 +891,10 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 
 **Priorité proposée :** P0 · **Phases :** Early game, Mid game, End game / Guerre des Larmes · **Preuve principale :** OBS-CODE · **Statut :** à affiner.
 
+**Livraison technique du profil LAB (05/11/2026) : partielle, tests exécutés.** Vraie égalité/faux nul distingués dans le duel et dans le rapport, sans arbitrage inventé.
+**Preuves :** docs/backlog/RECETTE-US-COM-010-2026-11-05.md ; apps/api/tests/test_jactari_duel_ending.py.
+**Reste pour la DoD historique :** oracles S2 sur magie, résurrections, faux nuls et scénarios complets. Les cinq critères du backlog classique et la revue produit restent **non acceptés**. [Suivi actualisé](../SUIVI-LIVRAISONS-2026-11-05.md).
+
 ### 1. Card — besoin du joueur
 
 > En tant que joueur, je souhaite obtenir un résultat explicable à puissance égale afin de éviter une issue arbitraire.
@@ -976,6 +992,10 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 ## US-COM-011 — Subir une fuite PvE
 
 **Priorité proposée :** P1 · **Phases :** Early game, Mid game, End game / Guerre des Larmes · **Preuve principale :** OBS-CODE · **Statut :** à affiner.
+
+**Livraison technique du profil LAB (05/11/2026) : partielle, tests exécutés.** Fuite PvE exactement à 1/7 de puissance brute, sans duel, puis retour enregistré.
+**Preuves :** docs/backlog/RECETTE-US-COM-011-2026-11-05.md ; apps/api/tests/test_pve_mission_flight.py.
+**Reste pour la DoD historique :** conséquences historiques supplémentaires pour le héros. Les cinq critères du backlog classique et la revue produit restent **non acceptés**. [Suivi actualisé](../SUIVI-LIVRAISONS-2026-11-05.md).
 
 ### 1. Card — besoin du joueur
 
@@ -1167,6 +1187,10 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 
 **Priorité proposée :** P0 · **Phases :** Early game, Mid game, End game / Guerre des Larmes · **Preuve principale :** OBS-CODE · **Statut :** à affiner.
 
+**Livraison technique du profil LAB (05/11/2026) : partielle, tests exécutés.** Dispersions des pelotons explicites dans les duels Jactari simulés.
+**Preuves :** apps/api/tests/test_pve_casualties.py ; apps/api/tests/test_pve_stack_sequence.py.
+**Reste pour la DoD historique :** magie, invocation et exceptions documentées. Les cinq critères du backlog classique et la revue produit restent **non acceptés**. [Suivi actualisé](../SUIVI-LIVRAISONS-2026-11-05.md).
+
 ### 1. Card — besoin du joueur
 
 > En tant que joueur, je souhaite voir combien d’unités cessent de combattre afin de lire correctement les échanges.
@@ -1263,6 +1287,10 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 
 **Priorité proposée :** P0 · **Phases :** Early game, Mid game, End game / Guerre des Larmes · **Preuve principale :** OBS-CODE · **Statut :** à affiner.
 
+**Livraison technique du profil LAB (05/11/2026) : partielle, tests exécutés.** V102 : morts permanentes ordinaires de l’attaquant à 30 %, par peloton, avec débit unique et journal.
+**Preuves :** PR #74 ; apps/api/tests/test_pve_lab_settlement.py ; CI 42035230881.
+**Reste pour la DoD historique :** PNJ spéciaux, résurrections, bonus, oracles historiques. Les cinq critères du backlog classique et la revue produit restent **non acceptés**. [Suivi actualisé](../SUIVI-LIVRAISONS-2026-11-05.md).
+
 ### 1. Card — besoin du joueur
 
 > En tant que joueur, je souhaite retrouver mes pertes durables afin de préparer le recrutement suivant.
@@ -1340,6 +1368,10 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 ## US-COM-015 — Traiter les armées particulières
 
 **Priorité proposée :** P0 · **Phases :** Early game, Mid game, End game / Guerre des Larmes · **Preuve principale :** OBS-CODE · **Statut :** à affiner.
+
+**Livraison technique du profil LAB (05/11/2026) : partielle, tests exécutés.** V103 : branche PNJ sans héros ni attrition, perte entière à la défaite, aucune perte en défense victorieuse.
+**Preuves :** PR #75 ; apps/api/tests/test_pve_neutral_resolution.py ; CI 42055391105.
+**Reste pour la DoD historique :** PNJ avec héros, attrition spéciale, invocations et exceptions. Les cinq critères du backlog classique et la revue produit restent **non acceptés**. [Suivi actualisé](../SUIVI-LIVRAISONS-2026-11-05.md).
 
 ### 1. Card — besoin du joueur
 
@@ -1496,6 +1528,10 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 ## US-COM-017 — Lire les étapes d’une bataille
 
 **Priorité proposée :** P0 · **Phases :** Early game, Mid game, End game / Guerre des Larmes · **Preuve principale :** COR · **Statut :** à affiner.
+
+**Livraison technique du profil LAB (05/11/2026) : partielle, tests exécutés.** Rapport de mission séquentiel et lecture des échanges en interface privée.
+**Preuves :** apps/web/app/cities/[cityId]/missions/[missionId]/page.tsx ; CI 42065652207.
+**Reste pour la DoD historique :** sorts, pré-tirs, blessures et rapport complet historique. Les cinq critères du backlog classique et la revue produit restent **non acceptés**. [Suivi actualisé](../SUIVI-LIVRAISONS-2026-11-05.md).
 
 ### 1. Card — besoin du joueur
 

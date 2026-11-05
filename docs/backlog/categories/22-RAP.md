@@ -22,6 +22,10 @@ Toutes les fiches sont **à affiner**, non implémentées et non estimées. Les 
 
 **Priorité proposée :** P0 · **Phases :** Early game, Mid game, End game / Guerre des Larmes, Après-campagne / hérédité · **Preuve principale :** PROP · **Statut :** à affiner.
 
+**Livraison technique du profil LAB (05/11/2026) : partielle, tests exécutés.** Rapport PvE personnel persisté avec instantanés, pertes et résolution neutre.
+**Preuves :** apps/api/src/mmhk_api/pve_missions.py ; CI 42065652207.
+**Reste pour la DoD historique :** courrier de combat complet, historique et autres sources de gains. Les cinq critères du backlog classique et la revue produit restent **non acceptés**. [Suivi actualisé](../SUIVI-LIVRAISONS-2026-11-05.md).
+
 ### 1. Card — besoin du joueur
 
 > En tant que joueur, je souhaite consulter mes rapports par nature et date afin de retrouver le résultat de mes actions.

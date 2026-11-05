@@ -492,6 +492,10 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 
 **Priorité proposée :** P0 · **Phases :** Early game, Mid game, End game / Guerre des Larmes · **Preuve principale :** PROP · **Statut :** à affiner.
 
+**Livraison technique du profil LAB (05/11/2026) : partielle, tests exécutés.** Départ, arrivée, retour et événements de mission suivis sous horloge SQL.
+**Preuves :** apps/api/tests/test_pve_missions_integration.py ; CI 42065652207.
+**Reste pour la DoD historique :** missions PvP, haltes, trêves et intégration historique. Les cinq critères du backlog classique et la revue produit restent **non acceptés**. [Suivi actualisé](../SUIVI-LIVRAISONS-2026-11-05.md).
+
 ### 1. Card — besoin du joueur
 
 > En tant que joueur, je souhaite consulter progression, destination et échéance afin de réagir à temps.
