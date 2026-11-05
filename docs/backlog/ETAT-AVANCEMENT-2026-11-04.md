@@ -9,11 +9,11 @@
 
 Le rapprochement couvre **300/300 fiches** : `data/backlog/implementation-review-2026-11-04.csv`.
 Il distingue :
-- **82 fiches avec un chemin de code candidat à examiner** : présence d'un
+- **83 fiches avec un chemin de code candidat à examiner** : présence d'un
   composant ou d'un flux potentiellement pertinent ; il manque encore des
   vérifications de critères, et certaines fonctions ne couvrent qu'une
   partie de l'US.
-- **218 fiches non vérifiées individuellement** : il ne s'agit PAS d'une
+- **217 fiches non vérifiées individuellement** : il ne s'agit PAS d'une
   affirmation que leur code n'existe pas.
 - **0 fiche déclarée acceptée dans cet audit** : l'équipe produit n'a pas
   consigné cinq résultats CA et DoD pour chaque fiche ; le taux d'acceptation
@@ -400,3 +400,26 @@ Les interactions complexes (magie, résurrections, faux nuls
 avec plusieurs pelotons) nécessitent encore des fixtures
 Jactari et une validation complète, avant toute
 résolution persistante de L1.
+
+## Complément du 5 novembre — US-COM-009, victoire écrasante
+
+Le calcul Jactari de l'écrasement est intégré au laboratoire :
+`delta=floor(total_gagnant)-floor(total_perdant)`, condition
+`delta > base_gagnant` strictement. Le marqueur `-1` est
+interprété comme une victoire écrasante sans perte théorique
+pour le gagnant, jamais comme une quantité de soldats.
+
+Module `jactari_overwhelming.py` et tests
+`test_jactari_overwhelming.py` ajoutés ; le détail est présent
+dans chaque événement de `pve_stack_sequence.py`, dans
+les rapports possédant les puissances de base et dans la
+simulation régionale.
+
+La story source et
+`RECETTE-US-COM-009-2026-11-05.md` sont mises à jour.
+**US-COM-009 reste non acceptée** : les CA et la DoD
+nécessitent encore l'exécution de la recette.
+
+Le suivi contient maintenant **83/300 candidats**,
+**217 US à examiner individuellement** et aucune
+US acceptée formellement.
