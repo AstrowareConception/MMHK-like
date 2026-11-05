@@ -171,6 +171,9 @@ def test_v100_departure_snapshot_survives_encounter_changes_and_replay(city):
     inputs=report["duel_report"]["engagement_inputs"]
     assert inputs["source_status"]=="frozen_at_departure"
     assert inputs["defender"]==snapshot
+    assert inputs["combat_scope"]=="LAB-ORDINARY-STACK-SEQUENCE-V1"
+    assert inputs["defender_line"][0]["count"]==4
+    assert inputs["attacker_line"][0]["count"]==8
     assert report["duel_report"]["admission"]["defender_raw_power"]=="4.0"
     assert report["duel_report"]["fled_before_combat"] is False
 
