@@ -33,6 +33,7 @@ export default async function MineLevelReferencePage({params,searchParams}:{
   if(!data.ok||!data.data||!city.ok||!city.data)
     return <PrivateScreenFailure status={data.status}
       scope="Référentiel minier" retryHref={"/cities/"+cityId+"/mines/levels"}/>;
+  const upgradeData=upgrades.ok&&upgrades.data?upgrades.data:null;
   return <GameShell screen="region" token={token} title="Registre des mines"
     eyebrow="G11 · RÉFÉRENCE DOCUMENTAIRE 2013"
     description={"Cité de "+city.data.name+" · G11 et laboratoire contrôlé"}
@@ -81,11 +82,11 @@ export default async function MineLevelReferencePage({params,searchParams}:{
           {!upgrades.ok&&<p role="alert" className="error">
             Le registre des chantiers n'est pas disponible.
             Aucune commande n'est proposée.</p>}
-          {upgrades.ok&&upgrades.data&&upgrades.data.mines.length===0&&
+          {upgradeData&&upgradeData.mines.length===0&&
             <p className="notice">Aucune mine de cette cité n'a reçu
               de qualification pour améliorer son niveau selon G11.
               Les taux expérimentaux existants ne suffisent pas.</p>}
-          {upgrades.ok&&upgrades.data&&upgrades.data.mines.map(m=>
+          {upgradeData&&upgradeData.mines.map(m=>
             <article key={m.resource}>
               <h3>{names[m.resource]??m.resource} · niveau {m.level}</h3>
               {m.active_order?
@@ -109,14 +110,14 @@ export default async function MineLevelReferencePage({params,searchParams}:{
                   <label>Héros constructeur
                     <select name="heroId" required defaultValue="">
                       <option value="" disabled>Choisir un héros disponible</option>
-                      {upgrades.data.available_heroes.filter(h=>
+                      {upgradeData.available_heroes.filter(h=>
                         h.status==="idle"&&h.level>=(m.required_hero_level??101)
                       ).map(h=><option key={h.hero_id} value={h.hero_id}>
                         {h.name} · niveau {h.level}</option>)}
                     </select>
                   </label>
                   <button type="submit" className="scene-action"
-                    disabled={upgrades.data.available_heroes.every(h=>
+                    disabled={upgradeData.available_heroes.every(h=>
                       h.status!=="idle"||h.level<(m.required_hero_level??101))}>
                     Lancer les travaux normaux (LAB)
                   </button>
