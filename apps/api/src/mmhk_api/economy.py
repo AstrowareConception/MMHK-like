@@ -13,6 +13,7 @@ import psycopg
 
 from .worlds import HAVEN_FIRST_MINES
 from .mine_upgrades import complete_mine_upgrades_at_clock
+from .mine_extensions import complete_lab_mine_extensions_at_clock
 
 _DAY = Decimal(86400)
 _PRECISION = Decimal("0.000000000000000001")
@@ -136,6 +137,7 @@ def run_economy_batch(
             # A job already due at the current economic cursor can safely
             # change rates before any further production is calculated.
             complete_mine_upgrades_at_clock(db,city_id,previous_at)
+            complete_lab_mine_extensions_at_clock(db,city_id,previous_at)
             elapsed = now - previous_at
             elapsed_microseconds = ((elapsed.days * 86400 + elapsed.seconds) * 1_000_000
                                     + elapsed.microseconds)
@@ -197,6 +199,28 @@ def run_economy_batch(
                 cutoff=(micros+tick_seconds*1_000_000-1)//(
                     tick_seconds*1_000_000)
                 ticks=min(ticks,max(1,cutoff))
+            # V107: an extension suspends production only at the first
+            # whole tick START after its construction begins. Keep the
+            # cut at the first tick start after due_at as well, so the
+            # new 5% bonus cannot be credited retroactively.
+            ext_rows=db.execute(
+                """SELECT resource,started_at,due_at,status
+                   FROM city_lab_mine_extension_orders
+                   WHERE city_id=%s ORDER BY resource FOR SHARE""",
+                (city_id,),
+            ).fetchall()
+            for ext_resource,start_at,due_at,status in ext_rows:
+                if status!='building':
+                    continue
+                for boundary in (start_at,due_at):
+                    if boundary<=previous_at:
+                        continue
+                    gap=boundary-previous_at
+                    micros=((gap.days*86400+gap.seconds)*1_000_000
+                            +gap.microseconds)
+                    limit=(micros+tick_seconds*1_000_000-1)//(
+                        tick_seconds*1_000_000)
+                    ticks=min(ticks,max(1,limit))
             if ticks < 1:
                 raise RuntimeError("Due-city clock calculation violated its invariant")
             delta = timedelta(seconds=ticks * tick_seconds)
@@ -230,6 +254,17 @@ def run_economy_batch(
                         raise RuntimeError("Locked mine has unexpected fractional production")
                     credits[resource] = 0
                     overflow[resource] = 0
+                    continue
+                extension_paused=any(
+                    ext_resource==resource and status=='building'
+                    and start_at<=previous_at<due_at
+                    for ext_resource,start_at,due_at,status in ext_rows
+                )
+                if extension_paused:
+                    # Preserve fractional carry acquired earlier, but add
+                    # no new production or overflow during extension works.
+                    credits[resource]=0
+                    overflow[resource]=0
                     continue
                 # Avoid losing the remainder of very large yet valid
                 # rate*duration values under Decimal's default 28-digit context.
@@ -277,10 +312,12 @@ def run_economy_batch(
                  psycopg.types.json.Jsonb(overflow)),
             )
             completed_upgrades=complete_mine_upgrades_at_clock(db,city_id,to_at)
+            completed_extensions=complete_lab_mine_extensions_at_clock(db,city_id,to_at)
             events.append({
                 "city_id": str(city_id), "revision": revision + 1,
                 "ticks": ticks, "to_at": to_at.isoformat(),
                 "credits": credits, "overflow": overflow,
                 "upgrades_completed": completed_upgrades,
+                "extensions_completed": completed_extensions,
             })
     return events
