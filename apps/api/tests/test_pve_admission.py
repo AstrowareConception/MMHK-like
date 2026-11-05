@@ -25,8 +25,8 @@ def test_us_com_011_ca03_exactly_one_seventh_flees():
 
 def test_above_threshold_is_admitted_without_rounding():
     assert not evaluate_pve_admission(
-        [stack("militia",1000001,power=1)],
-        [stack("wolves",1000000,power=7)]
+        [stack("militia",1000000,power=1)],
+        [stack("wolves",999999,power=7)]
     )["fled"]
 
 
