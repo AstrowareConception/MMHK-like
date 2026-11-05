@@ -143,7 +143,24 @@ export default async function MissionReportPage({params}:{
               duel.interpretation.verdict==="defender"?"Avantage du défenseur":
               duel.interpretation.verdict==="draw"?"Égalité":"Résultat non tranché"}</strong>
           </div>}
+          {duel.interpretation?.ending?.kind==="false_draw"&&<p className="mmhk-mission-ledger-note">
+            Faux nul Jactari : le marqueur technique départage le duel
+            sans jet aléatoire. Le peloton désigné vainqueur peut finir
+            avec zéro unité active ; aucune mort définitive n'est déduite
+            de ce marqueur.
+          </p>}
+          {duel.interpretation?.ending?.kind==="true_draw"&&
+            <p className="mmhk-mission-ledger-note">
+              Égalité véritable : les deux pelotons sont dispersés
+              dans la simulation. Cela ne constitue pas leur destruction
+              définitive.
+            </p>}
           {duel.interpretation&&<>
+            {duel.interpretation.ending&&<div>
+              <span>Unités dispersées pendant le duel (non persistantes)</span>
+              <strong>{metric(duel.interpretation.ending.theoretical_dispersions.attacker)}
+                {" / "}{metric(duel.interpretation.ending.theoretical_dispersions.defender)}</strong>
+            </div>}
             <div><span>Dispersion de l'attaquant / du défenseur</span>
               <strong>{duel.interpretation.attacker.dispersed?"Oui":"Non"} /
                 {duel.interpretation.defender.dispersed?"Oui":"Non"}</strong></div>
