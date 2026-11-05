@@ -917,6 +917,26 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 - [ ] Les décisions de la Conversation et les preuves de fidélité sont reliées à cette fiche ; les variantes volontaires sont signalées.
 - [ ] La revue et l’acceptation fonctionnelle sont enregistrées ; aucune case ci-dessus n’est considérée cochée par la rédaction du backlog.
 
+### Suivi d'implémentation (5 novembre 2026 — candidat partiel)
+
+- **Correction :** les branches Jactari `nul` et `faux_nul` sont
+  distinguées dans `jactari_duel_ending.py`. Le verdict
+  technique de l'attaquant (`+1`) ou du défenseur (`-1`)
+  n'est ni une égalité ordinaire, ni une raison de créer
+  un vainqueur aléatoire.
+- **Séquence :** `pve_stack_sequence.py` ne fait plus rejouer
+  un peloton dont l'effectif est nul, même s'il n'est pas marqué
+  dispersé par le calculateur source ; son marqueur de faux nul
+  est conservé pour l'issue finale.
+- **Preuves candidates :** test du vrai nul, faux nul +1,
+  marqueur symétrique -1, bornes à une unité et rejeu
+  déterministe dans `test_jactari_duel_ending.py`.
+- **Acceptation :** corpus de rapports réels, interaction avec
+  résurrection/magie, CI, API et recette à deux comptes restent
+  ouverts. Les CA01–05 et la DoD ne sont pas validés.
+- **Recette :** [US-COM-010](../RECETTE-US-COM-010-2026-11-05.md).
+
+
 ---
 
 <a id="us-com-011"></a>
@@ -1170,6 +1190,24 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 - [ ] Le cas frontière est vérifié : **duel fictif I/C 100 contre100 → 50 I et100 C dispersés**.
 - [ ] Les décisions de la Conversation et les preuves de fidélité sont reliées à cette fiche ; les variantes volontaires sont signalées.
 - [ ] La revue et l’acceptation fonctionnelle sont enregistrées ; aucune case ci-dessus n’est considérée cochée par la rédaction du backlog.
+
+### Suivi d'implémentation (5 novembre 2026 — candidat partiel)
+
+- **Règle :** les pertes temporaires d'un duel Jactari sont
+  explicitement séparées des morts définitives calculées
+  après bataille. Une victoire écrasante marquée `-1`
+  n'est pas une quantité de morts négative.
+- **Code candidat :** `jactari_duel_ending.py` expose
+  `theoretical_dispersions`, `remaining`, `dispersed`
+  et `exhausted_without_dispersion`. Le laboratoire
+  multi-pelotons et ses rapports les conservent.
+- **Fixture :** 100 I contre 100 C de puissance 100 chacun,
+  avantage de contre-arme de 50 % : 50 I et 100 C dispersés.
+  Les pertes permanentes demeurent non appliquées.
+- **Limites :** magie, pré-tirs, résurrections, intégration
+  transactionnelle et cinq CA/DoD non recettés.
+- **Recette :** [US-COM-013](../RECETTE-US-COM-013-2026-11-05.md).
+
 
 ---
 
