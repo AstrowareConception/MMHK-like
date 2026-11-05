@@ -647,6 +647,13 @@ def main() -> int:
                             expect(line).to_be_visible()
                             expect(line).to_contain_text("Échanges Jactari enregistrés")
                             expect(line.locator("ol li").first).to_be_visible()
+                            # V103 is disabled by default on the local sandbox.
+                            # An ordinary unqualified encounter must not vanish.
+                            neutral=page.get_by_test_id("pve-neutral-resolution")
+                            expect(neutral).to_be_visible()
+                            expect(neutral).to_contain_text(
+                                "La résolution des rencontres neutres était désactivée au départ"
+                            )
                         else:
                             # V100 and older reports still expose the mono-stack metrics.
                             assert len(page.locator(".mission-duel-results>div").all())>=3

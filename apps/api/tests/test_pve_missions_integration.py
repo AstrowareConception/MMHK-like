@@ -627,6 +627,12 @@ def test_v103_qualified_victory_resolves_neutral_once_without_mine_or_xp(city):
                           "WHERE encounter_id=%s",(encounter,)).fetchone()[0]==1
         assert db.execute("SELECT quantity FROM hero_army_units WHERE hero_id=%s "
                           "AND unit_code=%s",(hero,unit)).fetchone()[0]==old
+    # Once the hero has returned, the old encounter must still be blocked:
+    # a 409 while the hero is busy alone would not prove neutral liberation.
+    second=client.post(root+"/missions",headers=own,json={
+        **payload,"mission_id":str(uuid4()),
+    })
+    assert second.status_code==404,second.text
 
 
 def test_v103_neutral_mutation_after_dispatch_rolls_back_both_settlements(city):
