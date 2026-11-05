@@ -73,6 +73,64 @@ CREATE TRIGGER city_lab_mine_unlock_immutable_v104
 BEFORE UPDATE OR DELETE ON city_lab_mine_unlocks
 FOR EACH ROW EXECUTE FUNCTION protect_lab_mine_unlock_v104();
 
+-- A qualified physical location cannot be moved out from under a gate.
+-- Legitimate city teardown still cascades, because its city row is gone.
+CREATE FUNCTION guard_qualified_lab_mine_position_v104() RETURNS trigger
+LANGUAGE plpgsql AS $physical$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM city_lab_mine_unlocks g
+    JOIN cities c ON c.city_id=g.city_id
+    WHERE g.city_id=OLD.city_id AND g.resource=OLD.resource
+  ) THEN
+    RAISE EXCEPTION 'Qualified LAB mine position is immutable'
+      USING ERRCODE='23514';
+  END IF;
+  RETURN OLD;
+END;
+$physical$;
+CREATE TRIGGER city_lab_mine_position_guard_v104
+BEFORE UPDATE OR DELETE ON city_mine_positions FOR EACH ROW
+EXECUTE FUNCTION guard_qualified_lab_mine_position_v104();
+
+CREATE FUNCTION guard_qualified_lab_deposit_v104() RETURNS trigger
+LANGUAGE plpgsql AS $deposit$
+BEGIN
+  IF EXISTS (
+    SELECT 1 FROM city_lab_mine_unlocks g
+    JOIN cities c ON c.city_id=g.city_id
+    WHERE c.world_id=OLD.world_id AND c.x=OLD.x AND c.y=OLD.y
+      AND g.deposit_slot=OLD.slot
+  ) THEN
+    RAISE EXCEPTION 'Qualified LAB natural deposit is immutable'
+      USING ERRCODE='23514';
+  END IF;
+  RETURN OLD;
+END;
+$deposit$;
+CREATE TRIGGER world_lab_deposit_guard_v104
+BEFORE UPDATE OR DELETE ON world_region_deposits FOR EACH ROW
+EXECUTE FUNCTION guard_qualified_lab_deposit_v104();
+
+CREATE FUNCTION guard_qualified_lab_guardian_location_v104() RETURNS trigger
+LANGUAGE plpgsql AS $guardian$
+BEGIN
+  IF (OLD.city_id,OLD.cell_i,OLD.cell_j) IS DISTINCT FROM
+     (NEW.city_id,NEW.cell_i,NEW.cell_j)
+     AND EXISTS(
+       SELECT 1 FROM city_lab_mine_unlocks g
+       WHERE g.encounter_id=OLD.encounter_id
+     ) THEN
+    RAISE EXCEPTION 'Qualified LAB guardian tile is immutable'
+      USING ERRCODE='23514';
+  END IF;
+  RETURN NEW;
+END;
+$guardian$;
+CREATE TRIGGER region_lab_guardian_tile_v104
+BEFORE UPDATE ON region_encounters FOR EACH ROW
+EXECUTE FUNCTION guard_qualified_lab_guardian_location_v104();
+
 COMMENT ON TABLE city_lab_mine_unlocks IS
   'V104 qualified mine/deposit guardian linkage; pending gates suppress only their existing mine rate. Player activates after one V103 victory. Not historical S2.';
 COMMENT ON COLUMN city_lab_mine_unlocks.activated_at IS
