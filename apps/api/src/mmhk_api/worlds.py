@@ -125,6 +125,10 @@ def owned_city_detail(db: psycopg.Connection, account_id: UUID, city_id: UUID) -
     stocks_caps = dict(db.execute(
         "SELECT resource,capacity FROM city_stocks WHERE city_id=%s",(city_id,),
     ).fetchall())
+    gates = dict(db.execute(
+        "SELECT resource,activated_at FROM city_lab_mine_unlocks WHERE city_id=%s",
+        (city_id,),
+    ).fetchall())
     adjusted_caps = {
         kind: (stocks_caps.get(kind) or 0) +
               effects["capacity_bonus"].get(kind,0)
@@ -142,8 +146,12 @@ def owned_city_detail(db: psycopg.Connection, account_id: UUID, city_id: UUID) -
         "mines": mines,
         "production_active": bool(economy and economy[2]),
         "production_per_day": {
-            resource: str(base * (1 + bonus + Decimal(
-                effects["mine_additive_bonus"].get(resource,"0"))))
+            resource: (
+                str(base * (1 + bonus + Decimal(
+                    effects["mine_additive_bonus"].get(resource,"0"))))
+                if resource not in gates or gates[resource] is not None
+                else "0"
+            )
             for resource, base, bonus in rates
         },
         "stock_capacities": adjusted_caps,

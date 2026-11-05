@@ -21,6 +21,7 @@ from .worlds import seed_first_haven_city
 from .world_region_generation import provision_rectangle
 from .region_integrity import audit_world_regions
 from .pve_snapshot_audit import audit_active_pve_snapshots
+from .lab_mine_activation import qualify_lab_mine_unlock
 from .pve_lab_settlement import configure_lab_casualties
 from .pve_neutral_resolution import (
     qualify_lab_neutral_defender,configure_lab_neutral_resolution,
@@ -170,12 +171,25 @@ def main() -> None:
     neutral_policy.add_argument("--enabled",choices=("yes","no"),required=True)
     neutral_policy.add_argument("--source-ref",required=True)
     neutral_policy.add_argument("--acknowledge-experimental",action="store_true")
+    mine_gate=sub.add_parser(
+        "qualify-lab-mine-gate",
+        help="Enroll an existing deposit/mine behind its attested neutral guardian",
+    )
+    mine_gate.add_argument("--encounter-id",required=True,type=UUID)
+    mine_gate.add_argument("--source-ref",required=True)
+    mine_gate.add_argument("--acknowledge-experimental",action="store_true")
     args = parser.parse_args()
 
     with connect() as db:
         if args.command == "migrate":
             applied = migrate(db)
             print("Applied schema revisions:", applied or "already current")
+        elif args.command == "qualify-lab-mine-gate":
+            if not args.acknowledge_experimental:
+                parser.error("LAB mine enrollment requires --acknowledge-experimental")
+            print(json.dumps(qualify_lab_mine_unlock(
+                db,encounter_id=args.encounter_id,source_ref=args.source_ref,
+            ),ensure_ascii=False))
         elif args.command == "qualify-lab-neutral-defender":
             if not (args.no_hero_confirmed and args.no_attrition_confirmed):
                 parser.error("Both --no-hero-confirmed and --no-attrition-confirmed are required")

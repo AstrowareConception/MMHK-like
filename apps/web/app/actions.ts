@@ -612,3 +612,37 @@ export async function reclaimFailedFounding(form:FormData){
     (status===201||status===200?"refunded":
       status===409?"storage":"unavailable")+"#colony-orders");
 }
+
+
+/** Activate one explicitly qualified pre-existing LAB deposit after V103 victory. */
+export async function activateRegionalLabMine(form:FormData) {
+  const cityId=form.get("cityId"),resource=form.get("resource"),orderId=form.get("orderId");
+  const uuid=/^[a-f0-9-]{36}$/i;
+  if(typeof cityId!=="string"||!uuid.test(cityId)||
+     typeof orderId!=="string"||!uuid.test(orderId)||
+     typeof resource!=="string"||
+     !/^(gold|wood|ore|crystal|gems|sulfur|mercury)$/.test(resource))
+    redirect("/");
+  const token=(await cookies()).get("mmhk_session")?.value;
+  if(!token)redirect("/");
+  let status=503;
+  try {
+    const answer=await fetch(apiUrl(
+      "/api/v1/me/cities/"+cityId+"/mine-unlocks/"+resource+"/activate"),{
+      method:"POST",
+      headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
+      body:JSON.stringify({order_id:orderId}),
+      cache:"no-store",signal:AbortSignal.timeout(7000),
+    });
+    status=answer.status;
+  }catch{/* Never automatically repeat an uncertain command. */}
+  if(status===401)redirect("/");
+  if(status===200||status===201){
+    revalidatePath("/cities/"+cityId+"/region","page");
+    revalidatePath("/cities/"+cityId,"page");
+  }
+  redirect("/cities/"+cityId+"/region?mine="+(
+    status===200||status===201?"active":
+    status===409?"conflict":status===404?"missing":"unavailable"
+  )+"#lab-mines");
+}

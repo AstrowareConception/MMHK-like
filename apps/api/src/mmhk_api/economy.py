@@ -162,6 +162,23 @@ def run_economy_batch(
                 pre_change_ticks = (micros + tick_seconds*1000000-1)//(
                     tick_seconds*1000000)
                 ticks = min(ticks,pre_change_ticks)
+            # V104: only enrolled existing mines are gated. Split catch-up
+            # at the first whole tick starting after player activation.
+            gate_rows = db.execute(
+                """SELECT resource,activated_at FROM city_lab_mine_unlocks
+                   WHERE city_id=%s ORDER BY resource FOR SHARE""",
+                (city_id,),
+            ).fetchall()
+            gates = dict(gate_rows)
+            for unlock_time in gates.values():
+                if unlock_time is None or unlock_time <= previous_at:
+                    continue
+                span = unlock_time - previous_at
+                micros = ((span.days * 86400 + span.seconds) * 1000000
+                          + span.microseconds)
+                cut = (micros + tick_seconds * 1000000 - 1) // (
+                    tick_seconds * 1000000)
+                ticks = min(ticks, max(1, cut))
             if ticks < 1:
                 raise RuntimeError("Due-city clock calculation violated its invariant")
             delta = timedelta(seconds=ticks * tick_seconds)
@@ -186,6 +203,16 @@ def run_economy_batch(
                 cap = cap + int(effective_cap.get(resource,0))
                 if bonus < -1 or bonus > 100 or cap > _BIGINT:
                     raise RuntimeError("Building economic effect exceeds safe bounds")
+                locked = resource in gates and (
+                    gates[resource] is None or previous_at < gates[resource]
+                )
+                if locked:
+                    # No retroactive credits or fractions before liberation.
+                    if carry:
+                        raise RuntimeError("Locked mine has unexpected fractional production")
+                    credits[resource] = 0
+                    overflow[resource] = 0
+                    continue
                 # Avoid losing the remainder of very large yet valid
                 # rate*duration values under Decimal's default 28-digit context.
                 with localcontext() as context:

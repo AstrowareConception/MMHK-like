@@ -35,6 +35,7 @@ from .marketplace import (
 )
 from .map_views import MapNotFound, own_region, world_overview
 from .region_inspection import inspect_region
+from .lab_mine_activation import mine_unlocks_for_city,activate_lab_mine
 from .military_readiness import military_readiness
 from .timeline import timeline_for_player
 from .artifacts import artifact_inventory, move_artifact
@@ -814,6 +815,36 @@ def my_pve_lines_preview(city_id:UUID,encounter_id:UUID,
         raise HTTPException(status_code=409,detail=str(exc)) from exc
     except ValueError as exc:
         raise HTTPException(status_code=409,detail="Unsupported ordinary stack sequence") from exc
+
+
+class ActivateLabMineRequest(StrictDTO):
+    order_id: UUID
+
+
+@app.get("/api/v1/me/cities/{city_id}/mine-unlocks")
+def my_lab_mine_unlocks(city_id:UUID,db:_db,player:_player)->dict:
+    try:
+        return mine_unlocks_for_city(db,owner=player,city_id=city_id)
+    except RecruitmentNotFound as exc:
+        raise HTTPException(status_code=404,detail="City not found") from exc
+
+
+@app.post("/api/v1/me/cities/{city_id}/mine-unlocks/{resource}/activate",status_code=201)
+def activate_my_lab_mine(city_id:UUID,resource:str,command:ActivateLabMineRequest,
+                         db:_db,player:_player,response:Response)->dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        result=activate_lab_mine(
+            db,owner=player,city_id=city_id,
+            resource=resource,order_id=command.order_id,
+        )
+        if result["replayed"]:
+            response.status_code=200
+        return result
+    except RecruitmentNotFound as exc:
+        raise HTTPException(status_code=404,detail="City or qualified mine not found") from exc
+    except RecruitmentConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
 
 
 class PveMissionRequest(StrictDTO):
