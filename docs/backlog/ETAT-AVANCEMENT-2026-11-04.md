@@ -9,11 +9,11 @@
 
 Le rapprochement couvre **300/300 fiches** : `data/backlog/implementation-review-2026-11-04.csv`.
 Il distingue :
-- **79 fiches avec un chemin de code candidat à examiner** : présence d'un
+- **80 fiches avec un chemin de code candidat à examiner** : présence d'un
   composant ou d'un flux potentiellement pertinent ; il manque encore des
   vérifications de critères, et certaines fonctions ne couvrent qu'une
   partie de l'US.
-- **221 fiches non vérifiées individuellement** : il ne s'agit PAS d'une
+- **220 fiches non vérifiées individuellement** : il ne s'agit PAS d'une
   affirmation que leur code n'existe pas.
 - **0 fiche déclarée acceptée dans cet audit** : l'équipe produit n'a pas
   consigné cinq résultats CA et DoD pour chaque fiche ; le taux d'acceptation
@@ -332,3 +332,36 @@ Voir `RECETTE-US-COM-007-2026-11-05.md`.
 La prochaine priorité n'est pas d'activer la guerre : fermer
 les phases d'admission/fuite, comparer le modèle à l'oracle
 Jactari et achever une bataille PvE transactionnelle de L1.
+
+## Complément du 5 novembre 2026 — US-COM-011 : fuite PvE
+
+La règle d'admission de CODE-01-COMBAT est maintenant mise en œuvre
+par `pve_admission.py` sous forme de **contrôle pur** utilisant
+la somme des puissances brutes des pelotons ordinaires :
+
+- `r <= 1/7` (égalité incluse) déclenche une fuite avant combat.
+  La comparaison exacte `7 × A <= D` évite une divergence d'arrondi.
+- Les bonus du héros, contre-armes et pré-tirs ne participent pas
+  au contrôle d'admission.
+- `pve_stack_sequence.py` arrête le laboratoire sans événements
+  de tir ni duel si le seuil est atteint.
+- `pve_missions.py` enregistre un rapport sans résultat de duel
+  et conserve le retour différé du héros. Les anciens rapports
+  Jactari restent lisibles.
+- Types et UI Next.js distinguent la fuite des dispersions et
+  des morts définitives.
+- Tests écrits : `test_pve_admission.py`,
+  `test_pve_mission_flight.py` et scénarios complémentaires dans
+  `test_pve_stack_preview.py`. Les cas frontières, l'idempotence
+  et le retour sont couverts dans les fixtures, mais **l'exécution
+  PostgreSQL et navigateur reste à confirmer**.
+
+US-COM-011 rejoint les code-candidats du suivi :
+**80/300 candidats, 220 non vérifiés individuellement,
+0/300 acceptée formellement**. Le suivi et les fiches sources
+US-COM-002/008/011 ont été actualisés.
+
+Voir `RECETTE-US-COM-011-2026-11-05.md`.
+Les effets historiques détaillés d'une fuite, les autres règles
+de fin de combat et surtout l'application définitive des pertes
+et XP restent à qualifier avant de terminer L1.
