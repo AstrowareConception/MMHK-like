@@ -968,6 +968,26 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 - [ ] Les décisions de la Conversation et les preuves de fidélité sont reliées à cette fiche ; les variantes volontaires sont signalées.
 - [ ] La revue et l’acceptation fonctionnelle sont enregistrées ; aucune case ci-dessus n’est considérée cochée par la rédaction du backlog.
 
+### Suivi d'implémentation (5 novembre 2026 — candidat partiel)
+
+- **Source CODE-01-COMBAT :** contrôle d'admission PvE
+  sur la puissance brute des pelotons ordinaires ; une fuite
+  survient à `r <= 1/7`, avant les tirs et les échanges.
+  Les bonus du héros sont exclus de ce ratio.
+- **Code candidat :** `apps/api/src/mmhk_api/pve_admission.py`,
+  appelé par `pve_stack_sequence.py` et par le worker existant
+  `pve_missions.py`. Le rapport distingue une fuite d'un duel
+  simulé et conserve le retour du héros.
+- **Tests écrits :** `test_pve_admission.py`,
+  `test_pve_mission_flight.py` (égalité 1/7, sans
+  pré-tirs, idempotence et retour). **Exécution non confirmée.**
+- **Limites :** gestion historique des blessures, récompenses et
+  autres conséquences de fuite non certifiée ; aucun combat
+  persistant, perte définitive, XP ou libération de case n'est appliqué.
+- **Recette :** [US-COM-011](../RECETTE-US-COM-011-2026-11-05.md).
+  Les cinq CA et la DoD restent **non acceptés**.
+
+
 ---
 
 <a id="us-com-012"></a>
