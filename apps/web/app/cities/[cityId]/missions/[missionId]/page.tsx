@@ -118,6 +118,23 @@ export default async function MissionReportPage({params}:{
           <div><h2>Admission et résolution Jactari</h2>
             <p>Résultat transmis par le serveur à l'arrivée.</p></div>
         </header>
+        {duel?.engagement_inputs&&<div className="mmhk-mission-inputs" data-testid="pve-engagement-inputs">
+          <strong>Forces utilisées lors de l'engagement</strong>
+          <p>{duel.engagement_inputs.source_status==="frozen_at_departure"
+            ?"Les effectifs et puissances des deux camps ont été figés au départ. Une modification ultérieure de la rencontre ne change pas ce rapport."
+            :"Mission ancienne : les forces adverses ont été relevées à l'arrivée, car aucun instantané de départ n'existait."}</p>
+          <div><span>Attaquant</span>
+            <strong>{duel.engagement_inputs.attacker.unit_count.toLocaleString("fr-FR")}
+              {" × "+duel.engagement_inputs.attacker.unit_power.toLocaleString("fr-FR")}
+            </strong>
+          </div>
+          <div><span>Défenseur</span>
+            <strong>{duel.engagement_inputs.defender.unit_count.toLocaleString("fr-FR")}
+              {" × "+duel.engagement_inputs.defender.unit_power.toLocaleString("fr-FR")}
+            </strong>
+          </div>
+          <small>Profil : {duel.engagement_inputs.defender.policy_id}</small>
+        </div>}
         {duel?.fled_before_combat&&duel.admission?
           <div className="mission-duel-results mmhk-pve-flight" role="status">
             <strong>Fuite PvE — combat non engagé</strong>

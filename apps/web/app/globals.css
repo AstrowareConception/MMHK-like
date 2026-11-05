@@ -4913,3 +4913,15 @@ body:has(.mmhk-entry-panel) .masthead h1{
     scrollbar-width:thin;
   }
 }
+
+/* V100: mission provenance is visible to the player, even for legacy orders. */
+.mmhk-mission-inputs{display:grid;gap:8px;padding:14px 16px;
+  margin:12px 0;border:1px solid #a98d65;
+  background:linear-gradient(150deg,#ece0c7,#d8c6a5);color:#483623}
+.mmhk-mission-inputs>strong{font:700 16px Georgia,serif;color:#4b3320}
+.mmhk-mission-inputs p{margin:0;color:#57452f;font:12px/1.55 system-ui,sans-serif}
+.mmhk-mission-inputs>div{display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:8px;border-top:1px solid #c3a87f;padding-top:6px}
+.mmhk-mission-inputs>div strong{font:700 13px system-ui,sans-serif}
+.mmhk-mission-inputs>small{font:11px/1.5 system-ui,sans-serif;color:#68543a;
+  overflow-wrap:anywhere}

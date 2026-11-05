@@ -20,6 +20,7 @@ from .security import create_account, USERNAME
 from .worlds import seed_first_haven_city
 from .world_region_generation import provision_rectangle
 from .region_integrity import audit_world_regions
+from .pve_snapshot_audit import audit_active_pve_snapshots
 from .weapon_qualification import qualify_unit_weapon,qualify_encounter_weapon
 from .hero_combat_qualification import qualify_hero_basic_combat
 from .conditional_talent_qualification import qualify_conditional_counter_talent
@@ -136,6 +137,11 @@ def main() -> None:
     pre_shots.add_argument("--barrage-percent",type=Decimal,default=Decimal("0"))
     pre_shots.add_argument("--ballista-percent",type=Decimal,default=Decimal("0"))
     pre_shots.add_argument("--source-ref",required=True)
+    pve_audit=sub.add_parser(
+        "audit-pve-snapshots",
+        help="Read-only inventory of active legacy/frozen/corrupt PvE inputs",
+    )
+    pve_audit.add_argument("--limit",type=int,default=200)
     args = parser.parse_args()
 
     with connect() as db:
@@ -172,6 +178,11 @@ def main() -> None:
                 db,encounter_id=args.encounter_id,weapon=args.weapon_type,
                 source_ref=args.source_ref,
             ),ensure_ascii=False))
+        elif args.command == "audit-pve-snapshots":
+            print(json.dumps(
+                audit_active_pve_snapshots(db,limit=args.limit),
+                ensure_ascii=False,indent=2,
+            ))
         elif args.command == "audit-world-regions":
             report = audit_world_regions(
                 db,world_id=args.world_id,limit=args.limit,

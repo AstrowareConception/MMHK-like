@@ -6,6 +6,15 @@ Chaque fiche contient la formulation « En tant que…, je souhaite… afin de�
 
 **Statut du référentiel d’origine : backlog préparé pour l’affinage.** Lors de sa rédaction, aucune fiche n’était déclarée développée, estimée ou acceptée. Depuis, les composants candidats et leur recette sont suivis séparément ci-dessous : leur présence ne vaut pas validation d’une US. Les 1 500 critères restent la base de l’acceptation ; les preuves historiques disponibles ne certifient pas toutes les valeurs de la saison cible.
 
+## Garantie d'intégrité des missions PvE — V100
+
+Le [dossier de gel transactionnel des entrées de combat](QUALITE-PVE-INSTANTANES-V100-2026-11-05.md)
+détaille la capture des profils adverses **au départ**, la
+non-réécriture des rapports, la compatibilité des anciennes missions,
+la commande d'audit `audit-pve-snapshots` et les tests PostgreSQL
+attendus. Le nombre d'US candidates ne change pas ; les critères
+d'acceptation restent à vérifier séparément.
+
 ## Contrôle CI — 5 novembre 2026
 
 Le [rapport des jobs GitHub Actions et correctifs](CONTROLE-CI-2026-11-05.md)

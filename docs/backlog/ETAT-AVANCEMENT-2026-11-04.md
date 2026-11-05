@@ -423,3 +423,32 @@ nécessitent encore l'exécution de la recette.
 Le suivi contient maintenant **83/300 candidats**,
 **217 US à examiner individuellement** et aucune
 US acceptée formellement.
+
+## Garantie transverse V100 — contrôle du gel des missions (5 novembre)
+
+Dans le laboratoire PvE L1, l'attaquant était déjà figé à l'envoi,
+mais la force de la rencontre était relue **à l'arrivée**.
+La migration V100 fige désormais aussi le défenseur au départ dans
+une transaction et interdit de modifier les entrées d'un ordre
+engagé, un rapport déjà enregistré ou de faire reculer son état.
+
+Les missions antérieures à V100 ne sont **pas rétroactivement
+inventées** : si l'ancien instantané est absent, le rapport
+signale explicitement `legacy_live_at_arrival`. Un instantané
+corrompu ne provoque jamais de fallback invisible vers les
+données live ; le worker refuse sa résolution.
+
+La commande d'administration `audit-pve-snapshots` recense
+les nouvelles missions figées, les anciennes missions non
+figées et les erreurs de données, **en lecture seule**.
+
+Preuves à produire : tests des entrées figées en PostgreSQL,
+rejeu worker, refus des mutations SQL, suite API complète,
+validation du registre des 300 US et build Next.js.
+Ces contrôles sont intégrés à une nouvelle **PR quality gate**,
+et non considérés verts du seul fait de leur rédaction.
+
+Voir `QUALITE-PVE-INSTANTANES-V100-2026-11-05.md`.
+Les états des stories COM-002/011/017, MOV-007 et RAP-001
+sont enrichis, **sans augmentation artificielle** du total
+des 83/300 candidates (0 acceptée par l'audit).
