@@ -9,11 +9,11 @@
 
 Le rapprochement couvre **300/300 fiches** : `data/backlog/implementation-review-2026-11-04.csv`.
 Il distingue :
-- **78 fiches avec un chemin de code candidat à examiner** : présence d'un
+- **79 fiches avec un chemin de code candidat à examiner** : présence d'un
   composant ou d'un flux potentiellement pertinent ; il manque encore des
   vérifications de critères, et certaines fonctions ne couvrent qu'une
   partie de l'US.
-- **222 fiches non vérifiées individuellement** : il ne s'agit PAS d'une
+- **221 fiches non vérifiées individuellement** : il ne s'agit PAS d'une
   affirmation que leur code n'existe pas.
 - **0 fiche déclarée acceptée dans cet audit** : l'équipe produit n'a pas
   consigné cinq résultats CA et DoD pour chaque fiche ; le taux d'acceptation
@@ -297,3 +297,38 @@ pour l'inactivation hors condition, mais ni CA01–05 ni la DoD
 ne sont considérés acceptés. Les autres talents, tirs préalables,
 magie, pertes durables, XP et libération régionale restent
 des dépendances ouvertes de la tranche L1.
+
+## Complément du 5 novembre — US-COM-007 : tirs préalables Jactari
+
+L'examen direct de la fonction `tir_engins_siege` dans l'archive
+`data/Jactari/src/scripts/combat.min.js` a permis de préparer un
+modèle de pré-tirs respectant l'ordre source : barrage attaquant
+et défenseur, balistes des deux camps, bombardement défensif.
+
+- `pve_pre_shots.py` : phase pure déterministe, calcul des effets
+  à partir des **effectifs préalables des deux camps**, puis application
+  des pertes simulées avant les duels. Le cumul est borné à
+  l'effectif initial pour ne pas produire des troupes négatives.
+- V099 : profil de barrage/balistes **optionnel** du héros, avec
+  provenance opérateur et sans capacité inventée.
+- `pre_shot_qualification.py` et `manage qualify-pre-shots` :
+  création réservée à l'administrateur.
+- `region_pve.py` et `pve_stack_sequence.py` :
+  uniquement les pré-tirs autorisés de l'attaquant en PvE
+  régional ; le bombardement défensif est modélisé, mais
+  non activé contre les PNJ sans héros.
+- Next.js : représentation distincte de la phase préalable,
+  des échanges ordinaires et des pertes persistantes.
+- Tests écrits : `test_pve_pre_shots.py`,
+  `test_pre_shot_qualification.py`, compléments
+  `test_pve_stack_preview.py`.
+
+**US-COM-007** rejoint les `code_candidat_a_recetter`, sans
+validation des cinq CA ni de la DoD. La nouvelle tranche
+porte le compteur à **79/300 candidats et 221 non vérifiés**.
+Les 300 US restent non acceptées dans cet audit.
+
+Voir `RECETTE-US-COM-007-2026-11-05.md`.
+La prochaine priorité n'est pas d'activer la guerre : fermer
+les phases d'admission/fuite, comparer le modèle à l'oracle
+Jactari et achever une bataille PvE transactionnelle de L1.
