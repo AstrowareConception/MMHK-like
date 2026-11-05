@@ -36,8 +36,8 @@ def _validated_stack(value: object, *, defender: bool) -> dict:
         raise ValueError("Invalid frozen ordinary line quantity")
     if type(power) not in (int, float) or not isfinite(power) or not 0 < power <= 1_000_000:
         raise ValueError("Invalid frozen ordinary line unit power")
-    if weapon not in _WEAPONS or (
-        weapon is not None and type(weapon) is not str
+    if weapon is not None and (
+        type(weapon) is not str or weapon not in _WEAPONS
     ):
         raise ValueError("Invalid frozen ordinary line weapon classification")
     if (weapon is None) != (wref is None):
