@@ -14,6 +14,7 @@ from psycopg.types.json import Jsonb
 from jactari.duel import resolve_stack_duel
 from .pve_report_interpretation import interpret_duel
 from .pve_admission import evaluate_pve_admission
+from .pve_encounter_snapshot import validate_defender_snapshot,legacy_opponent_at_arrival
 from .forces import _owned_city, RecruitmentNotFound, RecruitmentConflict
 
 def start_pve_mission(db:psycopg.Connection,*,owner:UUID,city_id:UUID,
@@ -154,7 +155,7 @@ def advance_pve_missions(db:psycopg.Connection,*,max_orders:int=25,
             row=db.execute(
                 """SELECT m.mission_id,m.stage,m.hero_id,m.encounter_id,
                           m.unit_code,m.stack_count,m.stack_power,m.travel_seconds,
-                          m.arrival_due_at,m.return_due_at
+                          m.arrival_due_at,m.return_due_at,m.defender_snapshot
                    FROM pve_missions m WHERE
                      (m.stage='outbound' AND m.arrival_due_at<=%s) OR
                      (m.stage='returning' AND m.return_due_at<=%s)
@@ -163,33 +164,56 @@ def advance_pve_missions(db:psycopg.Connection,*,max_orders:int=25,
                    FOR UPDATE OF m SKIP LOCKED LIMIT 1""",(now,now),
             ).fetchone()
             if row is None:break
-            mid,stage,hid,eid,unit,count,power,travel_seconds,arrival,returning=row
+            (mid,stage,hid,eid,unit,count,power,travel_seconds,arrival,
+             returning,defender_snapshot)=row
             if stage=="outbound":
-                enemy=db.execute(
-                    """SELECT unit_count,unit_power FROM region_encounters
-                       WHERE encounter_id=%s""",(eid,),
-                ).fetchone()
-                if enemy is None:raise RuntimeError("Mission encounter missing")
+                # V100+ rows are frozen by a DB trigger in the original
+                # departure transaction. Do NOT reread a mutable encounter
+                # for them. Pre-V100 in-flight orders remain explicitly
+                # marked as legacy, so no false claim of immutability is made.
+                if defender_snapshot is not None:
+                    opponent=validate_defender_snapshot(defender_snapshot)
+                    source_status="frozen_at_departure"
+                else:
+                    enemy=db.execute(
+                        """SELECT unit_count,unit_power FROM region_encounters
+                           WHERE encounter_id=%s""",(eid,),
+                    ).fetchone()
+                    if enemy is None:
+                        raise RuntimeError("Legacy mission encounter missing")
+                    opponent=legacy_opponent_at_arrival(enemy[0],float(enemy[1]))
+                    source_status="legacy_live_at_arrival"
+                engagement_inputs={
+                    "source_status":source_status,
+                    "attacker":{"unit_code":unit,"unit_count":count,
+                                "unit_power":float(power)},
+                    "defender":opponent,
+                    "combat_scope":"LAB-SINGLE-STACK-V1",
+                }
                 # US-COM-011: evaluate original, unmodified army power
                 # before the duel. A flight still starts the return leg,
                 # but no battle is fabricated and no unit is modified.
                 admission=evaluate_pve_admission(
                     [{"count":count,"unit_power":float(power)}],
-                    [{"count":enemy[0],"unit_power":float(enemy[1])}],
+                    [{"count":opponent["unit_count"],
+                      "unit_power":opponent["unit_power"]}],
                 )
                 if admission["fled"]:
                     report={"scope":"LAB-SINGLE-STACK","preview_only":True,
                             "admission":admission,"fled_before_combat":True,
+                            "engagement_inputs":engagement_inputs,
                             "outcome":None,"interpretation":None,
                             "no_losses_applied":True,"no_rewards":True}
                 else:
                     outcome=resolve_stack_duel({
                         "attacker":{"count":count,"unitPower":float(power)},
-                        "defender":{"count":enemy[0],"unitPower":float(enemy[1])},
+                        "defender":{"count":opponent["unit_count"],
+                                    "unitPower":opponent["unit_power"]},
                         "modifiers":{}
                     })
                     report={"scope":"LAB-SINGLE-STACK","preview_only":True,
                             "admission":admission,"fled_before_combat":False,
+                            "engagement_inputs":engagement_inputs,
                             "outcome":outcome,
                             "interpretation":interpret_duel(outcome),
                             "no_losses_applied":True,"no_rewards":True}
