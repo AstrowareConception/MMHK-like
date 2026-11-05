@@ -37,6 +37,7 @@ from .map_views import MapNotFound, own_region, world_overview
 from .region_inspection import inspect_region
 from .lab_mine_activation import mine_unlocks_for_city,activate_lab_mine
 from .mine_level_reference import owned_city_mine_level_reference
+from .mine_upgrades import mine_upgrades_for_city,start_lab_mine_upgrade
 from .military_readiness import military_readiness
 from .timeline import timeline_for_player
 from .artifacts import artifact_inventory, move_artifact
@@ -855,6 +856,38 @@ def mine_levels_for_owner(city_id:UUID,db:_db,player:_player)->dict:
         return owned_city_mine_level_reference(db,owner=player,city_id=city_id)
     except RecruitmentNotFound as exc:
         raise HTTPException(status_code=404,detail="City not found") from exc
+
+
+class MineUpgradeStartRequest(StrictDTO):
+    order_id: UUID
+    hero_id: UUID
+    resource: str = Field(pattern=r"^(gold|wood|ore|crystal|gems|sulfur|mercury)$")
+
+
+@app.get("/api/v1/me/cities/{city_id}/mine-upgrades")
+def my_lab_mine_upgrades(city_id:UUID,db:_db,player:_player)->dict:
+    try:
+        return mine_upgrades_for_city(db,owner=player,city_id=city_id)
+    except RecruitmentNotFound as exc:
+        raise HTTPException(status_code=404,detail="City not found") from exc
+
+
+@app.post("/api/v1/me/cities/{city_id}/mine-upgrades",status_code=201)
+def start_my_lab_mine_upgrade(city_id:UUID,command:MineUpgradeStartRequest,
+                              db:_db,player:_player,response:Response)->dict:
+    response.headers["Cache-Control"]="private, no-store"
+    try:
+        result=start_lab_mine_upgrade(
+            db,owner=player,city_id=city_id,order_id=command.order_id,
+            resource=command.resource,hero_id=command.hero_id,
+        )
+        if result["replayed"]:
+            response.status_code=200
+        return result
+    except RecruitmentNotFound as exc:
+        raise HTTPException(status_code=404,detail="City or hero not found") from exc
+    except RecruitmentConflict as exc:
+        raise HTTPException(status_code=409,detail=str(exc)) from exc
 
 
 class PveMissionRequest(StrictDTO):
