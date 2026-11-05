@@ -139,3 +139,16 @@ L'US-COM-008 reste **non acceptée** malgré cette nouvelle
 dépendance traitée partiellement.
 
 Voir la [recette US-COM-011](RECETTE-US-COM-011-2026-11-05.md).
+
+## Extension du 5 novembre — vrais et faux nuls US-COM-010
+
+L'enchaînement intègre désormais le traitement de `faux_nul`
+de Jactari, y compris le cas où le peloton techniquement
+vainqueur termine avec zéro unité active. Son verdict est
+conservé, mais le peloton vide ne peut pas combattre la ligne
+suivante. Les indicateurs de dispersion restent séparés de
+l'épuisement et des morts définitives.
+
+Cette politique de sûreté du laboratoire doit encore être
+comparée aux interactions historiques de magie et de résurrection.
+Voir [US-COM-010](RECETTE-US-COM-010-2026-11-05.md).
