@@ -200,6 +200,13 @@ export function RegionEncounterPanel({encounter,forces,cityId,missions}:{
           {event.ending.kind==="true_draw"&&<small>
             Égalité Jactari : les deux pelotons quittent la ligne active.
           </small>}
+          {event.overwhelming.overwhelming&&<small>
+            Victoire écrasante {event.overwhelming.winner==="attacker"?"de l'attaquant":"du défenseur"}
+            {" : écart après arrondi "+event.overwhelming.power_delta_after_floor}
+            {" strictement supérieur à sa puissance de base "+
+              event.overwhelming.winner_base_power}.
+            Le marqueur Jactari −1 ne représente aucune perte négative.
+          </small>}
           <small>Puissances calculées : {event.total_power.attacker.toLocaleString("fr-FR")} /
             {event.total_power.defender.toLocaleString("fr-FR")}</small>
           <small>Héros :
