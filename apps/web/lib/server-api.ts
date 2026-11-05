@@ -190,8 +190,26 @@ export type LineSequencePreview={
   weapon_classification_complete:boolean;
   attacker_hero_profile_applied:boolean;
   attacker_conditional_talent_configured:boolean;
+  pre_shot_capabilities_configured:boolean;
   sequence:{
     scope:string;policy_id:string;verdict:"attacker"|"defender"|"draw";
+    pre_shots:{
+      policy_id:string;phase:"pre_duel";configured:boolean;
+      events:{
+        order:number;side:"attacker"|"defender";
+        kind:"barrage"|"ballista"|"bombardment";
+        source_ref:string;percent:string;
+        eligible_positions:number[];shot_power:number;
+        projected_losses:number[];target_side:"attacker"|"defender";
+        historically_certified_s2:false;
+      }[];
+      original_counts:{attacker:number[];defender:number[]};
+      projected_losses:{attacker:number[];defender:number[]};
+      simulated_losses:{attacker:number[];defender:number[]};
+      remaining_after_shots:{attacker:number[];defender:number[]};
+      overlap_capped:boolean;simultaneous:true;
+      effects_applied_to_database:false;historically_certified_s2:false;
+    };
     events:{
       exchange:number;attacker_position:number;defender_position:number;
       attacker_unit_code:string;defender_unit_code:string;
