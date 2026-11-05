@@ -12,11 +12,12 @@ import mmhk_api.pve_missions as missions
 class MissionDB:
     autocommit=True
 
-    def __init__(self, now, *, attacker=10, defender=70):
+    def __init__(self, now, *, attacker=10, defender=70, snapshot=None):
         self.now=now
         self.mid,self.hid,self.eid=uuid4(),uuid4(),uuid4()
         self.attacker=attacker
         self.defender=defender
+        self.snapshot=snapshot
         self.stage="outbound"
         self.return_due=now+timedelta(hours=1)
         self.travel_seconds=5
@@ -38,7 +39,8 @@ class MissionDB:
             if (self.stage=="outbound" and self.arrival_due<=date_a or
                 self.stage=="returning" and self.return_due<=date_b):
                 self.last_row=(self.mid,self.stage,self.hid,self.eid,"militia",
-                    self.attacker,10,self.travel_seconds,self.arrival_due,self.return_due)
+                    self.attacker,10,self.travel_seconds,self.arrival_due,self.return_due,
+                    self.snapshot)
             else:
                 self.last_row=None
         elif "SELECT unit_count,unit_power FROM region_encounters" in normalized:
@@ -81,6 +83,7 @@ def test_flight_is_persisted_once_without_running_duel(monkeypatch):
     assert db.report["outcome"] is None
     assert db.report["admission"]["threshold"]=="1/7"
     assert db.report["admission"]["fled"] is True
+    assert db.report["engagement_inputs"]["source_status"]=="legacy_live_at_arrival"
     assert db.events==["arrived"]
     assert db.hero_status=="on_mission"
 
@@ -118,3 +121,44 @@ def test_admitted_mission_still_executes_existing_duel(monkeypatch):
     assert db.report["fled_before_combat"] is False
     assert db.report["admission"]["fled"] is False
     assert db.report["outcome"] is not None
+
+
+def test_frozen_encounter_ignores_later_live_strength_changes():
+    """A frozen opponent cannot turn an admitted mission into a flight."""
+    from mmhk_api.pve_encounter_snapshot import POLICY_ID
+    now=datetime(2026,11,5,8,0,tzinfo=UTC)
+    frozen={
+        "policy_id":POLICY_ID,
+        "unit_code":"wolves",
+        "unit_count":40,"unit_power":10,
+        "source_ref":"LAB-MISSION-FROZEN",
+    }
+    db=MissionDB(now,attacker=10,defender=800,snapshot=frozen)
+    result=advance_pve_missions(db,max_orders=1,now_at=now)
+    assert result[0]["phase"]=="arrived"
+    assert db.report["fled_before_combat"] is False
+    assert db.report["engagement_inputs"]["source_status"]=="frozen_at_departure"
+    assert db.report["engagement_inputs"]["defender"]["unit_count"]==40
+    assert db.report["admission"]["defender_raw_power"]=="400"
+    assert not any("SELECT unit_count,unit_power FROM region_encounters" in q
+                   for q in db.queries)
+    assert advance_pve_missions(db,max_orders=1,now_at=now)==[]
+
+
+def test_corrupt_frozen_opponent_is_rejected_without_live_fallback():
+    from mmhk_api.pve_encounter_snapshot import POLICY_ID
+    now=datetime(2026,11,5,8,0,tzinfo=UTC)
+    corrupt={
+        "policy_id":POLICY_ID,
+        "unit_code":"wolves",
+        "unit_count":0,"unit_power":10,
+        "source_ref":"LAB-MISSION",
+    }
+    db=MissionDB(now,attacker=10,defender=800,snapshot=corrupt)
+    with pytest.raises(ValueError,match="frozen opponent"):
+        advance_pve_missions(db,max_orders=1,now_at=now)
+    assert db.stage=="outbound"
+    assert db.report is None
+    assert db.events==[]
+    assert not any("SELECT unit_count,unit_power FROM region_encounters" in q
+                   for q in db.queries)
