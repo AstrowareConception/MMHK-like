@@ -629,13 +629,27 @@ def main() -> int:
                         expect(page.locator(".mission-report-events li")).to_have_count(3)
                     if key=="formation":
                         expect(page.locator(".mission-report-formation > div")).to_have_count(7)
-                        expect(page.get_by_text("Peloton du duel expérimental")).to_be_visible()
+                        legacy_label=panel.get_by_text("Peloton du duel expérimental")
+                        if legacy_label.count():
+                            expect(legacy_label).to_be_visible()
+                        else:
+                            # V101 is a full line; do not require the old single-stack badge.
+                            expect(panel).to_contain_text(
+                                "Les positions occupées participent à une simulation séquentielle Jactari"
+                            )
                     if key=="duel":
                         expect(page.get_by_text("Rapport enregistré au contact")).to_be_visible()
                         scores=page.locator(".mission-duel-results").inner_text()
                         assert not re.search(r"\d+\.\d{8,}",scores),(
                             "Jactari output leaked unformatted floating precision",scores)
-                        assert len(page.locator(".mission-duel-results>div").all())>=3
+                        line=page.get_by_test_id("pve-ordinary-line-result")
+                        if line.count():
+                            expect(line).to_be_visible()
+                            expect(line).to_contain_text("Échanges Jactari enregistrés")
+                            expect(line.locator("ol li").first).to_be_visible()
+                        else:
+                            # V100 and older reports still expose the mono-stack metrics.
+                            assert len(page.locator(".mission-duel-results>div").all())>=3
                     page.screenshot(path="test-output/visuals/REPORT-"+key+"-"+str(width)+"x"+str(height)+".png",
                                     full_page=False,animations="disabled")
             page.set_viewport_size({"width":1366,"height":900})
