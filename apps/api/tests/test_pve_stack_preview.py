@@ -8,7 +8,7 @@ from mmhk_api.region_pve import preview_ordinary_line_sequence
 
 
 class FakeDB:
-    def __init__(self, *, own=True, hero="idle", formation=None, profile=None, talent=None):
+    def __init__(self, *, own=True, hero="idle", formation=None, profile=None, talent=None, pre_shots=None):
         self.city=uuid4()
         self.hero=uuid4()
         self.encounter=uuid4()
@@ -17,6 +17,7 @@ class FakeDB:
         self.hero_state=hero
         self.profile=profile
         self.talent=talent
+        self.pre_shots=pre_shots
         self.formation=formation if formation is not None else [
             ("militia",12,20,"I"),("archers",5,12,"R")
         ]
@@ -39,6 +40,8 @@ class FakeDB:
             self.rows=[self.profile] if self.profile is not None else []
         elif "FROM hero_conditional_counter_talents" in normalized:
             self.rows=[self.talent] if self.talent is not None else []
+        elif "FROM hero_pre_shot_lab_profiles" in normalized:
+            self.rows=[self.pre_shots] if self.pre_shots is not None else []
         elif "SELECT count(*) FROM hero_formation_slots" in normalized:
             self.rows=[(len(self.formation),)]
         else:
@@ -131,3 +134,29 @@ def test_conditional_talent_without_basic_hero_profile_fails_closed():
     with pytest.raises(RecruitmentConflict,match="requires qualified"):
         preview(db)
     assert all(q.startswith("SELECT") for q,_ in db.queries)
+
+
+def test_pre_shot_profile_executes_before_duel_without_database_writes():
+    from decimal import Decimal
+    # 12 militia (I, no barrage), 5 archers (R) at power 12,
+    # 100% ranged barrage produces 60 shot power; one enemy C stack
+    # of 3 × 10 is exhausted before ordinary exchanges.
+    db=FakeDB(pre_shots=(Decimal("100"),Decimal("0"),"LAB-BARRAGE-100"))
+    result=preview(db)
+    pres=result["sequence"]["pre_shots"]
+    assert result["pre_shot_capabilities_configured"] is True
+    assert pres["configured"] is True
+    assert pres["events"][0]["kind"]=="barrage"
+    assert pres["events"][0]["eligible_positions"]==[2]
+    assert pres["remaining_after_shots"]["defender"]==[0]
+    assert result["sequence"]["events"]==[]
+    assert result["sequence"]["verdict"]=="attacker"
+    assert not result["sequence"]["permanent_losses_applied"]
+    assert all(q.startswith("SELECT") for q,_ in db.queries)
+
+
+def test_no_pre_shot_profile_means_no_automatic_shots():
+    db=FakeDB()
+    result=preview(db)
+    assert result["pre_shot_capabilities_configured"] is False
+    assert result["sequence"]["pre_shots"]["events"]==[]
