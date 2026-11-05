@@ -10,6 +10,27 @@ CREATE TABLE pve_lab_casualty_policies (
   configured_at timestamptz NOT NULL DEFAULT clock_timestamp()
 );
 
+-- Only an explicitly versioned, uncertified LAB travel policy can enable
+-- durable experimental casualties. Protect this boundary even from direct SQL.
+CREATE FUNCTION enforce_pve_lab_casualty_world_v102() RETURNS trigger
+LANGUAGE plpgsql AS $
+BEGIN
+  IF NEW.enabled AND NOT EXISTS (
+    SELECT 1 FROM pve_travel_policies t
+      WHERE t.world_id=NEW.world_id
+        AND t.policy_id LIKE 'LAB-%'
+        AND NOT t.historically_certified
+  ) THEN
+    RAISE EXCEPTION 'Durable LAB casualties require an experimental LAB travel world'
+      USING ERRCODE='23514';
+  END IF;
+  RETURN NEW;
+END;
+$;
+CREATE TRIGGER pve_lab_casualty_world_guard_v102
+  BEFORE INSERT OR UPDATE ON pve_lab_casualty_policies FOR EACH ROW
+  EXECUTE FUNCTION enforce_pve_lab_casualty_world_v102();
+
 ALTER TABLE pve_missions ADD COLUMN attacker_settlement_snapshot jsonb;
 ALTER TABLE pve_missions ADD CONSTRAINT pve_attacker_settlement_shape_v102 CHECK (
   attacker_settlement_snapshot IS NULL OR (
