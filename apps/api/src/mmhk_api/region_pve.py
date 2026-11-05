@@ -142,6 +142,24 @@ def preview_ordinary_line_sequence(
         "additional_bonus":talent_row[0],
         "source_ref":talent_row[1],
     } if talent_row else None)
+    pre_shot_profile = db.execute(
+        """SELECT barrage_percent,ballista_percent,source_ref
+           FROM hero_pre_shot_lab_profiles WHERE hero_id=%s""",
+        (hero_id,),
+    ).fetchone()
+    pre_shot_actions=[]
+    if pre_shot_profile:
+        barrage,ballista,source_ref=pre_shot_profile
+        if barrage>0:
+            pre_shot_actions.append({
+                "side":"attacker","kind":"barrage",
+                "percent":barrage,"source_ref":source_ref,
+            })
+        if ballista>0:
+            pre_shot_actions.append({
+                "side":"attacker","kind":"ballista",
+                "percent":ballista,"source_ref":source_ref,
+            })
     report = resolve_ordinary_lines(
         [{"unit_code":code,"count":int(count),"unit_power":float(power),
           "weapon_code":weapon}
@@ -150,6 +168,11 @@ def preview_ordinary_line_sequence(
           "unit_power":float(monster[3]),"weapon_code":monster[4]}],
         attacker_hero=qualified_hero,
         attacker_talent=qualified_talent,
+        pre_shot_actions=pre_shot_actions,
+        pre_shot_context={
+            "attacker_has_hero":True,
+            "defender_has_hero":False,
+        },
     )
     return {
         "scope":report["scope"],"preview_only":True,
@@ -159,6 +182,7 @@ def preview_ordinary_line_sequence(
         "weapon_classification_complete":report["weapon_classification_complete"],
         "attacker_hero_profile_applied":report["attacker_hero_profile_applied"],
         "attacker_conditional_talent_configured":report["attacker_conditional_talent_configured"],
+        "pre_shot_capabilities_configured":bool(pre_shot_actions),
         "historically_certified":False,
         "note":"Partial ordinary-stack Jactari laboratory; no permanent effects.",
     }
