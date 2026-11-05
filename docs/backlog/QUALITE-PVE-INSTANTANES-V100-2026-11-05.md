@@ -130,3 +130,23 @@ Tests associés :
 
 **État des US : toujours candidates ou à recetter selon le registre ;
 aucune US n'est déclarée acceptée par la seule implémentation V100.**
+
+## Résultat de la quality gate — 5 novembre 2026
+
+[PR #71](https://github.com/AstrowareConception/MMHK-like/pull/71)
+validée par [la campagne GitHub Actions
+42005221019](https://github.com/AstrowareConception/MMHK-like/actions/runs/42005221019) :
+
+- V100 : migrations appliquées sur PostgreSQL 17 ;
+- tests ciblés de snapshots et d'idempotence : **25/25** ;
+- suite Python complète : **379/379** ;
+- build Next.js + TypeScript strict : **succès** ;
+- traçabilité des 300 US : **300/300**.
+
+La PR a été fusionnée sur `main` au commit
+`865ca626f967de1e7886fde87954e5951551e5b8`.
+Ces résultats remplacent l'indication « tests écrits, non
+exécutés » pour les **contrats techniques de V100 seulement**.
+Les critères de fidélité S2 et de gameplay complet restent
+non acceptés. Le grand parcours Docker/Chromium post-fusion
+n'est pas certifié par cette quality gate PR.
