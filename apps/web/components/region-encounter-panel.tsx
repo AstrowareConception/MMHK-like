@@ -120,9 +120,16 @@ export function RegionEncounterPanel({encounter,forces,cityId,missions}:{
     {lineReport&&<div className="encounter-report" role="status"
       data-testid="region-line-sequence-preview">
       <strong>Enchaînement expérimental — aucun effet sur la partie</strong>
-      <p>{lineReport.sequence.events.length} échanges · Verdict provisoire :
+      {lineReport.sequence.admission.fled?<div className="mmhk-pve-flight">
+        <strong>Fuite avant combat — seuil d'admission PvE atteint</strong>
+        <p>Puissance brute attaquante : {lineReport.sequence.admission.attacker_raw_power}
+          {" · Défense : "+lineReport.sequence.admission.defender_raw_power}
+          {" · Seuil inclusif : "+lineReport.sequence.admission.threshold}</p>
+        <p>Aucun barrage, duel, mort définitive, XP ou butin n'est
+          appliqué par cette simulation.</p>
+      </div>:<p>{lineReport.sequence.events.length} échanges · Verdict provisoire :
         {lineReport.sequence.verdict==="attacker"?" attaquant":
-         lineReport.sequence.verdict==="defender"?" défenseur":" égalité"}</p>
+         lineReport.sequence.verdict==="defender"?" défenseur":" égalité"}</p>}
       <p role="status">{lineReport.attacker_hero_profile_applied
         ?"Caractéristiques de combat du héros qualifiées : attaque +0,5 % par point."
         :"Caractéristiques de combat du héros non qualifiées : aucun bonus de héros supposé."}
@@ -134,6 +141,10 @@ export function RegionEncounterPanel({encounter,forces,cityId,missions}:{
       {lineReport.attacker_conditional_talent_configured&&<p>
         Talent du héros : activé échange par échange uniquement si l'unité
         attaquante possède l'avantage de contre-arme correspondant.
+      </p>}
+      {!lineReport.sequence.combat_started&&<p className="map-qualification">
+        Les bonus du héros et les tirs préalables sont exclus du rapport
+        brut utilisé pour décider de cette fuite.
       </p>}
       <div className="mmhk-pre-shot-phase" data-testid="combat-pre-shot-phase">
         <strong>Phase préalable — avant les duels</strong>
