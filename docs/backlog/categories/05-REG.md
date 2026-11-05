@@ -426,6 +426,10 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 
 **Priorité proposée :** P1 · **Phases :** Mid game, End game / Guerre des Larmes · **Preuve principale :** DOC · **Statut :** à affiner.
 
+**Livraison technique LAB (05/11/2026) : terminée pour une extension par mine, en attente de recette finale.** V107 : une extension G11 de +5 % peut être construite sur un emplacement LAB explicitement qualifié ; le coût et la durée sont attestés, le héros contrôlé, la production de cette seule mine suspendue durant les travaux puis rétablie avec le bonus après échéance.
+**Preuves :** PR #79 ; apps/api/tests/test_lab_mine_extensions.py ; apps/api/src/mmhk_api/mine_extensions.py ; docs/backlog/QUALITE-MINES-EXTENSIONS-V107-2026-11-05.md.
+**Reste pour la DoD historique :** Coûts et durées historiques, nombre maximal et cumul des extensions, géométrie exacte, combinaisons d'aménagements, prérequis des héros S2 ; réception des cinq CA et de la DoD classique. Les cinq critères du profil classique et la revue produit restent **non acceptés**. Voir [le suivi des livraisons](../SUIVI-LIVRAISONS-2026-11-05.md).
+
 ### 1. Card — besoin du joueur
 
 > En tant que joueur, je souhaite construire une extension afin de améliorer sa production.

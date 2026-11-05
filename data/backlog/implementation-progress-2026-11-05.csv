@@ -62,7 +62,7 @@ us_id,priorite,etat_livraison_lab,acceptation_classique,preuve_technique,reste_a
 "US-REG-003","P0","terminee_techniquement_lab","non_acceptee","PR #75 ; apps/api/tests/test_pve_missions_integration.py ; CI 42055391105","PNJ spéciaux, fidélité S2 et acceptation métier des cinq CA"
 "US-REG-004","P0","terminee_techniquement_lab","non_acceptee","PR #76 ; apps/api/tests/test_lab_mine_activation.py ; CI 42065652207","règles historiques G11, niveaux, extensions et réception produit des cinq CA"
 "US-REG-005","P0","terminee_techniquement_lab","non_acceptee","PR #78 ; apps/api/tests/test_lab_mine_upgrades.py ; apps/api/src/mmhk_api/mine_upgrades.py ; docs/backlog/QUALITE-MINES-NIVEAUX-V106-2026-11-05.md","Niveaux réels historiques, prérequis du héros S2, modes rapide/économique, extensions et règles de cumul ; réception des cinq CA et DoD du backlog classique."
-"US-REG-006","P1","non_evaluee_dans_cette_revue","non_acceptee","",""
+"US-REG-006","P1","terminee_techniquement_lab","non_acceptee","PR #79 ; apps/api/tests/test_lab_mine_extensions.py ; apps/api/src/mmhk_api/mine_extensions.py ; docs/backlog/QUALITE-MINES-EXTENSIONS-V107-2026-11-05.md","Coûts et durées historiques, nombre maximal et cumul des extensions, géométrie exacte, combinaisons d'aménagements, prérequis des héros S2 ; réception des cinq CA et de la DoD classique."
 "US-REG-007","P1","non_evaluee_dans_cette_revue","non_acceptee","",""
 "US-REG-008","P1","non_evaluee_dans_cette_revue","non_acceptee","",""
 "US-REG-009","P1","non_evaluee_dans_cette_revue","non_acceptee","",""

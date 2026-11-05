@@ -3,9 +3,9 @@
 ## Bilan et distinction des statuts
 
 - **300 US** et **1 500 critères** au backlog.
-- **4 US techniquement terminées et testées dans le laboratoire LAB**.
+- **5 US techniquement terminées et testées dans le laboratoire LAB**.
 - **12 US livrées partiellement et testées dans ce même laboratoire**.
-- **284 US non réévaluées individuellement pendant cette campagne** ; ne préjuge pas de l'absence de code (voir audit du 4 novembre).
+- **283 US non réévaluées individuellement pendant cette campagne** ; ne préjuge pas de l'absence de code (voir audit du 4 novembre).
 - **0 US acceptée au regard du jeu classique PvP/Guerre des Larmes** : les oracles historiques, les inconnues et la réception des cinq critères/DoD ne sont pas tous clos.
 
 Les états initiaux `a_affiner`, `ready=false` et `checksComplete=false` restent inchangés dans les 300 fiches. Le nouveau champ `implementationLab` décrit une livraison technique **sans faire passer un prototype pour le produit S2 final**. Les cinq CA et la DoD nécessiteront une vraie acceptation produit.
@@ -18,6 +18,7 @@ Les états initiaux `a_affiner`, `ready=false` et `checksComplete=false` restent
 | [US-REG-003](categories/05-REG.md#us-reg-003) | Libérer une case | PR #75 ; apps/api/tests/test_pve_missions_integration.py ; CI 42055391105 | PNJ spéciaux, fidélité S2 et acceptation métier des cinq CA |
 | [US-REG-004](categories/05-REG.md#us-reg-004) | Exploiter une mine libérée | PR #76 ; apps/api/tests/test_lab_mine_activation.py ; CI 42065652207 | règles historiques G11, niveaux, extensions et réception produit des cinq CA |
 | [US-REG-005](categories/05-REG.md#us-reg-005) | Améliorer une mine | PR #78 ; apps/api/tests/test_lab_mine_upgrades.py ; apps/api/src/mmhk_api/mine_upgrades.py ; docs/backlog/QUALITE-MINES-NIVEAUX-V106-2026-11-05.md | Niveaux réels historiques, prérequis du héros S2, modes rapide/économique, extensions et règles de cumul ; réception des cinq CA et DoD du backlog classique. |
+| [US-REG-006](categories/05-REG.md#us-reg-006) | Étendre une mine | PR #79 ; apps/api/tests/test_lab_mine_extensions.py ; apps/api/src/mmhk_api/mine_extensions.py ; docs/backlog/QUALITE-MINES-EXTENSIONS-V107-2026-11-05.md | Coûts et durées historiques, nombre maximal et cumul des extensions, géométrie exacte, combinaisons d'aménagements, prérequis des héros S2 ; réception des cinq CA et de la DoD classique. |
 
 ## Partiellement livrées — profil LAB
 
