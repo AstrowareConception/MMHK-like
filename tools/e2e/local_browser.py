@@ -123,6 +123,24 @@ def main() -> int:
             city_tabs=page.get_by_role("tablist",name="Écrans de la cité")
             city_tabs.get_by_role("tab",name="Réserves").click()
             expect(page.get_by_role("heading", name="Réserves de la ville")).to_be_visible()
+            # V105/V107: documentary levels remain accessible, while a
+            # non-LAB demo city must display NO invented extension quote.
+            page.get_by_role("link", name=re.compile(
+                "Consulter les niveaux de mines documentés"
+            )).click()
+            expect(page.get_by_test_id("g11-mine-reference")).to_be_visible()
+            page.get_by_role("link", name="Extensions minières qualifiées (LAB)").click()
+            ext=page.get_by_test_id("lab-mine-extensions")
+            expect(ext).to_be_visible()
+            expect(ext).to_contain_text(
+                "Aucun site d'extension n'a été qualifié"
+            )
+            expect(ext.get_by_role("button",name="Construire l'extension (LAB)")).to_have_count(0)
+            page.get_by_role("link",name="Retour aux niveaux des mines").click()
+            page.get_by_role("link",name="Retour à la cité").click()
+            expect(page.get_by_test_id("city-game-screen")).to_be_visible()
+            city_tabs=page.get_by_role("tablist",name="Écrans de la cité")
+            city_tabs.get_by_role("tab",name="Réserves").click()
             assert page.evaluate("""() => {
               const shell=document.querySelector('.kingdom-screen-content');
               return getComputedStyle(shell).overflowY==='hidden' &&
