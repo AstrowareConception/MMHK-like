@@ -115,7 +115,7 @@ export default async function MissionReportPage({params}:{
       duel={<div className="mmhk-mission-duel">
         <header className="mmhk-mission-pane-heading">
           <span aria-hidden="true">⚔</span>
-          <div><h2>Résolution du duel Jactari</h2>
+          <div><h2>Admission et résolution Jactari</h2>
             <p>Résultat transmis par le serveur à l'arrivée.</p></div>
         </header>
         {duel?.fled_before_combat&&duel.admission?
