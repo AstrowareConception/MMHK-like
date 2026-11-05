@@ -188,6 +188,18 @@ export function RegionEncounterPanel({encounter,forces,cityId,missions}:{
             contre {event.defender_position} ({event.defender_unit_code})</span>
           <small>Attaquant {event.started.attacker} → {event.remaining.attacker} ·
             Défenseur {event.started.defender} → {event.remaining.defender}</small>
+          <small>Dispersions théoriques : {event.theoretical_dispersions.attacker}
+            {" attaquant / "+event.theoretical_dispersions.defender+" défenseur"}
+            {" · Aucune mort définitive appliquée."}
+          </small>
+          {event.ending.kind==="false_draw"&&<small>
+            Faux nul Jactari : {event.ending.verdict==="attacker"?"avantage technique à l'attaquant":"avantage technique au défenseur"}.
+            Le peloton désigné peut néanmoins terminer à zéro unité active :
+            il ne reprend pas le combat contre le suivant.
+          </small>}
+          {event.ending.kind==="true_draw"&&<small>
+            Égalité Jactari : les deux pelotons quittent la ligne active.
+          </small>}
           <small>Puissances calculées : {event.total_power.attacker.toLocaleString("fr-FR")} /
             {event.total_power.defender.toLocaleString("fr-FR")}</small>
           <small>Héros :
