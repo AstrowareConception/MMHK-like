@@ -36,6 +36,7 @@ from .marketplace import (
 from .map_views import MapNotFound, own_region, world_overview
 from .region_inspection import inspect_region
 from .lab_mine_activation import mine_unlocks_for_city,activate_lab_mine
+from .mine_level_reference import owned_city_mine_level_reference
 from .military_readiness import military_readiness
 from .timeline import timeline_for_player
 from .artifacts import artifact_inventory, move_artifact
@@ -845,6 +846,15 @@ def activate_my_lab_mine(city_id:UUID,resource:str,command:ActivateLabMineReques
         raise HTTPException(status_code=404,detail="City or qualified mine not found") from exc
     except RecruitmentConflict as exc:
         raise HTTPException(status_code=409,detail=str(exc)) from exc
+
+
+
+@app.get("/api/v1/me/cities/{city_id}/mines/level-reference")
+def mine_levels_for_owner(city_id:UUID,db:_db,player:_player)->dict:
+    try:
+        return owned_city_mine_level_reference(db,owner=player,city_id=city_id)
+    except RecruitmentNotFound as exc:
+        raise HTTPException(status_code=404,detail="City not found") from exc
 
 
 class PveMissionRequest(StrictDTO):
