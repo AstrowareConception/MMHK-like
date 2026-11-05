@@ -124,3 +124,18 @@ Tests candidats :
 `test_pve_pre_shots.py` et `test_pve_stack_preview.py`.
 Les cinq critères d'US-COM-008 et la DoD restent non validés.
 Voir [US-COM-007](RECETTE-US-COM-007-2026-11-05.md).
+
+## Extension du 5 novembre — admission et fuite PvE US-COM-011
+
+Avant les tirs et les duels, la puissance brute cumulée des
+pelotons est comparée à la puissance défensive. Le test de seuil
+`r <= 1/7` est effectué sans bonus de héros, magie, contre-armes
+ou prélèvements de tirs préalables.
+
+En cas de fuite, la séquence conserve le rapport d'admission,
+mais ne démarre aucun échange. Le modèle continue d'être sans
+effet sur les unités, la région, les ressources ou l'expérience.
+L'US-COM-008 reste **non acceptée** malgré cette nouvelle
+dépendance traitée partiellement.
+
+Voir la [recette US-COM-011](RECETTE-US-COM-011-2026-11-05.md).
