@@ -30,7 +30,7 @@ CREATE TABLE city_lab_mine_upgrade_orders (
   city_id uuid NOT NULL,
   resource text NOT NULL,
   actor_account_id uuid NOT NULL REFERENCES accounts(account_id),
-  hero_id uuid NOT NULL REFERENCES city_heroes(hero_id),
+  hero_id uuid NOT NULL REFERENCES city_heroes(hero_id) ON DELETE CASCADE,
   from_level integer NOT NULL CHECK(from_level BETWEEN 1 AND 9),
   target_level integer NOT NULL CHECK(target_level=from_level+1 AND target_level<=10),
   hero_level_at_start integer NOT NULL CHECK(hero_level_at_start BETWEEN 1 AND 100),
