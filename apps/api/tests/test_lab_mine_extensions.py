@@ -221,7 +221,7 @@ def test_operator_cannot_requalify_different_extension_or_occupied_tile(city):
             "SELECT i,j FROM city_mine_positions WHERE city_id=%s "
             "AND resource='gold'",(city["city"],),
         ).fetchone()
-        with pytest.raises(ValueError,match="adjoin"):
+        with pytest.raises(ValueError,match="adjacent"):
             qualify_lab_mine_extension(
                 db,city_id=city["city"],resource="gold",
                 site_i=p[0],site_j=p[1],
