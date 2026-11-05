@@ -103,14 +103,15 @@ export default async function MissionReportPage({params}:{
               <strong>Position {i+1}</strong>
               <span className="mmhk-mission-troop-symbol" aria-hidden="true">{slot?"♟":"◇"}</span>
               <span>{slot?slot.quantity+" × "+(units[slot.unit_code]??slot.unit_code):"Libre"}</span>
-              {slot?.unit_code===r.unit_code&&
+              {!duel?.line_outcome&&slot?.unit_code===r.unit_code&&
                 <small>Peloton du duel expérimental</small>}
             </div>;
           })}
         </div>
-        <p className="mmhk-mission-ledger-note">Le rapport présente
-          exactement la composition enregistrée par le serveur. Seul le
-          peloton engagé participe à la simulation actuelle.</p>
+        <p className="mmhk-mission-ledger-note">Le rapport conserve
+          la composition enregistrée par le serveur. {duel?.line_outcome
+            ?"Les positions occupées participent à une simulation séquentielle Jactari ; aucune perte durable n'est appliquée."
+            :"Les missions plus anciennes utilisent encore un seul peloton dans le duel expérimental."}</p>
       </div>}
       duel={<div className="mmhk-mission-duel">
         <header className="mmhk-mission-pane-heading">
@@ -133,6 +134,12 @@ export default async function MissionReportPage({params}:{
               {" × "+duel.engagement_inputs.defender.unit_power.toLocaleString("fr-FR")}
             </strong>
           </div>
+          {duel.engagement_inputs.attacker_line&&<div className="mmhk-pve-line-snapshot">
+            <strong>Ligne de l'attaquant figée au départ</strong>
+            <ol>{duel.engagement_inputs.attacker_line.map(s=>
+              <li key={s.position}>Position {s.position} : {s.count} × {units[s.unit_code]??s.unit_code}
+                {" · puissance "+s.unit_power} · classe {s.weapon_code??"non qualifiée"}</li>)}</ol>
+          </div>}
           <small>Profil : {duel.engagement_inputs.defender.policy_id}</small>
         </div>}
         {duel?.fled_before_combat&&duel.admission?
@@ -152,8 +159,31 @@ export default async function MissionReportPage({params}:{
               ou perdu avec des morts définitives.</p>
           </div>
           :duel?<div className="mission-duel-results">
-          <p><strong>Rapport enregistré au contact</strong> — simulation mono-peloton,
-            sans pertes permanentes, récompense, XP ou libération de la case.</p>
+          <p><strong>Rapport enregistré au contact</strong> — {duel.line_outcome
+            ?"simulation séquentielle de la ligne ordinaire (jusqu'à sept pelotons)"
+            :"simulation mono-peloton historique"}, sans pertes permanentes,
+            récompense, XP ni libération de la case.</p>
+          {duel.line_outcome&&<div data-testid="pve-ordinary-line-result" className="mmhk-mission-line-result">
+            <div className="mmhk-mission-verdict" role="status">
+              <span>Verdict de la simulation de la ligne</span>
+              <strong>{duel.line_outcome.verdict==="attacker"?"Avantage de l'attaquant":
+                duel.line_outcome.verdict==="defender"?"Avantage du défenseur":
+                duel.line_outcome.verdict==="draw"?"Égalité":"Fuite avant combat"}</strong>
+            </div>
+            <div><span>Échanges Jactari enregistrés</span>
+              <strong>{duel.line_outcome.events.length}</strong></div>
+            <p>Pelotons attaquants, effectifs initiaux et simulés restants :</p>
+            <ol>{duel.line_outcome.attacker.map(s=><li key={s.position}>
+              Position {s.position} · {s.unit_code} : {s.initial} → {s.remaining}
+            </li>)}</ol>
+            {!duel.line_outcome.weapon_classification_complete&&
+              <p className="mmhk-mission-ledger-note">Certaines classes d'armes
+                ne sont pas qualifiées : les bonus de contre-arme correspondants
+                ne peuvent pas être certifiés.</p>}
+            <p className="mmhk-mission-ledger-note">Les statistiques du héros,
+              talents, sorts, pertes durables et récompenses restent exclus
+              de ce laboratoire tant que leurs paramètres ne sont pas qualifiés.</p>
+          </div>}
           {duel.interpretation&&<div className="mmhk-mission-verdict" role="status">
             <span>Verdict du duel simulé</span>
             <strong>{duel.interpretation.verdict==="attacker"?"Avantage de l'attaquant":
@@ -207,12 +237,12 @@ export default async function MissionReportPage({params}:{
             <div><span>Effets persistants sur le royaume</span>
               <strong>Aucun · ni morts, ni XP, ni butin, ni libération</strong></div>
           </>}
-          <div><span>Puissance de l'attaquant</span>
+          {!duel.line_outcome&&<><div><span>Puissance de l'attaquant</span>
             <strong>{metric(duel.outcome?.totalPower?.attacker)}</strong></div>
           <div><span>Puissance des défenseurs</span>
             <strong>{metric(duel.outcome?.totalPower?.defender)}</strong></div>
           <div><span>Unités actives restantes (simulation)</span>
-            <strong>{metric(duel.outcome?.remaining?.attacker)} / {metric(duel.outcome?.remaining?.defender)}</strong></div>
+            <strong>{metric(duel.outcome?.remaining?.attacker)} / {metric(duel.outcome?.remaining?.defender)}</strong></div></>}
         </div>:<div className="mmhk-mission-duel-pending">
           <span aria-hidden="true">⌛</span>
           <strong>Le héros n'a pas encore atteint sa destination</strong>

@@ -13,12 +13,13 @@ import mmhk_api.pve_missions as missions
 class MissionDB:
     autocommit=True
 
-    def __init__(self, now, *, attacker=10, defender=70, snapshot=None):
+    def __init__(self, now, *, attacker=10, defender=70, snapshot=None, ordinary_line=None):
         self.now=now
         self.mid,self.hid,self.eid=uuid4(),uuid4(),uuid4()
         self.attacker=attacker
         self.defender=defender
         self.snapshot=snapshot
+        self.ordinary_line=ordinary_line
         self.stage="outbound"
         self.return_due=now+timedelta(hours=1)
         self.travel_seconds=5
@@ -41,7 +42,7 @@ class MissionDB:
                 self.stage=="returning" and self.return_due<=date_b):
                 self.last_row=(self.mid,self.stage,self.hid,self.eid,"militia",
                     self.attacker,10,self.travel_seconds,self.arrival_due,self.return_due,
-                    self.snapshot)
+                    self.snapshot,self.ordinary_line)
             else:
                 self.last_row=None
         elif "SELECT unit_count,unit_power FROM region_encounters" in normalized:
@@ -163,3 +164,56 @@ def test_corrupt_frozen_opponent_is_rejected_without_live_fallback():
     assert db.events==[]
     assert not any("SELECT unit_count,unit_power FROM region_encounters" in q
                    for q in db.queries)
+
+
+
+def test_v101_complete_line_uses_only_frozen_positions_and_never_live_fallback():
+    """The entire 1..7 line is resolved from frozen values, not catalogues."""
+    from mmhk_api.pve_ordinary_line_snapshot import POLICY_ID as LINE_POLICY
+    from mmhk_api.pve_encounter_snapshot import POLICY_ID as DEF_POLICY
+    now=datetime(2026,11,5,11,0,tzinfo=UTC)
+    defender={"policy_id":DEF_POLICY,"unit_code":"wolves",
+              "unit_count":4,"unit_power":1,"source_ref":"TEST-V101"}
+    attacker=[
+        {"position":1,"unit_code":"militia","count":10,
+         "unit_power":10,"weapon_code":None,"weapon_source_ref":None,
+         "profile_policy_id":"TEST-V101"},
+        {"position":7,"unit_code":"archers","count":5,
+         "unit_power":20,"weapon_code":None,"weapon_source_ref":None,
+         "profile_policy_id":"TEST-V101"},
+    ]
+    enemy=[{"position":1,"unit_code":"wolves","count":4,
+            "unit_power":1,"weapon_code":None,"weapon_source_ref":None,
+            "profile_policy_id":DEF_POLICY,"source_ref":"TEST-V101"}]
+    db=MissionDB(now,attacker=10,defender=10000,snapshot=defender,
+                 ordinary_line={"policy_id":LINE_POLICY,
+                                "attacker":attacker,"defender":enemy})
+    assert advance_pve_missions(db,max_orders=1,now_at=now)[0]["phase"]=="arrived"
+    line=db.report["line_outcome"]
+    assert line["policy_id"]=="jactari-sequential-ordinary-v1"
+    assert [s["initial"] for s in line["attacker"]]==[10,5]
+    assert db.report["admission"]["attacker_raw_power"]=="200.0"
+    assert db.report["engagement_inputs"]["combat_scope"]=="LAB-ORDINARY-STACK-SEQUENCE-V1"
+    assert db.report["no_losses_applied"] is True
+    assert db.report["no_rewards"] is True
+    assert db.report["outcome"] is None
+    assert db.events==["arrived"]
+    assert not any("region_encounters" in q for q in db.queries)
+    assert advance_pve_missions(db,max_orders=1,now_at=now)==[]
+
+
+def test_v101_corrupt_line_blocks_without_mutation_or_live_reinterpretation():
+    from mmhk_api.pve_ordinary_line_snapshot import POLICY_ID as LINE_POLICY
+    from mmhk_api.pve_encounter_snapshot import POLICY_ID as DEF_POLICY
+    now=datetime(2026,11,5,11,0,tzinfo=UTC)
+    defender={"policy_id":DEF_POLICY,"unit_code":"wolves","unit_count":4,
+              "unit_power":1,"source_ref":"TEST-V101"}
+    line={"policy_id":LINE_POLICY,"attacker":[],
+          "defender":[]}
+    db=MissionDB(now,attacker=10,defender=4000,
+                 snapshot=defender,ordinary_line=line)
+    with pytest.raises(ValueError,match="frozen ordinary line"):
+        advance_pve_missions(db,max_orders=1,now_at=now)
+    assert db.stage=="outbound"
+    assert db.report is None and db.events==[]
+    assert not any("region_encounters" in q for q in db.queries)

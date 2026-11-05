@@ -15,6 +15,8 @@ from jactari.duel import resolve_stack_duel
 from .pve_report_interpretation import interpret_duel
 from .pve_admission import evaluate_pve_admission
 from .pve_encounter_snapshot import validate_defender_snapshot,legacy_opponent_at_arrival
+from .pve_ordinary_line_snapshot import validate_ordinary_line_snapshot,laboratory_lines
+from .pve_stack_sequence import resolve_ordinary_lines
 from .forces import _owned_city, RecruitmentNotFound, RecruitmentConflict
 
 def start_pve_mission(db:psycopg.Connection,*,owner:UUID,city_id:UUID,
@@ -36,10 +38,12 @@ def start_pve_mission(db:psycopg.Connection,*,owner:UUID,city_id:UUID,
         if hero is None:raise RecruitmentNotFound
         if hero[0]!="idle":raise RecruitmentConflict("Hero already travelling")
         enemy=db.execute(
-            """SELECT cell_i,cell_j FROM region_encounters WHERE encounter_id=%s
+            """SELECT cell_i,cell_j,unit_power FROM region_encounters WHERE encounter_id=%s
                AND city_id=%s AND NOT resolved FOR UPDATE""",(encounter_id,city_id),
         ).fetchone()
         if enemy is None:raise RecruitmentNotFound
+        if enemy[2]>1000000:
+            raise RecruitmentConflict("Encounter combat power exceeds qualified laboratory bounds")
         if db.execute(
             """SELECT 1 FROM pve_missions WHERE encounter_id=%s
                AND stage<>'completed'""",(encounter_id,),
@@ -54,6 +58,18 @@ def start_pve_mission(db:psycopg.Connection,*,owner:UUID,city_id:UUID,
         if stack is None or stack[0]<=0 or stack[0]>1000000:
             raise RecruitmentConflict("No usable troop stack assigned to this hero")
         if stack[1] is None:raise RecruitmentConflict("Unverified troop combat profile")
+        unqualified=db.execute(
+            """SELECT a.unit_code FROM hero_army_units a
+               JOIN city_unit_profiles p USING(unit_code)
+               WHERE a.hero_id=%s AND a.quantity>0
+                 AND (p.lab_duel_power IS NULL OR p.lab_duel_power>1000000
+                      OR a.quantity>1000000)
+               LIMIT 1""",(hero_id,),
+        ).fetchone()
+        if unqualified:
+            raise RecruitmentConflict(
+                "A deployed ordinary stack has no qualified combat power/count"
+            )
         policy=db.execute(
             """SELECT p.seconds_per_step,p.policy_id FROM pve_travel_policies p
                JOIN cities c ON c.world_id=p.world_id WHERE c.city_id=%s""",
@@ -67,8 +83,8 @@ def start_pve_mission(db:psycopg.Connection,*,owner:UUID,city_id:UUID,
         seconds=distance*policy[0]
         if seconds>172800:raise RecruitmentConflict("Unsupported journey length")
         # Freeze the preparation at departure; editing is impossible until
-        # return. Only the selected unit code participates in the current
-        # bounded Jactari duel; the remaining slots are documentary.
+        # return. The ordinary positions now participate together in the frozen
+        # V101 sequential preview. Hero bonuses and lasting losses remain excluded.
         prepared=db.execute(
             """SELECT position,unit_code,quantity FROM hero_formation_slots
                WHERE hero_id=%s ORDER BY position""",(hero_id,),
@@ -155,7 +171,8 @@ def advance_pve_missions(db:psycopg.Connection,*,max_orders:int=25,
             row=db.execute(
                 """SELECT m.mission_id,m.stage,m.hero_id,m.encounter_id,
                           m.unit_code,m.stack_count,m.stack_power,m.travel_seconds,
-                          m.arrival_due_at,m.return_due_at,m.defender_snapshot
+                          m.arrival_due_at,m.return_due_at,m.defender_snapshot,
+                          m.ordinary_line_snapshot
                    FROM pve_missions m WHERE
                      (m.stage='outbound' AND m.arrival_due_at<=%s) OR
                      (m.stage='returning' AND m.return_due_at<=%s)
@@ -165,8 +182,51 @@ def advance_pve_missions(db:psycopg.Connection,*,max_orders:int=25,
             ).fetchone()
             if row is None:break
             (mid,stage,hid,eid,unit,count,power,travel_seconds,arrival,
-             returning,defender_snapshot)=row
-            if stage=="outbound":
+             returning,defender_snapshot,ordinary_line_snapshot)=row
+            if stage=="outbound" and ordinary_line_snapshot is not None:
+                # V101+ freezes the entire 1..7 ordinary line at dispatch.
+                # No live catalogue or encounter attributes are read here.
+                verified=validate_ordinary_line_snapshot(
+                    ordinary_line_snapshot,defender_snapshot,
+                )
+                selected=[s for s in verified["attacker"] if s["unit_code"]==unit]
+                if (sum(s["count"] for s in selected)!=count or
+                    any(s["unit_power"]!=float(power) for s in selected)):
+                    raise ValueError("Frozen ordinary line contradicts V100 attacker")
+                attack_line,defend_line=laboratory_lines(verified)
+                sequence=resolve_ordinary_lines(attack_line,defend_line)
+                frozen_defender=validate_defender_snapshot(defender_snapshot)
+                engagement_inputs={
+                    "source_status":"frozen_at_departure",
+                    "attacker":{"unit_code":unit,"unit_count":count,
+                                "unit_power":float(power)},
+                    "defender":frozen_defender,
+                    "attacker_line":verified["attacker"],
+                    "defender_line":verified["defender"],
+                    "combat_scope":"LAB-ORDINARY-STACK-SEQUENCE-V1",
+                }
+                report={
+                    "scope":"LAB-ORDINARY-STACK-SEQUENCE","preview_only":True,
+                    "admission":sequence["admission"],
+                    "fled_before_combat":sequence["verdict"]=="fled",
+                    "engagement_inputs":engagement_inputs,
+                    "line_outcome":sequence,
+                    "outcome":None,"interpretation":None,
+                    "no_losses_applied":True,"no_rewards":True,
+                    "hero_modifiers_qualified":False,
+                }
+                confirmed_return=now+timedelta(seconds=travel_seconds)
+                db.execute(
+                    """UPDATE pve_missions SET stage='returning',arrived_at=%s,
+                       duel_report=%s,return_due_at=%s WHERE mission_id=%s""",
+                    (now,Jsonb(report),confirmed_return,mid),
+                )
+                db.execute(
+                    """INSERT INTO pve_mission_events(mission_id,phase,occurred_at)
+                       VALUES(%s,'arrived',%s) ON CONFLICT DO NOTHING""",(mid,now),
+                )
+                processed.append({"mission_id":str(mid),"phase":"arrived"})
+            elif stage=="outbound":
                 # V100+ rows are frozen by a DB trigger in the original
                 # departure transaction. Do NOT reread a mutable encounter
                 # for them. Pre-V100 in-flight orders remain explicitly

@@ -43,3 +43,42 @@ actives à examiner avant un déploiement.
 Le calcul reste expérimental, avec branche de fuite
 avant duel, sans pertes durables, XP, butin ou libération.
 Voir le [dossier de contrôle](QUALITE-PVE-INSTANTANES-V100-2026-11-05.md).
+
+
+
+## V101 — ligne ordinaire complète figée au départ (5 novembre 2026)
+
+La migration `101_pve_frozen_ordinary_lines.sql` ajoute
+`ordinary_line_snapshot` aux missions PvE. Un trigger PostgreSQL
+capture dans la même transaction que V100 les **1 à 7 positions ordinaires
+réellement attribuées au héros** (effectifs, puissance individuelle,
+type d'arme lorsqu'il a été qualifié et provenance) et la ligne du
+défenseur neutre. Il rejette toute composition dont les effectifs ne
+correspondent pas aux troupes assignées ou dont la puissance est inconnue.
+
+Le worker utilise désormais `resolve_ordinary_lines` pour les nouvelles
+missions V101. Le rapport conserve les deux lignes de départ, les
+échanges séquentiels et leurs résultats théoriques. La fuite se calcule
+sur **tous les pelotons ordinaires**, avant les autres modificateurs.
+L'UI distingue ce résultat multi-pelotons des anciens duels mono-peloton.
+
+Les missions V100 préexistantes restent mono-peloton avec leur adversaire
+V100 figé, et les missions antérieures V100 restent explicitement
+`legacy_live_at_arrival`. Une copie V101 invalide ne déclenche
+aucune relecture des données courantes.
+
+**Limites :** toutes les rencontres actuelles ont un seul peloton PNJ ;
+les caractéristiques du héros et ses talents ne sont pas encore figés
+pour une mission complète ; si une classification d'arme est inconnue,
+son bonus n'est pas certifiable. Aucun règlement permanent n'est appliqué :
+ni pertes, ni XP, ni butin, ni libération de mine. Le statut des US reste
+non accepté et aucun taux d'avancement n'est déduit de ces tests.
+
+La commande `audit-pve-snapshots` conserve ses compteurs V100 et ajoute
+`ordinary_lines` pour identifier les missions V101 valides ou corrompues.
+Le déploiement de V101 exige sauvegarde préalable et validation sur
+base jetable ; la migration est à sens unique.
+
+Tests : `test_pve_ordinary_line_snapshot.py`,
+`test_pve_mission_flight.py`, `test_pve_missions_integration.py`,
+`test_pve_snapshot_audit.py`. Dossier qualité V100 conservé.

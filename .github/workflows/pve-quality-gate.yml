@@ -6,7 +6,7 @@ on:
     branches: [main]
     paths:
       - 'apps/api/src/mmhk_api/pve_*.py'
-      - 'apps/api/src/mmhk_api/sql/100_*.sql'
+      - 'apps/api/src/mmhk_api/sql/10[0-9]_*.sql'
       - 'apps/api/tests/test_pve_*.py'
       - 'apps/web/**'
       - 'data/backlog/**'
@@ -55,8 +55,10 @@ jobs:
         run: |
           python -m py_compile \
             apps/api/src/mmhk_api/pve_encounter_snapshot.py \
+            apps/api/src/mmhk_api/pve_ordinary_line_snapshot.py \
             apps/api/src/mmhk_api/pve_missions.py \
             apps/api/tests/test_pve_encounter_snapshot.py \
+            apps/api/tests/test_pve_ordinary_line_snapshot.py \
             apps/api/tests/test_pve_mission_flight.py \
             apps/api/tests/test_pve_missions_integration.py
       - name: Apply actual PostgreSQL migrations, including V100

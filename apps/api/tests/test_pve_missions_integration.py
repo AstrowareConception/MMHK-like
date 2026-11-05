@@ -73,7 +73,7 @@ def test_hero_goes_out_and_back_only_when_worker_confirms(city):
         assert len(arrived)==1 and arrived[0]["phase"]=="arrived"
     underway=client.get(root+"/missions",headers=h).json()["missions"][0]
     assert underway["stage"]=="returning"
-    assert underway["duel_report"]["scope"]=="LAB-SINGLE-STACK"
+    assert underway["duel_report"]["scope"]=="LAB-ORDINARY-STACK-SEQUENCE"
     assert underway["duel_report"]["no_losses_applied"] is True
     with psycopg.connect(URL) as db:
         assert db.execute("SELECT status FROM city_heroes WHERE hero_id=%s",(hero,)).fetchone()[0]=="on_mission"
@@ -171,6 +171,9 @@ def test_v100_departure_snapshot_survives_encounter_changes_and_replay(city):
     inputs=report["duel_report"]["engagement_inputs"]
     assert inputs["source_status"]=="frozen_at_departure"
     assert inputs["defender"]==snapshot
+    assert inputs["combat_scope"]=="LAB-ORDINARY-STACK-SEQUENCE-V1"
+    assert inputs["defender_line"][0]["count"]==4
+    assert inputs["attacker_line"][0]["count"]==8
     assert report["duel_report"]["admission"]["defender_raw_power"]=="4.0"
     assert report["duel_report"]["fled_before_combat"] is False
 
@@ -203,3 +206,120 @@ def test_v100_departure_snapshot_survives_encounter_changes_and_replay(city):
         with psycopg.connect(URL) as db:
             with pytest.raises(psycopg.errors.CheckViolation):
                 db.execute(statement,(payload["mission_id"],))
+
+
+
+def test_v101_qualified_full_formation_survives_profile_mutation(city):
+    """PostgreSQL freezes both ordinary slots and qualified weapon classes."""
+    import pytest
+    hero,unit,encounter=_setup(city)
+    extra="labreserve_"+uuid4().hex[:12]
+    with psycopg.connect(URL) as db:
+        db.execute("""INSERT INTO city_unit_profiles(
+            unit_code,display_name,dwelling_code,tier,unit_costs,policy_id,
+            lab_duel_power,combat_weapon_code,combat_weapon_source_ref)
+          VALUES(%s,'Réserve qualifiée','recruit_t1',1,%s,
+                 'TEST-V101',5,'R','TEST-COUNTER-V101')""",
+                   (extra,Jsonb({k:0 for k in (
+                       "gold","wood","ore","crystal","gems","sulfur","mercury"
+                   )})))
+        db.execute("INSERT INTO hero_army_units(hero_id,unit_code,quantity) "
+                   "VALUES(%s,%s,3)",(hero,extra))
+        db.execute("""UPDATE city_unit_profiles SET
+            combat_weapon_code='I',combat_weapon_source_ref='TEST-COUNTER-V101'
+            WHERE unit_code=%s""",(unit,))
+        db.execute("""UPDATE region_encounters SET
+            combat_weapon_code='C',combat_weapon_source_ref='TEST-COUNTER-V101'
+            WHERE encounter_id=%s""",(encounter,))
+    h=headers(city["username"])
+    root=f"/api/v1/me/cities/{city['city']}"
+    saved=client.post(f"{root}/heroes/{hero}/formation",headers=h,json={
+        "order_id":str(uuid4()),
+        "positions":[{"position":1,"unit_code":unit,"quantity":8},
+                     {"position":7,"unit_code":extra,"quantity":3}],
+    })
+    assert saved.status_code==201,saved.text
+    mid=str(uuid4())
+    start=client.post(root+"/missions",headers=h,json={
+        "mission_id":mid,"hero_id":str(hero),
+        "encounter_id":str(encounter),"unit_code":unit,
+    })
+    assert start.status_code==201,start.text
+    with psycopg.connect(URL) as db:
+        line,defender=db.execute(
+            "SELECT ordinary_line_snapshot,defender_snapshot "
+            "FROM pve_missions WHERE mission_id=%s",(mid,),
+        ).fetchone()
+        assert [s["position"] for s in line["attacker"]]==[1,7]
+        assert [s["count"] for s in line["attacker"]]==[8,3]
+        assert [s["weapon_code"] for s in line["attacker"]]==["I","R"]
+        assert line["defender"][0]["weapon_code"]=="C"
+        assert defender["unit_count"]==4
+        # External administrative edits after dispatch must not change the duel.
+        db.execute("UPDATE city_unit_profiles SET lab_duel_power=900,"
+                   "combat_weapon_code='E' WHERE unit_code=%s",(unit,))
+        db.execute("UPDATE city_unit_profiles SET lab_duel_power=400 "
+                   "WHERE unit_code=%s",(extra,))
+        db.execute("UPDATE region_encounters SET unit_count=700,unit_power=200,"
+                   "combat_weapon_code='E' WHERE encounter_id=%s",(encounter,))
+    with psycopg.connect(URL,autocommit=True) as db:
+        assert advance_pve_missions(
+            db,now_at=datetime.fromisoformat(start.json()["arrival_due_at"])
+        )==[{"mission_id":mid,"phase":"arrived"}]
+    result=client.get(root+"/missions/"+mid+"/report",headers=h)
+    assert result.status_code==200,result.text
+    duel=result.json()["duel_report"]
+    assert duel["engagement_inputs"]["attacker_line"]==line["attacker"]
+    assert duel["engagement_inputs"]["defender_line"]==line["defender"]
+    assert duel["line_outcome"]["policy_id"]=="jactari-sequential-ordinary-v1"
+    assert [s["initial"] for s in duel["line_outcome"]["attacker"]]==[8,3]
+    assert [s["position"] for s in duel["line_outcome"]["attacker"]]==[1,7]
+    assert duel["line_outcome"]["weapon_classification_complete"] is True
+    assert duel["no_losses_applied"] is True and duel["no_rewards"] is True
+    assert duel["admission"]["defender_raw_power"]=="4.0"
+    with psycopg.connect(URL) as db:
+        for sql in (
+            "UPDATE pve_missions SET ordinary_line_snapshot=NULL WHERE mission_id=%s",
+            "UPDATE pve_missions SET ordinary_line_snapshot=jsonb_set("
+            "ordinary_line_snapshot,'{attacker,0,count}','100'::jsonb) "
+            "WHERE mission_id=%s",
+        ):
+            with db.transaction():
+                with pytest.raises(psycopg.errors.CheckViolation):
+                    db.execute(sql,(mid,))
+        assert db.execute("SELECT quantity FROM hero_army_units "
+                          "WHERE hero_id=%s AND unit_code=%s",(hero,unit)
+                         ).fetchone()[0]==8
+
+
+def test_v101_refuses_unqualified_secondary_stack_before_mission(city):
+    hero,unit,encounter=_setup(city)
+    extra="unrated_"+uuid4().hex[:12]
+    with psycopg.connect(URL) as db:
+        db.execute("""INSERT INTO city_unit_profiles(
+             unit_code,display_name,dwelling_code,tier,unit_costs,policy_id)
+             VALUES(%s,'Unité sans puissance','recruit_t1',1,%s,'TEST-UNRATED')""",
+             (extra,Jsonb({k:0 for k in (
+                 "gold","wood","ore","crystal","gems","sulfur","mercury"
+             )})))
+        db.execute("INSERT INTO hero_army_units(hero_id,unit_code,quantity) "
+                   "VALUES(%s,%s,2)",(hero,extra))
+    root=f"/api/v1/me/cities/{city['city']}"
+    h=headers(city["username"])
+    saved=client.post(f"{root}/heroes/{hero}/formation",headers=h,json={
+        "order_id":str(uuid4()),
+        "positions":[{"position":1,"unit_code":unit,"quantity":8},
+                     {"position":7,"unit_code":extra,"quantity":2}],
+    })
+    assert saved.status_code==201,saved.text
+    launched=client.post(root+"/missions",headers=h,json={
+        "mission_id":str(uuid4()),"hero_id":str(hero),
+        "encounter_id":str(encounter),"unit_code":unit,
+    })
+    assert launched.status_code==409,launched.text
+    assert "qualified" in launched.text
+    with psycopg.connect(URL) as db:
+        assert db.execute("SELECT status FROM city_heroes WHERE hero_id=%s",
+                          (hero,)).fetchone()[0]=="idle"
+        assert db.execute("SELECT count(*) FROM pve_missions WHERE hero_id=%s",
+                          (hero,)).fetchone()[0]==0
