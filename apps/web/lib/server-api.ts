@@ -319,6 +319,19 @@ export type PveLaboratoryLineOutcome={
   weapon_classification_complete:boolean;permanent_losses_applied:false;
   experience_awarded:false;loot_awarded:false;region_liberated:false;
 };
+export type PveLabAttackerSettlement={
+  status:"applied"|"not_enabled"|"pre_v102_no_settlement"|
+    "zero_hero_profile_not_qualified"|"fled_without_combat"|
+    "weapon_classification_incomplete"|"pre_shots_not_qualified"|
+    "nonordinary_verdict"|"special_jactari_ending_not_qualified";
+  policy_id:string;source_ref:string|null;hero_profile_source_ref:string|null;
+  total_deaths:number;effects_applied:boolean;attacker_only:true;
+  no_npc_losses:true;no_xp:true;no_loot:true;no_liberation:true;
+  historically_certified:false;
+  entries:{position:number;unit_code:string;initial:number;
+    simulated_remaining:number;dispersed:number;permanent_deaths:number;
+    conversion_policy_id:string}[];
+};
 export type PveEngagementInputs={
   source_status:"frozen_at_departure"|"legacy_live_at_arrival";
   combat_scope:"LAB-SINGLE-STACK-V1"|"LAB-ORDINARY-STACK-SEQUENCE-V1";
@@ -339,6 +352,7 @@ export type PveMission={
     engagement_inputs?:PveEngagementInputs;
     admission?:PveAdmission;fled_before_combat?:boolean;
     line_outcome?:PveLaboratoryLineOutcome;
+    settlement?:PveLabAttackerSettlement;
     outcome:{
       totalPower:{attacker:number;defender:number};remaining:{attacker:number;defender:number}
     }|null;interpretation?:PveInterpretation|null}|null;

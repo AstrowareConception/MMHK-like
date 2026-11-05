@@ -11,6 +11,16 @@ const stateName:Record<string,string>={
 const phaseName:Record<string,string>={
   departed:"Départ de la cité",arrived:"Arrivée et duel",returned:"Retour à la cité"
 };
+const settlementStatus:Record<string,string>={
+  not_enabled:"Règlement expérimental désactivé pour ce monde au départ",
+  pre_v102_no_settlement:"Mission antérieure à V102 : aucun règlement rétroactif",
+  zero_hero_profile_not_qualified:"Caractéristiques du héros non qualifiées pour le laboratoire",
+  fled_without_combat:"Fuite avant combat : aucune perte permanente calculée",
+  weapon_classification_incomplete:"Classes d'armes incomplètes : pertes permanentes non appliquées",
+  pre_shots_not_qualified:"Tirs préalables non qualifiés : règlement refusé",
+  nonordinary_verdict:"Verdict particulier : règlement permanent non qualifié",
+  special_jactari_ending_not_qualified:"Égalité ou faux nul Jactari : règlement permanent non qualifié"
+};
 const units:Record<string,string>={
   militia:"Miliciens du Havre",archers:"Archers du Havre",
   wolves:"Loups",bandits:"Brigands"
@@ -161,8 +171,10 @@ export default async function MissionReportPage({params}:{
           :duel?<div className="mission-duel-results">
           <p><strong>Rapport enregistré au contact</strong> — {duel.line_outcome
             ?"simulation séquentielle de la ligne ordinaire (jusqu'à sept pelotons)"
-            :"simulation mono-peloton historique"}, sans pertes permanentes,
-            récompense, XP ni libération de la case.</p>
+            :"simulation mono-peloton historique"}. {duel.settlement?.effects_applied
+              ?"Une perte durable expérimentale de l'attaquant a été enregistrée."
+              :"Aucune perte durable n'a été appliquée."}
+            {" "}Aucune récompense, XP ni libération de la case.</p>
           {duel.line_outcome&&<div data-testid="pve-ordinary-line-result" className="mmhk-mission-line-result">
             <div className="mmhk-mission-verdict" role="status">
               <span>Verdict de la simulation de la ligne</span>
@@ -180,9 +192,29 @@ export default async function MissionReportPage({params}:{
               <p className="mmhk-mission-ledger-note">Certaines classes d'armes
                 ne sont pas qualifiées : les bonus de contre-arme correspondants
                 ne peuvent pas être certifiés.</p>}
-            <p className="mmhk-mission-ledger-note">Les statistiques du héros,
-              talents, sorts, pertes durables et récompenses restent exclus
-              de ce laboratoire tant que leurs paramètres ne sont pas qualifiés.</p>
+            <p className="mmhk-mission-ledger-note">Les talents, sorts,
+              récompenses et effets sur le défenseur PNJ restent exclus
+              de ce laboratoire. Seule la conversion des dispersions de
+              l'attaquant ordinaire peut être activée par une politique
+              expérimentale explicitement qualifiée.</p>
+          </div>}
+          {duel.settlement&&<div data-testid="pve-attacker-settlement"
+              className="mmhk-mission-verdict" role="status">
+            <span>Règlement expérimental des pertes de l'attaquant</span>
+            {duel.settlement.status==="applied"?<>
+              <strong>{duel.settlement.total_deaths.toLocaleString("fr-FR")}
+                {" mort(s) permanente(s) enregistrée(s)"}</strong>
+              <p>Le calcul à 30 % ne concerne que les pelotons ordinaires
+                de l'attaquant, selon les données figées au départ.
+                Les soldats non morts restent affectés au héros.</p>
+              <ol>{duel.settlement.entries.map(s=><li key={s.position}>
+                Position {s.position} · {units[s.unit_code]??s.unit_code}
+                {" : "+s.dispersed+" dispersé(s), "+s.permanent_deaths+" mort(s)"}
+              </li>)}</ol>
+            </>:<strong>{settlementStatus[duel.settlement.status]??
+              "Règlement non appliqué"}</strong>}
+            <small>Politique : {duel.settlement.policy_id}
+              {" · aucune mort PNJ, XP, butin ou libération attribués."}</small>
           </div>}
           {duel.interpretation&&<div className="mmhk-mission-verdict" role="status">
             <span>Verdict du duel simulé</span>
@@ -248,9 +280,11 @@ export default async function MissionReportPage({params}:{
           <strong>Le héros n'a pas encore atteint sa destination</strong>
           <p>Aucun résultat n'est calculé avant l'événement d'arrivée du worker.</p>
         </div>}
-        <p className="mmhk-mission-ledger-note">La simulation actuelle n'applique
-          aucune perte définitive ni récompense ; le combat complet MMHK
-          saison 2 n'est pas encore certifié.</p>
+        <p className="mmhk-mission-ledger-note">Le laboratoire peut enregistrer
+          les pertes définitives de l'attaquant uniquement si la politique
+          V102 a été explicitement activée et si ses conditions sont vérifiées.
+          Aucun règlement des PNJ, récompense, XP ou contrôle territorial
+          n'est encore certifié pour MMHK saison 2.</p>
       </div>}
     />
   </GameShell>;
