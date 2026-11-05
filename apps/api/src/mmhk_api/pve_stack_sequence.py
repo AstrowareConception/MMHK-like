@@ -1,9 +1,10 @@
 """Bounded multi-stack sequencing laboratory for US-COM-008.
 
-This module intentionally reuses the verified single-stack Jactari port
-without pretending to reproduce spells, pre-shots, hero bonuses
-and resurrection. Counter-weapons are applied only with known weapon codes. It resolves an ordered encounter without persistent effects.
-A stack dispersed once never returns to the active line.
+This module reuses the bounded single-stack Jactari port and adds
+operator-qualified counters, basic hero attributes, selected pre-shots
+and a conditional talent. It does NOT reproduce the full S2 battle rules,
+notably spells, resurrections, hero specializations or settlement.
+An exhausted stack cannot be recycled even in a Jactari false draw.
 """
 from __future__ import annotations
 
@@ -228,6 +229,6 @@ def resolve_ordinary_lines(attacker: list[dict], defender: list[dict],
         "excluded_mechanics": [
             *([] if pre_shots["configured"] else ["pre_shots"]),
             "other_hero_talents", "magic",
-            "summons", "resurrections", "admission", "npc_casualty_policy",
+            "summons", "resurrections", "npc_casualty_policy",
         ],
     }
