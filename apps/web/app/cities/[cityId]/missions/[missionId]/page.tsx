@@ -118,7 +118,23 @@ export default async function MissionReportPage({params}:{
           <div><h2>Résolution du duel Jactari</h2>
             <p>Résultat transmis par le serveur à l'arrivée.</p></div>
         </header>
-        {duel?<div className="mission-duel-results">
+        {duel?.fled_before_combat&&duel.admission?
+          <div className="mission-duel-results mmhk-pve-flight" role="status">
+            <strong>Fuite PvE — combat non engagé</strong>
+            <p>L'armée attaquante n'atteignait pas le seuil d'admission
+              du calculateur Jactari. Le retour du héros a été planifié
+              sans lancer de duel ni appliquer de pertes.</p>
+            <div><span>Puissance brute de l'attaquant</span>
+              <strong>{duel.admission.attacker_raw_power}</strong></div>
+            <div><span>Puissance brute du défenseur</span>
+              <strong>{duel.admission.defender_raw_power}</strong></div>
+            <div><span>Seuil de fuite inclusif</span>
+              <strong>{duel.admission.threshold}</strong></div>
+            <p>Ce contrôle n'utilise ni bonus du héros, ni contre-armes,
+              ni tirs préalables. Il ne représente pas un combat gagné
+              ou perdu avec des morts définitives.</p>
+          </div>
+          :duel?<div className="mission-duel-results">
           <p><strong>Rapport enregistré au contact</strong> — simulation mono-peloton,
             sans pertes permanentes, récompense, XP ou libération de la case.</p>
           {duel.interpretation&&<div className="mmhk-mission-verdict" role="status">
