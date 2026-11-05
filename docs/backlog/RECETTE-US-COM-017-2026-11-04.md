@@ -50,3 +50,17 @@ La première commande est un test purement fonctionnel ; les autres
 nécessitent une installation complète et, pour certaines suites, une
 base PostgreSQL jetable configurée. Ne pas lancer les tests générant
 des ordres sur une sauvegarde de partie réelle.
+
+## Extension du 5 novembre — justesse des verdicts et des dispersions
+
+Les nouveaux rapports mono-peloton incorporent un objet `ending`
+qui préserve les vrais nuls, faux nuls, marqueurs +1/-1,
+effectifs actifs et dispersions temporaires. La vue détaillée
+explique pourquoi un peloton à zéro peut recevoir un verdict
+technique sans que cela signifie l'attribution de morts
+définitives.
+
+Les anciens rapports sans ce champ demeurent consultables.
+Les étapes multi-pelotons, sorts et pertes réelles restent à
+recetter. Voir [US-COM-010](RECETTE-US-COM-010-2026-11-05.md)
+et [US-COM-013](RECETTE-US-COM-013-2026-11-05.md).
