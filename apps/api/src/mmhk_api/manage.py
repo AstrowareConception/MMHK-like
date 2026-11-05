@@ -22,6 +22,9 @@ from .world_region_generation import provision_rectangle
 from .region_integrity import audit_world_regions
 from .pve_snapshot_audit import audit_active_pve_snapshots
 from .pve_lab_settlement import configure_lab_casualties
+from .pve_neutral_resolution import (
+    qualify_lab_neutral_defender,configure_lab_neutral_resolution,
+)
 from .weapon_qualification import qualify_unit_weapon,qualify_encounter_weapon
 from .hero_combat_qualification import qualify_hero_basic_combat
 from .conditional_talent_qualification import qualify_conditional_counter_talent
@@ -151,12 +154,41 @@ def main() -> None:
     casualties.add_argument("--enabled",choices=("yes","no"),required=True)
     casualties.add_argument("--source-ref",required=True)
     casualties.add_argument("--acknowledge-experimental",action="store_true")
+    neutral = sub.add_parser(
+        "qualify-lab-neutral-defender",
+        help="Operator attestation: no neutral hero and no special attrition",
+    )
+    neutral.add_argument("--encounter-id",required=True,type=UUID)
+    neutral.add_argument("--source-ref",required=True)
+    neutral.add_argument("--no-hero-confirmed",action="store_true")
+    neutral.add_argument("--no-attrition-confirmed",action="store_true")
+    neutral_policy = sub.add_parser(
+        "configure-lab-neutral-resolution",
+        help="Opt-in completed neutral encounters, never mines, in LAB world",
+    )
+    neutral_policy.add_argument("--world-id",required=True)
+    neutral_policy.add_argument("--enabled",choices=("yes","no"),required=True)
+    neutral_policy.add_argument("--source-ref",required=True)
+    neutral_policy.add_argument("--acknowledge-experimental",action="store_true")
     args = parser.parse_args()
 
     with connect() as db:
         if args.command == "migrate":
             applied = migrate(db)
             print("Applied schema revisions:", applied or "already current")
+        elif args.command == "qualify-lab-neutral-defender":
+            if not (args.no_hero_confirmed and args.no_attrition_confirmed):
+                parser.error("Both --no-hero-confirmed and --no-attrition-confirmed are required")
+            print(json.dumps(qualify_lab_neutral_defender(
+                db,encounter_id=args.encounter_id,source_ref=args.source_ref,
+            ),ensure_ascii=False))
+        elif args.command == "configure-lab-neutral-resolution":
+            if args.enabled=="yes" and not args.acknowledge_experimental:
+                parser.error("Enabling LAB neutral resolution requires --acknowledge-experimental")
+            print(json.dumps(configure_lab_neutral_resolution(
+                db,world_id=args.world_id,enabled=args.enabled=="yes",
+                source_ref=args.source_ref,
+            ),ensure_ascii=False))
         elif args.command == "configure-lab-pve-casualties":
             if args.enabled=="yes" and not args.acknowledge_experimental:
                 parser.error("Enabling durable experimental deaths requires --acknowledge-experimental")
