@@ -306,9 +306,24 @@ export type PveInterpretation={
   xp_awarded:false;loot_awarded:false;model:string;
 };
 
+export type PveOrdinarySnapshotStack={
+  position:number;unit_code:string;count:number;unit_power:number;
+  weapon_code:"I"|"R"|"C"|"E"|null;weapon_source_ref:string|null;
+  profile_policy_id:string;source_ref?:string|null;
+};
+export type PveLaboratoryLineOutcome={
+  policy_id:string;verdict:"attacker"|"defender"|"draw"|"fled";
+  events:{exchange:number;attacker_position:number;defender_position:number}[];
+  attacker:{position:number;unit_code:string;initial:number;remaining:number;dispersed:boolean}[];
+  defender:{position:number;unit_code:string;initial:number;remaining:number;dispersed:boolean}[];
+  weapon_classification_complete:boolean;permanent_losses_applied:false;
+  experience_awarded:false;loot_awarded:false;region_liberated:false;
+};
 export type PveEngagementInputs={
   source_status:"frozen_at_departure"|"legacy_live_at_arrival";
-  combat_scope:"LAB-SINGLE-STACK-V1";
+  combat_scope:"LAB-SINGLE-STACK-V1"|"LAB-ORDINARY-STACK-SEQUENCE-V1";
+  attacker_line?:PveOrdinarySnapshotStack[];
+  defender_line?:PveOrdinarySnapshotStack[];
   attacker:{unit_code:string;unit_count:number;unit_power:number};
   defender:{policy_id:string;unit_code:string|null;
     unit_count:number;unit_power:number;source_ref:string|null};
@@ -323,6 +338,7 @@ export type PveMission={
   duel_report:{scope:string;preview_only:boolean;
     engagement_inputs?:PveEngagementInputs;
     admission?:PveAdmission;fled_before_combat?:boolean;
+    line_outcome?:PveLaboratoryLineOutcome;
     outcome:{
       totalPower:{attacker:number;defender:number};remaining:{attacker:number;defender:number}
     }|null;interpretation?:PveInterpretation|null}|null;
