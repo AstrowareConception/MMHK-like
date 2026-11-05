@@ -206,6 +206,14 @@ export type JactariDuelEnding={
   profile:"jactari-duel-ending-v1";historically_certified_s2:false;
 };
 
+export type JactariOverwhelming={
+  winner:"attacker"|"defender"|null;
+  overwhelming:boolean;power_delta_after_floor:number;
+  winner_base_power:number|null;strict_threshold:true;
+  marker_expected:boolean;source_policy:string;
+  persistent_casualties_applied:false;
+};
+
 export type LineSequencePreview={
   scope:"LAB-ORDINARY-STACK-SEQUENCE";
   preview_only:true;
@@ -243,6 +251,7 @@ export type LineSequencePreview={
       dispersed:{attacker:boolean;defender:boolean};
       jactari_false_draw:number;jactari_draw:boolean;
       ending:JactariDuelEnding;
+      overwhelming:JactariOverwhelming;
       theoretical_dispersions:{attacker:number;defender:number};
       removed_from_line:{attacker:boolean;defender:boolean};
       total_power:{attacker:number;defender:number};
@@ -284,6 +293,7 @@ export type LineSequencePreview={
 export type PveInterpretation={
   verdict:"attacker"|"defender"|"draw"|"unresolved";
   false_draw:number;
+  overwhelming?:JactariOverwhelming|null;
   ending?:JactariDuelEnding;
   attacker:{simulated_losses:number;overwhelming_victory:boolean;remaining:number;dispersed:boolean};
   defender:{simulated_losses:number;overwhelming_victory:boolean;remaining:number;dispersed:boolean};
