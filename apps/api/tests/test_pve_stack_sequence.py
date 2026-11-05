@@ -71,3 +71,13 @@ def test_replay_is_deterministic_without_db_side_effects():
     assert result==resolve_ordinary_lines(attack,defend)
     assert result["region_liberated"] is False
     assert result["experience_awarded"] is False
+
+
+def test_sparse_formation_positions_are_not_renumbered():
+    left=[
+        {"position":1,**stack("militia",1,10)},
+        {"position":7,**stack("archers",20,40)},
+    ]
+    result=resolve_ordinary_lines(left,[stack("wolves",10,30)])
+    assert [s["position"] for s in result["attacker"]]==[1,7]
+    assert [e["attacker_position"] for e in result["events"]]==[1,7]

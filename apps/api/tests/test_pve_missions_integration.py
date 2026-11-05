@@ -273,6 +273,7 @@ def test_v101_qualified_full_formation_survives_profile_mutation(city):
     assert duel["engagement_inputs"]["defender_line"]==line["defender"]
     assert duel["line_outcome"]["policy_id"]=="jactari-sequential-ordinary-v1"
     assert [s["initial"] for s in duel["line_outcome"]["attacker"]]==[8,3]
+    assert [s["position"] for s in duel["line_outcome"]["attacker"]]==[1,7]
     assert duel["line_outcome"]["weapon_classification_complete"] is True
     assert duel["no_losses_applied"] is True and duel["no_rewards"] is True
     assert duel["admission"]["defender_raw_power"]=="4.0"

@@ -87,7 +87,7 @@ def laboratory_lines(verified: dict) -> tuple[list[dict], list[dict]]:
     """Project frozen data into the existing seven-peloton laboratory."""
     def project(stacks: list[dict]) -> list[dict]:
         return [
-            {"unit_code": s["unit_code"], "count": s["count"],
+            {"position": s["position"], "unit_code": s["unit_code"], "count": s["count"],
              "unit_power": s["unit_power"], "weapon_code": s["weapon_code"]}
             for s in stacks
         ]

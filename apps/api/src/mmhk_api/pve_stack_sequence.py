@@ -31,9 +31,13 @@ def _validate_army(stacks: list[dict[str, Any]], label: str) -> list[dict]:
     for index, stack in enumerate(stacks):
         if (not isinstance(stack, dict) or
             not {"unit_code", "count", "unit_power"}.issubset(stack)
-            or set(stack) - {"unit_code", "count", "unit_power", "weapon_code", "siege"}):
+            or set(stack) - {"unit_code", "count", "unit_power", "weapon_code", "siege", "position"}):
             raise ValueError(f"{label}: malformed stack")
         code, count, power = (stack["unit_code"], stack["count"], stack["unit_power"])
+        position = stack.get("position", index + 1)
+        if (type(position) is not int or not 1 <= position <= 7 or
+            (result and position <= result[-1]["position"])):
+            raise ValueError(f"{label}: positions must be 1..7 and ascending")
         weapon = stack.get("weapon_code")
         siege = stack.get("siege",False)
         if type(siege) is not bool:
@@ -46,7 +50,7 @@ def _validate_army(stacks: list[dict[str, Any]], label: str) -> list[dict]:
             or not isfinite(power) or power <= 0 or power > 1_000_000):
             raise ValueError(f"{label}: invalid unit stack")
         result.append({
-            "position": index + 1, "unit_code": code, "initial": count,
+            "position": position, "unit_code": code, "initial": count,
             "remaining": count, "unit_power": float(power),
             "weapon_code": weapon, "siege":siege, "dispersed": False,
         })
