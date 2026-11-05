@@ -13,7 +13,7 @@ CREATE TABLE pve_lab_casualty_policies (
 -- Only an explicitly versioned, uncertified LAB travel policy can enable
 -- durable experimental casualties. Protect this boundary even from direct SQL.
 CREATE FUNCTION enforce_pve_lab_casualty_world_v102() RETURNS trigger
-LANGUAGE plpgsql AS $
+LANGUAGE plpgsql AS $guard$
 BEGIN
   IF NEW.enabled AND NOT EXISTS (
     SELECT 1 FROM pve_travel_policies t
@@ -26,7 +26,7 @@ BEGIN
   END IF;
   RETURN NEW;
 END;
-$;
+$guard$;
 CREATE TRIGGER pve_lab_casualty_world_guard_v102
   BEFORE INSERT OR UPDATE ON pve_lab_casualty_policies FOR EACH ROW
   EXECUTE FUNCTION enforce_pve_lab_casualty_world_v102();
