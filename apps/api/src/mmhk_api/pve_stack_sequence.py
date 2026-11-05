@@ -18,6 +18,7 @@ from .conditional_hero_talents import conditional_attack_talent
 from .pve_pre_shots import resolve_pre_shots
 from .pve_admission import evaluate_pve_admission
 from .jactari_duel_ending import classify_jactari_exchange
+from .jactari_overwhelming import explain_overwhelming
 
 MAX_STACKS = 7
 MAX_EXCHANGES = 98
@@ -150,6 +151,7 @@ def resolve_ordinary_lines(attacker: list[dict], defender: list[dict],
             },
         })
         ending=classify_jactari_exchange(result)
+        overwhelming=explain_overwhelming(result)
         ra = ending["remaining"]["attacker"]
         rd = ending["remaining"]["defender"]
         lost_a = ending["dispersed"]["attacker"]
@@ -177,6 +179,7 @@ def resolve_ordinary_lines(attacker: list[dict], defender: list[dict],
             "jactari_false_draw": result["falseDraw"],
             "jactari_draw": result["draw"],
             "ending":ending,
+            "overwhelming":overwhelming,
             "theoretical_dispersions":ending["theoretical_dispersions"],
             "removed_from_line":ending["removed_from_line"],
             "counter_weapons": counter,
