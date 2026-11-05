@@ -21,6 +21,18 @@ const settlementStatus:Record<string,string>={
   nonordinary_verdict:"Verdict particulier : règlement permanent non qualifié",
   special_jactari_ending_not_qualified:"Égalité ou faux nul Jactari : règlement permanent non qualifié"
 };
+const neutralResolutionStatus:Record<string,string>={
+  pre_v103_not_applicable:"Mission ancienne : aucune résolution neutre rétroactive",
+  policy_disabled:"La résolution des rencontres neutres était désactivée au départ",
+  neutral_profile_unqualified:"Profil du PNJ sans héros et sans attrition non qualifié",
+  attacker_settlement_not_qualified:"Règlement de l'attaquant non qualifié : aucune résolution",
+  flight_no_resolution:"Fuite de l'attaquant : rencontre maintenue",
+  neutral_defended:"Le défenseur neutre a résisté : rencontre maintenue",
+  draw_or_unknown_outcome:"Égalité ou résultat non qualifié : rencontre maintenue",
+  weapon_classification_incomplete:"Classification d'armes incomplète : rencontre maintenue",
+  pre_shots_not_qualified:"Tirs préalables non qualifiés : rencontre maintenue",
+  special_ending_not_qualified:"Issue Jactari particulière : rencontre maintenue"
+};
 const units:Record<string,string>={
   militia:"Miliciens du Havre",archers:"Archers du Havre",
   wolves:"Loups",bandits:"Brigands"
@@ -174,7 +186,10 @@ export default async function MissionReportPage({params}:{
             :"simulation mono-peloton historique"}. {duel.settlement?.effects_applied
               ?"Une perte durable expérimentale de l'attaquant a été enregistrée."
               :"Aucune perte durable n'a été appliquée."}
-            {" "}Aucune récompense, XP ni libération de la case.</p>
+            {" "}{duel.neutral_resolution?.encounter_resolved
+              ?"La rencontre neutre a été résolue en laboratoire."
+              :"La rencontre neutre reste inchangée."}
+            {" "}Aucune XP, aucun butin, revenu minier ou contrôle territorial attribué.</p>
           {duel.line_outcome&&<div data-testid="pve-ordinary-line-result" className="mmhk-mission-line-result">
             <div className="mmhk-mission-verdict" role="status">
               <span>Verdict de la simulation de la ligne</span>
@@ -193,10 +208,10 @@ export default async function MissionReportPage({params}:{
                 ne sont pas qualifiées : les bonus de contre-arme correspondants
                 ne peuvent pas être certifiés.</p>}
             <p className="mmhk-mission-ledger-note">Les talents, sorts,
-              récompenses et effets sur le défenseur PNJ restent exclus
-              de ce laboratoire. Seule la conversion des dispersions de
-              l'attaquant ordinaire peut être activée par une politique
-              expérimentale explicitement qualifiée.</p>
+              récompenses et productions minières restent exclues du
+              laboratoire. Les pertes du défenseur PNJ sans héros peuvent
+              être appliquées uniquement si sa branche sans attrition et
+              les politiques V102/V103 ont été explicitement qualifiées.</p>
           </div>}
           {duel.settlement&&<div data-testid="pve-attacker-settlement"
               className="mmhk-mission-verdict" role="status">
@@ -214,7 +229,20 @@ export default async function MissionReportPage({params}:{
             </>:<strong>{settlementStatus[duel.settlement.status]??
               "Règlement non appliqué"}</strong>}
             <small>Politique : {duel.settlement.policy_id}
-              {" · aucune mort PNJ, XP, butin ou libération attribués."}</small>
+              {" · ce registre décrit uniquement les pertes de l'attaquant."}</small>
+          </div>}
+          {duel.neutral_resolution&&<div data-testid="pve-neutral-resolution"
+              className="mmhk-mission-verdict" role="status">
+            <span>Résolution de la rencontre neutre (laboratoire)</span>
+            {duel.neutral_resolution.encounter_resolved?<>
+              <strong>Défenseur neutralisé · {duel.neutral_resolution.neutral_deaths.toLocaleString("fr-FR")}
+                {" unité(s) PNJ définitivement perdues"}</strong>
+              <p>Rencontre désormais résolue : elle n'est plus proposée
+                parmi les adversaires actifs de la région.</p>
+            </>:<strong>{neutralResolutionStatus[duel.neutral_resolution.status]??
+                "Rencontre inchangée"}</strong>}
+            <small>Aucune mine activée, aucune XP, aucun butin et aucun
+              territoire attribués. Politique : {duel.neutral_resolution.policy_id}</small>
           </div>}
           {duel.interpretation&&<div className="mmhk-mission-verdict" role="status">
             <span>Verdict du duel simulé</span>
@@ -281,10 +309,11 @@ export default async function MissionReportPage({params}:{
           <p>Aucun résultat n'est calculé avant l'événement d'arrivée du worker.</p>
         </div>}
         <p className="mmhk-mission-ledger-note">Le laboratoire peut enregistrer
-          les pertes définitives de l'attaquant uniquement si la politique
-          V102 a été explicitement activée et si ses conditions sont vérifiées.
-          Aucun règlement des PNJ, récompense, XP ou contrôle territorial
-          n'est encore certifié pour MMHK saison 2.</p>
+          les pertes ordinaires de l'attaquant via V102 et la résolution
+          d'une rencontre neutre sans héros ni attrition via V103, uniquement
+          sous deux politiques de laboratoire et des données qualifiées.
+          Aucun revenu minier, XP, butin ou contrôle territorial n'est
+          encore certifié pour MMHK saison 2.</p>
       </div>}
     />
   </GameShell>;
