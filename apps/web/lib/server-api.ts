@@ -182,6 +182,16 @@ export type DuelPreview = {
     draw:boolean;note:string};
 };
 
+export type PveAdmission={
+  policy_id:string;scope:"LAB-PVE-ORDINARY-POWER";
+  attacker_raw_power:string;defender_raw_power:string;
+  ratio:string;threshold:"1/7";threshold_inclusive:true;
+  fled:boolean;status:"fled_before_combat"|"admitted_to_laboratory";
+  comparison:string;hero_bonuses_included:false;
+  counter_weapons_included:false;pre_shots_included:false;
+  effects_applied_to_database:false;historically_certified_s2:false;
+};
+
 export type LineSequencePreview={
   scope:"LAB-ORDINARY-STACK-SEQUENCE";
   preview_only:true;
@@ -192,7 +202,8 @@ export type LineSequencePreview={
   attacker_conditional_talent_configured:boolean;
   pre_shot_capabilities_configured:boolean;
   sequence:{
-    scope:string;policy_id:string;verdict:"attacker"|"defender"|"draw";
+    scope:string;policy_id:string;verdict:"attacker"|"defender"|"draw"|"fled";
+    combat_started:boolean;admission:PveAdmission;
     pre_shots:{
       policy_id:string;phase:"pre_duel";configured:boolean;
       events:{
@@ -271,9 +282,11 @@ export type PveMission={
   unit_code:string;stack_count:number;travel_seconds:number;travel_policy_id:string;
   started_at:string;arrival_due_at:string;return_due_at:string;
   arrived_at:string|null;returned_at:string|null;
-  duel_report:{scope:string;preview_only:boolean;outcome:{
-    totalPower:{attacker:number;defender:number};remaining:{attacker:number;defender:number}
-  };interpretation?:PveInterpretation}|null;
+  duel_report:{scope:string;preview_only:boolean;
+    admission?:PveAdmission;fled_before_combat?:boolean;
+    outcome:{
+      totalPower:{attacker:number;defender:number};remaining:{attacker:number;defender:number}
+    }|null;interpretation?:PveInterpretation|null}|null;
 };
 export type PveMissionsResponse={
   city_id:string;server_now:string;historically_certified:false;
