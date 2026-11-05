@@ -85,6 +85,58 @@ CREATE TRIGGER lab_mine_upgrade_order_immutable_v106
 BEFORE UPDATE ON city_lab_mine_upgrade_orders FOR EACH ROW
 EXECUTE FUNCTION protect_lab_mine_upgrade_order_v106();
 
+-- A mine level can only advance alongside a paid due order, and no
+-- operator may silently change the qualification used to accept an order.
+CREATE FUNCTION guard_g11_lab_level_v106() RETURNS trigger
+LANGUAGE plpgsql AS $levelguard$
+BEGIN
+  IF TG_OP='DELETE' THEN
+    IF EXISTS (SELECT 1 FROM cities c WHERE c.city_id=OLD.city_id) THEN
+      RAISE EXCEPTION 'Qualified LAB mine level cannot be removed'
+        USING ERRCODE='23514';
+    END IF;
+    RETURN OLD;
+  END IF;
+  IF ROW(OLD.city_id,OLD.resource,OLD.source_ref,OLD.established_at)
+     IS DISTINCT FROM
+     ROW(NEW.city_id,NEW.resource,NEW.source_ref,NEW.established_at) THEN
+    RAISE EXCEPTION 'Qualified LAB mine provenance cannot be changed'
+      USING ERRCODE='23514';
+  END IF;
+  IF OLD.level IS DISTINCT FROM NEW.level AND NOT EXISTS (
+    SELECT 1 FROM city_lab_mine_upgrade_orders o
+    JOIN city_economy_clock clock ON clock.city_id=o.city_id
+    WHERE o.city_id=OLD.city_id AND o.resource=OLD.resource
+      AND o.status='building'
+      AND o.from_level=OLD.level AND o.target_level=NEW.level
+      AND o.due_at<=clock.last_tick_at
+  ) THEN
+    RAISE EXCEPTION 'Mine level requires a due paid LAB construction order'
+      USING ERRCODE='23514';
+  END IF;
+  RETURN NEW;
+END;
+$levelguard$;
+CREATE TRIGGER city_lab_mine_level_guard_v106
+BEFORE UPDATE OR DELETE ON city_lab_mine_levels FOR EACH ROW
+EXECUTE FUNCTION guard_g11_lab_level_v106();
+
+CREATE FUNCTION guard_g11_lab_qualification_v106() RETURNS trigger
+LANGUAGE plpgsql AS $quali$
+BEGIN
+  IF TG_OP='UPDATE' OR EXISTS (
+    SELECT 1 FROM cities c WHERE c.city_id=OLD.city_id
+  ) THEN
+    RAISE EXCEPTION 'LAB G11 next-step qualification is immutable'
+      USING ERRCODE='23514';
+  END IF;
+  RETURN OLD;
+END;
+$quali$;
+CREATE TRIGGER city_lab_mine_qualification_guard_v106
+BEFORE UPDATE OR DELETE ON city_lab_mine_level_qualifications FOR EACH ROW
+EXECUTE FUNCTION guard_g11_lab_qualification_v106();
+
 COMMENT ON TABLE city_lab_mine_levels IS
  'V106 opt-in LAB mine levels: never created from undocumented experimental rates.';
 COMMENT ON TABLE city_lab_mine_upgrade_orders IS
