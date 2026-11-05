@@ -7,6 +7,7 @@ dead soldiers. False draws are kept explicit and never treated as loot rights.
 from __future__ import annotations
 
 from .pve_casualties import ordinary_hero_permanent_losses
+from .jactari_duel_ending import classify_jactari_exchange
 
 
 def interpret_duel(outcome: dict) -> dict:
@@ -30,17 +31,14 @@ def interpret_duel(outcome: dict) -> dict:
     draw=outcome.get("draw")
     if type(draw) is not bool:
         raise ValueError("Invalid draw flag")
-    if draw:
-        verdict="draw"
-    elif attacker_disperse and not defender_disperse:
-        verdict="defender"
-    elif defender_disperse and not attacker_disperse:
-        verdict="attacker"
-    else:
-        verdict="unresolved"
+    # Jactari's falseDraw=+1/-1 is a deliberate tiebreak,
+    # NOT a failed duel and NOT necessarily a true mutual draw.
+    ending=classify_jactari_exchange(outcome)
+    verdict=ending["verdict"]
     return {
         "verdict":verdict,
-        "false_draw":outcome.get("falseDraw",0),
+        "false_draw":ending["false_draw_marker"],
+        "ending":ending,
         "attacker": {
             "simulated_losses":0 if la==-1 else la,
             "overwhelming_victory":la==-1,
