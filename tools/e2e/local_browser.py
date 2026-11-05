@@ -97,7 +97,7 @@ def main() -> int:
             # stable mine locations. Unknown cells remain explicitly unknown;
             # do not assume a fixed coordinate is empty after provisioning.
             expect(page.locator(".map-section-legend").filter(
-                has_text=re.compile(r"25 cases · \\d+ gisements · \\d+ mines")
+                has_text=re.compile(r"25 cases · \d+ gisements · \d+ mines")
             )).to_be_visible()
             unknown=page.locator(
                 '.region-selectable-cell[aria-label*="non cartographiée"]'
