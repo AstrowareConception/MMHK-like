@@ -167,11 +167,17 @@ def test_real_paid_upgrade_replay_and_correct_tick_boundary(city):
         later=run_economy_batch(db,now_at=started+timedelta(hours=3),
                                 max_cities=1)[0]
         assert later["ticks"]==1
-        assert later["credits"]["gold"]==167
+        # Fractional carry is retained at 18 decimals. A one-unit credit
+        # may move to the following tick when 1/3 + 2/3 is truncated.
+        assert later["credits"]["gold"]==166
         assert later["upgrades_completed"]==[]
         assert run_economy_batch(db,now_at=started+timedelta(hours=3))==[]
     with psycopg.connect(URL) as db:
-        assert _gold(db,city["city"])==11250
+        assert _gold(db,city["city"])==11249
+        carry=db.execute("SELECT fractional_units FROM city_mine_rates "
+                         "WHERE city_id=%s AND resource='gold'",
+                         (city["city"],)).fetchone()[0]
+        assert carry >= Decimal("0.999999999999999998")
         assert db.execute("SELECT level FROM city_lab_mine_levels "
                           "WHERE city_id=%s AND resource='gold'",
                           (city["city"],)).fetchone()[0]==2
@@ -182,6 +188,15 @@ def test_real_paid_upgrade_replay_and_correct_tick_boundary(city):
                           "WHERE order_id=%s",(aid,)).fetchone()[0]=="completed"
         assert db.execute("SELECT count(*) FROM city_lab_mine_upgrade_orders "
                           "WHERE order_id=%s",(aid,)).fetchone()[0]==1
+    with psycopg.connect(URL,autocommit=True) as db:
+        fourth=run_economy_batch(db,now_at=started+timedelta(hours=4),
+                                 max_cities=1)[0]
+        assert fourth["credits"]["gold"]==167
+        assert fourth["upgrades_completed"]==[]
+        assert run_economy_batch(db,now_at=started+timedelta(hours=4))==[]
+    with psycopg.connect(URL) as db:
+        # 83 + 166 + 167 = 416; no old tick was repriced.
+        assert _gold(db,city["city"])==11416
     current=client.get(root+"/mine-upgrades",headers=who).json()
     assert current["mines"][0]["level"]==2
     assert current["mines"][0]["quote"] is None
