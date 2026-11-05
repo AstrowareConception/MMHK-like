@@ -5517,6 +5517,15 @@
         "clock": "horloge du monde",
         "historicalOracle": "a_qualifier",
         "execution": "non_executee"
+      },
+      "implementationLab": {
+        "status": "partielle_validee_lab",
+        "profile": "LAB-V104-2026-11-05",
+        "verifiedAt": "2026-11-05",
+        "summary": "Taux et plafond existants affichés, mine gardée ramenée à zéro, mine activée au taux opérateur.",
+        "technicalEvidence": "apps/api/src/mmhk_api/worlds.py ; apps/api/tests/test_lab_mine_activation.py ; CI 42065652207",
+        "notYetAccepted": "production historique par niveau et effets des extensions",
+        "historicalAcceptance": false
       }
     },
     {
@@ -5672,6 +5681,15 @@
         "clock": "horloge du monde",
         "historicalOracle": "a_qualifier",
         "execution": "non_executee"
+      },
+      "implementationLab": {
+        "status": "terminee_techniquement_lab",
+        "profile": "LAB-V104-2026-11-05",
+        "verifiedAt": "2026-11-05",
+        "summary": "Production expérimentale persistante hors connexion, rattrapage borné, horloge SQL et non-rejeu des ticks.",
+        "technicalEvidence": "apps/api/tests/test_economy_integration.py ; apps/api/src/mmhk_api/economy.py ; CI 42065652207",
+        "notYetAccepted": "cadences historiques et acceptation du profil classique",
+        "historicalAcceptance": false
       }
     },
     {
@@ -10266,6 +10284,15 @@
         "clock": "horloge du monde",
         "historicalOracle": "a_qualifier",
         "execution": "non_executee"
+      },
+      "implementationLab": {
+        "status": "terminee_techniquement_lab",
+        "profile": "LAB-V104-2026-11-05",
+        "verifiedAt": "2026-11-05",
+        "summary": "V103 : rencontre neutre à profil qualifié retirée après victoire ; transaction, reprise, refus et confidentialité testés. Ce n’est pas une conquête de territoire historique.",
+        "technicalEvidence": "PR #75 ; apps/api/tests/test_pve_missions_integration.py ; CI 42055391105",
+        "notYetAccepted": "PNJ spéciaux, fidélité S2 et acceptation métier des cinq CA",
+        "historicalAcceptance": false
       }
     },
     {
@@ -10420,6 +10447,15 @@
         "clock": "horloge du monde",
         "historicalOracle": "a_qualifier",
         "execution": "non_executee"
+      },
+      "implementationLab": {
+        "status": "terminee_techniquement_lab",
+        "profile": "LAB-V104-2026-11-05",
+        "verifiedAt": "2026-11-05",
+        "summary": "V104 : gisement réel et mine existante qualifiés, activation propriétaire idempotente et production sans crédit rétroactif.",
+        "technicalEvidence": "PR #76 ; apps/api/tests/test_lab_mine_activation.py ; CI 42065652207",
+        "notYetAccepted": "règles historiques G11, niveaux, extensions et réception produit des cinq CA",
+        "historicalAcceptance": false
       }
     },
     {
@@ -22715,6 +22751,15 @@
         "clock": "horloge du monde",
         "historicalOracle": "a_qualifier",
         "execution": "non_executee"
+      },
+      "implementationLab": {
+        "status": "partielle_validee_lab",
+        "profile": "LAB-V104-2026-11-05",
+        "verifiedAt": "2026-11-05",
+        "summary": "V100–V103 : mission PvE à temps serveur, combat 1–7 pelotons figés et conséquences partielles, sans XP/butin.",
+        "technicalEvidence": "PR #71–75 ; apps/api/tests/test_pve_missions_integration.py ; CI 42055391105",
+        "notYetAccepted": "combat complet Jactari/MMHK, progression, récompenses, magie et armées spéciales",
+        "historicalAcceptance": false
       }
     },
     {
@@ -23021,6 +23066,15 @@
         "clock": "horloge du monde",
         "historicalOracle": "a_qualifier",
         "execution": "non_executee"
+      },
+      "implementationLab": {
+        "status": "partielle_validee_lab",
+        "profile": "LAB-V104-2026-11-05",
+        "verifiedAt": "2026-11-05",
+        "summary": "Classes d’armes qualifiées et comparaison différentielle de duels ordinaires ; aucune classe inconnue inventée.",
+        "technicalEvidence": "apps/api/tests/test_pve_stack_sequence.py ; CI 42065652207",
+        "notYetAccepted": "catalogue complet et bonus conditionnels de la saison cible",
+        "historicalAcceptance": false
       }
     },
     {
@@ -23635,6 +23689,15 @@
         "clock": "horloge du monde",
         "historicalOracle": "a_qualifier",
         "execution": "non_executee"
+      },
+      "implementationLab": {
+        "status": "partielle_validee_lab",
+        "profile": "LAB-V104-2026-11-05",
+        "verifiedAt": "2026-11-05",
+        "summary": "V101 : lignes de 1 à 7 positions, séquence déterministe, positions non contiguës conservées.",
+        "technicalEvidence": "PR #72 ; apps/api/tests/test_pve_stack_sequence.py ; CI 42025473547",
+        "notYetAccepted": "magie, héros, capacités et conformité historique de toute la séquence",
+        "historicalAcceptance": false
       }
     },
     {
@@ -23942,6 +24005,15 @@
         "clock": "horloge du monde",
         "historicalOracle": "a_qualifier",
         "execution": "non_executee"
+      },
+      "implementationLab": {
+        "status": "partielle_validee_lab",
+        "profile": "LAB-V104-2026-11-05",
+        "verifiedAt": "2026-11-05",
+        "summary": "Vraie égalité/faux nul distingués dans le duel et dans le rapport, sans arbitrage inventé.",
+        "technicalEvidence": "docs/backlog/RECETTE-US-COM-010-2026-11-05.md ; apps/api/tests/test_jactari_duel_ending.py",
+        "notYetAccepted": "oracles S2 sur magie, résurrections, faux nuls et scénarios complets",
+        "historicalAcceptance": false
       }
     },
     {
@@ -24096,6 +24168,15 @@
         "clock": "horloge du monde",
         "historicalOracle": "a_qualifier",
         "execution": "non_executee"
+      },
+      "implementationLab": {
+        "status": "partielle_validee_lab",
+        "profile": "LAB-V104-2026-11-05",
+        "verifiedAt": "2026-11-05",
+        "summary": "Fuite PvE exactement à 1/7 de puissance brute, sans duel, puis retour enregistré.",
+        "technicalEvidence": "docs/backlog/RECETTE-US-COM-011-2026-11-05.md ; apps/api/tests/test_pve_mission_flight.py",
+        "notYetAccepted": "conséquences historiques supplémentaires pour le héros",
+        "historicalAcceptance": false
       }
     },
     {
@@ -24401,6 +24482,15 @@
         "clock": "horloge du monde",
         "historicalOracle": "a_qualifier",
         "execution": "non_executee"
+      },
+      "implementationLab": {
+        "status": "partielle_validee_lab",
+        "profile": "LAB-V104-2026-11-05",
+        "verifiedAt": "2026-11-05",
+        "summary": "Dispersions des pelotons explicites dans les duels Jactari simulés.",
+        "technicalEvidence": "apps/api/tests/test_pve_casualties.py ; apps/api/tests/test_pve_stack_sequence.py",
+        "notYetAccepted": "magie, invocation et exceptions documentées",
+        "historicalAcceptance": false
       }
     },
     {
@@ -24554,6 +24644,15 @@
         "clock": "horloge du monde",
         "historicalOracle": "a_qualifier",
         "execution": "non_executee"
+      },
+      "implementationLab": {
+        "status": "partielle_validee_lab",
+        "profile": "LAB-V104-2026-11-05",
+        "verifiedAt": "2026-11-05",
+        "summary": "V102 : morts permanentes ordinaires de l’attaquant à 30 %, par peloton, avec débit unique et journal.",
+        "technicalEvidence": "PR #74 ; apps/api/tests/test_pve_lab_settlement.py ; CI 42035230881",
+        "notYetAccepted": "PNJ spéciaux, résurrections, bonus, oracles historiques",
+        "historicalAcceptance": false
       }
     },
     {
@@ -24708,6 +24807,15 @@
         "clock": "horloge du monde",
         "historicalOracle": "a_qualifier",
         "execution": "non_executee"
+      },
+      "implementationLab": {
+        "status": "partielle_validee_lab",
+        "profile": "LAB-V104-2026-11-05",
+        "verifiedAt": "2026-11-05",
+        "summary": "V103 : branche PNJ sans héros ni attrition, perte entière à la défaite, aucune perte en défense victorieuse.",
+        "technicalEvidence": "PR #75 ; apps/api/tests/test_pve_neutral_resolution.py ; CI 42055391105",
+        "notYetAccepted": "PNJ avec héros, attrition spéciale, invocations et exceptions",
+        "historicalAcceptance": false
       }
     },
     {
@@ -25016,6 +25124,15 @@
         "clock": "horloge du monde",
         "historicalOracle": "a_qualifier",
         "execution": "non_executee"
+      },
+      "implementationLab": {
+        "status": "partielle_validee_lab",
+        "profile": "LAB-V104-2026-11-05",
+        "verifiedAt": "2026-11-05",
+        "summary": "Rapport de mission séquentiel et lecture des échanges en interface privée.",
+        "technicalEvidence": "apps/web/app/cities/[cityId]/missions/[missionId]/page.tsx ; CI 42065652207",
+        "notYetAccepted": "sorts, pré-tirs, blessures et rapport complet historique",
+        "historicalAcceptance": false
       }
     },
     {
@@ -27780,6 +27897,15 @@
         "clock": "horloge du monde",
         "historicalOracle": "a_qualifier",
         "execution": "non_executee"
+      },
+      "implementationLab": {
+        "status": "partielle_validee_lab",
+        "profile": "LAB-V104-2026-11-05",
+        "verifiedAt": "2026-11-05",
+        "summary": "Départ, arrivée, retour et événements de mission suivis sous horloge SQL.",
+        "technicalEvidence": "apps/api/tests/test_pve_missions_integration.py ; CI 42065652207",
+        "notYetAccepted": "missions PvP, haltes, trêves et intégration historique",
+        "historicalAcceptance": false
       }
     },
     {
@@ -44660,6 +44786,15 @@
         "clock": "horloge du monde",
         "historicalOracle": "a_qualifier",
         "execution": "non_executee"
+      },
+      "implementationLab": {
+        "status": "partielle_validee_lab",
+        "profile": "LAB-V104-2026-11-05",
+        "verifiedAt": "2026-11-05",
+        "summary": "Rapport PvE personnel persisté avec instantanés, pertes et résolution neutre.",
+        "technicalEvidence": "apps/api/src/mmhk_api/pve_missions.py ; CI 42065652207",
+        "notYetAccepted": "courrier de combat complet, historique et autres sources de gains",
+        "historicalAcceptance": false
       }
     },
     {

@@ -8,6 +8,7 @@ on:
       - 'apps/api/src/mmhk_api/pve_*.py'
       - 'apps/api/src/mmhk_api/lab_mine_activation.py'
       - 'apps/api/src/mmhk_api/economy.py'
+      - 'apps/api/src/mmhk_api/mine_level_reference.py'
       - 'apps/api/src/mmhk_api/worlds.py'
       - 'apps/api/src/mmhk_api/main.py'
       - 'apps/api/src/mmhk_api/manage.py'
@@ -15,6 +16,7 @@ on:
       - 'apps/api/src/mmhk_api/sql/10[0-9]_*.sql'
       - 'apps/api/tests/test_pve_*.py'
       - 'apps/api/tests/test_lab_mine_activation.py'
+      - 'apps/api/tests/test_mine_level_reference.py'
       - 'apps/web/**'
       - 'tools/e2e/local_browser.py'
       - 'data/backlog/**'
@@ -66,6 +68,7 @@ jobs:
             apps/api/src/mmhk_api/pve_ordinary_line_snapshot.py \
             apps/api/src/mmhk_api/pve_missions.py \
             apps/api/src/mmhk_api/lab_mine_activation.py \
+            apps/api/src/mmhk_api/mine_level_reference.py \
             apps/api/src/mmhk_api/economy.py \
             apps/api/src/mmhk_api/worlds.py \
             apps/api/src/mmhk_api/main.py \
@@ -78,6 +81,7 @@ jobs:
             apps/api/tests/test_pve_lab_settlement.py \
             apps/api/tests/test_pve_neutral_resolution.py \
             apps/api/tests/test_lab_mine_activation.py \
+            apps/api/tests/test_mine_level_reference.py \
             apps/api/tests/test_pve_missions_integration.py \
             tools/e2e/local_browser.py
       - name: Apply actual PostgreSQL migrations, including V104
@@ -89,11 +93,14 @@ jobs:
             apps/api/tests/test_pve_lab_settlement.py \
             apps/api/tests/test_pve_mission_flight.py \
             apps/api/tests/test_pve_missions_integration.py \
-            apps/api/tests/test_lab_mine_activation.py
+            apps/api/tests/test_lab_mine_activation.py \
+            apps/api/tests/test_mine_level_reference.py
       - name: Verify full Python regression suite
         run: python -m pytest -q apps/api/tests
       - name: Validate all 300 US are still tracked
-        run: node tools/validate-implementation-review.mjs
+        run: |
+          node tools/validate-implementation-review.mjs
+          node tools/validate-backlog-progress.mjs
 
   web-types:
     name: Next.js build / strict TS

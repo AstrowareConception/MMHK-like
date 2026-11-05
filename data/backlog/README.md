@@ -13,3 +13,12 @@ Les états initiaux sont à affiner, non prêts, non estimés et non exécutés.
 Pour modifier une story, conserver son ID, actualiser simultanément sa fiche Markdown et le JSON, puis lancer `node tools/validate-backlog.mjs` depuis le dépôt. Ajouter une nouvelle fiche après le dernier numéro disponible ; ne pas réutiliser l’identifiant d’une fiche retirée. Lors d’un découpage, mettre à jour le total attendu et les compteurs de catégories : la version initiale validée ici contient 300 fiches.
 
 Voir le [backlog](../../docs/backlog/README.md), la [méthode](../../docs/backlog/METHODE-ET-QUALITE.md) et la [validation](../../docs/backlog/VALIDATION.md).
+
+## Suivi des livraisons techniques — 5 novembre 2026
+
+[implementation-progress-2026-11-05.csv](implementation-progress-2026-11-05.csv)
+suit 300/300 IDs et distingue les livraisons LAB validées des US non
+acceptées historiquement. Il est synchronisé avec le champ facultatif
+`implementationLab` des fiches JSON et les annotations Markdown.
+Contrôle : `node tools/validate-backlog-progress.mjs`.
+L'ancien CSV d'audit du 4 novembre reste une photographie non modifiée.

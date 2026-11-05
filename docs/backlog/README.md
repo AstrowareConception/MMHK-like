@@ -6,6 +6,11 @@ Chaque fiche contient la formulation « En tant que…, je souhaite… afin de�
 
 **Statut du référentiel d’origine : backlog préparé pour l’affinage.** Lors de sa rédaction, aucune fiche n’était déclarée développée, estimée ou acceptée. Depuis, les composants candidats et leur recette sont suivis séparément ci-dessous : leur présence ne vaut pas validation d’une US. Les 1 500 critères restent la base de l’acceptation ; les preuves historiques disponibles ne certifient pas toutes les valeurs de la saison cible.
 
+## Suivi réel des livraisons — 5 novembre 2026
+
+Le [suivi des US livrées en laboratoire](SUIVI-LIVRAISONS-2026-11-05.md)
+indique **3 US techniquement terminées LAB** et **12 partiellement livrées** parmi les 300 fiches, avec preuves GitHub CI. **Aucune US classique n'est encore acceptée** : la DoD historique et la revue produit restent indépendantes. Le registre vérifiable est `data/backlog/implementation-progress-2026-11-05.csv` (commande `node tools/validate-backlog-progress.mjs`).
+
 ## Garantie d'intégrité des missions PvE — V100
 
 Le [dossier de gel transactionnel des entrées de combat](QUALITE-PVE-INSTANTANES-V100-2026-11-05.md)

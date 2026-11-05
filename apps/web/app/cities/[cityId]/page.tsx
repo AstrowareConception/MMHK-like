@@ -77,6 +77,12 @@ export default async function CityPage({
         </>}
         reserves={<div className="mmhk-city-collection" id="city-resources-panel">
           <h2 id="city-resources">Réserves de la ville</h2>
+        <p className="notice">
+          <Link href={"/cities/"+cityId+"/mines/levels"}>
+            Consulter les niveaux de mines documentés (G11, référence de 2013)
+          </Link>. La grille indique les coûts et durées de base connus, sans
+          prétendre que les niveaux actuels ou les prérequis du héros sont qualifiés.
+        </p>
         <div className="resource-grid">
           {RESOURCES.map(([key, label]) => (
             <article key={key}>

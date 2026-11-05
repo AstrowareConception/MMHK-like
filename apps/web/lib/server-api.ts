@@ -332,6 +332,20 @@ export type PveLabAttackerSettlement={
     simulated_remaining:number;dispersed:number;permanent_deaths:number;
     conversion_policy_id:string}[];
 };
+export type G11MineLevelStep={
+  from_level:number;to_level:number;cost_gold:number;
+  base_duration_hours:number;base_daily_before:number;
+  base_daily_after:number;production_continues_during_level_work:true;
+  reference_only:true;
+};
+export type G11MineLevelReference={
+  city_id:string;source_ref:string;policy_id:string;
+  mine_max_level:10;documentary_only:true;current_mine_levels_known:false;
+  hero_prerequisites_qualified:false;fast_economic_mode_rounding_qualified:false;
+  extension_stacking_qualified:false;upgrades_executable:false;
+  historically_certified_s2:false;
+  mines:{resource:string;steps:G11MineLevelStep[]}[];
+};
 export type LabMineUnlock={
   resource:"gold"|"wood"|"ore"|"crystal"|"gems"|"sulfur"|"mercury";
   deposit_slot:number;i:number;j:number;

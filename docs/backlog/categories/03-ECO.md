@@ -102,6 +102,10 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 
 **Priorité proposée :** P0 · **Phases :** Early game, Mid game, End game / Guerre des Larmes · **Preuve principale :** DOC · **Statut :** à affiner.
 
+**Livraison technique du profil LAB (05/11/2026) : partielle, tests exécutés.** Taux et plafond existants affichés, mine gardée ramenée à zéro, mine activée au taux opérateur.
+**Preuves :** apps/api/src/mmhk_api/worlds.py ; apps/api/tests/test_lab_mine_activation.py ; CI 42065652207.
+**Reste pour la DoD historique :** production historique par niveau et effets des extensions. Les cinq critères du backlog classique et la revue produit restent **non acceptés**. [Suivi actualisé](../SUIVI-LIVRAISONS-2026-11-05.md).
+
 ### 1. Card — besoin du joueur
 
 > En tant que joueur, je souhaite consulter le détail des revenus afin de choisir les améliorations rentables.
@@ -179,6 +183,10 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 ## US-ECO-003 — Produire hors connexion
 
 **Priorité proposée :** P0 · **Phases :** Early game, Mid game, End game / Guerre des Larmes · **Preuve principale :** DOC · **Statut :** à affiner.
+
+**Livraison technique du profil LAB (05/11/2026) : terminée, tests exécutés.** Production expérimentale persistante hors connexion, rattrapage borné, horloge SQL et non-rejeu des ticks.
+**Preuves :** apps/api/tests/test_economy_integration.py ; apps/api/src/mmhk_api/economy.py ; CI 42065652207.
+**Reste pour la DoD historique :** cadences historiques et acceptation du profil classique. Les cinq critères du backlog classique et la revue produit restent **non acceptés**. [Suivi actualisé](../SUIVI-LIVRAISONS-2026-11-05.md).
 
 ### 1. Card — besoin du joueur
 
