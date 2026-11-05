@@ -41,6 +41,14 @@ def _qualified_g11_gold(city,*,approve=True,threshold=1,starting_gold=12000):
             db,now_at=datetime.fromisoformat(mission.json()["arrival_due_at"]),
         )
         assert progress[0]["phase"]=="arrived"
+        # The hero must actually return to become available to construct.
+        report=client.get(root+"/missions/"+mission.json()["mission_id"]+"/report",
+                          headers=who)
+        assert report.status_code==200
+        returned=advance_pve_missions(
+            db,now_at=datetime.fromisoformat(report.json()["return_due_at"]),
+        )
+        assert returned[0]["phase"]=="returned"
     activation=client.post(root+"/mine-unlocks/gold/activate",
         headers=who,json={"order_id":str(uuid4())})
     assert activation.status_code==201,activation.text
@@ -147,7 +155,8 @@ def test_real_paid_upgrade_replay_and_correct_tick_boundary(city):
         first=run_economy_batch(db,now_at=started+timedelta(hours=3),
                                 max_cities=1)[0]
         assert first["ticks"]==2
-        assert first["credits"]["gold"]==166
+        # V104 already suppresses the initial pre-activation tick.
+        assert first["credits"]["gold"]==83
         assert first["upgrades_completed"][0]["target_level"]==2
         later=run_economy_batch(db,now_at=started+timedelta(hours=3),
                                 max_cities=1)[0]
@@ -156,7 +165,7 @@ def test_real_paid_upgrade_replay_and_correct_tick_boundary(city):
         assert later["upgrades_completed"]==[]
         assert run_economy_batch(db,now_at=started+timedelta(hours=3))==[]
     with psycopg.connect(URL) as db:
-        assert _gold(db,city["city"])==11333
+        assert _gold(db,city["city"])==11250
         assert db.execute("SELECT level FROM city_lab_mine_levels "
                           "WHERE city_id=%s AND resource='gold'",
                           (city["city"],)).fetchone()[0]==2
