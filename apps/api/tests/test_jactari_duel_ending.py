@@ -116,3 +116,15 @@ def test_invalid_or_fabricated_ending_is_rejected():
     outcome["falseDraw"]=1
     with pytest.raises(ValueError):
         classify_jactari_exchange(outcome)
+
+
+@pytest.mark.parametrize("attacker,defender,winner",[
+    (10,11,"defender"),(11,10,"attacker"),
+])
+def test_one_unit_boundary_is_stable_and_not_random(attacker,defender,winner):
+    outcome=duel(ac=attacker,dc=defender)
+    ending=classify_jactari_exchange(outcome)
+    assert ending["kind"]=="ordinary"
+    assert ending["verdict"]==winner
+    assert ending["false_draw_marker"]==0
+    assert ending==classify_jactari_exchange(duel(ac=attacker,dc=defender))
