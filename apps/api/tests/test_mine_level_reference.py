@@ -25,7 +25,7 @@ def test_g11_reference_baseline_and_nine_steps(kind,per_level):
         1,2,3,5,8,13,21,34,55,
     ]
     assert [s["base_daily_after"] for s in steps]==[
-        per_level*i for i in range(2,11),
+        per_level*i for i in range(2,11)
     ]
     assert all(s["production_continues_during_level_work"] for s in steps)
     assert all(s["reference_only"] for s in steps)
