@@ -323,3 +323,167 @@ def test_v101_refuses_unqualified_secondary_stack_before_mission(city):
                           (hero,)).fetchone()[0]=="idle"
         assert db.execute("SELECT count(*) FROM pve_missions WHERE hero_id=%s",
                           (hero,)).fetchone()[0]==0
+
+
+
+def _enable_v102_lab(world, hero):
+    """Explicit, reversible-for-FUTURE-missions opt-in on an isolated test world."""
+    with psycopg.connect(URL) as db:
+        db.execute("""UPDATE pve_travel_policies SET policy_id='LAB-TEST-TRAVEL-V102'
+                      WHERE world_id=%s""",(world,))
+        db.execute("""INSERT INTO pve_lab_casualty_policies(
+                        world_id,enabled,source_ref)
+                      VALUES(%s,true,'TEST-LAB-EXPLICIT-V102')""",(world,))
+        db.execute("""INSERT INTO hero_basic_combat_profiles(
+                        hero_id,attack_points,defense_points,
+                        attack_per_unit,defense_per_unit,source_ref)
+                      VALUES(%s,0,0,0,0,'TEST-ZERO-HERO-V102')""",(hero,))
+
+
+def test_v102_applies_only_opted_in_attacker_deaths_once_under_transaction(city):
+    hero,unit,encounter=_setup(city)
+    _enable_v102_lab(city["world"],hero)
+    with psycopg.connect(URL) as db:
+        db.execute("""UPDATE city_unit_profiles SET combat_weapon_code='I',
+                         combat_weapon_source_ref='TEST-WEAPON-V102'
+                      WHERE unit_code=%s""",(unit,))
+        db.execute("""UPDATE region_encounters SET combat_weapon_code='I',
+                         combat_weapon_source_ref='TEST-WEAPON-V102'
+                      WHERE encounter_id=%s""",(encounter,))
+    root=f"/api/v1/me/cities/{city['city']}"
+    own=headers(city["username"]);other=headers(city["enemyname"])
+    mid=str(uuid4())
+    response=client.post(root+"/missions",headers=own,json={
+        "mission_id":mid,"hero_id":str(hero),
+        "encounter_id":str(encounter),"unit_code":unit,
+    })
+    assert response.status_code==201,response.text
+    with psycopg.connect(URL) as db:
+        frozen=db.execute(
+            "SELECT attacker_settlement_snapshot FROM pve_missions WHERE mission_id=%s",
+            (mid,),
+        ).fetchone()[0]
+        assert frozen["enabled"] is True
+        assert frozen["zero_hero_profile"] is True
+        assert frozen["source_ref"]=="TEST-LAB-EXPLICIT-V102"
+        # Subsequent policy or qualified hero changes never revise this order.
+        db.execute("UPDATE pve_lab_casualty_policies SET enabled=false WHERE world_id=%s",
+                   (city["world"],))
+        db.execute("UPDATE hero_basic_combat_profiles SET attack_points=100 "
+                   "WHERE hero_id=%s",(hero,))
+        db.execute("UPDATE region_encounters SET unit_count=500,unit_power=100 "
+                   "WHERE encounter_id=%s",(encounter,))
+    arrival=datetime.fromisoformat(response.json()["arrival_due_at"])
+    with psycopg.connect(URL,autocommit=True) as db:
+        assert advance_pve_missions(db,now_at=arrival)==[
+            {"mission_id":mid,"phase":"arrived"}]
+        assert advance_pve_missions(db,now_at=arrival)==[]
+    report=client.get(root+"/missions/"+mid+"/report",headers=own)
+    assert report.status_code==200,report.text
+    assert client.get(root+"/missions/"+mid+"/report",headers=other).status_code==404
+    body=report.json()
+    settlement=body["duel_report"]["settlement"]
+    assert settlement["status"]=="applied"
+    assert settlement["total_deaths"]>0
+    assert settlement["total_deaths"]<8
+    assert body["duel_report"]["no_losses_applied"] is False
+    assert body["duel_report"]["no_rewards"] is True
+    assert body["duel_report"]["line_outcome"]["experience_awarded"] is False
+    with psycopg.connect(URL) as db:
+        stock=db.execute("SELECT quantity FROM hero_army_units "
+                         "WHERE hero_id=%s AND unit_code=%s",(hero,unit)).fetchone()[0]
+        assert stock==8-settlement["total_deaths"]
+        assert db.execute("SELECT resolved,unit_count FROM region_encounters "
+                          "WHERE encounter_id=%s",(encounter,)).fetchone()==(False,500)
+        ledger=db.execute(
+            "SELECT total_deaths,entries FROM pve_lab_casualty_settlements "
+            "WHERE mission_id=%s",(mid,),
+        ).fetchone()
+        assert ledger[0]==settlement["total_deaths"]
+        assert ledger[1]==settlement["entries"]
+        assert db.execute("SELECT count(*) FROM hero_formation_slots "
+                          "WHERE hero_id=%s",(hero,)).fetchone()[0]==0
+    # Reconnect and return: no second debit or ledger entry.
+    returning=datetime.fromisoformat(body["return_due_at"])
+    with psycopg.connect(URL,autocommit=True) as db:
+        assert advance_pve_missions(db,now_at=returning)==[
+            {"mission_id":mid,"phase":"returned"}]
+        assert advance_pve_missions(db,now_at=returning)==[]
+    with psycopg.connect(URL) as db:
+        assert db.execute("SELECT quantity FROM hero_army_units "
+                          "WHERE hero_id=%s AND unit_code=%s",(hero,unit)).fetchone()[0]==stock
+        assert db.execute("SELECT count(*) FROM pve_lab_casualty_settlements "
+                          "WHERE mission_id=%s",(mid,)).fetchone()[0]==1
+        assert db.execute("SELECT status FROM city_heroes WHERE hero_id=%s",
+                          (hero,)).fetchone()[0]=="idle"
+
+
+def test_v102_qualified_policy_without_zero_hero_remains_non_mutating(city):
+    hero,unit,encounter=_setup(city)
+    with psycopg.connect(URL) as db:
+        db.execute("UPDATE pve_travel_policies SET policy_id='LAB-TEST-V102' "
+                   "WHERE world_id=%s",(city["world"],))
+        db.execute("""INSERT INTO pve_lab_casualty_policies(
+                        world_id,enabled,source_ref)
+                      VALUES(%s,true,'TEST-LAB-V102')""",(city["world"],))
+    h=headers(city["username"])
+    root=f"/api/v1/me/cities/{city['city']}"
+    mid=str(uuid4())
+    created=client.post(root+"/missions",headers=h,json={
+        "mission_id":mid,"hero_id":str(hero),"encounter_id":str(encounter),
+        "unit_code":unit,
+    })
+    assert created.status_code==201,created.text
+    with psycopg.connect(URL,autocommit=True) as db:
+        advance_pve_missions(db,now_at=datetime.fromisoformat(
+            created.json()["arrival_due_at"]))
+    report=client.get(root+"/missions/"+mid+"/report",headers=h).json()
+    assert report["duel_report"]["settlement"]["status"]=="zero_hero_profile_not_qualified"
+    assert report["duel_report"]["no_losses_applied"] is True
+    with psycopg.connect(URL) as db:
+        assert db.execute("SELECT quantity FROM hero_army_units "
+                          "WHERE hero_id=%s AND unit_code=%s",(hero,unit)).fetchone()[0]==8
+        assert db.execute("SELECT count(*) FROM pve_lab_casualty_settlements "
+                          "WHERE mission_id=%s",(mid,)).fetchone()[0]==0
+
+
+def test_v102_policy_cannot_enable_non_lab_world(city):
+    hero,unit,encounter=_setup(city)
+    import pytest
+    with psycopg.connect(URL) as db:
+        with pytest.raises(psycopg.errors.CheckViolation):
+            db.execute("""INSERT INTO pve_lab_casualty_policies(
+                            world_id,enabled,source_ref)
+                          VALUES(%s,true,'INVALID-TEST-WORLD')""",(city["world"],))
+    with psycopg.connect(URL) as db:
+        assert db.execute("SELECT count(*) FROM pve_lab_casualty_policies "
+                          "WHERE world_id=%s",(city["world"],)).fetchone()[0]==0
+
+
+def test_v102_cannot_edit_or_delete_committed_ledger(city):
+    hero,unit,encounter=_setup(city)
+    _enable_v102_lab(city["world"],hero)
+    with psycopg.connect(URL) as db:
+        db.execute("UPDATE city_unit_profiles SET combat_weapon_code='I',"
+                   "combat_weapon_source_ref='TEST-V102' WHERE unit_code=%s",(unit,))
+        db.execute("UPDATE region_encounters SET combat_weapon_code='I',"
+                   "combat_weapon_source_ref='TEST-V102' WHERE encounter_id=%s",(encounter,))
+    root=f"/api/v1/me/cities/{city['city']}"
+    mid=str(uuid4())
+    created=client.post(root+"/missions",headers=headers(city["username"]),json={
+        "mission_id":mid,"hero_id":str(hero),"encounter_id":str(encounter),
+        "unit_code":unit,
+    })
+    assert created.status_code==201,created.text
+    with psycopg.connect(URL,autocommit=True) as db:
+        advance_pve_missions(db,now_at=datetime.fromisoformat(
+            created.json()["arrival_due_at"]))
+    import pytest
+    for query in (
+        "UPDATE pve_lab_casualty_settlements SET total_deaths=0 WHERE mission_id=%s",
+        "DELETE FROM pve_lab_casualty_settlements WHERE mission_id=%s",
+        "UPDATE pve_missions SET attacker_settlement_snapshot=NULL WHERE mission_id=%s",
+    ):
+        with psycopg.connect(URL) as db:
+            with pytest.raises(psycopg.errors.CheckViolation):
+                db.execute(query,(mid,))
