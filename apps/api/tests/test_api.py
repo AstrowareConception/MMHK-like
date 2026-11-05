@@ -65,6 +65,7 @@ def test_openapi_contains_no_unapproved_game_commands():
         "/api/v1/me/cities/{city_id}/mine-unlocks",
         "/api/v1/me/cities/{city_id}/mines/level-reference",
         "/api/v1/me/cities/{city_id}/mine-upgrades",
+        "/api/v1/me/cities/{city_id}/mine-extensions",
         "/api/v1/me/cities/{city_id}/mine-unlocks/{resource}/activate",
         "/api/v1/me/cities/{city_id}/missions",
         "/api/v1/me/cities/{city_id}/missions/{mission_id}/report",
