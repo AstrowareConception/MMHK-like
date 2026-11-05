@@ -16,6 +16,7 @@ from .hero_combat_modifiers import hero_combat_modifiers
 from .conditional_hero_talents import conditional_attack_talent
 from .pve_pre_shots import resolve_pre_shots
 from .pve_admission import evaluate_pve_admission
+from .jactari_duel_ending import classify_jactari_exchange
 
 MAX_STACKS = 7
 MAX_EXCHANGES = 98
@@ -113,6 +114,7 @@ def resolve_ordinary_lines(attacker: list[dict], defender: list[dict],
             if stack["remaining"]==0:
                 stack["dispersed"]=True
     events: list[dict] = []
+    last_duel_ending: dict | None = None
     a_index = d_index = 0
 
     while True:
@@ -143,21 +145,22 @@ def resolve_ordinary_lines(attacker: list[dict], defender: list[dict],
                 "defendWeapon": float(counter["defender_bonus"]),
             },
         })
-        ra = result["remaining"]["attacker"]
-        rd = result["remaining"]["defender"]
-        lost_a = result["dispersed"]["attacker"]
-        lost_d = result["dispersed"]["defender"]
-        # An undecided state must not cause an infinite retry, nor be silently
-        # adjudicated as a victory. Jactari marks false draws separately.
-        if (type(ra) is not int or type(rd) is not int
-            or not 0 <= ra <= before_a or not 0 <= rd <= before_d
-            or not (lost_a or lost_d)
-            or (lost_a and ra != 0) or (lost_d and rd != 0)
-            or (not lost_a and ra == 0) or (not lost_d and rd == 0)):
-            raise ValueError("Unsupported or inconsistent Jactari duel outcome")
+        ending=classify_jactari_exchange(result)
+        ra = ending["remaining"]["attacker"]
+        rd = ending["remaining"]["defender"]
+        lost_a = ending["dispersed"]["attacker"]
+        lost_d = ending["dispersed"]["defender"]
+        # A source-backed false draw can exhaust the nominal winner
+        # without marking that stack dispersed. Never replay a zero-count
+        # stack, but preserve Jactari's final tiebreak marker separately.
+        if not 0<=ra<=before_a or not 0<=rd<=before_d:
+            raise ValueError("Invalid Jactari remaining count")
         left["remaining"], right["remaining"] = ra, rd
         left["dispersed"] = lost_a
         right["dispersed"] = lost_d
+        left["exhausted"] = ending["exhausted_without_dispersion"]["attacker"]
+        right["exhausted"] = ending["exhausted_without_dispersion"]["defender"]
+        last_duel_ending=ending
         events.append({
             "exchange": len(events) + 1,
             "attacker_position": left["position"],
@@ -169,23 +172,29 @@ def resolve_ordinary_lines(attacker: list[dict], defender: list[dict],
             "dispersed": {"attacker": lost_a, "defender": lost_d},
             "jactari_false_draw": result["falseDraw"],
             "jactari_draw": result["draw"],
+            "ending":ending,
+            "theoretical_dispersions":ending["theoretical_dispersions"],
+            "removed_from_line":ending["removed_from_line"],
             "counter_weapons": counter,
             "hero_attributes": hero,
             "conditional_talent": talent,
             "total_power": result["totalPower"],
-            "attacker_survives_to_next_exchange": not lost_a,
-            "defender_survives_to_next_exchange": not lost_d,
+            "attacker_survives_to_next_exchange": not ending["removed_from_line"]["attacker"],
+            "defender_survives_to_next_exchange": not ending["removed_from_line"]["defender"],
         })
-        if lost_a:
+        if ending["removed_from_line"]["attacker"]:
             a_index += 1
-        if lost_d:
+        if ending["removed_from_line"]["defender"]:
             d_index += 1
 
     attack_alive = a_index < len(a)
     defend_alive = d_index < len(d)
     verdict = (
         "attacker" if attack_alive and not defend_alive else
-        "defender" if defend_alive and not attack_alive else "draw"
+        "defender" if defend_alive and not attack_alive else
+        last_duel_ending["verdict"]
+        if last_duel_ending and last_duel_ending["kind"]=="false_draw"
+        else "draw"
     )
     return {
         "scope": "LAB-ORDINARY-STACK-SEQUENCE",
@@ -194,6 +203,10 @@ def resolve_ordinary_lines(attacker: list[dict], defender: list[dict],
         "combat_started":True,
         "admission":admission,
         "events": events,
+        "last_duel_ending":last_duel_ending,
+        "technical_tiebreak":last_duel_ending["false_draw_marker"]
+          if not attack_alive and not defend_alive and
+             last_duel_ending and last_duel_ending["kind"]=="false_draw" else 0,
         "pre_shots": pre_shots,
         "attacker": a,
         "defender": d,
