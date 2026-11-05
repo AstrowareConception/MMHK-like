@@ -136,3 +136,31 @@ aucune US. Les profils sans héros et les autres branches restent
 Tests : `test_pve_lab_settlement.py`,
 `test_pve_missions_integration.py`, PostgreSQL 17 sur base jetable,
 puis CI Next.js et parcours complet Docker/Chromium post-fusion.
+
+
+## V103 — qualification du PNJ et disparition d'une rencontre neutre (LAB)
+
+Le calculateur Jactari distingue les défenseurs PNJ sans héros et sans
+attribut spécial attrition_pnj : lors d'une victoire de l'attaquant,
+tous les effectifs PNJ de cette branche sont définitivement perdus.
+Lorsque le PNJ l'emporte, la perte permanente de cette branche est nulle.
+Ce n'est pas le coefficient habituel de 30 % des armées avec héros.
+Un PNJ doté d'attrition particulière suit un autre traitement.
+
+V103 n'assimile pas implicitement toutes les rencontres à ces PNJ.
+Le profil sans héros et sans attrition doit être attesté par un opérateur
+avec sa provenance. Le monde expérimental doit activer V103 en plus de
+V102 ; ces décisions sont gelées au départ.
+
+Le worker peut alors, uniquement après une victoire ordinaire qualifiée,
+marquer la rencontre comme résolue et enregistrer une écriture immuable,
+dans la transaction déjà utilisée pour les pertes V102 et le rapport.
+Une cible modifiée en cours de voyage bloque le règlement et annule
+tous les effets de la transaction. Les missions anciennes restent
+explicitement exclues de V103.
+
+Ce changement ne donne AUCUNE mine, aucune production, aucune XP, aucun
+butin et aucun territoire : il retire seulement une rencontre neutre
+vaincue des adversaires actifs de la région du laboratoire.
+US-COM-015, US-REG-003 et US-REG-004 restent non acceptées.
+Voir QUALITE-PVE-PNJ-V103-2026-11-05.md.
