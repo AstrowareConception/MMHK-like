@@ -3,6 +3,7 @@ import {randomUUID} from "node:crypto";
 import {startQualifiedMineUpgrade} from "../../../../actions";
 import {notFound,redirect} from "next/navigation";
 import {GameShell} from "../../../../../components/game-shell/game-shell";
+import {LiveRefresh} from "../../../../../components/live-refresh";
 import {PrivateScreenFailure} from "../../../../../components/game-ui/private-screen-failure";
 import {privateApi,sessionToken,type CityDetail,type G11MineLevelReference,
   type LabMineUpgradesResponse}
@@ -38,6 +39,8 @@ export default async function MineLevelReferencePage({params,searchParams}:{
     eyebrow="G11 · RÉFÉRENCE DOCUMENTAIRE 2013"
     description={"Cité de "+city.data.name+" · G11 et laboratoire contrôlé"}
     worldId={city.data.world_id} cityId={cityId} stocks={city.data.stocks}>
+      {upgradeData?.mines.some(m=>m.active_order!==null)&&
+        <LiveRefresh intervalSeconds={15}/>}
       <section className="mmhk-city-collection" data-testid="g11-mine-reference">
         <h2>Niveaux et rendements de référence</h2>
         <p className="notice">
