@@ -839,6 +839,23 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 - [ ] Les décisions de la Conversation et les preuves de fidélité sont reliées à cette fiche ; les variantes volontaires sont signalées.
 - [ ] La revue et l’acceptation fonctionnelle sont enregistrées ; aucune case ci-dessus n’est considérée cochée par la rédaction du backlog.
 
+### Suivi d'implémentation (5 novembre 2026 — candidat partiel)
+
+- **Calcul observé Jactari :** l'écart des puissances
+  `floor(total_gagnant)-floor(total_perdant)` doit être
+  **strictement supérieur** à la base du gagnant.
+- **Module :** `jactari_overwhelming.py`, appelé par
+  `pve_stack_sequence.py` et, si la preuve de puissance
+  est présente, `pve_report_interpretation.py`.
+- **Tests écrits :** `test_jactari_overwhelming.py`,
+  seuil égal à base, dépassement strict, sentinelle -1,
+  validation d'incohérence et rejeu déterministe.
+- **Interface :** distingue victoire écrasante et
+  pertes permanentes, sans ajouter de troupes ni récompenses.
+- **Recette :** [US-COM-009](../RECETTE-US-COM-009-2026-11-05.md).
+  Les cinq critères et la DoD demeurent non acceptés.
+
+
 ---
 
 <a id="us-com-010"></a>
