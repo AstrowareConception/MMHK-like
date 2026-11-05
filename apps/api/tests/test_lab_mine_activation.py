@@ -4,6 +4,7 @@ PostgreSQL is the authority for mine rates, actual credits, two-account
 privacy, immutable gate enrollment and replay-safe activation.
 """
 from datetime import datetime,timedelta
+from decimal import Decimal
 from uuid import uuid4
 
 import psycopg
@@ -129,7 +130,7 @@ def test_guardian_victory_player_activation_and_no_backfill(city):
     }).status_code==404
     now_state=client.get(root+"/mine-unlocks",headers=owner).json()
     assert now_state["mines"][0]["state"]=="active"
-    assert client.get(root,headers=owner).json()["production_per_day"]["gold"]=="24"
+    assert Decimal(client.get(root,headers=owner).json()["production_per_day"]["gold"])==Decimal(24)
     # The first whole tick began before activation, so it must not pay gold.
     with psycopg.connect(URL,autocommit=True) as db:
         one=run_economy_batch(db,now_at=started+timedelta(hours=4),
