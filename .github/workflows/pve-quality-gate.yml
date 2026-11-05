@@ -98,7 +98,8 @@ jobs:
       - name: Verify full Python regression suite
         run: python -m pytest -q apps/api/tests
       - name: Validate all 300 US are still tracked
-        run: node tools/validate-implementation-review.mjs
+        run: |
+          node tools/validate-implementation-review.mjs
           node tools/validate-backlog-progress.mjs
 
   web-types:
