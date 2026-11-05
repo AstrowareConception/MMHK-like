@@ -723,8 +723,12 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
   renseignée depuis le catalogue qualifié, le bonus de contre-arme
   est recalculé à chaque échange, et non fixé une fois pour toute
   la bataille. Les classes inconnues ne reçoivent aucun bonus présumé.
-- **Recette toujours en attente :** les tirs préalables, les bonus,
-  les sorts, les pertes persistantes et les tests transactionnels
+- **Complément lié à US-COM-007 :** le laboratoire applique désormais
+  des tirs préalables explicitement qualifiés, avant le premier duel.
+  Une ligne entièrement neutralisée est sautée, les autres continuent
+  avec leurs effectifs restants. Aucun tir n'est inféré automatiquement.
+- **Recette toujours en attente :** les variantes complètes des tirs
+  préalables, les bonus, les sorts, les pertes persistantes et les tests transactionnels
   empêchent encore de valider CA01–CA05 et la DoD.
 - **Justificatifs :** [recette US-COM-008](../RECETTE-US-COM-008-2026-11-04.md)
   et [recette US-COM-004](../RECETTE-US-COM-004-2026-11-04.md).
