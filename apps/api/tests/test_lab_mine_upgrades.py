@@ -225,3 +225,45 @@ def test_order_facts_protected_from_admin_rewriting(city):
         assert _gold(db,city["city"])==11000
         assert db.execute("SELECT status FROM city_lab_mine_upgrade_orders "
                           "WHERE order_id=%s",(aid,)).fetchone()[0]=="building"
+
+
+
+def test_immutable_hero_qualification_and_direct_level_cheating_blocked(city):
+    hero,started,root,who=_qualified_g11_gold(city)
+    statements=(
+        ("UPDATE city_lab_mine_levels SET level=2 "
+         "WHERE city_id=%s AND resource='gold'",(city["city"],)),
+        ("UPDATE city_lab_mine_level_qualifications "
+         "SET required_hero_level=99 WHERE city_id=%s AND resource='gold'",
+         (city["city"],)),
+        ("DELETE FROM city_lab_mine_level_qualifications "
+         "WHERE city_id=%s AND resource='gold'",(city["city"],)),
+    )
+    for query,args in statements:
+        with psycopg.connect(URL) as db:
+            with pytest.raises(psycopg.errors.CheckViolation):
+                db.execute(query,args)
+    with psycopg.connect(URL) as db:
+        assert db.execute("SELECT level FROM city_lab_mine_levels "
+                          "WHERE city_id=%s AND resource='gold'",
+                          (city["city"],)).fetchone()[0]==1
+
+
+def test_occupied_hero_and_revoked_lab_world_refuse_before_debit(city):
+    hero,started,root,who=_qualified_g11_gold(city)
+    with psycopg.connect(URL) as db:
+        db.execute("UPDATE city_heroes SET status='wounded' WHERE hero_id=%s",
+                   (hero,))
+    payload={"order_id":str(uuid4()),"hero_id":str(hero),"resource":"gold"}
+    assert client.post(root+"/mine-upgrades",headers=who,json=payload).status_code==409
+    with psycopg.connect(URL) as db:
+        db.execute("UPDATE city_heroes SET status='idle' WHERE hero_id=%s",(hero,))
+        db.execute("UPDATE pve_travel_policies SET policy_id='REVOKED-LAB-V106' "
+                   "WHERE world_id=%s",(city["world"],))
+    assert client.get(root+"/mine-upgrades",headers=who).json()["mines"]==[]
+    denied=client.post(root+"/mine-upgrades",headers=who,json=payload)
+    assert denied.status_code==409,denied.text
+    with psycopg.connect(URL) as db:
+        assert _gold(db,city["city"])==12000
+        assert db.execute("SELECT count(*) FROM city_lab_mine_upgrade_orders "
+                          "WHERE city_id=%s",(city["city"],)).fetchone()[0]==0
