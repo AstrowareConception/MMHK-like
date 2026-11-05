@@ -62,6 +62,8 @@ def test_openapi_contains_no_unapproved_game_commands():
         "/api/v1/me/cities/{city_id}/artifacts/move",
         "/api/v1/me/cities/{city_id}/encounters/{encounter_id}/preview",
         "/api/v1/me/cities/{city_id}/encounters/{encounter_id}/preview-lines",
+        "/api/v1/me/cities/{city_id}/mine-unlocks",
+        "/api/v1/me/cities/{city_id}/mine-unlocks/{resource}/activate",
         "/api/v1/me/cities/{city_id}/missions",
         "/api/v1/me/cities/{city_id}/missions/{mission_id}/report",
         "/api/v1/me/cities/{city_id}/heroes/{hero_id}/formation",
