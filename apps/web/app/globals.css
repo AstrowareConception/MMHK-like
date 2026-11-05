@@ -4883,3 +4883,33 @@ body:has(.mmhk-entry-panel) .masthead h1{
     gap:9px;
   }
 }
+
+/* Region intelligence screen: scroll the four intelligence cards internally.
+   The tab itself must remain inside the fixed-height game viewport.
+   Chromium at 1220×900 previously detected 112px of tab-panel overflow. */
+@media (min-width:901px) {
+  .gui-game-stage[data-game-screen="region"]
+  .mmhk-region-collection[data-testid="region-intel-screen"] {
+    display:flex;
+    flex-direction:column;
+    overflow:hidden!important;
+  }
+  .gui-game-stage[data-game-screen="region"]
+  .mmhk-region-collection[data-testid="region-intel-screen"]
+  .mmhk-region-intel-heading {
+    flex:0 0 auto;
+    min-height:0;
+  }
+  .gui-game-stage[data-game-screen="region"]
+  .mmhk-region-collection[data-testid="region-intel-screen"]
+  .region-legend {
+    flex:1 1 0;
+    min-height:0;
+    min-width:0;
+    align-content:start;
+    overflow-y:auto;
+    overflow-x:hidden;
+    overscroll-behavior:contain;
+    scrollbar-width:thin;
+  }
+}
