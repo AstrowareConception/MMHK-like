@@ -95,8 +95,17 @@ def test_region_has_exactly_25_unmapped_cells_and_center_owned_city(map_fixture)
     assert center==[{"i":2,"j":2,"kind":"owned_city","resource":None,"city_id":f["city"]}]
     assert all(c["city_id"] is None for c in region["cells"] if c["kind"]=="unmapped")
     assert set(region["mine_types_unlocated"])=={"gold","wood","ore","crystal"}
-    assert region["mine_positions_known"] is False
-    assert region["cell_layout"]=="illustrative_unmapped"
+    # First-city mines are now persistently positioned; undiscovered
+    # terrain outside those four mined cells remains unmapped.
+    assert region["mine_positions_known"] is True
+    assert region["cell_layout"]=="persistent_mine_positions_v1"
+    positions=region["mine_positions"]
+    assert len(positions)==4
+    assert {p["resource"] for p in positions}=={"gold","wood","ore","crystal"}
+    assert len({(p["i"],p["j"]) for p in positions})==4
+    assert all(0<=p["i"]<5 and 0<=p["j"]<5 and
+               (p["i"],p["j"])!=(2,2) for p in positions)
+    assert len([cell for cell in region["cells"] if cell["kind"]=="mine"])==4
     assert region["historical_regional_terrain_certified"] is False
     ring={(v["dx"],v["dy"]):(v["x"],v["y"]) for v in region["surrounding_world_regions"]}
     assert len(ring)==9
