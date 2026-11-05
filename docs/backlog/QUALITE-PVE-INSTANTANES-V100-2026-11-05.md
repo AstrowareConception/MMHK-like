@@ -98,6 +98,25 @@ par recalcul automatique. Une anomalie doit être traitée après
 diagnostic et sauvegarde, pas en changeant arbitrairement la force
 du défenseur.
 
+## Diagnostic opérateur en lecture seule
+
+La commande suivante examine les missions actives sans lancer,
+recalculer ni modifier leurs combats :
+
+```bash
+python -m mmhk_api.manage audit-pve-snapshots --limit 200
+```
+
+Le résultat JSON distingue `frozen`,
+`legacy_unsnapshotted` et `corrupt`. L'indicateur
+`truncated` prévient lorsque plus de missions existent que
+la limite demandée. Les identifiants de missions problématiques
+permettent de préparer une intervention contrôlée ; la commande
+ne répare rien automatiquement.
+
+Tests associés :
+`apps/api/tests/test_pve_snapshot_audit.py`.
+
 ## Critères de recette des US concernées
 
 - **US-COM-002-CA03/04** : double confirmation et rejeu sans
