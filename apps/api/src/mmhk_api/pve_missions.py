@@ -38,10 +38,12 @@ def start_pve_mission(db:psycopg.Connection,*,owner:UUID,city_id:UUID,
         if hero is None:raise RecruitmentNotFound
         if hero[0]!="idle":raise RecruitmentConflict("Hero already travelling")
         enemy=db.execute(
-            """SELECT cell_i,cell_j FROM region_encounters WHERE encounter_id=%s
+            """SELECT cell_i,cell_j,unit_power FROM region_encounters WHERE encounter_id=%s
                AND city_id=%s AND NOT resolved FOR UPDATE""",(encounter_id,city_id),
         ).fetchone()
         if enemy is None:raise RecruitmentNotFound
+        if enemy[2]>1000000:
+            raise RecruitmentConflict("Encounter combat power exceeds qualified laboratory bounds")
         if db.execute(
             """SELECT 1 FROM pve_missions WHERE encounter_id=%s
                AND stage<>'completed'""",(encounter_id,),
@@ -56,6 +58,18 @@ def start_pve_mission(db:psycopg.Connection,*,owner:UUID,city_id:UUID,
         if stack is None or stack[0]<=0 or stack[0]>1000000:
             raise RecruitmentConflict("No usable troop stack assigned to this hero")
         if stack[1] is None:raise RecruitmentConflict("Unverified troop combat profile")
+        unqualified=db.execute(
+            """SELECT a.unit_code FROM hero_army_units a
+               JOIN city_unit_profiles p USING(unit_code)
+               WHERE a.hero_id=%s AND a.quantity>0
+                 AND (p.lab_duel_power IS NULL OR p.lab_duel_power>1000000
+                      OR a.quantity>1000000)
+               LIMIT 1""",(hero_id,),
+        ).fetchone()
+        if unqualified:
+            raise RecruitmentConflict(
+                "A deployed ordinary stack has no qualified combat power/count"
+            )
         policy=db.execute(
             """SELECT p.seconds_per_step,p.policy_id FROM pve_travel_policies p
                JOIN cities c ON c.world_id=p.world_id WHERE c.city_id=%s""",
@@ -69,8 +83,8 @@ def start_pve_mission(db:psycopg.Connection,*,owner:UUID,city_id:UUID,
         seconds=distance*policy[0]
         if seconds>172800:raise RecruitmentConflict("Unsupported journey length")
         # Freeze the preparation at departure; editing is impossible until
-        # return. Only the selected unit code participates in the current
-        # bounded Jactari duel; the remaining slots are documentary.
+        # return. The ordinary positions now participate together in the frozen
+        # V101 sequential preview. Hero bonuses and lasting losses remain excluded.
         prepared=db.execute(
             """SELECT position,unit_code,quantity FROM hero_formation_slots
                WHERE hero_id=%s ORDER BY position""",(hero_id,),
