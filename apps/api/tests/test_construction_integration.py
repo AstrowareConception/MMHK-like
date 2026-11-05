@@ -8,7 +8,7 @@ import psycopg
 import pytest
 from fastapi.testclient import TestClient
 
-from mmhk_api.db import migrate
+from mmhk_api.db import migrate, _MIGRATIONS
 from mmhk_api.main import app
 from mmhk_api.security import create_account
 from mmhk_api.worlds import seed_first_haven_city
@@ -93,8 +93,11 @@ def test_migration_catalog_and_undisclosed_enemy_buildings(city):
         assert migrate(db)==[]
         versions=[r[0] for r in db.execute(
             "SELECT version FROM app_schema_migrations ORDER BY version").fetchall()]
-        # 013 is introduced by the parallel hero formation PR; 014 is market.
-        assert versions==list(range(1,13))+([13] if 13 in versions else [])+[14,15,16,17,18,19,20]
+        # Compare with the actual versioned SQL catalog, including later migrations.
+        expected=sorted(
+            int(file.name[:3]) for file in _MIGRATIONS.glob("[0-9][0-9][0-9]_*.sql")
+        )
+        assert versions==expected
     assert client.get(f"/api/v1/me/cities/{city['city']}/construction").status_code==401
     own=client.get(f"/api/v1/me/cities/{city['city']}/construction",headers=h)
     assert own.status_code==200
