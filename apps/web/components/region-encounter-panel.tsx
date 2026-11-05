@@ -130,15 +130,19 @@ export function RegionEncounterPanel({encounter,forces,cityId,missions}:{
       </div>:<p>{lineReport.sequence.events.length} échanges · Verdict provisoire :
         {lineReport.sequence.verdict==="attacker"?" attaquant":
          lineReport.sequence.verdict==="defender"?" défenseur":" égalité"}</p>}
-      <p role="status">{lineReport.attacker_hero_profile_applied
+      <p role="status">{!lineReport.sequence.combat_started
+        ?"Aucun bonus du héros n'a été appliqué : fuite avant combat."
+        :lineReport.attacker_hero_profile_applied
         ?"Caractéristiques de combat du héros qualifiées : attaque +0,5 % par point."
         :"Caractéristiques de combat du héros non qualifiées : aucun bonus de héros supposé."}
       </p>
-      <p role="status">{lineReport.weapon_classification_complete
+      <p role="status">{!lineReport.sequence.combat_started
+        ?"Les contre-armes ne sont pas utilisées pour décider de la fuite."
+        :lineReport.weapon_classification_complete
         ?"Types d'armes renseignés : les avantages I/R/C sont appliqués à chaque échange."
         :"Classification d'armes incomplète : aucun avantage n'est inventé pour les unités non qualifiées."}
       </p>
-      {lineReport.attacker_conditional_talent_configured&&<p>
+      {lineReport.sequence.combat_started&&lineReport.attacker_conditional_talent_configured&&<p>
         Talent du héros : activé échange par échange uniquement si l'unité
         attaquante possède l'avantage de contre-arme correspondant.
       </p>}
@@ -148,7 +152,10 @@ export function RegionEncounterPanel({encounter,forces,cityId,missions}:{
       </p>}
       <div className="mmhk-pre-shot-phase" data-testid="combat-pre-shot-phase">
         <strong>Phase préalable — avant les duels</strong>
-        {lineReport.sequence.pre_shots.configured?<>
+        {!lineReport.sequence.combat_started
+          ?<p>Fuite avant tout tir : les capacités éventuellement configurées
+            ne se déclenchent pas.</p>
+          :lineReport.sequence.pre_shots.configured?<>
           <p>Les tirs des deux camps sont calculés sur les effectifs initiaux,
             puis appliqués ensemble avant les échanges ordinaires.</p>
           <ol>
