@@ -487,3 +487,49 @@ def test_v102_cannot_edit_or_delete_committed_ledger(city):
         with psycopg.connect(URL) as db:
             with pytest.raises(psycopg.errors.CheckViolation):
                 db.execute(query,(mid,))
+
+
+
+def test_v102_rolls_back_arrival_on_tampered_assigned_stock(city):
+    """No partial ledger, report, or arrived event when troops were altered."""
+    import pytest
+    hero,unit,encounter=_setup(city)
+    _enable_v102_lab(city["world"],hero)
+    with psycopg.connect(URL) as db:
+        db.execute("UPDATE city_unit_profiles SET combat_weapon_code='I', "
+                   "combat_weapon_source_ref='TEST-ROLLBACK-V102' "
+                   "WHERE unit_code=%s",(unit,))
+        db.execute("UPDATE region_encounters SET combat_weapon_code='I', "
+                   "combat_weapon_source_ref='TEST-ROLLBACK-V102' "
+                   "WHERE encounter_id=%s",(encounter,))
+    root=f"/api/v1/me/cities/{city['city']}"
+    mid=str(uuid4())
+    created=client.post(root+"/missions",headers=headers(city["username"]),json={
+        "mission_id":mid,"hero_id":str(hero),"encounter_id":str(encounter),
+        "unit_code":unit,
+    })
+    assert created.status_code==201,created.text
+    arrival=datetime.fromisoformat(created.json()["arrival_due_at"])
+    with psycopg.connect(URL) as db:
+        db.execute("UPDATE hero_army_units SET quantity=7 "
+                   "WHERE hero_id=%s AND unit_code=%s",(hero,unit))
+    with psycopg.connect(URL,autocommit=True) as db:
+        with pytest.raises(ValueError,match="stock differs"):
+            advance_pve_missions(db,now_at=arrival)
+    with psycopg.connect(URL) as db:
+        assert db.execute("SELECT stage,duel_report FROM pve_missions "
+                          "WHERE mission_id=%s",(mid,)).fetchone()==("outbound",None)
+        assert db.execute("SELECT count(*) FROM pve_lab_casualty_settlements "
+                          "WHERE mission_id=%s",(mid,)).fetchone()[0]==0
+        assert db.execute("SELECT phase FROM pve_mission_events "
+                          "WHERE mission_id=%s",(mid,)).fetchall()==[("departed",)]
+        # Restore the exact inventory to permit the previously frozen order.
+        db.execute("UPDATE hero_army_units SET quantity=8 "
+                   "WHERE hero_id=%s AND unit_code=%s",(hero,unit))
+    with psycopg.connect(URL,autocommit=True) as db:
+        assert advance_pve_missions(db,now_at=arrival)==[
+            {"mission_id":mid,"phase":"arrived"}]
+        assert advance_pve_missions(db,now_at=arrival)==[]
+    with psycopg.connect(URL) as db:
+        assert db.execute("SELECT count(*) FROM pve_lab_casualty_settlements "
+                          "WHERE mission_id=%s",(mid,)).fetchone()[0]==1
