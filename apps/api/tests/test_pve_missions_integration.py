@@ -191,3 +191,15 @@ def test_v100_departure_snapshot_survives_encounter_changes_and_replay(city):
             (payload["mission_id"],),
         ).fetchall()
         assert events.count(("arrived",))==1
+
+    # A replay, edit or changed formation cannot modify an already
+    # confirmed report or attacker input. SQL enforces this for ALL writers.
+    import pytest
+    for statement in (
+        "UPDATE pve_missions SET stack_count=stack_count+1 WHERE mission_id=%s",
+        "UPDATE pve_missions SET duel_report='{}'::jsonb WHERE mission_id=%s",
+        "UPDATE pve_missions SET stage='outbound' WHERE mission_id=%s",
+    ):
+        with psycopg.connect(URL) as db:
+            with pytest.raises(psycopg.errors.CheckViolation):
+                db.execute(statement,(payload["mission_id"],))
