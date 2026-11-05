@@ -194,6 +194,22 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
   **US-COM-002 reste non acceptée.**
 
 
+### Contrôle de cohérence V100 — à recetter
+
+- Une mission engagée conserve désormais l'instantané défensif de
+  la rencontre **au départ**, figé dans la transaction PostgreSQL ;
+  une modification de la cible durant le voyage n'altère pas le combat.
+- Les attributs du héros attaquant, la formation, l'identité de
+  mission et le rapport enregistré restent protégés contre les
+  modifications rétroactives.
+- Un échec sur un instantané corrompu est explicite, sans substitution
+  par les informations actuellement disponibles.
+- Cette preuve répond partiellement aux enjeux de reprise CA03/04
+  mais n'implémente ni le règlement des morts, ni l'XP, ni
+  la libération des cases. Les cinq CA et la DoD ne sont pas validés.
+- [Dossier V100 et matrice de recette](../QUALITE-PVE-INSTANTANES-V100-2026-11-05.md).
+
+
 ---
 
 <a id="us-com-003"></a>
@@ -1052,6 +1068,20 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
   Les cinq CA et la DoD restent **non acceptés**.
 
 
+### Contrôle des entrées de fuite V100 — à recetter
+
+- L'admission `r <= 1/7` est calculée sur l'instantané
+  de l'adversaire figé au départ, et non sur un nouveau
+  effectif chargé à l'arrivée.
+- Les ordres antérieurs à V100 conservent leur comportement
+  historique **explicitement étiqueté comme non figé**.
+- Scénarios écrits : modification d'effectif pendant le trajet,
+  fuite/non-fuite, corruption refusée, rejeu et retour.
+- L'acceptation US-COM-011 reste suspendue à la recette intégrée
+  et à la qualification des conséquences historiques.
+- [Garantie et tests V100](../QUALITE-PVE-INSTANTANES-V100-2026-11-05.md).
+
+
 ---
 
 <a id="us-com-012"></a>
@@ -1537,6 +1567,20 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 - [ ] Le cas frontière est vérifié : **catalogue mis à jour → ancien rapport non recalculé**.
 - [ ] Les décisions de la Conversation et les preuves de fidélité sont reliées à cette fiche ; les variantes volontaires sont signalées.
 - [ ] La revue et l’acceptation fonctionnelle sont enregistrées ; aucune case ci-dessus n’est considérée cochée par la rédaction du backlog.
+
+### Reproductibilité des rapports V100 — à recetter
+
+- Le rapport de mission enregistre désormais les entrées effectives
+  du duel ou de la fuite (`engagement_inputs`) et leur provenance.
+- Le rapport n'est plus modifiable une fois inscrit,
+  y compris lorsque les unités de la rencontre ou les prix
+  du catalogue évoluent ultérieurement.
+- Les anciens rapports et missions sans instantané de départ
+  ne sont pas réinterprétés rétroactivement.
+- Ce verrou ne complète pas les tours, sorts et effets persistants
+  exigés par US-COM-017 ; les CA et la DoD restent ouverts.
+- [Recette technique V100](../QUALITE-PVE-INSTANTANES-V100-2026-11-05.md).
+
 
 ---
 
