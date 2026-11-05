@@ -6,6 +6,7 @@ on:
     branches: [main]
     paths:
       - 'apps/api/src/mmhk_api/pve_*.py'
+      - 'apps/api/src/mmhk_api/manage.py'
       - 'apps/api/src/mmhk_api/sql/10[0-9]_*.sql'
       - 'apps/api/tests/test_pve_*.py'
       - 'apps/web/**'
@@ -58,17 +59,21 @@ jobs:
             apps/api/src/mmhk_api/pve_encounter_snapshot.py \
             apps/api/src/mmhk_api/pve_ordinary_line_snapshot.py \
             apps/api/src/mmhk_api/pve_missions.py \
+            apps/api/src/mmhk_api/pve_lab_settlement.py \
+            apps/api/src/mmhk_api/manage.py \
             apps/api/tests/test_pve_encounter_snapshot.py \
             apps/api/tests/test_pve_ordinary_line_snapshot.py \
             apps/api/tests/test_pve_mission_flight.py \
+            apps/api/tests/test_pve_lab_settlement.py \
             apps/api/tests/test_pve_missions_integration.py \
             tools/e2e/local_browser.py
-      - name: Apply actual PostgreSQL migrations, including V100
+      - name: Apply actual PostgreSQL migrations, including V102
         run: python -m mmhk_api.manage migrate
       - name: Test frozen opponents, legacy missions, and API worker replay
         run: |
           python -m pytest -q \
             apps/api/tests/test_pve_encounter_snapshot.py \
+            apps/api/tests/test_pve_lab_settlement.py \
             apps/api/tests/test_pve_mission_flight.py \
             apps/api/tests/test_pve_missions_integration.py
       - name: Verify full Python regression suite
