@@ -49,14 +49,14 @@ def test_full_line_validation_preserves_slots_and_honest_unknowns():
 @pytest.mark.parametrize("field,value", [
     ("count", 0), ("count", True), ("count", 1_000_001),
     ("unit_power", 0), ("unit_power", float("inf")),
-    ("position", 9), ("weapon_code", "X"),
+    ("position", 9), ("weapon_code", "X"), ("weapon_code", []),
     ("weapon_source_ref", None),
     ("profile_policy_id", "x"),
 ])
 def test_invalid_attacker_snapshot_rejected(field, value):
     damaged = line()
     damaged["attacker"][0][field] = value
-    with pytest.raises(ValueError, match="frozen ordinary line"):
+    with pytest.raises(ValueError, match="(?i)frozen ordinary line"):
         validate_ordinary_line_snapshot(damaged, original())
 
 def test_reject_out_of_order_duplicate_or_too_many_slots():
