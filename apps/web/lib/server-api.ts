@@ -332,6 +332,17 @@ export type PveLabAttackerSettlement={
     simulated_remaining:number;dispersed:number;permanent_deaths:number;
     conversion_policy_id:string}[];
 };
+export type LabMineUnlock={
+  resource:"gold"|"wood"|"ore"|"crystal"|"gems"|"sulfur"|"mercury";
+  deposit_slot:number;i:number;j:number;
+  state:"guarded"|"ready"|"active";
+  source_ref:string;base_units_per_day:string;
+  activated_at:string|null;activated_order_id:string|null;
+};
+export type LabMineUnlocksResponse={
+  city_id:string;historically_certified:false;
+  scope:"LAB-QUALIFIED-NATURAL-MINES-V1";mines:LabMineUnlock[];
+};
 export type PveLabNeutralResolution={
   status:"resolved"|"pre_v103_not_applicable"|"policy_disabled"|
     "neutral_profile_unqualified"|"attacker_settlement_not_qualified"|
