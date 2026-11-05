@@ -86,13 +86,16 @@ export function RegionMissionsPanel({missions,onExplore}:{missions:PveMissionsRe
       <Link className="mission-report-link" href={"/cities/"+missions.city_id+
         "/missions/"+m.mission_id}>Voir le rapport et le trajet</Link>
       {m.duel_report&&<small>
-        Rapport Jactari enregistré à l’arrivée (simulation mono-peloton, sans pertes ni butin).
-        {m.duel_report.interpretation&&<> Verdict théorique : {
-          m.duel_report.interpretation.verdict==="attacker"?"attaquant":
-          m.duel_report.interpretation.verdict==="defender"?"défenseur":
-          m.duel_report.interpretation.verdict==="draw"?"égalité":"indéterminé"}. </>}
-        Attaque {m.duel_report.outcome?.totalPower.attacker} ·
-        Défense {m.duel_report.outcome?.totalPower.defender}.
+        {m.duel_report.fled_before_combat
+          ?"Fuite PvE confirmée à l'arrivée : la puissance brute était au maximum de 1/7 de la défense. Aucun duel ni perte n'a été simulé."
+          :<>Rapport Jactari enregistré à l’arrivée (simulation mono-peloton, sans pertes ni butin).
+            {m.duel_report.interpretation&&<> Verdict théorique : {
+              m.duel_report.interpretation.verdict==="attacker"?"attaquant":
+              m.duel_report.interpretation.verdict==="defender"?"défenseur":
+              m.duel_report.interpretation.verdict==="draw"?"égalité":"indéterminé"}. </>}
+            Attaque {m.duel_report.outcome?.totalPower.attacker} ·
+            Défense {m.duel_report.outcome?.totalPower.defender}.
+          </>}
       </small>}
     </article>)}
     {!active.length&&<div className="mmhk-region-missions-empty">
