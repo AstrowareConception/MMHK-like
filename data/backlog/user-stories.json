@@ -10609,6 +10609,15 @@
         "clock": "horloge du monde",
         "historicalOracle": "a_qualifier",
         "execution": "non_executee"
+      },
+      "implementationLab": {
+        "status": "terminee_techniquement_lab",
+        "profile": "LAB-V106-2026-11-05",
+        "verifiedAt": "2026-11-05",
+        "summary": "V106 : la mine V104 activée reçoit un niveau G11 explicitement qualifié, un héros constructeur admissible, un coût et une échéance. Le débit est unique ; le vieux rendement subsiste pendant les travaux et le nouveau ne s'applique qu'après réconciliation des ticks.",
+        "technicalEvidence": "PR #78 ; apps/api/tests/test_lab_mine_upgrades.py ; apps/api/src/mmhk_api/mine_upgrades.py ; docs/backlog/QUALITE-MINES-NIVEAUX-V106-2026-11-05.md",
+        "notYetAccepted": "Niveaux réels historiques, prérequis du héros S2, modes rapide/économique, extensions et règles de cumul ; réception des cinq CA et DoD du backlog classique.",
+        "historicalAcceptance": false
       }
     },
     {
