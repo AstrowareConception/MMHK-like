@@ -1,6 +1,7 @@
 """US-COM-011: timed PvE worker records one flight report, never a duel."""
 from contextlib import nullcontext
 from datetime import UTC,datetime,timedelta
+from decimal import Decimal
 from uuid import uuid4
 
 import pytest
@@ -139,7 +140,7 @@ def test_frozen_encounter_ignores_later_live_strength_changes():
     assert db.report["fled_before_combat"] is False
     assert db.report["engagement_inputs"]["source_status"]=="frozen_at_departure"
     assert db.report["engagement_inputs"]["defender"]["unit_count"]==40
-    assert db.report["admission"]["defender_raw_power"]=="400"
+    assert Decimal(db.report["admission"]["defender_raw_power"])==Decimal("400")
     assert not any("SELECT unit_count,unit_power FROM region_encounters" in q
                    for q in db.queries)
     assert advance_pve_missions(db,max_orders=1,now_at=now)==[]
