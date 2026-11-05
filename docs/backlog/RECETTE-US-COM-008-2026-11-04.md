@@ -107,3 +107,20 @@ Ce travail enrichit les CA01–CA03 candidats d'US-COM-008,
 mais les autres phases Jactari et tous les effets persistants
 restent absents. **US-COM-008 n'est pas acceptée.**
 Voir [recette US-COM-005](RECETTE-US-COM-005-2026-11-04.md).
+
+## Extension du 5 novembre — tirs préalables US-COM-007
+
+Le laboratoire peut recevoir un profil de tirs préalables
+explicitement qualifié. Les effets sont calculés sur les
+effectifs intacts des deux camps avant d'être appliqués
+simultanément aux pelotons, puis l'enchaînement US-COM-008
+démarre avec leurs effectifs restants.
+
+Une ligne neutralisée avant duel est ignorée. Le résultat
+d'une bataille sans profil reste inchangé. Aucun ordre serveur,
+mort définitive, XP ou capture ne découle de ces calculs.
+
+Tests candidats :
+`test_pve_pre_shots.py` et `test_pve_stack_preview.py`.
+Les cinq critères d'US-COM-008 et la DoD restent non validés.
+Voir [US-COM-007](RECETTE-US-COM-007-2026-11-05.md).
