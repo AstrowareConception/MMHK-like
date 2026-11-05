@@ -13,6 +13,7 @@ import psycopg
 from psycopg.types.json import Jsonb
 from jactari.duel import resolve_stack_duel
 from .pve_report_interpretation import interpret_duel
+from .pve_admission import evaluate_pve_admission
 from .forces import _owned_city, RecruitmentNotFound, RecruitmentConflict
 
 def start_pve_mission(db:psycopg.Connection,*,owner:UUID,city_id:UUID,
@@ -169,14 +170,29 @@ def advance_pve_missions(db:psycopg.Connection,*,max_orders:int=25,
                        WHERE encounter_id=%s""",(eid,),
                 ).fetchone()
                 if enemy is None:raise RuntimeError("Mission encounter missing")
-                outcome=resolve_stack_duel({
-                    "attacker":{"count":count,"unitPower":float(power)},
-                    "defender":{"count":enemy[0],"unitPower":float(enemy[1])},
-                    "modifiers":{}
-                })
-                report={"scope":"LAB-SINGLE-STACK","preview_only":True,
-                        "outcome":outcome,"interpretation":interpret_duel(outcome),
-                        "no_losses_applied":True,"no_rewards":True}
+                # US-COM-011: evaluate original, unmodified army power
+                # before the duel. A flight still starts the return leg,
+                # but no battle is fabricated and no unit is modified.
+                admission=evaluate_pve_admission(
+                    [{"count":count,"unit_power":float(power)}],
+                    [{"count":enemy[0],"unit_power":float(enemy[1])}],
+                )
+                if admission["fled"]:
+                    report={"scope":"LAB-SINGLE-STACK","preview_only":True,
+                            "admission":admission,"fled_before_combat":True,
+                            "outcome":None,"interpretation":None,
+                            "no_losses_applied":True,"no_rewards":True}
+                else:
+                    outcome=resolve_stack_duel({
+                        "attacker":{"count":count,"unitPower":float(power)},
+                        "defender":{"count":enemy[0],"unitPower":float(enemy[1])},
+                        "modifiers":{}
+                    })
+                    report={"scope":"LAB-SINGLE-STACK","preview_only":True,
+                            "admission":admission,"fled_before_combat":False,
+                            "outcome":outcome,
+                            "interpretation":interpret_duel(outcome),
+                            "no_losses_applied":True,"no_rewards":True}
                 # Late workers do not consume part of the return leg.
                 # Return duration begins with the confirmed arrival timestamp.
                 confirmed_return=now+timedelta(seconds=travel_seconds)
