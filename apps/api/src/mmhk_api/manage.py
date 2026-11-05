@@ -23,6 +23,7 @@ from .region_integrity import audit_world_regions
 from .weapon_qualification import qualify_unit_weapon,qualify_encounter_weapon
 from .hero_combat_qualification import qualify_hero_basic_combat
 from .conditional_talent_qualification import qualify_conditional_counter_talent
+from .pre_shot_qualification import qualify_pre_shot_profile
 
 
 def main() -> None:
@@ -127,12 +128,27 @@ def main() -> None:
     hero_talent.add_argument("--hero-id",type=UUID,required=True)
     hero_talent.add_argument("--bonus",type=Decimal,required=True)
     hero_talent.add_argument("--source-ref",required=True)
+    pre_shots=sub.add_parser(
+        "qualify-pre-shots",
+        help="Operator-only Jactari pre-shot laboratory capability profile",
+    )
+    pre_shots.add_argument("--hero-id",type=UUID,required=True)
+    pre_shots.add_argument("--barrage-percent",type=Decimal,default=Decimal("0"))
+    pre_shots.add_argument("--ballista-percent",type=Decimal,default=Decimal("0"))
+    pre_shots.add_argument("--source-ref",required=True)
     args = parser.parse_args()
 
     with connect() as db:
         if args.command == "migrate":
             applied = migrate(db)
             print("Applied schema revisions:", applied or "already current")
+        elif args.command == "qualify-pre-shots":
+            print(json.dumps(qualify_pre_shot_profile(
+                db,hero_id=args.hero_id,
+                barrage_percent=args.barrage_percent,
+                ballista_percent=args.ballista_percent,
+                source_ref=args.source_ref,
+            ),ensure_ascii=False))
         elif args.command == "qualify-counter-talent":
             print(json.dumps(qualify_conditional_counter_talent(
                 db,hero_id=args.hero_id,
