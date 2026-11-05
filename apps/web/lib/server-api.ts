@@ -332,6 +332,22 @@ export type PveLabAttackerSettlement={
     simulated_remaining:number;dispersed:number;permanent_deaths:number;
     conversion_policy_id:string}[];
 };
+export type PveLabNeutralResolution={
+  status:"resolved"|"pre_v103_not_applicable"|"policy_disabled"|
+    "neutral_profile_unqualified"|"attacker_settlement_not_qualified"|
+    "flight_no_resolution"|"neutral_defended"|
+    "draw_or_unknown_outcome"|"weapon_classification_incomplete"|
+    "pre_shots_not_qualified"|"special_ending_not_qualified";
+  policy_id:string;policy_source_ref:string|null;
+  profile_source_ref:string|null;neutral_deaths:number;
+  encounter_resolved:boolean;mine_activated:false;
+  loot_awarded:false;experience_awarded:false;territory_captured:false;
+  historically_certified_s2:false;
+  neutral_casualties?:{
+    initial:number;permanent_deaths:number;survivors:number;
+    policy_id:string;source_branch:string;historically_certified_s2:false
+  };
+};
 export type PveEngagementInputs={
   source_status:"frozen_at_departure"|"legacy_live_at_arrival";
   combat_scope:"LAB-SINGLE-STACK-V1"|"LAB-ORDINARY-STACK-SEQUENCE-V1";
@@ -353,6 +369,7 @@ export type PveMission={
     admission?:PveAdmission;fled_before_combat?:boolean;
     line_outcome?:PveLaboratoryLineOutcome;
     settlement?:PveLabAttackerSettlement;
+    neutral_resolution?:PveLabNeutralResolution;
     outcome:{
       totalPower:{attacker:number;defender:number};remaining:{attacker:number;defender:number}
     }|null;interpretation?:PveInterpretation|null}|null;

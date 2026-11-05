@@ -533,3 +533,203 @@ def test_v102_rolls_back_arrival_on_tampered_assigned_stock(city):
     with psycopg.connect(URL) as db:
         assert db.execute("SELECT count(*) FROM pve_lab_casualty_settlements "
                           "WHERE mission_id=%s",(mid,)).fetchone()[0]==1
+
+
+
+def _qualify_v103_neutral(world, hero, unit, encounter):
+    from mmhk_api.pve_neutral_resolution import (
+        qualify_lab_neutral_defender, configure_lab_neutral_resolution,
+    )
+    _enable_v102_lab(world,hero)
+    with psycopg.connect(URL) as db:
+        db.execute("""UPDATE city_unit_profiles SET
+            combat_weapon_code='I',combat_weapon_source_ref='TEST-NPC-V103'
+            WHERE unit_code=%s""",(unit,))
+        db.execute("""UPDATE region_encounters SET
+            combat_weapon_code='I',combat_weapon_source_ref='TEST-NPC-V103'
+            WHERE encounter_id=%s""",(encounter,))
+        qualified=qualify_lab_neutral_defender(
+            db,encounter_id=encounter,source_ref="LAB-NO-HERO-NO-ATTRITION-V103",
+        )
+        assert qualified["no_hero_confirmed"] is True
+        state=configure_lab_neutral_resolution(
+            db,world_id=world,enabled=True,source_ref="LAB-NEUTRAL-V103",
+        )
+        assert state["enabled_for_future_missions_only"] is True
+
+
+def test_v103_qualified_victory_resolves_neutral_once_without_mine_or_xp(city):
+    hero,unit,encounter=_setup(city)
+    _qualify_v103_neutral(city["world"],hero,unit,encounter)
+    root=f"/api/v1/me/cities/{city['city']}"
+    own=headers(city["username"]);foreign=headers(city["enemyname"])
+    mid=str(uuid4())
+    payload={"mission_id":mid,"hero_id":str(hero),
+             "encounter_id":str(encounter),"unit_code":unit}
+    created=client.post(root+"/missions",headers=own,json=payload)
+    assert created.status_code==201,created.text
+    with psycopg.connect(URL) as db:
+        frozen=db.execute(
+            "SELECT neutral_resolution_snapshot FROM pve_missions "
+            "WHERE mission_id=%s",(mid,),
+        ).fetchone()[0]
+        assert frozen["enabled"] and frozen["no_hero_verified"]
+        assert frozen["no_attrition_verified"]
+        # A changed policy must not cancel an already authorized neutral order.
+        db.execute("UPDATE pve_lab_neutral_resolution_policies "
+                   "SET enabled=false WHERE world_id=%s",(city["world"],))
+    arrival=datetime.fromisoformat(created.json()["arrival_due_at"])
+    with psycopg.connect(URL,autocommit=True) as db:
+        assert advance_pve_missions(db,now_at=arrival)==[
+            {"mission_id":mid,"phase":"arrived"}]
+        assert advance_pve_missions(db,now_at=arrival)==[]
+    report=client.get(root+"/missions/"+mid+"/report",headers=own)
+    assert report.status_code==200,report.text
+    assert client.get(root+"/missions/"+mid+"/report",headers=foreign).status_code==404
+    report=report.json()["duel_report"]
+    assert report["line_outcome"]["verdict"]=="attacker"
+    assert report["neutral_resolution"]["status"]=="resolved"
+    assert report["neutral_resolution"]["neutral_deaths"]==4
+    assert report["neutral_resolution"]["encounter_resolved"] is True
+    assert report["neutral_resolution"]["mine_activated"] is False
+    assert report["neutral_resolution"]["experience_awarded"] is False
+    assert report["neutral_resolution"]["loot_awarded"] is False
+    assert report["settlement"]["status"]=="applied"
+    with psycopg.connect(URL) as db:
+        assert db.execute("SELECT resolved,unit_count FROM region_encounters "
+                          "WHERE encounter_id=%s",(encounter,)).fetchone()==(True,4)
+        row=db.execute(
+            "SELECT neutral_deaths,original_count FROM pve_lab_neutral_resolutions "
+            "WHERE mission_id=%s",(mid,),
+        ).fetchone()
+        assert row==(4,4)
+        assert db.execute("SELECT count(*) FROM pve_lab_neutral_resolutions "
+                          "WHERE encounter_id=%s",(encounter,)).fetchone()[0]==1
+        assert db.execute("SELECT experience FROM city_heroes WHERE hero_id=%s",
+                          (hero,)).fetchone()[0]==0
+        old=db.execute("SELECT quantity FROM hero_army_units WHERE hero_id=%s "
+                       "AND unit_code=%s",(hero,unit)).fetchone()[0]
+        assert old==8-report["settlement"]["total_deaths"]
+    # There can never be a second attack on a neutral already cleared.
+    replay=client.post(root+"/missions",headers=own,json={
+        **payload,"mission_id":str(uuid4()),
+    })
+    assert replay.status_code==409
+    returning=datetime.fromisoformat(
+        client.get(root+"/missions/"+mid+"/report",headers=own).json()["return_due_at"]
+    )
+    with psycopg.connect(URL,autocommit=True) as db:
+        assert advance_pve_missions(db,now_at=returning)==[
+            {"mission_id":mid,"phase":"returned"}]
+        assert advance_pve_missions(db,now_at=returning)==[]
+    with psycopg.connect(URL) as db:
+        assert db.execute("SELECT count(*) FROM pve_lab_neutral_resolutions "
+                          "WHERE encounter_id=%s",(encounter,)).fetchone()[0]==1
+        assert db.execute("SELECT quantity FROM hero_army_units WHERE hero_id=%s "
+                          "AND unit_code=%s",(hero,unit)).fetchone()[0]==old
+    # Once the hero has returned, the old encounter must still be blocked:
+    # a 409 while the hero is busy alone would not prove neutral liberation.
+    second=client.post(root+"/missions",headers=own,json={
+        **payload,"mission_id":str(uuid4()),
+    })
+    assert second.status_code==404,second.text
+
+
+def test_v103_neutral_mutation_after_dispatch_rolls_back_both_settlements(city):
+    import pytest
+    hero,unit,encounter=_setup(city)
+    _qualify_v103_neutral(city["world"],hero,unit,encounter)
+    root=f"/api/v1/me/cities/{city['city']}"
+    mid=str(uuid4())
+    created=client.post(root+"/missions",headers=headers(city["username"]),json={
+        "mission_id":mid,"hero_id":str(hero),
+        "encounter_id":str(encounter),"unit_code":unit,
+    })
+    assert created.status_code==201,created.text
+    with psycopg.connect(URL) as db:
+        db.execute("UPDATE region_encounters SET unit_count=5 "
+                   "WHERE encounter_id=%s",(encounter,))
+    arrival=datetime.fromisoformat(created.json()["arrival_due_at"])
+    with psycopg.connect(URL,autocommit=True) as db:
+        with pytest.raises(ValueError,match="changed after frozen"):
+            advance_pve_missions(db,now_at=arrival)
+    with psycopg.connect(URL) as db:
+        assert db.execute("SELECT stage,duel_report FROM pve_missions "
+                          "WHERE mission_id=%s",(mid,)).fetchone()==("outbound",None)
+        assert db.execute("SELECT count(*) FROM pve_lab_casualty_settlements "
+                          "WHERE mission_id=%s",(mid,)).fetchone()[0]==0
+        assert db.execute("SELECT count(*) FROM pve_lab_neutral_resolutions "
+                          "WHERE mission_id=%s",(mid,)).fetchone()[0]==0
+        assert db.execute("SELECT quantity FROM hero_army_units "
+                          "WHERE hero_id=%s AND unit_code=%s",(hero,unit)).fetchone()[0]==8
+        assert db.execute("SELECT resolved FROM region_encounters "
+                          "WHERE encounter_id=%s",(encounter,)).fetchone()[0] is False
+        db.execute("UPDATE region_encounters SET unit_count=4 "
+                   "WHERE encounter_id=%s",(encounter,))
+    with psycopg.connect(URL,autocommit=True) as db:
+        assert advance_pve_missions(db,now_at=arrival)==[
+            {"mission_id":mid,"phase":"arrived"}]
+
+
+def test_v103_requires_both_explicit_operator_policies(city):
+    import pytest
+    hero,unit,encounter=_setup(city)
+    # Do not enable neutral clearance before a verified LAB world and V102.
+    with psycopg.connect(URL) as db:
+        with pytest.raises(psycopg.errors.CheckViolation):
+            db.execute("""INSERT INTO pve_lab_neutral_resolution_policies(
+                world_id,enabled,source_ref) VALUES(%s,true,'LAB-V103-DENY')""",
+                (city["world"],))
+    # Enabling V102 alone never turns on V103.
+    _enable_v102_lab(city["world"],hero)
+    with psycopg.connect(URL) as db:
+        db.execute("UPDATE city_unit_profiles SET combat_weapon_code='I',"
+                   "combat_weapon_source_ref='TEST-V103' WHERE unit_code=%s",(unit,))
+        db.execute("UPDATE region_encounters SET combat_weapon_code='I',"
+                   "combat_weapon_source_ref='TEST-V103' WHERE encounter_id=%s",(encounter,))
+    root=f"/api/v1/me/cities/{city['city']}"
+    mid=str(uuid4())
+    created=client.post(root+"/missions",headers=headers(city["username"]),json={
+        "mission_id":mid,"hero_id":str(hero),
+        "encounter_id":str(encounter),"unit_code":unit,
+    })
+    assert created.status_code==201,created.text
+    with psycopg.connect(URL,autocommit=True) as db:
+        advance_pve_missions(db,now_at=datetime.fromisoformat(
+            created.json()["arrival_due_at"]))
+    report=client.get(root+"/missions/"+mid+"/report",
+                      headers=headers(city["username"])).json()["duel_report"]
+    assert report["neutral_resolution"]["status"]=="policy_disabled"
+    assert report["neutral_resolution"]["encounter_resolved"] is False
+    with psycopg.connect(URL) as db:
+        assert db.execute("SELECT resolved FROM region_encounters WHERE encounter_id=%s",
+                          (encounter,)).fetchone()[0] is False
+
+
+def test_v103_prevents_resurrection_and_ledger_rewriting(city):
+    import pytest
+    hero,unit,encounter=_setup(city)
+    _qualify_v103_neutral(city["world"],hero,unit,encounter)
+    root=f"/api/v1/me/cities/{city['city']}"
+    mid=str(uuid4())
+    created=client.post(root+"/missions",headers=headers(city["username"]),json={
+        "mission_id":mid,"hero_id":str(hero),
+        "encounter_id":str(encounter),"unit_code":unit,
+    })
+    assert created.status_code==201,created.text
+    with psycopg.connect(URL,autocommit=True) as db:
+        advance_pve_missions(db,now_at=datetime.fromisoformat(
+            created.json()["arrival_due_at"]))
+    for stmt,args in (
+        ("UPDATE region_encounters SET resolved=false WHERE encounter_id=%s",
+         (encounter,)),
+        ("UPDATE pve_lab_neutral_resolutions SET neutral_deaths=1 WHERE mission_id=%s",
+         (mid,)),
+        ("DELETE FROM pve_lab_neutral_resolutions WHERE mission_id=%s",
+         (mid,)),
+        ("UPDATE pve_missions SET neutral_resolution_snapshot=NULL WHERE mission_id=%s",
+         (mid,)),
+    ):
+        with psycopg.connect(URL) as db:
+            with pytest.raises(psycopg.errors.CheckViolation):
+                db.execute(stmt,args)
