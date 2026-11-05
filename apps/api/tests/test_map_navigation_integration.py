@@ -92,7 +92,7 @@ def test_region_has_exactly_25_unmapped_cells_and_center_owned_city(map_fixture)
     assert len(region["cells"])==25
     assert len({(v["i"],v["j"]) for v in region["cells"]})==25
     center=[v for v in region["cells"] if v["kind"]=="owned_city"]
-    assert center==[{"i":2,"j":2,"kind":"owned_city","city_id":f["city"]}]
+    assert center==[{"i":2,"j":2,"kind":"owned_city","resource":None,"city_id":f["city"]}]
     assert all(c["city_id"] is None for c in region["cells"] if c["kind"]=="unmapped")
     assert set(region["mine_types_unlocated"])=={"gold","wood","ore","crystal"}
     assert region["mine_positions_known"] is False
