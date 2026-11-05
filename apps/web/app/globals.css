@@ -4850,3 +4850,15 @@ body:has(.mmhk-entry-panel) .masthead h1{
 .mmhk-regional-line-events li small{display:block;margin:2px 0}
 .mmhk-regional-line-events li small{font-size:11px;color:#bfc9bb}
 .encounter-preview-controls button{min-height:38px}
+
+/* US-COM-007 — distinguish simultaneous pre-duel shots from stack exchanges. */
+.mmhk-pre-shot-phase{margin:12px 0 16px;padding:13px 15px;
+  border:1px solid #b69a60;background:linear-gradient(145deg,#3c3930,#24393c);
+  color:#f2ddb5;box-shadow:inset 0 1px #ffffff19}
+.mmhk-pre-shot-phase>strong{display:block;font:700 15px Georgia,serif;color:#ffdfa4}
+.mmhk-pre-shot-phase p{margin:9px 0;font-size:12px;line-height:1.55;color:#e0d4bc}
+.mmhk-pre-shot-phase ol{margin:9px 0 10px;padding-left:20px;display:grid;gap:6px}
+.mmhk-pre-shot-phase li{font-size:12px;line-height:1.5;color:#f1d8a4}
+.mmhk-pre-shot-phase li strong{font-size:12px}
+.mmhk-pre-shot-phase small{display:block;font:11px/1.55 system-ui,sans-serif;
+  color:#b9c3b8}
