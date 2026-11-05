@@ -8,7 +8,7 @@ from mmhk_api.region_pve import preview_ordinary_line_sequence
 
 
 class FakeDB:
-    def __init__(self, *, own=True, hero="idle", formation=None, profile=None, talent=None, pre_shots=None):
+    def __init__(self, *, own=True, hero="idle", formation=None, profile=None, talent=None, pre_shots=None, enemy_count=3):
         self.city=uuid4()
         self.hero=uuid4()
         self.encounter=uuid4()
@@ -18,6 +18,7 @@ class FakeDB:
         self.profile=profile
         self.talent=talent
         self.pre_shots=pre_shots
+        self.enemy_count=enemy_count
         self.formation=formation if formation is not None else [
             ("militia",12,20,"I"),("archers",5,12,"R")
         ]
@@ -29,7 +30,7 @@ class FakeDB:
         if "SELECT c.city_id FROM cities c" in normalized:
             self.rows=[(self.city,)] if self.own else []
         elif "SELECT name,unit_code,unit_count,unit_power" in normalized:
-            self.rows=[("Wolves","wolves",3,10,"C")] if self.own else []
+            self.rows=[("Wolves","wolves",self.enemy_count,10,"C")] if self.own else []
         elif "SELECT name,status FROM city_heroes" in normalized:
             self.rows=[("Hero",self.hero_state)] if self.own else []
         elif "FROM hero_formation_slots s" in normalized:
@@ -160,3 +161,21 @@ def test_no_pre_shot_profile_means_no_automatic_shots():
     result=preview(db)
     assert result["pre_shot_capabilities_configured"] is False
     assert result["sequence"]["pre_shots"]["events"]==[]
+
+
+def test_early_pve_flight_preempts_qualified_hero_bonuses_and_ranged_shots():
+    from decimal import Decimal
+    db=FakeDB(
+        formation=[("archers",1,10,"R")],
+        enemy_count=70,
+        profile=(1000,0,Decimal("0"),Decimal("0"),"LAB-HERO"),
+        pre_shots=(Decimal("100"),Decimal("0"),"LAB-SHOT"),
+    )
+    result=preview(db)
+    assert result["sequence"]["admission"]["fled"] is True
+    assert result["sequence"]["verdict"]=="fled"
+    assert result["sequence"]["combat_started"] is False
+    assert result["sequence"]["events"]==[]
+    assert result["sequence"]["pre_shots"]["events"]==[]
+    assert result["sequence"]["attacker"][0]["remaining"]==1
+    assert all(q.startswith("SELECT") for q,_ in db.queries)
