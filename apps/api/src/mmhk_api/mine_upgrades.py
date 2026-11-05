@@ -232,7 +232,11 @@ def start_lab_mine_upgrade(
                FROM city_lab_mine_levels l
                JOIN city_mine_rates r USING(city_id,resource)
                JOIN city_lab_mine_unlocks g USING(city_id,resource)
-               WHERE l.city_id=%s AND l.resource=%s FOR UPDATE OF l,r,g""",
+               JOIN cities c ON c.city_id=l.city_id
+               JOIN pve_travel_policies t ON t.world_id=c.world_id
+               WHERE l.city_id=%s AND l.resource=%s
+                 AND left(t.policy_id,4)='LAB-' AND NOT t.historically_certified
+               FOR UPDATE OF l,r,g""",
             (city_id,resource),
         ).fetchone()
         if not row or row[2] is None or row[0]>=10:
