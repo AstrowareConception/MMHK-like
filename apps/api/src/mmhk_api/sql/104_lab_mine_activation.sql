@@ -7,7 +7,7 @@ CREATE TABLE city_lab_mine_unlocks (
   resource text NOT NULL CHECK (
     resource IN ('gold','wood','ore','crystal','gems','sulfur','mercury')
   ),
-  encounter_id uuid NOT NULL UNIQUE REFERENCES region_encounters(encounter_id),
+  encounter_id uuid NOT NULL UNIQUE REFERENCES region_encounters(encounter_id) ON DELETE CASCADE,
   deposit_slot smallint NOT NULL CHECK (deposit_slot BETWEEN 0 AND 3),
   source_ref text NOT NULL CHECK (length(source_ref) BETWEEN 3 AND 255),
   enrolled_at timestamptz NOT NULL DEFAULT clock_timestamp(),
@@ -34,8 +34,7 @@ BEGIN
   IF TG_OP='DELETE' THEN
     -- Direct removal while the economic rate exists would bypass the gate.
     -- Parent deletion cascades only after the parent is removed.
-    IF EXISTS (SELECT 1 FROM city_mine_rates r
-               WHERE r.city_id=OLD.city_id AND r.resource=OLD.resource) THEN
+    IF EXISTS (SELECT 1 FROM cities c WHERE c.city_id=OLD.city_id) THEN
       RAISE EXCEPTION 'Qualified LAB mine gate cannot be deleted'
         USING ERRCODE='23514';
     END IF;
