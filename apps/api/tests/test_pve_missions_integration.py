@@ -289,3 +289,36 @@ def test_v101_qualified_full_formation_survives_profile_mutation(city):
         assert db.execute("SELECT quantity FROM hero_army_units "
                           "WHERE hero_id=%s AND unit_code=%s",(hero,unit)
                          ).fetchone()[0]==8
+
+
+def test_v101_refuses_unqualified_secondary_stack_before_mission(city):
+    hero,unit,encounter=_setup(city)
+    extra="unrated_"+uuid4().hex[:12]
+    with psycopg.connect(URL) as db:
+        db.execute("""INSERT INTO city_unit_profiles(
+             unit_code,display_name,dwelling_code,tier,unit_costs,policy_id)
+             VALUES(%s,'Unité sans puissance','recruit_t1',1,%s,'TEST-UNRATED')""",
+             (extra,Jsonb({k:0 for k in (
+                 "gold","wood","ore","crystal","gems","sulfur","mercury"
+             )})))
+        db.execute("INSERT INTO hero_army_units(hero_id,unit_code,quantity) "
+                   "VALUES(%s,%s,2)",(hero,extra))
+    root=f"/api/v1/me/cities/{city['city']}"
+    h=headers(city["username"])
+    saved=client.post(f"{root}/heroes/{hero}/formation",headers=h,json={
+        "order_id":str(uuid4()),
+        "positions":[{"position":1,"unit_code":unit,"quantity":8},
+                     {"position":7,"unit_code":extra,"quantity":2}],
+    })
+    assert saved.status_code==201,saved.text
+    launched=client.post(root+"/missions",headers=h,json={
+        "mission_id":str(uuid4()),"hero_id":str(hero),
+        "encounter_id":str(encounter),"unit_code":unit,
+    })
+    assert launched.status_code==409,launched.text
+    assert "qualified" in launched.text
+    with psycopg.connect(URL) as db:
+        assert db.execute("SELECT status FROM city_heroes WHERE hero_id=%s",
+                          (hero,)).fetchone()[0]=="idle"
+        assert db.execute("SELECT count(*) FROM pve_missions WHERE hero_id=%s",
+                          (hero,)).fetchone()[0]==0
