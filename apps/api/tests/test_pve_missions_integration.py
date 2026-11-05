@@ -136,3 +136,58 @@ def test_late_worker_never_shortens_the_return_leg(city):
         assert advance_pve_missions(db,now_at=adjusted-timedelta(seconds=1))==[]
         assert advance_pve_missions(db,now_at=adjusted)[0]["phase"]=="returned"
     assert client.get(root+"/forces",headers=h).json()["heroes"][0]["status"]=="idle"
+
+
+def test_v100_departure_snapshot_survives_encounter_changes_and_replay(city):
+    """Real PostgreSQL: combat inputs are frozen even when the world changes."""
+    hero,unit,encounter=_setup(city)
+    h=headers(city["username"])
+    root=f"/api/v1/me/cities/{city['city']}"
+    payload={"mission_id":str(uuid4()),"hero_id":str(hero),
+             "encounter_id":str(encounter),"unit_code":unit}
+    started=client.post(root+"/missions",headers=h,json=payload)
+    assert started.status_code==201,started.text
+    arrival=datetime.fromisoformat(started.json()["arrival_due_at"])
+    with psycopg.connect(URL) as db:
+        snapshot=db.execute(
+            "SELECT defender_snapshot FROM pve_missions WHERE mission_id=%s",
+            (payload["mission_id"],),
+        ).fetchone()[0]
+        assert snapshot["policy_id"]=="LAB-PVE-DEFENDER-AT-DEPARTURE-V1"
+        assert snapshot["unit_code"]=="brigands"
+        assert snapshot["unit_count"]==4
+        assert float(snapshot["unit_power"])==1.0
+        assert snapshot["source_ref"]=="TEST-MISSION"
+        # An administrator changes the encounter AFTER the hero departed.
+        db.execute("UPDATE region_encounters SET unit_count=1000,unit_power=99 "
+                   "WHERE encounter_id=%s",(encounter,))
+
+    with psycopg.connect(URL,autocommit=True) as db:
+        arrived=advance_pve_missions(db,now_at=arrival)
+        assert arrived==[{"mission_id":payload["mission_id"],"phase":"arrived"}]
+        assert advance_pve_missions(db,now_at=arrival)==[]
+    report=client.get(root+"/missions/"+payload["mission_id"]+"/report",
+                      headers=h).json()
+    inputs=report["duel_report"]["engagement_inputs"]
+    assert inputs["source_status"]=="frozen_at_departure"
+    assert inputs["defender"]==snapshot
+    assert report["duel_report"]["admission"]["defender_raw_power"]=="4.0"
+    assert report["duel_report"]["fled_before_combat"] is False
+
+    # The snapshot cannot be edited to replay the encounter at a new power.
+    with psycopg.connect(URL) as db:
+        with db.transaction():
+            with __import__("pytest").raises(psycopg.errors.CheckViolation):
+                db.execute(
+                    """UPDATE pve_missions
+                       SET defender_snapshot=jsonb_set(
+                         defender_snapshot,'{unit_count}','100'::jsonb
+                       ) WHERE mission_id=%s""",
+                    (payload["mission_id"],),
+                )
+    with psycopg.connect(URL) as db:
+        events=db.execute(
+            "SELECT phase FROM pve_mission_events WHERE mission_id=%s",
+            (payload["mission_id"],),
+        ).fetchall()
+        assert events.count(("arrived",))==1
