@@ -6,6 +6,13 @@ Chaque fiche contient la formulation « En tant que…, je souhaite… afin de�
 
 **Statut du référentiel d’origine : backlog préparé pour l’affinage.** Lors de sa rédaction, aucune fiche n’était déclarée développée, estimée ou acceptée. Depuis, les composants candidats et leur recette sont suivis séparément ci-dessous : leur présence ne vaut pas validation d’une US. Les 1 500 critères restent la base de l’acceptation ; les preuves historiques disponibles ne certifient pas toutes les valeurs de la saison cible.
 
+## Contrôle CI — 5 novembre 2026
+
+Le [rapport des jobs GitHub Actions et correctifs](CONTROLE-CI-2026-11-05.md)
+distingue les tests réellement exécutés, leurs échecs, les correctifs
+poussés et la revalidation encore nécessaire. Un test écrit ne constitue
+pas une preuve d'exécution ou d'acceptation de l'US.
+
 ## Suivi d'implémentation — 4 novembre 2026
 
 Un [audit transversal des 300 US](ETAT-AVANCEMENT-2026-11-04.md)
