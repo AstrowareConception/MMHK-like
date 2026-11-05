@@ -611,6 +611,31 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 - [ ] Les décisions de la Conversation et les preuves de fidélité sont reliées à cette fiche ; les variantes volontaires sont signalées.
 - [ ] La revue et l’acceptation fonctionnelle sont enregistrées ; aucune case ci-dessus n’est considérée cochée par la rédaction du backlog.
 
+### Suivi d'implémentation (5 novembre 2026 — candidat partiel)
+
+- **Règle documentée :** le client communautaire Jactari traite
+  barrages, balistes et bombardement dans un ordre défini,
+  calcule les contributions sur les effectifs initiaux,
+  puis applique les pertes accumulées avant les duels.
+- **Module :** `apps/api/src/mmhk_api/pve_pre_shots.py`.
+  Simulation déterministe sur instantanés, ordre canonique,
+  effet borné en cas de cumul de tirs sur une même cible.
+- **Intégration :** phase préalable dans le laboratoire multi-pelotons
+  et rapport de reconnaissance régional. Aucune perte réelle,
+  récompense ou libération territoriale n'est appliquée.
+- **Activation :** migration V099 et qualification opérateur avec
+  provenance ; aucune capacité historique inventée pour les héros.
+  Le bombardement est testé par le modèle pur et n'est pas activé
+  contre les rencontres neutres dépourvues de héros défenseur.
+- **Preuves candidates :** `test_pve_pre_shots.py`,
+  `test_pre_shot_qualification.py`, scénarios à deux camps,
+  absence de capacité, premier peloton éliminé.
+- **Acceptation :** les cinq CA et la DoD demeurent non validés ;
+  les pourcentages, les variantes S2 et le combat persistant exigent
+  une recette. Voir
+  [dossier de recette US-COM-007](../RECETTE-US-COM-007-2026-11-05.md).
+
+
 ---
 
 <a id="us-com-008"></a>
