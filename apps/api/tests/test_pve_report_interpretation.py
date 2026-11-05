@@ -47,3 +47,24 @@ def test_equality_keeps_draw_without_gameplay_effect():
 def test_incomplete_report_fails_closed():
     with raises(ValueError):
         interpret_duel({"losses":{}})
+
+
+def test_false_draw_keeps_jactari_technical_attacker_verdict():
+    outcome=duel(10,10,{"attackStackHero":0.001})
+    assert outcome["falseDraw"]==1
+    report=interpret_duel(outcome)
+    assert report["verdict"]=="attacker"
+    assert report["ending"]["kind"]=="false_draw"
+    assert report["ending"]["exhausted_without_dispersion"]["attacker"] is True
+    assert report["attacker"]["remaining"]==0
+    assert report["persistent_effects_applied"] is False
+
+
+def test_report_keeps_theoretical_dispersions_not_deaths():
+    outcome=duel(100,100,{"attackWeapon":0.50})
+    report=interpret_duel(outcome)
+    assert report["ending"]["theoretical_dispersions"]=={
+        "attacker":50,"defender":100,
+    }
+    assert report["ordinary_attacker_loss_projection"]["permanent_deaths"]==15
+    assert report["ordinary_attacker_loss_projection"]["effects_applied"] is False
