@@ -49,6 +49,7 @@ CREATE TABLE city_lab_mine_upgrade_orders (
     REFERENCES city_lab_mine_levels(city_id,resource) ON DELETE CASCADE,
   FOREIGN KEY(city_id,resource,target_level)
     REFERENCES city_lab_mine_level_qualifications(city_id,resource,target_level)
+    ON DELETE CASCADE
 );
 CREATE UNIQUE INDEX one_pending_lab_mine_upgrade
   ON city_lab_mine_upgrade_orders(city_id,resource)
