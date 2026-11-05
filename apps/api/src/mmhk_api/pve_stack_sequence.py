@@ -14,6 +14,7 @@ from jactari.duel import resolve_stack_duel
 from .counter_weapons import counter_weapon_bonuses
 from .hero_combat_modifiers import hero_combat_modifiers
 from .conditional_hero_talents import conditional_attack_talent
+from .pve_pre_shots import resolve_pre_shots
 
 MAX_STACKS = 7
 MAX_EXCHANGES = 98
@@ -47,7 +48,9 @@ def _validate_army(stacks: list[dict[str, Any]], label: str) -> list[dict]:
 
 def resolve_ordinary_lines(attacker: list[dict], defender: list[dict],
                            *, attacker_hero: dict | None = None,
-                           attacker_talent: dict | None = None) -> dict:
+                           attacker_talent: dict | None = None,
+                           pre_shot_actions: list[dict] | None = None,
+                           pre_shot_context: dict | None = None) -> dict:
     """Pure, deterministic, unmodified stack sequence.
 
     Only neutral, single-pair arithmetic is qualified here. The loser of an
@@ -62,10 +65,31 @@ def resolve_ordinary_lines(attacker: list[dict], defender: list[dict],
         raise ValueError("Conditional hero talent requires qualified hero attributes")
     a = _validate_army(attacker, "attacker")
     d = _validate_army(defender, "defender")
+    pre_shots=resolve_pre_shots(
+        [{"count":stack["remaining"],"unit_power":stack["unit_power"],
+          "weapon_code":stack["weapon_code"],"siege":stack.get("siege",False)}
+         for stack in a],
+        [{"count":stack["remaining"],"unit_power":stack["unit_power"],
+          "weapon_code":stack["weapon_code"],"siege":stack.get("siege",False)}
+         for stack in d],
+        pre_shot_actions or [],**(pre_shot_context or {}),
+    )
+    for side,army in (("attacker",a),("defender",d)):
+        for stack,lost in zip(army,pre_shots["simulated_losses"][side]):
+            stack["pre_shot_losses"]=lost
+            stack["remaining"]-=lost
+            if stack["remaining"]==0:
+                stack["dispersed"]=True
     events: list[dict] = []
     a_index = d_index = 0
 
-    while a_index < len(a) and d_index < len(d):
+    while True:
+        while a_index<len(a) and a[a_index]["dispersed"]:
+            a_index+=1
+        while d_index<len(d) and d[d_index]["dispersed"]:
+            d_index+=1
+        if a_index>=len(a) or d_index>=len(d):
+            break
         if len(events) >= MAX_EXCHANGES:
             raise RuntimeError("Unexpectedly long laboratory combat")
         left, right = a[a_index], d[d_index]
@@ -136,6 +160,7 @@ def resolve_ordinary_lines(attacker: list[dict], defender: list[dict],
         "policy_id": "jactari-sequential-ordinary-v1",
         "verdict": verdict,
         "events": events,
+        "pre_shots": pre_shots,
         "attacker": a,
         "defender": d,
         "permanent_losses_applied": False,
@@ -151,7 +176,8 @@ def resolve_ordinary_lines(attacker: list[dict], defender: list[dict],
             t["weapon_code"] is not None for t in [*a,*d]
         ),
         "excluded_mechanics": [
-            "pre_shots", "other_hero_talents", "magic",
+            *([] if pre_shots["configured"] else ["pre_shots"]),
+            "other_hero_talents", "magic",
             "summons", "resurrections", "admission", "npc_casualty_policy",
         ],
     }
