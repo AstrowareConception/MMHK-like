@@ -23,6 +23,7 @@ from .region_integrity import audit_world_regions
 from .pve_snapshot_audit import audit_active_pve_snapshots
 from .lab_mine_activation import qualify_lab_mine_unlock
 from .mine_upgrades import qualify_lab_mine_upgrade
+from .mine_extensions import qualify_lab_mine_extension
 from .pve_lab_settlement import configure_lab_casualties
 from .pve_neutral_resolution import (
     qualify_lab_neutral_defender,configure_lab_neutral_resolution,
@@ -189,12 +190,35 @@ def main() -> None:
     mine_upgrades.add_argument("--required-hero-level",type=int,required=True)
     mine_upgrades.add_argument("--source-ref",required=True)
     mine_upgrades.add_argument("--acknowledge-experimental",action="store_true")
+    extension=sub.add_parser(
+        "qualify-lab-mine-extension",
+        help="Operator-attested free tile, cost, time and hero gate for one G11 LAB +5% extension",
+    )
+    extension.add_argument("--city-id",type=UUID,required=True)
+    extension.add_argument("--resource",required=True)
+    extension.add_argument("--site-i",type=int,required=True)
+    extension.add_argument("--site-j",type=int,required=True)
+    extension.add_argument("--cost-gold",type=int,required=True)
+    extension.add_argument("--duration-seconds",type=int,required=True)
+    extension.add_argument("--required-hero-level",type=int,required=True)
+    extension.add_argument("--source-ref",required=True)
+    extension.add_argument("--acknowledge-experimental",action="store_true")
     args = parser.parse_args()
 
     with connect() as db:
         if args.command == "migrate":
             applied = migrate(db)
             print("Applied schema revisions:", applied or "already current")
+        elif args.command == "qualify-lab-mine-extension":
+            if not args.acknowledge_experimental:
+                parser.error("LAB G11 extension requires --acknowledge-experimental")
+            print(json.dumps(qualify_lab_mine_extension(
+                db,city_id=args.city_id,resource=args.resource,
+                site_i=args.site_i,site_j=args.site_j,
+                required_hero_level=args.required_hero_level,
+                cost_gold=args.cost_gold,duration_seconds=args.duration_seconds,
+                source_ref=args.source_ref,
+            ),ensure_ascii=False))
         elif args.command == "qualify-lab-mine-level":
             if not args.acknowledge_experimental:
                 parser.error("G11 mine qualifications need --acknowledge-experimental")

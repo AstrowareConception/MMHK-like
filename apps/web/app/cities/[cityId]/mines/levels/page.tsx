@@ -132,6 +132,11 @@ export default async function MineLevelReferencePage({params,searchParams}:{
         </section>
         <p className="notice">Source : {data.data.source_ref}.
           Document de référence seulement, pas un ordre de construction.</p>
+        <p className="notice">Les extensions sont distinctes des
+          niveaux : pendant leur construction la mine ne produit plus.</p>
+        <Link className="scene-action" href={"/cities/"+cityId+"/mines/extensions"}>
+          Extensions minières qualifiées (LAB)
+        </Link>
         <Link className="scene-action" href={"/cities/"+cityId}>
           Retour à la cité
         </Link>

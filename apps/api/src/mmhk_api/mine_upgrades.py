@@ -183,6 +183,10 @@ def mine_upgrades_for_city(
         (city_id,owner),
     ).fetchall()
     active_by_resource={v[1]:_view_order(v) for v in active}
+    extension_pending={row[0] for row in db.execute(
+        """SELECT resource FROM city_lab_mine_extension_orders
+           WHERE city_id=%s AND status='building'""",(city_id,),
+    ).fetchall()}
     return {
         "city_id":str(city_id),"policy_id":POLICY_ID,
         "historically_certified_s2":False,
@@ -196,7 +200,8 @@ def mine_upgrades_for_city(
             "gate_activated":activated_at is not None,
             "quote":(
                 quote_g11_normal_step(resource,level)
-                if level<10 and required_level is not None else None
+                if level<10 and required_level is not None
+                   and resource not in extension_pending else None
             ),
             "active_order":active_by_resource.get(resource),
         } for resource,level,required_level,source,activated_at in rows],
@@ -272,6 +277,12 @@ def start_lab_mine_upgrade(
         ).fetchone()
         if pending:
             raise RecruitmentConflict("Mine already upgrading")
+        if db.execute(
+            """SELECT 1 FROM city_lab_mine_extension_orders
+               WHERE city_id=%s AND resource=%s AND status='building'""",
+            (city_id,resource),
+        ).fetchone():
+            raise RecruitmentConflict("Cannot upgrade mine level during extension works")
         gold=db.execute(
             "SELECT amount FROM city_stocks WHERE city_id=%s AND resource='gold' FOR UPDATE",
             (city_id,),

@@ -129,6 +129,10 @@ def owned_city_detail(db: psycopg.Connection, account_id: UUID, city_id: UUID) -
         "SELECT resource,activated_at FROM city_lab_mine_unlocks WHERE city_id=%s",
         (city_id,),
     ).fetchall())
+    extension_paused = {r[0] for r in db.execute(
+        """SELECT resource FROM city_lab_mine_extension_orders
+           WHERE city_id=%s AND status='building'""",(city_id,),
+    ).fetchall()}
     adjusted_caps = {
         kind: (stocks_caps.get(kind) or 0) +
               effects["capacity_bonus"].get(kind,0)
@@ -149,7 +153,8 @@ def owned_city_detail(db: psycopg.Connection, account_id: UUID, city_id: UUID) -
             resource: (
                 str(base * (1 + bonus + Decimal(
                     effects["mine_additive_bonus"].get(resource,"0"))))
-                if resource not in gates or gates[resource] is not None
+                if (resource not in gates or gates[resource] is not None)
+                   and resource not in extension_paused
                 else "0"
             )
             for resource, base, bonus in rates

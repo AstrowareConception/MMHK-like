@@ -9,7 +9,7 @@ Chaque fiche contient la formulation « En tant que…, je souhaite… afin de�
 ## Suivi réel des livraisons — 5 novembre 2026
 
 Le [suivi des US livrées en laboratoire](SUIVI-LIVRAISONS-2026-11-05.md)
-indique **4 US techniquement terminées LAB** et **12 partiellement livrées** parmi les 300 fiches, avec preuves GitHub CI. **Aucune US classique n'est encore acceptée** : la DoD historique et la revue produit restent indépendantes. Le registre vérifiable est `data/backlog/implementation-progress-2026-11-05.csv` (commande `node tools/validate-backlog-progress.mjs`).
+indique **5 US techniquement terminées LAB** et **12 partiellement livrées** parmi les 300 fiches, avec preuves GitHub CI. **Aucune US classique n'est encore acceptée** : la DoD historique et la revue produit restent indépendantes. Le registre vérifiable est `data/backlog/implementation-progress-2026-11-05.csv` (commande `node tools/validate-backlog-progress.mjs`).
 
 ## Garantie d'intégrité des missions PvE — V100
 
