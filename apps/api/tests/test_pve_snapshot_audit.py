@@ -25,9 +25,9 @@ def test_audit_distinguishes_frozen_legacy_and_corrupt_without_writes():
         "source_ref":"LAB-AUDIT",
     }
     db=DB([
-        (uuid4(),"outbound",valid),
-        (uuid4(),"returning",None),
-        (uuid4(),"outbound",{**valid,"unit_count":0}),
+        (uuid4(),"outbound",valid,None),
+        (uuid4(),"returning",None,None),
+        (uuid4(),"outbound",{**valid,"unit_count":0},None),
     ])
     report=audit_active_pve_snapshots(db)
     assert report["inspected"]==3
@@ -35,13 +35,14 @@ def test_audit_distinguishes_frozen_legacy_and_corrupt_without_writes():
         "frozen":1,"legacy_unsnapshotted":1,"corrupt":1,
     }
     assert len(report["findings"])==2
+    assert report["ordinary_lines"]=={"frozen":0,"not_available":1,"corrupt":0}
     assert report["read_only"] is True
     assert len(db.calls)==1
     assert db.calls[0][0].strip().startswith("SELECT")
 
 
 def test_limited_read_only_audit_reports_truncation():
-    db=DB([(uuid4(),"outbound",None)]*3)
+    db=DB([(uuid4(),"outbound",None,None)]*3)
     result=audit_active_pve_snapshots(db,limit=2)
     assert result["truncated"] is True
     assert result["inspected"]==2
@@ -54,3 +55,16 @@ def test_invalid_limit_rejected_before_query(bad):
     with pytest.raises(ValueError):
         audit_active_pve_snapshots(db,limit=bad)
     assert db.calls==[]
+
+
+def test_audit_detects_corrupt_v101_without_replacing_it():
+    base={"policy_id":POLICY_ID,"unit_code":"wolves","unit_count":4,
+          "unit_power":1,"source_ref":"TEST-AUDIT"}
+    malformed={"policy_id":"LAB-PVE-ORDINARY-LINE-AT-DEPARTURE-V1",
+               "attacker":[],"defender":[]}
+    db=DB([(uuid4(),"returning",base,malformed)])
+    report=audit_active_pve_snapshots(db)
+    assert report["counts"]["corrupt"]==1
+    assert report["ordinary_lines"]["corrupt"]==1
+    assert report["findings"][0]["issue"]=="invalid_frozen_ordinary_line"
+    assert len(db.calls)==1
