@@ -180,3 +180,36 @@ def test_qualification_is_idempotent_and_requires_correct_evidence(city):
             qualify_lab_mine_unlock(
                 db,encounter_id=encounter,source_ref="LAB-CHANGED-SOURCE",
             )
+
+
+
+def test_enrolled_real_deposit_and_guardian_cannot_move(city):
+    hero,unit,encounter,started,pos=_setup_gate(city)
+    with psycopg.connect(URL) as db:
+        slot=db.execute(
+            "SELECT deposit_slot FROM city_lab_mine_unlocks "
+            "WHERE city_id=%s AND resource='gold'",(city["city"],),
+        ).fetchone()[0]
+        x,y=db.execute(
+            "SELECT x,y FROM cities WHERE city_id=%s",(city["city"],),
+        ).fetchone()
+    for stmt,params in (
+        ("UPDATE city_mine_positions SET i=%s WHERE city_id=%s AND resource='gold'",
+         (1 if pos[0]!=1 else 0,city["city"])),
+        ("DELETE FROM world_region_deposits WHERE world_id=%s AND x=%s AND y=%s AND slot=%s",
+         (city["world"],x,y,slot)),
+        ("UPDATE world_region_deposits SET resource='mercury' "
+         "WHERE world_id=%s AND x=%s AND y=%s AND slot=%s",
+         (city["world"],x,y,slot)),
+        ("UPDATE region_encounters SET cell_j=%s WHERE encounter_id=%s",
+         (0 if pos[1]!=0 else 1,encounter)),
+    ):
+        with psycopg.connect(URL) as db:
+            with pytest.raises(psycopg.errors.CheckViolation):
+                db.execute(stmt,params)
+    with psycopg.connect(URL) as db:
+        assert db.execute("SELECT cell_i,cell_j FROM region_encounters "
+                          "WHERE encounter_id=%s",(encounter,)).fetchone()==pos
+        assert db.execute("SELECT i,j FROM city_mine_positions "
+                          "WHERE city_id=%s AND resource='gold'",
+                          (city["city"],)).fetchone()==pos
