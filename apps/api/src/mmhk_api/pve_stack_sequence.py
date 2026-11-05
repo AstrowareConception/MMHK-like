@@ -29,10 +29,13 @@ def _validate_army(stacks: list[dict[str, Any]], label: str) -> list[dict]:
     for index, stack in enumerate(stacks):
         if (not isinstance(stack, dict) or
             not {"unit_code", "count", "unit_power"}.issubset(stack)
-            or set(stack) - {"unit_code", "count", "unit_power", "weapon_code"}):
+            or set(stack) - {"unit_code", "count", "unit_power", "weapon_code", "siege"}):
             raise ValueError(f"{label}: malformed stack")
         code, count, power = (stack["unit_code"], stack["count"], stack["unit_power"])
         weapon = stack.get("weapon_code")
+        siege = stack.get("siege",False)
+        if type(siege) is not bool:
+            raise ValueError(f"{label}: siege classification must be boolean")
         counter_weapon_bonuses(weapon, weapon)  # Validate without guessing a class.
         if (not isinstance(code, str) or not 1 <= len(code) <= 48
             or not code.replace("_", "").isalnum()
@@ -43,7 +46,7 @@ def _validate_army(stacks: list[dict[str, Any]], label: str) -> list[dict]:
         result.append({
             "position": index + 1, "unit_code": code, "initial": count,
             "remaining": count, "unit_power": float(power),
-            "weapon_code": weapon, "dispersed": False,
+            "weapon_code": weapon, "siege":siege, "dispersed": False,
         })
     return result
 
