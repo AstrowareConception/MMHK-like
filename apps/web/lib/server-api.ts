@@ -192,6 +192,20 @@ export type PveAdmission={
   effects_applied_to_database:false;historically_certified_s2:false;
 };
 
+export type JactariDuelEnding={
+  kind:"ordinary"|"true_draw"|"false_draw";
+  verdict:"attacker"|"defender"|"draw";
+  false_draw_marker:-1|0|1;
+  remaining:{attacker:number;defender:number};
+  dispersed:{attacker:boolean;defender:boolean};
+  removed_from_line:{attacker:boolean;defender:boolean};
+  exhausted_without_dispersion:{attacker:boolean;defender:boolean};
+  theoretical_dispersions:{attacker:number;defender:number};
+  overwhelming_sentinel:{attacker:boolean;defender:boolean};
+  permanent_deaths_applied:false;
+  profile:"jactari-duel-ending-v1";historically_certified_s2:false;
+};
+
 export type LineSequencePreview={
   scope:"LAB-ORDINARY-STACK-SEQUENCE";
   preview_only:true;
@@ -228,6 +242,9 @@ export type LineSequencePreview={
       remaining:{attacker:number;defender:number};
       dispersed:{attacker:boolean;defender:boolean};
       jactari_false_draw:number;jactari_draw:boolean;
+      ending:JactariDuelEnding;
+      theoretical_dispersions:{attacker:number;defender:number};
+      removed_from_line:{attacker:boolean;defender:boolean};
       total_power:{attacker:number;defender:number};
       hero_attributes:{
         attackStackHero:string;defendStackHero:string;
@@ -253,6 +270,8 @@ export type LineSequencePreview={
       attacker_survives_to_next_exchange:boolean;
       defender_survives_to_next_exchange:boolean;
     }[];
+    last_duel_ending:JactariDuelEnding|null;
+    technical_tiebreak:-1|0|1;
     counter_weapon_policy:string;weapon_classification_complete:boolean;
     attacker_hero_profile_applied:boolean;
     attacker_conditional_talent_configured:boolean;
@@ -265,6 +284,7 @@ export type LineSequencePreview={
 export type PveInterpretation={
   verdict:"attacker"|"defender"|"draw"|"unresolved";
   false_draw:number;
+  ending?:JactariDuelEnding;
   attacker:{simulated_losses:number;overwhelming_victory:boolean;remaining:number;dispersed:boolean};
   defender:{simulated_losses:number;overwhelming_victory:boolean;remaining:number;dispersed:boolean};
   ordinary_attacker_loss_projection?:{
