@@ -155,6 +155,18 @@ export default async function MissionReportPage({params}:{
               dans la simulation. Cela ne constitue pas leur destruction
               définitive.
             </p>}
+          {duel.interpretation?.overwhelming?.overwhelming&&
+            <div className="mmhk-mission-verdict">
+              <span>Écrasement Jactari — victoire technique</span>
+              <strong>{duel.interpretation.overwhelming.winner==="attacker"
+                ?"Camp attaquant":"Camp défenseur"}</strong>
+              <span>Écart après arrondi : {
+                duel.interpretation.overwhelming.power_delta_after_floor
+              } · base du camp vainqueur : {
+                duel.interpretation.overwhelming.winner_base_power
+              }.</span>
+              <small>Le marqueur −1 de Jactari n'est pas une quantité de morts.</small>
+            </div>}
           {duel.interpretation&&<>
             {duel.interpretation.ending&&<div>
               <span>Unités dispersées pendant le duel (non persistantes)</span>
