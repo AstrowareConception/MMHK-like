@@ -9,6 +9,7 @@ on:
       - 'apps/api/src/mmhk_api/sql/10[0-9]_*.sql'
       - 'apps/api/tests/test_pve_*.py'
       - 'apps/web/**'
+      - 'tools/e2e/local_browser.py'
       - 'data/backlog/**'
       - 'docs/backlog/**'
       - '.github/workflows/pve-quality-gate.yml'
@@ -60,7 +61,8 @@ jobs:
             apps/api/tests/test_pve_encounter_snapshot.py \
             apps/api/tests/test_pve_ordinary_line_snapshot.py \
             apps/api/tests/test_pve_mission_flight.py \
-            apps/api/tests/test_pve_missions_integration.py
+            apps/api/tests/test_pve_missions_integration.py \
+            tools/e2e/local_browser.py
       - name: Apply actual PostgreSQL migrations, including V100
         run: python -m mmhk_api.manage migrate
       - name: Test frozen opponents, legacy missions, and API worker replay
