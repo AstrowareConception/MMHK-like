@@ -15,6 +15,7 @@ from .counter_weapons import counter_weapon_bonuses
 from .hero_combat_modifiers import hero_combat_modifiers
 from .conditional_hero_talents import conditional_attack_talent
 from .pve_pre_shots import resolve_pre_shots
+from .pve_admission import evaluate_pve_admission
 
 MAX_STACKS = 7
 MAX_EXCHANGES = 98
@@ -65,6 +66,37 @@ def resolve_ordinary_lines(attacker: list[dict], defender: list[dict],
         raise ValueError("Conditional hero talent requires qualified hero attributes")
     a = _validate_army(attacker, "attacker")
     d = _validate_army(defender, "defender")
+    # US-COM-011: this gate precedes and ignores all battle modifiers,
+    # even a qualified hero bonus or a configured pre-shot capability.
+    admission=evaluate_pve_admission(attacker,defender)
+    if admission["fled"]:
+        empty_shots=resolve_pre_shots(
+            [{"count":v["remaining"],"unit_power":v["unit_power"],
+              "weapon_code":v["weapon_code"]} for v in a],
+            [{"count":v["remaining"],"unit_power":v["unit_power"],
+              "weapon_code":v["weapon_code"]} for v in d],
+            [],
+        )
+        return {
+            "scope":"LAB-ORDINARY-STACK-SEQUENCE",
+            "policy_id":"jactari-sequential-ordinary-v1",
+            "verdict":"fled","combat_started":False,
+            "admission":admission,
+            "events":[],"pre_shots":empty_shots,
+            "attacker":a,"defender":d,
+            "permanent_losses_applied":False,
+            "experience_awarded":False,"loot_awarded":False,
+            "region_liberated":False,"historically_certified":False,
+            "counter_weapon_policy":"jactari-counter-weapons-v1",
+            "attacker_hero_profile_applied":False,
+            "attacker_conditional_talent_configured":attacker_talent is not None,
+            "attacker_hero_profile":hero,
+            "weapon_classification_complete":all(
+                v["weapon_code"] is not None for v in [*a,*d]
+            ),
+            "excluded_mechanics":["pre_shots","all_duels","other_hero_talents",
+                "magic","summons","resurrections","npc_casualty_policy"],
+        }
     pre_shots=resolve_pre_shots(
         [{"count":stack["remaining"],"unit_power":stack["unit_power"],
           "weapon_code":stack["weapon_code"],"siege":stack.get("siege",False)}
@@ -159,6 +191,8 @@ def resolve_ordinary_lines(attacker: list[dict], defender: list[dict],
         "scope": "LAB-ORDINARY-STACK-SEQUENCE",
         "policy_id": "jactari-sequential-ordinary-v1",
         "verdict": verdict,
+        "combat_started":True,
+        "admission":admission,
         "events": events,
         "pre_shots": pre_shots,
         "attacker": a,
