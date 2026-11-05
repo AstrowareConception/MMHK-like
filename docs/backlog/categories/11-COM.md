@@ -179,6 +179,21 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 - [ ] Les décisions de la Conversation et les preuves de fidélité sont reliées à cette fiche ; les variantes volontaires sont signalées.
 - [ ] La revue et l’acceptation fonctionnelle sont enregistrées ; aucune case ci-dessus n’est considérée cochée par la rédaction du backlog.
 
+### Suivi d'implémentation (5 novembre 2026 — candidat partiel)
+
+- Le worker PvE existant conserve le trajet aller et retour du héros.
+  Il reconnaît désormais la **fuite pré-combat** selon le ratio brut
+  de la US-COM-011, puis enregistre un rapport explicite sans duel.
+- La mission reste idempotente dans son cycle `outbound` →
+  `returning` → `completed`, sans libération de case ni récompense.
+  Un test de worker a été écrit ; l'exécution sur PostgreSQL
+  et les preuves des cinq CA restent à obtenir.
+- La **résolution persistante** des combats, la réservation définitive
+  des troupes, les pertes, l'expérience et les rewards ne sont pas
+  complètes. Voir [recette US-COM-011](../RECETTE-US-COM-011-2026-11-05.md).
+  **US-COM-002 reste non acceptée.**
+
+
 ---
 
 <a id="us-com-003"></a>
@@ -732,6 +747,18 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
   empêchent encore de valider CA01–CA05 et la DoD.
 - **Justificatifs :** [recette US-COM-008](../RECETTE-US-COM-008-2026-11-04.md)
   et [recette US-COM-004](../RECETTE-US-COM-004-2026-11-04.md).
+
+
+### Complément de traçabilité (5 novembre 2026)
+
+- Le laboratoire multi-pelotons effectue maintenant la vérification
+  d'admission PvE **avant** les pré-tirs et le premier échange.
+  Si l'attaquant fuit, il ne calcule aucune bataille artificielle.
+- Les règles d'enchaînement des pelotons et de leurs pertes
+  théoriques ne changent que pour les combats admis.
+  Voir [US-COM-011](../RECETTE-US-COM-011-2026-11-05.md).
+- Cette dépendance améliorée ne constitue pas la recette de
+  US-COM-008 ; les cinq critères et la DoD restent ouverts.
 
 
 ---
