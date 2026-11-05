@@ -130,7 +130,7 @@ def settle_attacker_if_qualified(
         expected[v["unit_code"]] += v["initial"]
         dead[v["unit_code"]] += v["permanent_deaths"]
     current = dict(db.execute(
-        """SELECT unit_code,quantity FROM hero_army_units WHERE hero_id=%s
+        """SELECT unit_code,quantity FROM hero_army_units WHERE hero_id=%s AND quantity>0
            ORDER BY unit_code FOR UPDATE""", (hero_id,),
     ).fetchall())
     # No direct or concurrent DB writer may make original troops reappear.

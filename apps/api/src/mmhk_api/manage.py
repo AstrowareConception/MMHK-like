@@ -21,6 +21,7 @@ from .worlds import seed_first_haven_city
 from .world_region_generation import provision_rectangle
 from .region_integrity import audit_world_regions
 from .pve_snapshot_audit import audit_active_pve_snapshots
+from .pve_lab_settlement import configure_lab_casualties
 from .weapon_qualification import qualify_unit_weapon,qualify_encounter_weapon
 from .hero_combat_qualification import qualify_hero_basic_combat
 from .conditional_talent_qualification import qualify_conditional_counter_talent
@@ -142,12 +143,27 @@ def main() -> None:
         help="Read-only inventory of active legacy/frozen/corrupt PvE inputs",
     )
     pve_audit.add_argument("--limit",type=int,default=200)
+    casualties = sub.add_parser(
+        "configure-lab-pve-casualties",
+        help="Opt-in ordinary attacker casualties in a named LAB world only",
+    )
+    casualties.add_argument("--world-id",required=True)
+    casualties.add_argument("--enabled",choices=("yes","no"),required=True)
+    casualties.add_argument("--source-ref",required=True)
+    casualties.add_argument("--acknowledge-experimental",action="store_true")
     args = parser.parse_args()
 
     with connect() as db:
         if args.command == "migrate":
             applied = migrate(db)
             print("Applied schema revisions:", applied or "already current")
+        elif args.command == "configure-lab-pve-casualties":
+            if args.enabled=="yes" and not args.acknowledge_experimental:
+                parser.error("Enabling durable experimental deaths requires --acknowledge-experimental")
+            print(json.dumps(configure_lab_casualties(
+                db,world_id=args.world_id,enabled=args.enabled=="yes",
+                source_ref=args.source_ref,
+            ),ensure_ascii=False))
         elif args.command == "qualify-pre-shots":
             print(json.dumps(qualify_pre_shot_profile(
                 db,hero_id=args.hero_id,

@@ -1,8 +1,9 @@
 """Timed, server-authoritative PvE journey with two separate travel legs.
 
-The LAB mission records a bounded one-stack Jactari report on arrival.
-It neither applies permanent losses nor frees cells/awards loot or XP.
-This remains separate from the future fully qualified US-COM combat engine.
+The LAB journey uses the frozen ordinary line at arrival. Only an explicit
+V102 operator opt-in with a proven zero-modifier hero profile may debit the
+attacker's basic durable losses. No NPC losses, XP, loot or liberation is
+implied. All other journeys remain non-mutating combat laboratories.
 """
 from __future__ import annotations
 
@@ -17,6 +18,7 @@ from .pve_admission import evaluate_pve_admission
 from .pve_encounter_snapshot import validate_defender_snapshot,legacy_opponent_at_arrival
 from .pve_ordinary_line_snapshot import validate_ordinary_line_snapshot,laboratory_lines
 from .pve_stack_sequence import resolve_ordinary_lines
+from .pve_lab_settlement import settle_attacker_if_qualified
 from .forces import _owned_city, RecruitmentNotFound, RecruitmentConflict
 
 def start_pve_mission(db:psycopg.Connection,*,owner:UUID,city_id:UUID,
@@ -172,7 +174,7 @@ def advance_pve_missions(db:psycopg.Connection,*,max_orders:int=25,
                 """SELECT m.mission_id,m.stage,m.hero_id,m.encounter_id,
                           m.unit_code,m.stack_count,m.stack_power,m.travel_seconds,
                           m.arrival_due_at,m.return_due_at,m.defender_snapshot,
-                          m.ordinary_line_snapshot
+                          m.ordinary_line_snapshot,m.attacker_settlement_snapshot
                    FROM pve_missions m WHERE
                      (m.stage='outbound' AND m.arrival_due_at<=%s) OR
                      (m.stage='returning' AND m.return_due_at<=%s)
@@ -182,7 +184,7 @@ def advance_pve_missions(db:psycopg.Connection,*,max_orders:int=25,
             ).fetchone()
             if row is None:break
             (mid,stage,hid,eid,unit,count,power,travel_seconds,arrival,
-             returning,defender_snapshot,ordinary_line_snapshot)=row
+             returning,defender_snapshot,ordinary_line_snapshot,attacker_settlement_snapshot)=row
             if stage=="outbound" and ordinary_line_snapshot is not None:
                 # V101+ freezes the entire 1..7 ordinary line at dispatch.
                 # No live catalogue or encounter attributes are read here.
@@ -196,6 +198,11 @@ def advance_pve_missions(db:psycopg.Connection,*,max_orders:int=25,
                 attack_line,defend_line=laboratory_lines(verified)
                 sequence=resolve_ordinary_lines(attack_line,defend_line)
                 frozen_defender=validate_defender_snapshot(defender_snapshot)
+                settlement=settle_attacker_if_qualified(
+                    db,mission_id=mid,hero_id=hid,
+                    snapshot=attacker_settlement_snapshot,
+                    verified_line=verified,sequence=sequence,
+                )
                 engagement_inputs={
                     "source_status":"frozen_at_departure",
                     "attacker":{"unit_code":unit,"unit_count":count,
@@ -212,7 +219,9 @@ def advance_pve_missions(db:psycopg.Connection,*,max_orders:int=25,
                     "engagement_inputs":engagement_inputs,
                     "line_outcome":sequence,
                     "outcome":None,"interpretation":None,
-                    "no_losses_applied":True,"no_rewards":True,
+                    "no_losses_applied":not settlement["effects_applied"],
+                    "no_rewards":True,
+                    "settlement":settlement,
                     "hero_modifiers_qualified":False,
                 }
                 confirmed_return=now+timedelta(seconds=travel_seconds)
