@@ -73,7 +73,7 @@ def test_hero_goes_out_and_back_only_when_worker_confirms(city):
         assert len(arrived)==1 and arrived[0]["phase"]=="arrived"
     underway=client.get(root+"/missions",headers=h).json()["missions"][0]
     assert underway["stage"]=="returning"
-    assert underway["duel_report"]["scope"]=="LAB-SINGLE-STACK"
+    assert underway["duel_report"]["scope"]=="LAB-ORDINARY-STACK-SEQUENCE"
     assert underway["duel_report"]["no_losses_applied"] is True
     with psycopg.connect(URL) as db:
         assert db.execute("SELECT status FROM city_heroes WHERE hero_id=%s",(hero,)).fetchone()[0]=="on_mission"
