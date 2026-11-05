@@ -9,11 +9,11 @@
 
 Le rapprochement couvre **300/300 fiches** : `data/backlog/implementation-review-2026-11-04.csv`.
 Il distingue :
-- **80 fiches avec un chemin de code candidat à examiner** : présence d'un
+- **82 fiches avec un chemin de code candidat à examiner** : présence d'un
   composant ou d'un flux potentiellement pertinent ; il manque encore des
   vérifications de critères, et certaines fonctions ne couvrent qu'une
   partie de l'US.
-- **220 fiches non vérifiées individuellement** : il ne s'agit PAS d'une
+- **218 fiches non vérifiées individuellement** : il ne s'agit PAS d'une
   affirmation que leur code n'existe pas.
 - **0 fiche déclarée acceptée dans cet audit** : l'équipe produit n'a pas
   consigné cinq résultats CA et DoD pour chaque fiche ; le taux d'acceptation
@@ -365,3 +365,38 @@ Voir `RECETTE-US-COM-011-2026-11-05.md`.
 Les effets historiques détaillés d'une fuite, les autres règles
 de fin de combat et surtout l'application définitive des pertes
 et XP restent à qualifier avant de terminer L1.
+
+## Complément — 5 novembre 2026 — US-COM-010 et US-COM-013
+
+Les branches précises de Jactari ont été examinées dans le corpus archivé :
+`data/Jactari/src/scripts/combat.min.js`,
+`simulation_combat` et `resultat.faux_nul`.
+
+- **US-COM-010 :** le module `jactari_duel_ending.py`
+  distingue l'égalité vraie et les marqueurs techniques de faux nul
+  `+1/-1`, sans jet aléatoire. Dans le laboratoire
+  multi-pelotons, un peloton à zéro unité active est retiré
+  de la ligne, même si Jactari ne le marque pas `disperse`.
+  Le marqueur de faux nul reste disponible pour trancher
+  un affrontement où les dernières lignes sont épuisées.
+- **US-COM-013 :** le rapport garde séparément les unités
+  temporairement dispersées, les effectifs encore actifs et
+  les morts permanentes **non appliquées**. La fixture
+  du backlog 100 I contre 100 C, puissance 100,
+  donne 50 I et 100 C dispersés.
+- **Dépendances :** US-COM-008 (séquence), US-COM-017 (rapport)
+  enrichies, sans attribution de pertes économiques ou de XP.
+- Tests écrits : `test_jactari_duel_ending.py` et
+  `test_pve_report_interpretation.py`, y compris
+  égalité, faux nul, frontière d'une unité et rejeu.
+
+Le registre compte désormais **82/300 fiches avec code candidat**,
+**218 non examinées individuellement**, **0 acceptation formelle**.
+
+Les recettes [US-COM-010](RECETTE-US-COM-010-2026-11-05.md)
+et [US-COM-013](RECETTE-US-COM-013-2026-11-05.md)
+précisent les cinq CA et les limites historiques.
+Les interactions complexes (magie, résurrections, faux nuls
+avec plusieurs pelotons) nécessitent encore des fixtures
+Jactari et une validation complète, avant toute
+résolution persistante de L1.
