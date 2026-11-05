@@ -100,8 +100,8 @@ CREATE TRIGGER pve_settlement_policy_immutable_v102
 -- One irreversible ledger entry per mission, applied atomically with troop
 -- debits, the immutable combat report, and the outbound -> returning transition.
 CREATE TABLE pve_lab_casualty_settlements (
-  mission_id uuid PRIMARY KEY REFERENCES pve_missions(mission_id),
-  hero_id uuid NOT NULL REFERENCES city_heroes(hero_id),
+  mission_id uuid PRIMARY KEY REFERENCES pve_missions(mission_id) ON DELETE CASCADE,
+  hero_id uuid NOT NULL,
   policy_id text NOT NULL CHECK(policy_id='LAB-PVE-ORDINARY-HERO-030-V1'),
   source_ref text NOT NULL CHECK(length(source_ref) BETWEEN 3 AND 255),
   total_deaths integer NOT NULL CHECK(total_deaths BETWEEN 0 AND 7000000),
@@ -110,12 +110,20 @@ CREATE TABLE pve_lab_casualty_settlements (
 );
 
 CREATE FUNCTION prevent_pve_lab_settlement_mutation_v102() RETURNS trigger
-LANGUAGE plpgsql AS $$
+LANGUAGE plpgsql AS $ledger$
 BEGIN
-  RAISE EXCEPTION 'PvE casualty settlement ledger is append-only'
-    USING ERRCODE='23514';
+  -- An existing mission's settlement is immutable. Legitimate destruction
+  -- of a parent mission/city erases its dependent record through the FK.
+  -- No orphaned settlement row must survive account/world teardown.
+  IF TG_OP='UPDATE' OR EXISTS (
+    SELECT 1 FROM pve_missions WHERE mission_id=OLD.mission_id
+  ) THEN
+    RAISE EXCEPTION 'PvE casualty settlement ledger is append-only'
+      USING ERRCODE='23514';
+  END IF;
+  RETURN OLD;
 END;
-$$;
+$ledger$;
 CREATE TRIGGER pve_lab_settlement_append_only_v102
   BEFORE UPDATE OR DELETE ON pve_lab_casualty_settlements
   FOR EACH ROW EXECUTE FUNCTION prevent_pve_lab_settlement_mutation_v102();
