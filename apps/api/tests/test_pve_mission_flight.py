@@ -13,12 +13,13 @@ import mmhk_api.pve_missions as missions
 class MissionDB:
     autocommit=True
 
-    def __init__(self, now, *, attacker=10, defender=70, snapshot=None):
+    def __init__(self, now, *, attacker=10, defender=70, snapshot=None, ordinary_line=None):
         self.now=now
         self.mid,self.hid,self.eid=uuid4(),uuid4(),uuid4()
         self.attacker=attacker
         self.defender=defender
         self.snapshot=snapshot
+        self.ordinary_line=ordinary_line
         self.stage="outbound"
         self.return_due=now+timedelta(hours=1)
         self.travel_seconds=5
@@ -41,7 +42,7 @@ class MissionDB:
                 self.stage=="returning" and self.return_due<=date_b):
                 self.last_row=(self.mid,self.stage,self.hid,self.eid,"militia",
                     self.attacker,10,self.travel_seconds,self.arrival_due,self.return_due,
-                    self.snapshot)
+                    self.snapshot,self.ordinary_line)
             else:
                 self.last_row=None
         elif "SELECT unit_count,unit_power FROM region_encounters" in normalized:

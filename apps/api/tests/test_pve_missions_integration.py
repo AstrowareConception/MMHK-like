@@ -73,7 +73,10 @@ def test_hero_goes_out_and_back_only_when_worker_confirms(city):
         assert len(arrived)==1 and arrived[0]["phase"]=="arrived"
     underway=client.get(root+"/missions",headers=h).json()["missions"][0]
     assert underway["stage"]=="returning"
-    assert underway["duel_report"]["scope"]=="LAB-SINGLE-STACK"
+    assert underway["duel_report"]["scope"]=="LAB-ORDINARY-STACK-SEQUENCE"
+    assert underway["duel_report"]["line_outcome"]["policy_id"]=="jactari-sequential-ordinary-v1"
+    assert [s["initial"] for s in underway["duel_report"]["line_outcome"]["attacker"]]==[3,5]
+    assert underway["duel_report"]["line_outcome"]["permanent_losses_applied"] is False
     assert underway["duel_report"]["no_losses_applied"] is True
     with psycopg.connect(URL) as db:
         assert db.execute("SELECT status FROM city_heroes WHERE hero_id=%s",(hero,)).fetchone()[0]=="on_mission"
@@ -171,6 +174,9 @@ def test_v100_departure_snapshot_survives_encounter_changes_and_replay(city):
     inputs=report["duel_report"]["engagement_inputs"]
     assert inputs["source_status"]=="frozen_at_departure"
     assert inputs["defender"]==snapshot
+    assert inputs["combat_scope"]=="LAB-ORDINARY-STACK-SEQUENCE-V1"
+    assert inputs["defender_line"][0]["count"]==4
+    assert inputs["attacker_line"][0]["count"]==8
     assert report["duel_report"]["admission"]["defender_raw_power"]=="4.0"
     assert report["duel_report"]["fled_before_combat"] is False
 
