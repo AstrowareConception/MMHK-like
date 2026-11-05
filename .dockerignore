@@ -16,3 +16,11 @@ tools
 *.sqlite
 *.db
 *.partial-*
+
+# Isolated LOCAL QA credentials, logs, browser captures and database archives.
+# These must not enter Docker's build context, even as unused files.
+.qa-local/
+test-output/
+backups/
+**/*.dump
+**/.env.*

@@ -33,3 +33,7 @@ apps/web/.env.local
 /data/assets-private-original/
 /data/assets-private-reconstructed/
 /data/asset-catalog/generated/
+
+# Temporary independent QA project and browser screenshots; never publish secrets
+/.qa-local/
+/test-output/

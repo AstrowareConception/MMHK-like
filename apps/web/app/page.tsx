@@ -23,9 +23,9 @@ export const dynamic = "force-dynamic";
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{ error?: string }>;
+  searchParams: Promise<{ error?: string; logout?: string }>;
 }) {
-  const { error } = await searchParams;
+  const { error, logout } = await searchParams;
   const token = await sessionToken();
   const [health, engine, worlds] = await Promise.all([
     apiHealth<Health>("/api/v1/health"),
@@ -115,6 +115,16 @@ export default async function Home({
           <>
             <p className="form-intro">Connectez-vous avec un compte provisionné
               par l'administrateur de ce laboratoire.</p>
+            {logout === "local" && <p className="error" role="alert"
+                data-testid="logout-revocation-unconfirmed">
+              Vous êtes déconnecté de ce navigateur, mais le serveur ne répondait pas :
+              la révocation de votre session distante n’a pas pu être confirmée.
+              Son jeton peut rester valide jusqu’à expiration.
+            </p>}
+            {logout === "confirmed" && <p role="status"
+                className="construction-notice" data-testid="logout-revocation-confirmed">
+              Déconnexion confirmée : votre session distante est fermée.
+            </p>}
             {sessionRejected && <p className="error" role="alert">
               Votre session a expiré ou a été refusée. Connectez-vous de nouveau.</p>}
             {error === "limited" && <p className="error" role="alert">
