@@ -168,11 +168,11 @@ def verify_live_writes(fixture):
         "cross_target_denials":8,"second_city_unchanged":True,
         "destination_indistinguishable":2,
         "both_cities_unchanged":True,"journals_unchanged":True,
-        "journal_tables_checked":18,"city_tables_checked":14,
+        "journal_tables_checked":22,"city_tables_checked":18,
         "replay_success":2,"replay_conflict":2,"cross_replay_denial":2
     },result
     print("PASS: 42 cross-account write denials (40 concealed 404, "
-          "2 indistinguishable 409); BOTH cities and 18 order journals "
+          "2 indistinguishable 409); BOTH cities and 22 order journals "
           "unchanged; 2 safe owner replays, 2 altered-UUID conflicts, "
           "2 rejected foreign replay attempts",flush=True)
 
