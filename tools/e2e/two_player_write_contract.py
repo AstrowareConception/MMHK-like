@@ -68,7 +68,9 @@ JOURNAL_TABLES=(
     "caravan_program_stop_orders","pve_missions","pve_mission_events",
     "colonization_orders","colonization_order_events",
     "pve_lab_casualty_settlements","pve_lab_neutral_resolutions",
-    "city_lab_mine_upgrade_orders","city_lab_mine_extension_orders"
+    "city_lab_mine_upgrade_orders","city_lab_mine_extension_orders",
+    "pve_lab_xp_awards","pve_lab_xp_reward_qualifications",
+    "pve_lab_xp_policies"
 )
 
 def rows_as_state(db,query,params=()):
