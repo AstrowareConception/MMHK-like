@@ -6,6 +6,8 @@ on:
     branches: [main]
     paths:
       - 'apps/api/src/mmhk_api/pve_*.py'
+      - 'apps/api/src/mmhk_api/hero_experience.py'
+      - 'apps/api/src/mmhk_api/forces.py'
       - 'apps/api/src/mmhk_api/lab_mine_activation.py'
       - 'apps/api/src/mmhk_api/economy.py'
       - 'apps/api/src/mmhk_api/mine_level_reference.py'
@@ -16,6 +18,7 @@ on:
       - 'apps/api/src/mmhk_api/manage.py'
       - 'apps/api/src/mmhk_api/sql/10[0-9]_*.sql'
       - 'apps/api/tests/test_pve_*.py'
+      - 'apps/api/tests/test_lab_hero_xp.py'
       - 'apps/api/tests/test_lab_mine_activation.py'
       - 'apps/api/tests/test_mine_level_reference.py'
       - 'apps/api/tests/test_lab_mine_upgrades.py'
@@ -79,6 +82,7 @@ jobs:
             apps/api/src/mmhk_api/main.py \
             apps/api/src/mmhk_api/pve_lab_settlement.py \
             apps/api/src/mmhk_api/pve_neutral_resolution.py \
+            apps/api/src/mmhk_api/hero_experience.py \
             apps/api/src/mmhk_api/manage.py \
             apps/api/tests/test_pve_encounter_snapshot.py \
             apps/api/tests/test_pve_ordinary_line_snapshot.py \
@@ -89,9 +93,11 @@ jobs:
             apps/api/tests/test_mine_level_reference.py \
             apps/api/tests/test_lab_mine_upgrades.py \
             apps/api/tests/test_lab_mine_extensions.py \
+            apps/api/tests/test_lab_hero_xp.py \
+            apps/api/tests/test_lab_hero_xp.py \
             apps/api/tests/test_pve_missions_integration.py \
             tools/e2e/local_browser.py
-      - name: Apply actual PostgreSQL migrations, including V107
+      - name: Apply actual PostgreSQL migrations, including V109 XP
         run: python -m mmhk_api.manage migrate
       - name: Test frozen opponents, legacy missions, and API worker replay
         run: |
