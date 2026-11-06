@@ -14,6 +14,19 @@ Le workflow complet sur `main` (run 42116200182, première tentative) a validé 
 - Une différence de valeur est toujours un échec, même sans changement de cardinalité ; aucune tolérance temporelle ni suppression d'assertion.
 - Le workflow six services est désormais également exécuté **avant fusion** pour les PR modifiant le contrat de sécurité à deux joueurs, au lieu d'attendre `main`.
 
+## Correctif de stabilité du test V107
+
+La suite Python de la PR a trouvé un échec reproductible uniquement selon
+certaines positions régionales aléatoires : une mine d'or pouvait ne disposer
+d'aucune case adjacente libre. La fixture V107 présupposait le contraire.
+
+La recette des extensions utilise désormais une **géométrie LAB déterministe**
+avec quatre mines positionnées avant toute attestation V104 des gisements et
+du PNJ. Cela rend l'hypothèse de site libre explicite dans l'environnement
+de test **sans modifier le générateur du jeu** ni assouplir les contrôles
+PostgreSQL d'occupation et d'immuabilité. Les tests continuent à vérifier
+l'impossibilité de réserver une case occupée.
+
 ## Validation
 
 - [ ] Compilation des scripts Python E2E
