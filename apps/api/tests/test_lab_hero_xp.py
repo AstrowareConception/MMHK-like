@@ -165,16 +165,20 @@ def test_xp_award_freezes_before_departure_and_is_atomic_replay_safe(city):
         ).fetchone()==(800,1,2)
         assert db.execute("SELECT count(*) FROM pve_lab_xp_awards "
                           "WHERE encounter_id=%s",(encounter,)).fetchone()[0]==1
-        with psycopg.connect(URL) as immutable_db:
-            with pytest.raises(psycopg.errors.CheckViolation):
-                immutable_db.execute(
-                    "UPDATE pve_lab_xp_awards SET experience_awarded=1 "
-                    "WHERE mission_id=%s",(mid,),
-                )
-            with pytest.raises(psycopg.errors.CheckViolation):
-                immutable_db.execute(
-                    "DELETE FROM pve_lab_xp_awards WHERE mission_id=%s",(mid,),
-                )
+    # Each expected PostgreSQL constraint error aborts its own transaction.
+    # Use distinct connections: do not mistake a failed SQL transaction for
+    # proof that the second forbidden operation is correctly protected.
+    with psycopg.connect(URL) as immutable_db:
+        with pytest.raises(psycopg.errors.CheckViolation):
+            immutable_db.execute(
+                "UPDATE pve_lab_xp_awards SET experience_awarded=1 "
+                "WHERE mission_id=%s",(mid,),
+            )
+    with psycopg.connect(URL) as immutable_db:
+        with pytest.raises(psycopg.errors.CheckViolation):
+            immutable_db.execute(
+                "DELETE FROM pve_lab_xp_awards WHERE mission_id=%s",(mid,),
+            )
     replay=client.post(root+"/missions",headers=owner,json=payload)
     assert replay.status_code==200
     assert replay.json()["replayed"] is True
