@@ -496,6 +496,16 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 <a id="us-her-007"></a>
 ## US-HER-007 — Suivre l’expérience
 
+**V109 — qualification LAB du 6 novembre 2026 (non acceptée historiquement).**
+Les seuils des niveaux 1–40 sont désormais persistés depuis la source Jactari CODE-01.
+La fiche du héros affiche le niveau, l'XP et le prochain seuil. Un gain de PvE
+n'est enregistré que si le PNJ, le montant expérimental et les politiques
+V102/V103/V109 ont été qualifiés avant le départ ; le gain unique est tracé
+par mission. Aucun barème de récompense Ubisoft n'est extrapolé.
+**US-HER-007 demeure non acceptée** : règles de progression au niveau maximal,
+carrières et validation S2 restent ouvertes. [Preuves V109](../QUALITE-PVE-XP-HEROS-V109-2026-11-06.md).
+
+
 **Priorité proposée :** P0 · **Phases :** Early game, Mid game, End game / Guerre des Larmes · **Preuve principale :** OBS-CODE · **Statut :** à affiner.
 
 ### 1. Card — besoin du joueur
