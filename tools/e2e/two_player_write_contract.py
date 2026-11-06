@@ -290,11 +290,26 @@ for label,path,body,original in accepted:
 # The two legitimate city states AND complete order/journal rowsets must be
 # byte-for-byte identical after the 42 forgery attempts and six replay probes.
 after=complete_snapshot()
-assert after["cities"]==before["cities"],(
-    "Unauthorized or replayed request modified one of the two cities"
+# Fail closed, but expose the table names (never their contents) in CI.
+# This separates a real authorization regression from an unrelated order
+# transition, without hiding either kind of mutation.
+city_changes={
+    owner:[table for table in before["cities"][owner]
+           if before["cities"][owner][table]!=after["cities"][owner][table]]
+    for owner in ("a","b")
+}
+city_changes={owner:tables for owner,tables in city_changes.items() if tables}
+assert not city_changes, (
+    "Unauthorized or replayed request modified city tables: "+repr(city_changes)
 )
-assert after["journals"]==before["journals"],(
-    "Unauthorized or replayed request changed game order journals"
+journal_changes={
+    table:(len(before["journals"][table]),len(after["journals"][table]))
+    for table in JOURNAL_TABLES
+    if before["journals"][table]!=after["journals"][table]
+}
+assert not journal_changes, (
+    "Unauthorized or replayed request changed game order journals "
+    "(table and row counts only): "+repr(journal_changes)
 )
 assert checks==42 and cross_target==8 and destination_indistinguishable==2,(
     checks,cross_target,destination_indistinguishable
