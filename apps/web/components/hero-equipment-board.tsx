@@ -204,7 +204,12 @@ export function HeroEquipmentBoard({cityId,hero,heroes,inventory,art}:{
           className="mmhk-hero-master-portrait"/>
         <div className="mmhk-portrait-label"><strong>{hero.name}</strong>
           <small>{hero.archetype==="magic"?"Magie":"Force"} · Niveau {hero.level}</small>
-          <span className="mmhk-hero-xp">Expérience : {hero.experience.toLocaleString("fr-FR")}</span></div>
+          <span className="mmhk-hero-xp">Expérience : {hero.experience.toLocaleString("fr-FR")}</span>
+          <small>{hero.experience_progress.level_consistent_with_thresholds
+            ?hero.experience_progress.experience_to_next_level===null
+              ?"Niveau maximal documenté (40)"
+              :hero.experience_progress.experience_to_next_level.toLocaleString("fr-FR")+" XP avant le niveau suivant"
+            :"Progression du niveau à qualifier"}</small></div>
       </div>
       <div className="mmhk-equipped-areas">
         {inventory.slots.map(slot=>{
