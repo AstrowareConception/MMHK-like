@@ -22,6 +22,7 @@ from .pve_ordinary_line_snapshot import validate_ordinary_line_snapshot,laborato
 from .pve_stack_sequence import resolve_ordinary_lines
 from .pve_lab_settlement import settle_attacker_if_qualified
 from .pve_neutral_resolution import resolve_neutral_if_qualified
+from .hero_experience import award_pve_xp_if_qualified
 from .forces import _owned_city, RecruitmentNotFound, RecruitmentConflict
 
 def start_pve_mission(db:psycopg.Connection,*,owner:UUID,city_id:UUID,
@@ -178,7 +179,7 @@ def advance_pve_missions(db:psycopg.Connection,*,max_orders:int=25,
                           m.unit_code,m.stack_count,m.stack_power,m.travel_seconds,
                           m.arrival_due_at,m.return_due_at,m.defender_snapshot,
                           m.ordinary_line_snapshot,m.attacker_settlement_snapshot,
-                          m.neutral_resolution_snapshot
+                          m.neutral_resolution_snapshot,m.xp_reward_snapshot
                    FROM pve_missions m WHERE
                      (m.stage='outbound' AND m.arrival_due_at<=%s) OR
                      (m.stage='returning' AND m.return_due_at<=%s)
@@ -189,7 +190,7 @@ def advance_pve_missions(db:psycopg.Connection,*,max_orders:int=25,
             if row is None:break
             (mid,stage,hid,eid,unit,count,power,travel_seconds,arrival,
              returning,defender_snapshot,ordinary_line_snapshot,attacker_settlement_snapshot,
-             neutral_resolution_snapshot)=row
+             neutral_resolution_snapshot,xp_reward_snapshot)=row
             if stage=="outbound" and ordinary_line_snapshot is not None:
                 # V101+ freezes the entire 1..7 ordinary line at dispatch.
                 # No live catalogue or encounter attributes are read here.
@@ -214,6 +215,12 @@ def advance_pve_missions(db:psycopg.Connection,*,max_orders:int=25,
                     verified_line=verified,sequence=sequence,
                     attacker_settlement=settlement,
                 )
+                xp_award=award_pve_xp_if_qualified(
+                    db,mission_id=mid,hero_id=hid,encounter_id=eid,
+                    snapshot=xp_reward_snapshot,
+                    neutral_resolution=neutral_resolution,
+                )
+                neutral_resolution["experience_awarded"]=xp_award["status"]=="awarded"
                 engagement_inputs={
                     "source_status":"frozen_at_departure",
                     "attacker":{"unit_code":unit,"unit_count":count,
@@ -231,7 +238,8 @@ def advance_pve_missions(db:psycopg.Connection,*,max_orders:int=25,
                     "line_outcome":sequence,
                     "outcome":None,"interpretation":None,
                     "no_losses_applied":not settlement["effects_applied"],
-                    "no_rewards":True,
+                    "no_rewards":xp_award["status"]!="awarded",
+                    "hero_experience":xp_award,
                     "settlement":settlement,
                     "neutral_resolution":neutral_resolution,
                     "hero_modifiers_qualified":False,
