@@ -10,13 +10,39 @@ from uuid import uuid4
 import psycopg
 import pytest
 
-from test_construction_integration import city, headers, client, URL
+from test_construction_integration import city as seeded_city, headers, client, URL
 from test_lab_mine_upgrades import _qualified_g11_gold
 from mmhk_api.mine_extensions import (
     BONUS, qualify_lab_mine_extension, extensions_for_city,
     start_lab_mine_extension,
 )
 from mmhk_api.economy import run_economy_batch
+
+
+@pytest.fixture
+def city(seeded_city):
+    """A known LAB geometry, not a claim about historical mine placement.
+
+    Random production mine placements must never decide if a test of the
+    extension contract can run. Arrange the four unqualified local mine
+    positions BEFORE the V104 deposit/guardian qualification. The actual
+    V104/V107 immutability and physical occupancy checks remain enabled.
+    """
+    with psycopg.connect(URL) as db:
+        db.execute(
+            "DELETE FROM city_mine_positions WHERE city_id=%s",
+            (seeded_city["city"],),
+        )
+        for resource,i,j in (
+            ("gold",0,0),("wood",0,4),("ore",4,0),("crystal",4,4)
+        ):
+            db.execute(
+                """INSERT INTO city_mine_positions(
+                     city_id,resource,i,j,layout_policy)
+                   VALUES(%s,%s,%s,%s,'LAB-V107-TEST-FIXTURE')""",
+                (seeded_city["city"],resource,i,j),
+            )
+    return seeded_city
 
 
 def _free_adjacent_site(db,city_id):

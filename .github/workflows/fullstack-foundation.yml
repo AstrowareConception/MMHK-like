@@ -1,8 +1,13 @@
 name: FastAPI + Next.js foundation
 # Production-like integration gate: automatic on main, manual on demand.
-# Feature branches are tested explicitly before integration, without
-# triggering new expensive six-service suites on every feature push.
+# The expensive six-service test also runs on PRs that change its own
+# two-account E2E security contract, before those changes reach main.
 on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'tools/e2e/two_player_*'
+      - '.github/workflows/fullstack-foundation.yml'
   push:
     branches:
       - main
