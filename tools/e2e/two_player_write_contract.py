@@ -55,7 +55,9 @@ CITY_TABLES=(
     "cities","city_stocks","city_mines","city_mine_rates",
     "city_economy_clock","urban_city_buildings","city_recruit_pools",
     "city_garrison_units","city_hero_offers","city_heroes",
-    "city_artifacts","hero_formation_slots","region_encounters"
+    "city_artifacts","hero_formation_slots","region_encounters",
+    "city_lab_mine_unlocks","city_lab_mine_levels",
+    "city_lab_mine_level_qualifications","city_lab_mine_extension_sites"
 )
 JOURNAL_TABLES=(
     "urban_construction_orders","urban_construction_events",
@@ -64,7 +66,9 @@ JOURNAL_TABLES=(
     "city_merchant_orders","marketplace_orders","marketplace_offers",
     "caravan_shipments","caravan_shipment_events","caravan_dispatch_programs",
     "caravan_program_stop_orders","pve_missions","pve_mission_events",
-    "colonization_orders","colonization_order_events"
+    "colonization_orders","colonization_order_events",
+    "pve_lab_casualty_settlements","pve_lab_neutral_resolutions",
+    "city_lab_mine_upgrade_orders","city_lab_mine_extension_orders"
 )
 
 def rows_as_state(db,query,params=()):
