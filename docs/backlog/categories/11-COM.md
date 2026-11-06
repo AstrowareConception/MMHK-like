@@ -106,6 +106,15 @@ La [DoD commune DOD-01 à DOD-10](../METHODE-ET-QUALITE.md#definition-of-done) s
 <a id="us-com-002"></a>
 ## US-COM-002 — Engager un combat PvE
 
+**Ajout technique V109 (6 novembre 2026, LAB exclusivement).** Lors d'une
+victoire sur un PNJ V103 réellement résolu, le worker peut désormais créditer
+une récompense d'expérience explicitement attestée avant le départ, en une
+seule transaction avec les pertes et la libération. Les formules complètes
+Jactari d'XP et de progression S2 ne sont pas déclarées reproduites :
+[preuves et exclusions V109](../QUALITE-PVE-XP-HEROS-V109-2026-11-06.md).
+**US-COM-002 reste non acceptée historiquement.**
+
+
 **Priorité proposée :** P0 · **Phases :** Early game, Mid game, End game / Guerre des Larmes · **Preuve principale :** DOC · **Statut :** à affiner.
 
 **Livraison technique du profil LAB (05/11/2026) : partielle, tests exécutés.** V100–V103 : mission PvE à temps serveur, combat 1–7 pelotons figés et conséquences partielles, sans XP/butin.

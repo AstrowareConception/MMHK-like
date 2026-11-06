@@ -44,7 +44,8 @@ class MissionDB:
                 self.stage=="returning" and self.return_due<=date_b):
                 self.last_row=(self.mid,self.stage,self.hid,self.eid,"militia",
                     self.attacker,10,self.travel_seconds,self.arrival_due,self.return_due,
-                    self.snapshot,self.ordinary_line,self.settlement,self.neutral)
+                    self.snapshot,self.ordinary_line,self.settlement,self.neutral,
+                    None)  # V109: legacy missions have no frozen XP profile
             else:
                 self.last_row=None
         elif "SELECT unit_count,unit_power FROM region_encounters" in normalized:

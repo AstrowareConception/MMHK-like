@@ -189,7 +189,10 @@ export default async function MissionReportPage({params}:{
             {" "}{duel.neutral_resolution?.encounter_resolved
               ?"La rencontre neutre a été résolue en laboratoire."
               :"La rencontre neutre reste inchangée."}
-            {" "}Aucune XP, aucun butin, revenu minier ou contrôle territorial attribué.</p>
+            {" "}{duel.hero_experience?.status==="awarded"
+               ?"Une récompense d'expérience LAB qualifiée a été enregistrée."
+               :"Aucune XP persistante attribuée."}
+             {" "}Aucun butin ou contrôle territorial attribué.</p>
           {duel.line_outcome&&<div data-testid="pve-ordinary-line-result" className="mmhk-mission-line-result">
             <div className="mmhk-mission-verdict" role="status">
               <span>Verdict de la simulation de la ligne</span>
@@ -208,8 +211,9 @@ export default async function MissionReportPage({params}:{
                 ne sont pas qualifiées : les bonus de contre-arme correspondants
                 ne peuvent pas être certifiés.</p>}
             <p className="mmhk-mission-ledger-note">Les talents, sorts,
-              récompenses et productions minières restent exclues du
-              laboratoire. Les pertes du défenseur PNJ sans héros peuvent
+              butins et productions minières restent exclus du
+              laboratoire. L'expérience est attribuée uniquement sur
+              qualification LAB V109. Les pertes du défenseur PNJ sans héros peuvent
               être appliquées uniquement si sa branche sans attrition et
               les politiques V102/V103 ont été explicitement qualifiées.</p>
           </div>}
@@ -241,8 +245,29 @@ export default async function MissionReportPage({params}:{
                 parmi les adversaires actifs de la région.</p>
             </>:<strong>{neutralResolutionStatus[duel.neutral_resolution.status]??
                 "Rencontre inchangée"}</strong>}
-            <small>Aucune mine activée, aucune XP, aucun butin et aucun
-              territoire attribués. Politique : {duel.neutral_resolution.policy_id}</small>
+            <small>La résolution neutre ne crédite ni mine, ni butin,
+              ni territoire par elle-même. Politique : {duel.neutral_resolution.policy_id}</small>
+          </div>}
+          {duel.hero_experience&&<div className="mmhk-mission-verdict"
+              data-testid="pve-hero-xp-award" role="status">
+            <span>Expérience du héros — qualification LAB V109</span>
+            {duel.hero_experience.status==="awarded"?<>
+              <strong>+{duel.hero_experience.experience_awarded.toLocaleString("fr-FR")} XP</strong>
+              <p>{duel.hero_experience.before_experience?.toLocaleString("fr-FR")}
+                {" → "}{duel.hero_experience.after_experience?.toLocaleString("fr-FR")} XP
+                {" · niveau "}{duel.hero_experience.before_level}
+                {" → "}{duel.hero_experience.after_level}</p>
+              <small>Montant attesté pour cette rencontre, non calculé
+                par une formule S2 supposée.</small>
+            </>:<strong>{duel.hero_experience.status==="pre_v109_not_applicable"
+              ?"Mission antérieure à V109 : aucune attribution rétroactive":
+              duel.hero_experience.status==="policy_disabled"
+              ?"Expérience LAB désactivée au départ":
+              duel.hero_experience.status==="reward_not_qualified"
+              ?"Aucun montant d'expérience attesté pour cette rencontre":
+              duel.hero_experience.status==="max_level_reward_not_qualified"
+              ?"Récompense au plafond non qualifiée : aucun crédit":
+              "Rencontre non résolue : aucune expérience attribuée"}</strong>}
           </div>}
           {duel.interpretation&&<div className="mmhk-mission-verdict" role="status">
             <span>Verdict du duel simulé</span>
@@ -295,7 +320,8 @@ export default async function MissionReportPage({params}:{
                   {" dispersées"}</strong>
               </div>}
             <div><span>Effets persistants sur le royaume</span>
-              <strong>Aucun · ni morts, ni XP, ni butin, ni libération</strong></div>
+              <strong>Simulation uniquement · consulter les registres V102/V103/V109
+                pour les effets réellement appliqués</strong></div>
           </>}
           {!duel.line_outcome&&<><div><span>Puissance de l'attaquant</span>
             <strong>{metric(duel.outcome?.totalPower?.attacker)}</strong></div>
@@ -312,8 +338,9 @@ export default async function MissionReportPage({params}:{
           les pertes ordinaires de l'attaquant via V102 et la résolution
           d'une rencontre neutre sans héros ni attrition via V103, uniquement
           sous deux politiques de laboratoire et des données qualifiées.
-          Aucun revenu minier, XP, butin ou contrôle territorial n'est
-          encore certifié pour MMHK saison 2.</p>
+          Les paliers d'XP sont issus de la table Jactari ; les montants
+          expérimentaux V109 ne prouvent pas la formule Ubisoft S2.
+          Aucun butin ni contrôle territorial n'est certifié pour MMHK saison 2.</p>
       </div>}
     />
   </GameShell>;

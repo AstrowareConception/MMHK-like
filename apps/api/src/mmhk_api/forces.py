@@ -13,6 +13,7 @@ from psycopg.types.json import Jsonb
 
 from .building_effects import resolve_city_effects
 from .worlds import RESOURCE_NAMES
+from .hero_experience import hero_progress
 
 
 class RecruitmentNotFound(Exception):
@@ -91,7 +92,8 @@ def city_forces(db: psycopg.Connection, *, owner: UUID, city_id: UUID) -> dict:
         ],
         "heroes": [
             {"hero_id":str(hid),"name":name,"archetype":arc,"level":level,
-             "experience":xp,"status":status,"hired_at":time.isoformat()}
+             "experience":xp,"status":status,"hired_at":time.isoformat(),
+             "experience_progress":hero_progress(db,level=level,xp=xp)}
             for hid,name,arc,level,xp,status,time in heroes
         ],
         "hero_offers": [

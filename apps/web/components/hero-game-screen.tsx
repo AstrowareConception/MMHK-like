@@ -55,6 +55,15 @@ export function HeroGameScreen({cityId,hero,heroes,initialTab,
         <strong>{hero.name}</strong>
         <small>{hero.archetype==="magic"?"Voie de la Magie":"Voie de la Force"}
           {" · Niveau "+hero.level+" · "+hero.experience.toLocaleString("fr-FR")+" XP"}</small>
+        <small data-testid="hero-xp-next-level">
+          {hero.experience_progress.level_consistent_with_thresholds
+            ?hero.experience_progress.next_level_experience===null
+              ?"Niveau 40 atteint (règles de gains au maximum non qualifiées)"
+              :"Prochain niveau : "+hero.experience_progress.next_level+
+               " à "+hero.experience_progress.next_level_experience.toLocaleString("fr-FR")+
+               " XP (encore "+hero.experience_progress.experience_to_next_level?.toLocaleString("fr-FR")+")"
+            :"Niveau existant à réconcilier avec la table Jactari"}
+        </small>
       </div>
       <div className="mmhk-command-tabs" role="tablist" aria-label="Écrans du héros">
         {sections.map((item,i)=><button key={item.id} type="button" role="tab"

@@ -150,7 +150,14 @@ export type CityForces = {
     unit_costs:Record<string,number>;policy_id:string;available:number;unlocked:boolean}[];
   hero_armies:{hero_id:string;unit_code:string;name:string;quantity:number;tier:number}[];
   heroes: {hero_id:string;name:string;archetype:"might"|"magic";
-    level:number;experience:number;status:string;hired_at:string}[];
+    level:number;experience:number;status:string;hired_at:string;
+    experience_progress:{
+      level:number;experience:number;source_policy:string;
+      next_level:number|null;next_level_experience:number|null;
+      experience_to_next_level:number|null;
+      level_consistent_with_thresholds:boolean;
+      max_level_rule_qualified:false;historically_certified_s2:false;
+    }}[];
   hero_offers:{offer_id:string;name:string;archetype:"might"|"magic";
     gold_cost:number;policy_id:string}[];
   tavern_unlocked:boolean;
@@ -399,12 +406,21 @@ export type PveLabNeutralResolution={
   policy_id:string;policy_source_ref:string|null;
   profile_source_ref:string|null;neutral_deaths:number;
   encounter_resolved:boolean;mine_activated:false;
-  loot_awarded:false;experience_awarded:false;territory_captured:false;
+  loot_awarded:false;experience_awarded:boolean;territory_captured:false;
   historically_certified_s2:false;
   neutral_casualties?:{
     initial:number;permanent_deaths:number;survivors:number;
     policy_id:string;source_branch:string;historically_certified_s2:false
   };
+};
+export type PveLabHeroExperience={
+  status:"awarded"|"pre_v109_not_applicable"|"policy_disabled"|
+    "reward_not_qualified"|"neutral_not_resolved"|"max_level_reward_not_qualified";
+  policy_id:string;experience_awarded:number;
+  before_level:number|null;after_level:number|null;
+  before_experience?:number;after_experience?:number;
+  policy_source_ref?:string;reward_source_ref?:string;
+  historically_certified_s2:false;
 };
 export type PveEngagementInputs={
   source_status:"frozen_at_departure"|"legacy_live_at_arrival";
@@ -428,6 +444,7 @@ export type PveMission={
     line_outcome?:PveLaboratoryLineOutcome;
     settlement?:PveLabAttackerSettlement;
     neutral_resolution?:PveLabNeutralResolution;
+    hero_experience?:PveLabHeroExperience;
     outcome:{
       totalPower:{attacker:number;defender:number};remaining:{attacker:number;defender:number}
     }|null;interpretation?:PveInterpretation|null}|null;
